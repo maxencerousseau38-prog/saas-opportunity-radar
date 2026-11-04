@@ -75,14 +75,15 @@ a functional requirement, the Product Requirements win (ADR-000).
 ## V1 implementation choices
 
 -   Monorepo: pnpm + Turborepo. **[ACCEPTED: IB v1.0 §0 as provided by the product owner; pnpm also in CLAUDE.md §14 commands]**; versions are PD-01.
--   Runtime: Node.js LTS, TypeScript strict mode. Exact LTS line
-    **[PENDING_USER_APPROVAL: PD-01]**.
+-   Runtime: Node.js LTS, TypeScript strict mode. The most recent LTS
+    line, verified against the official schedule at Sprint 0 start (24 or
+    26) **[ACCEPTED: PD-01, approved 4 Nov 2026]**.
 -   Web: Next.js App Router.
 -   Database/Auth/Storage: Supabase.
 -   Queue: Supabase Queues (PGMQ), one durable queue `sor_jobs`;
     server-side consumers only.
--   Validation: Zod (major version **[PENDING_USER_APPROVAL: PD-01]**;
-    contracts are written version-agnostically, §4.0).
+-   Validation: Zod, latest major **[ACCEPTED: PD-01]**; contracts are
+    written version-agnostically and pinned by contract tests (§4.0).
 -   Tests: Vitest, Playwright, Supabase pgTAP tests.
 -   AI: provider-neutral gateway; no provider-specific calls inside
     engine agents.
@@ -270,7 +271,7 @@ trusted backend operations may create or update them.
 
 All workspace-scoped reads and writes require membership and role
 checks. Pain Point Clusters and generated opportunities are
-workspace-scoped **[PENDING_USER_APPROVAL: PD-09]**.
+workspace-scoped **[ACCEPTED: PD-09, approved 4 Nov 2026]**.
 
 ### Platform and operations (server-only)
 
@@ -304,7 +305,7 @@ table. Nothing is dropped.
 | §12.7 Sources (`saas_id`, `verified_at`, `evidence_type`, `raw_reference`, `extraction_method`) | `sources` + `source_records` + `source_snapshots` + `evidence_items` (`verified_at`, `evidence_type`, `extraction_method`) |
 | §12.8 AI Analyses (`individual_scores`, `model_identifier`, `prompt_version`) | `opportunity_analyses` + `analysis_dimension_scores` + `agent_step_runs` (per-step model and prompt versions) |
 | §12.9 `excluded_categories`, `sorting` | `saved_searches.filters.configurable_exclusions`, `saved_searches.sort_key` |
-| §12.10 link table `personal_notes`, `status` | `collection_items.notes`; status per PD-04 (ADR-014) |
+| §12.10 link table `personal_notes`, `status` | `collection_items.notes`; status in `workspace_product_states` (PD-04 A, ADR-014), displayed in every collection |
 | §12.11 Pain Point Clusters | `pain_point_clusters` (+ snapshots for history, PRD §13.3) |
 | §12.12 Pain Point Evidence (`feedback_id`, `saas_id`, `source_id`, `evidence_url`, `published_at`) | `pain_point_evidence` → `feedback_problems` → `customer_feedback` → snapshot/record; all PRD fields are returned by the cluster-evidence DTO (`GET W/clusters/{id}/evidence`) |
 | §12.13 Generated Opportunities (`cluster_id`, `competitors`, `*_score`, `verdict`) | `generated_opportunities` + link tables; scores and verdict come from the latest completed `opportunity_analyses` row whose subject is the opportunity |
@@ -344,7 +345,7 @@ table. Nothing is dropped.
     and in this document together.
 
 Migration order and owning sprint (sprint numbers follow §15, whose order
-is **[PENDING_USER_APPROVAL: PD-13]**):
+is **[ACCEPTED: PD-13, approved 4 Nov 2026]**):
 
 | # | File (suffix) | Content | Sprint |
 |---|---|---|---|
@@ -1236,7 +1237,7 @@ create table public.collections (
 );
 
 -- Status column intentionally absent: per-workspace status lives in
--- workspace_product_states [PENDING_USER_APPROVAL: PD-04 / ADR-014].
+-- workspace_product_states [ACCEPTED: PD-04 / ADR-014, approved 4 Nov 2026].
 create table public.collection_items (
   id uuid primary key default gen_random_uuid(),
   collection_id uuid not null,
@@ -1630,7 +1631,7 @@ create table public.exclusion_rules (
   rule_key text not null,
   rule_kind text not null check (rule_kind in ('excluded_category','core_purpose_phrase','review_phrase')),
   pattern text not null,
-  outcome text not null check (outcome in ('excluded','needs_review')),
+  outcome text not null check (outcome in ('excluded','needs_review','flag_only')),
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
   unique (rule_set_version, rule_key)
@@ -1638,7 +1639,8 @@ create table public.exclusion_rules (
 alter table public.exclusion_rules enable row level security;
 revoke all on table public.exclusion_rules from anon, authenticated;   -- server-only, audit mirror
 
--- Non-AI defaults. AI budget defaults are inserted once PD-08 is approved.
+-- Non-AI defaults. AI budget defaults are inserted once the PD-08 benchmark
+-- has fixed them (PD-24, pending).
 insert into public.platform_limits(key, value, description) values
   ('max_owned_workspaces_per_user', '5', 'Workspaces a user may own'),
   ('max_concurrent_jobs_per_workspace', '3', 'Running jobs per workspace'),
@@ -1736,7 +1738,8 @@ insert into public.sources(source_key, name, source_type, access_method, default
   ('official_website','Official website','official_website','official_website_fetch',1);
 -- Third-party sources (Product Hunt, G2, Capterra, Reddit, X, LinkedIn,
 -- Crunchbase, AlternativeTo, BuiltWith/Wappalyzer, Similarweb; PRD §13.1)
--- are inserted only after their terms review (PD-14, ADR-013).
+-- are inserted only after their terms review (PD-14 A; G2 first, pending
+-- approval PD-26; Discovery search sources PD-28; ADR-013).
 
 -- exclusion_rules mirrors packages/domain/src/exclusion (rule set 'excl-1');
 -- §5.4 is the authoritative list. The code is the executor; this table is
@@ -1747,7 +1750,7 @@ insert into public.exclusion_rules(rule_set_version, rule_key, rule_kind, patter
   ('excl-1','R3','core_purpose_phrase','partner programs?|partner management|partner relationship management|PRM|partner ecosystem|partner marketplace|partner portal|channel partners?|partner attribution|partner commissions?|partner payouts?|partnership management|partnerships platform','excluded'),
   ('excl-1','R4','core_purpose_phrase','referral networks?|affiliate and referral|referral and affiliate','excluded'),
   ('excl-1','R5','core_purpose_phrase','(commission|payout) WITH (affiliate|partner) in the same core text','excluded'),
-  ('excl-1','R6','review_phrase','commission management|sales commissions?|referral programs?|referral marketing|customer referrals?','needs_review'),
+  ('excl-1','R6','review_phrase','commission management|sales commissions?|referral programs?|referral marketing|customer referrals?','flag_only'),  -- PD-11 A
   ('excl-1','R7','review_phrase','standalone affiliate (core texts) | standalone partners? (primary use case only)','needs_review'),
   ('excl-1','R8','review_phrase','R2-R5 phrases in description only','needs_review'),
   ('excl-1','R10','review_phrase','LLM core_purpose_flag = affiliate_or_partner','needs_review');
@@ -1962,7 +1965,7 @@ $$;
 create trigger feedback_problems_consistency before insert or update
 on public.feedback_problems for each row execute function private.trg_problem_product_consistency();
 
--- Embedding dimensions depend on the model (PD-08); no ANN index until
+-- Embedding dimensions depend on the model (PD-24); no ANN index until
 -- the model is fixed. MVP volumes allow exact search.
 create table public.feedback_problem_embeddings (
   problem_id uuid not null references public.feedback_problems(id) on delete cascade,
@@ -2710,9 +2713,14 @@ create table public.validation_experiments (
   revenue_currency char(3) check (revenue_currency is null or revenue_currency ~ '^[A-Z]{3}$'),
   result text not null default 'pending' check (result in ('pending','success','failure','inconclusive')),
   evidence_url text check (evidence_url is null or evidence_url ~* '^https?://'),
+  proof_storage_path text,               -- PD-21: invoice / payment record (private bucket)
+  proof_verified_by uuid references auth.users(id),   -- server/operator only
+  proof_verified_at timestamptz,
   created_by uuid not null references auth.users(id),
   created_at timestamptz not null default now(),
   completed_at timestamptz,
+  check ((proof_verified_by is null) = (proof_verified_at is null)),
+  check (proof_verified_by is null or proof_storage_path is not null),
   foreign key (generated_opportunity_id, workspace_id)
     references public.generated_opportunities(id, workspace_id) on delete cascade,
   -- Same-workspace analysis only; SET NULL on the analysis column only (PostgreSQL 15+).
@@ -2723,11 +2731,17 @@ create table public.validation_experiments (
 );
 alter table public.validation_experiments enable row level security;
 revoke all on table public.validation_experiments from anon, authenticated;
-grant select, insert, delete on public.validation_experiments to authenticated;
+grant select, delete on public.validation_experiments to authenticated;
+grant insert (workspace_id, generated_opportunity_id, product_id, analysis_id, experiment_type,
+  target_persona, hypothesis, success_criteria, failure_criteria, sample_size, participants_count,
+  positive_responses, qualified_interviews, pilots_started, paying_customers, revenue_generated,
+  revenue_currency, result, evidence_url, proof_storage_path, created_by, completed_at)
+  on public.validation_experiments to authenticated;   -- proof_verified_* are server-only
 -- workspace_id, created_by and the experiment's subject are immutable.
 grant update (experiment_type, target_persona, hypothesis, success_criteria, failure_criteria,
   sample_size, participants_count, positive_responses, qualified_interviews, pilots_started,
-  paying_customers, revenue_generated, revenue_currency, result, evidence_url, completed_at)
+  paying_customers, revenue_generated, revenue_currency, result, evidence_url, proof_storage_path,
+  completed_at)
   on public.validation_experiments to authenticated;
 create policy experiments_select on public.validation_experiments for select to authenticated
   using (private.is_workspace_member(workspace_id));
@@ -2743,11 +2757,16 @@ create policy experiments_delete on public.validation_experiments for delete to 
 Experiments are user-entered records (intentions, positive responses,
 qualified interviews, pilots and payments are separate columns, PRD
 §12.14). A paid experiment result is user-declared evidence; it can feed
-a later analysis only through an evidence item of type `user_declared`
-with `fact_status = 'declared'`. Whether such user-recorded payments may
-satisfy the paying-customer gate of §9 (they are first-party evidence but
-not independently verifiable) is decided before Phase 3
-**[PENDING_USER_APPROVAL: PD-21]**.
+a later analysis only through an evidence item of type `user_declared`.
+**[ACCEPTED: PD-21 A, approved 4 Nov 2026]** A recorded payment counts
+toward the paying-customer gate of §9 only with a proof document
+(`proof_storage_path`, private bucket) checked by the platform operator
+(`proof_verified_by`, `proof_verified_at`, set by the server only). It is
+then recorded with `monetization_signal = 'payment_confirmed'`,
+reliability level 2 (first-party record with proof), `fact_status =
+'confirmed'` and `verification_status = 'verified'`. Without a checked
+proof, it stays `declared` at reliability level 4 and cannot satisfy the
+gate.
 
 ------------------------------------------------------------------------
 
@@ -2758,8 +2777,8 @@ objects for every external input and every AI output.
 
 ## 4.0 Version-agnostic conventions
 
-The Zod major version is fixed in Sprint 0 **[PENDING_USER_APPROVAL:
-PD-01]**. Behaviour differences between majors could not be verified
+The latest Zod major is used **[ACCEPTED: PD-01]**; the exact version is
+pinned in Sprint 0. Behaviour differences between majors could not be verified
 from official documentation during consolidation (network policy), so
 the contracts avoid constructs whose semantics are version-sensitive:
 
@@ -3041,19 +3060,19 @@ Deterministic definitions used by the filter engine
 | `independent` | `company_type = 'independent'` | ACCEPTED |
 | `funded` / `bootstrapped` | `funding_status = 'externally_funded'` / `'bootstrapped'` | ACCEPTED |
 | `subsidiary_or_group` | `company_type in ('subsidiary','public_company')` | ACCEPTED |
-| `indie_saas` | Recommended: `independent` AND `employee_max <= 20` AND `funding_status <> 'externally_funded'` | PENDING_USER_APPROVAL: PD-17 |
-| `maturity` | Stored value set only from evidence-backed enrichment; derivation rule from signals | PENDING_USER_APPROVAL: PD-17 |
+| `indie_saas` | `independent` AND `employee_max <= 20` AND `funding_status <> 'externally_funded'` | ACCEPTED: PD-17 A |
+| `maturity` | Stored value set only from evidence-backed enrichment; no derivation rule | ACCEPTED: PD-17 A |
 | `paying_customers_confirmed` | ≥1 visible evidence item with `monetization_signal in ('payment_confirmed','customer_verified')` and `verification_status = 'verified'` | ACCEPTED: PRD §4.2.I |
 | `paid_subscriptions` | ≥1 current pricing plan with `price_amount > 0` (= paid plan offered, **not** proof of customers; label states this) | ACCEPTED: PRD §4.2.I |
 | `monetization_unverified` | paid plan offered and no confirmed/verified monetization evidence | ACCEPTED |
-| price bands | lowest current non-free monthly-equivalent price converted with the latest `fx_rates` row (indicative, PRD §4.2.G); `custom` = custom pricing only | FX source PENDING_USER_APPROVAL: PD-20 |
+| price bands | lowest current non-free monthly-equivalent price converted with the latest `fx_rates` row (indicative, PRD §4.2.G); `custom` = custom pricing only; currencies not covered stay unconverted | ACCEPTED: PD-20 A (ECB daily reference rates) |
 | opportunity filters | latest completed analysis of the product in the workspace | ACCEPTED: PRD §4.2.K (organising only, not proof) |
 | result count before applying | `GET .../products/count` with the same query | ACCEPTED: PRD §4.3 |
 
 The set of filters shipped in the MVP ("filtres fondamentaux", PRD §18)
-is **[PENDING_USER_APPROVAL: PD-16]**; recommended MVP set: A, B, C
-(headquarters country), D, E, F, G, I, O. All other groups remain in the
-contract and ship in Phase 2.
+is **[ACCEPTED: PD-16 A + J, approved 4 Nov 2026]**: A, B, C
+(headquarters country), D, E, F, G, I, J, O. Groups H, K, L, M, N remain
+in the contract and ship in Phase 2.
 
 ## 4.4 `evidence.ts`
 
@@ -3233,7 +3252,7 @@ export const ResearchPreferencesSchema = z.object({
   configurable_exclusions: z.array(ConfigurableExclusionSchema).max(7).default([]),
   billing_models: z.array(BillingModelSchema).max(9).default([]),
   // PRD §14.1 "Seuil de validation": may only make BUILD stricter than the
-  // locked thresholds of PRD §21 [PENDING_USER_APPROVAL: PD-23].
+  // locked thresholds of PRD §21 [ACCEPTED: PD-23 A].
   stricter_build_thresholds: z.object({
     min_score: z.number().int().min(75).max(100).default(75),
     min_wtp: z.number().int().min(10).max(15).default(10)
@@ -3777,9 +3796,12 @@ Gateway requirements:
 -   Never log secrets or full private prompts unnecessarily.
 -   Provider fallback only for retryable provider failures; the model
     actually used is always recorded.
--   Providers, models per profile, embedding model and default budgets:
-    **[PENDING_USER_APPROVAL: PD-08]**. Until then, tests use a fake
-    provider.
+-   Selection method **[ACCEPTED: PD-08 A]**: one provider chosen by a
+    cost/quality benchmark on the evaluation fixtures, plus a fake
+    provider for tests. The concrete provider, models per profile,
+    embedding model and budgets are the benchmark's outcome
+    **[PENDING_USER_APPROVAL: PD-24]**; until then, tests and development
+    use the fake provider.
 
 ## 5.4 Permanent exclusion classifier (all engines)
 
@@ -3817,8 +3839,8 @@ export function classifyExclusion(input: ExclusionInput): ExclusionResult;
 | R2 Affiliate core phrases: "affiliate marketing", "affiliate program(s)", "affiliate network(s)", "affiliate management", "affiliate tracking", "affiliate software", "affiliate platform", "affiliate attribution", "affiliate commission(s)", "affiliate payout(s)" | core texts | `excluded` |
 | R3 Partner core phrases: "partner program(s)", "partner management", "partner relationship management", "PRM", "partner ecosystem", "partner marketplace", "partner portal", "channel partner(s)", "partner attribution", "partner commission(s)", "partner payout(s)", "partnership management", "partnerships platform" | core texts | `excluded` |
 | R4 Referral networks: "referral network(s)", "affiliate and referral", "referral and affiliate" | core texts | `excluded` |
-| R5 Commission/payout with partner context: "commission" or "payout" within the same core text as "affiliate" or "partner" (referral-only contexts are R6, pending PD-11) | core texts | `excluded` |
-| R6 Boundary cases: "commission management", "sales commission(s)", "referral program(s)", "referral marketing", "customer referral(s)" (no partner/affiliate context) | core texts | `needs_review` until PD-11 |
+| R5 Commission/payout with partner context: "commission" or "payout" within the same core text as "affiliate" or "partner" | core texts | `excluded` |
+| R6 Boundary cases: "commission management", "sales commission(s)", "referral program(s)", "referral marketing", "customer referral(s)" (no partner/affiliate context) | core texts | `eligible` + informational boundary flag (PD-11 A: not excluded unless the core purpose is affiliate/partner) |
 | R7 Ambiguous tokens: standalone "affiliate" in any core text; standalone "partner(s)" in `primaryUseCase` only (not name or tagline) | core texts | `needs_review` |
 | R8 Any R2--R5 phrase in secondary texts only | description | `needs_review` |
 | R9 Any R2--R7 phrase in feature texts only | features/integrations | `eligible` + `incidentalMentions` |
@@ -3828,7 +3850,8 @@ Precedence: `excluded` > `needs_review` > `eligible`. Golden tests cover
 every rule, including products that must stay eligible (a CRM with a
 referral feature, a marketing tool whose tagline says "your growth
 partner" without partner-program purpose, a marketing-attribution tool
-under the visible "Attribution" category).
+under the visible "Attribution" category, employee sales-commission
+software and customer-referral-program software (PD-11 A)).
 
 Operator resolution: a platform operator may resolve only a
 `needs_review` outcome, setting the product to `eligible` or `excluded`
@@ -4364,7 +4387,7 @@ The server rejects the O7a step (retryable once, then
     and `verification_status = 'verified'`; otherwise the server caps
     the rating at 3 and records a warning (a pricing page alone cannot
     reach the WTP threshold, CLAUDE.md §4.1).
-5.  Ratings are integers 0--5 **[PENDING_USER_APPROVAL: PD-05]** (with
+5.  Ratings are integers 0--5 **[ACCEPTED: PD-05 A]** (with
     integer ratings every score is an integer, so threshold comparisons
     are exact; v1.0 rounded a decimal score before comparing to 75).
 
@@ -4446,7 +4469,7 @@ export function computeScore(dims: ValidatedDimension[], now: Date): ScoreResult
 
 ## 9.4 Confidence formula
 
-**[PENDING_USER_APPROVAL: PD-07]** --- recommended deterministic formula
+**[ACCEPTED: PD-07 A, approved 4 Nov 2026]** --- deterministic formula
 (PRD §8.9 factors: number and quality of sources, age, confirmed vs
 estimated data, missing information, disagreements):
 
@@ -4472,7 +4495,7 @@ cluster confidence (§7.3).
 -   A kill criterion is **substantiated** when it has ≥ 1 supporting
     evidence item from the analysis index with `verification_status =
     'verified'` and `reliability_level ≤ 3`
-    **[PENDING_USER_APPROVAL: PD-07]**.
+    **[ACCEPTED: PD-07 A]**.
 -   Critical + substantiated → REJECT (fatal flaw).
 -   Critical + not substantiated → an unresolved critical kill criterion:
     blocks BUILD CANDIDATE (→ VALIDATE FIRST).
@@ -4487,25 +4510,25 @@ Evaluated in order; `reasons` records every gate result.
 |---|---|---|---|---|
 | 1 | A critical kill criterion is substantiated | REJECT | `FATAL_FLAW` | ACCEPTED (CLAUDE.md §10) |
 | 2 | Coverage < 100 | VALIDATE FIRST | `INCOMPLETE_COVERAGE` | ACCEPTED |
-| 3 | Score < 50 | REJECT | `SCORE_BELOW_REJECT_THRESHOLD` | ACCEPTED (PRD §8.8 "0--49 Rejeter"); a possible low-confidence exception is PD-06 |
-| 4 | 50 ≤ score < 65 | REJECT (recommended) or VALIDATE FIRST | `LOW_POTENTIAL` | PENDING_USER_APPROVAL: PD-06 |
+| 3 | Score < 50 | REJECT | `SCORE_BELOW_REJECT_THRESHOLD` | ACCEPTED (PRD §8.8 "0--49 Rejeter"); a possible low-confidence exception is PD-25 (pending, non-blocking) |
+| 4 | 50 ≤ score < 65 | VALIDATE FIRST (band "Faible potentiel") | `LOW_POTENTIAL` | ACCEPTED: PD-06 B |
 | 5 | 65 ≤ score < 75 | VALIDATE FIRST | `TO_INVESTIGATE` | ACCEPTED (PRD §8.8 "À approfondir") |
-| 6 | Score ≥ 75 and any gate fails: WTP < 10 (`WTP_BELOW_THRESHOLD`); no verified `payment_confirmed`/`customer_verified` evidence (`NO_PAYING_CUSTOMER_EVIDENCE`, PRD §21); confidence < 70 (`LOW_CONFIDENCE`); demand gate (`INSUFFICIENT_DEMAND_EVIDENCE`); differentiation gate (`NO_CONCRETE_DIFFERENTIATION`); unsubstantiated critical kill criterion (`UNRESOLVED_CRITICAL_KILL_CRITERION`); recommended product excluded or under review (`EXCLUDED_RECOMMENDATION`) | VALIDATE FIRST | listed codes | ACCEPTED gates; thresholds and gate definitions PENDING_USER_APPROVAL: PD-07 |
+| 6 | Score ≥ 75 and any gate fails: WTP < 10 (`WTP_BELOW_THRESHOLD`); no verified `payment_confirmed`/`customer_verified` evidence (`NO_PAYING_CUSTOMER_EVIDENCE`, PRD §21); confidence < 70 (`LOW_CONFIDENCE`); demand gate (`INSUFFICIENT_DEMAND_EVIDENCE`); differentiation gate (`NO_CONCRETE_DIFFERENTIATION`); unsubstantiated critical kill criterion (`UNRESOLVED_CRITICAL_KILL_CRITERION`); recommended product excluded or under review (`EXCLUDED_RECOMMENDATION`) | VALIDATE FIRST | listed codes | ACCEPTED (gates; thresholds and definitions PD-07 A) |
 | 7 | Score ≥ 75 and all gates pass | BUILD CANDIDATE | `ALL_GATES_PASSED` | ACCEPTED |
 | 8 | After 1--7: verdict is BUILD CANDIDATE and the red-team recommends VALIDATE FIRST or REJECT | VALIDATE FIRST | `RED_TEAM_OBJECTION` | ACCEPTED (red-team only tightens; REJECT only through rule 1) |
 
 Workspace thresholds (PRD §14.1 "Seuil de validation"): a workspace may
 only raise the BUILD thresholds above 75 / 10 (`stricter_build_thresholds`
 in research preferences); the locked minimums of PRD §21 can never be
-lowered **[PENDING_USER_APPROVAL: PD-23]**.
+lowered **[ACCEPTED: PD-23 A]**.
 
-Recommended gate definitions (PD-07): **demand** = customer-demand rating
+Approved gate definitions (PD-07 A): **demand** = customer-demand rating
 ≥ 3 supported by ≥ 2 distinct source records; **differentiation** =
 competitive-differentiation rating ≥ 3 and ≥ 1 non-hypothesis finding of
 type `opportunity` or `competitor_gap` with supporting evidence. Whether a
 complete score < 50 with low confidence (< 40) should become VALIDATE
-FIRST instead of REJECT is part of PD-06 (recommended: keep REJECT,
-because every dimension of a complete score is evidence-backed).
+FIRST instead of REJECT is **[PENDING_USER_APPROVAL: PD-25]**
+(recommended: no exception); until decided, rule 3 applies as written.
 
 ## 9.7 Display rules
 
@@ -4616,7 +4639,7 @@ platform operator. `W` = `/workspaces/{workspaceId}`.
 | GET | `W/analyses` · `/{id}` · `/{id}/progress` · `/{id}/report` · `/{id}/evidence` | V |
 | POST | `W/analyses/{id}/cancel` · `/{id}/retry` | M |
 | DELETE | `W/analyses/{id}` | A (PRD §14.4; audit-logged) |
-| POST | `W/analyses/{id}/exports` | M (`report_export`, 202; formats PENDING_USER_APPROVAL: PD-18, recommended JSON + Markdown in MVP, PDF later) |
+| POST | `W/analyses/{id}/exports` | M (`report_export`, 202; JSON + Markdown in the MVP, PDF later — PD-18 A) |
 
 ## Settings, sources, data
 
@@ -4734,7 +4757,9 @@ Sprint 3 with integration tests.
     notes, tags, statuses, cluster corrections, correction reports.
 -   `viewer`: read workspace resources only.
 -   `platform operator` (outside workspaces): catalog curation through
-    operator endpoints only. Holder: **[PENDING_USER_APPROVAL: PD-12]**.
+    operator endpoints only. Holder: the product owner only **[ACCEPTED:
+    PD-12 A]**, registered once in Sprint 2 by a documented server-side
+    procedure (no user ID in migrations).
 
 ## Rules
 
@@ -4802,7 +4827,8 @@ Configurable server-side limits in `platform_limits` (workspace settings
 can only lower them): max discovery candidates, max source requests per
 run, max AI calls per agent, max AI cost per run and per analysis, max
 wall-clock time, max retries, max concurrent jobs per workspace. AI
-budget defaults: **[PENDING_USER_APPROVAL: PD-08]**.
+budget defaults: fixed after the PD-08 benchmark
+**[PENDING_USER_APPROVAL: PD-24]**.
 
 Stop gracefully when a budget is reached and return `partial` or
 `needs_review`; never fabricate missing output.
@@ -4892,8 +4918,8 @@ Measure: extraction precision, identity resolution precision, evidence
 entailment, unsupported-claim rate, category accuracy, clustering purity
 and incorrect-merge rate, score reproducibility, verdict consistency,
 cost per successful run. Acceptance thresholds per agent are proposed
-from the first baseline and approved before the agent ships
-**[PENDING_USER_APPROVAL: PD-22]**.
+from the first baseline and approved by the product owner before the
+agent ships **[ACCEPTED: PD-22 A, process]**.
 
 Do not ship an agent because it returns valid JSON; ship only after
 factual and evidence evaluations pass.
@@ -4902,9 +4928,7 @@ factual and evidence evaluations pass.
 
 # 15. Implementation sequence and Definition of Done
 
-Order **[PENDING_USER_APPROVAL: PD-13, ADR-012]**. Sprints 0--3 are
-identical under both candidate orders; the decision is needed before
-Sprint 4. Recommended order puts the Pain Point and Opportunity Engines
+Order **[ACCEPTED: PD-13 A, ADR-012, approved 4 Nov 2026]**. The order puts the Pain Point and Opportunity Engines
 before the Discovery Engine (PRD §18 "Priorité absolue : vérifier la
 qualité de la détection des problèmes et la pertinence des opportunités
 générées avant d'étendre le nombre de connecteurs"), with the catalog fed
@@ -4912,7 +4936,7 @@ by manual entry and imports in the meantime.
 
 ## Sprint 0 --- Repository and tooling
 
-Blocked by PD-01 (toolchain versions, CI provider).
+PD-01 approved. **Starts only on the product owner's explicit go-ahead.**
 
 -   Create the monorepo (pnpm + Turborepo), strict TypeScript, lint,
     format, Vitest, Playwright, `.gitignore`.
@@ -4928,7 +4952,7 @@ in CI.
 
 ## Sprint 1 --- Database foundation and security
 
-Blocked by PD-04 (status model).
+No pending decision (PD-04 approved).
 
 -   M1--M4; verify Supabase version, API key model, default grants.
 -   `create_workspace`, `sor_transfer_ownership`.
@@ -4940,9 +4964,7 @@ pass; browser roles cannot write catalog or operational data.
 
 ## Sprint 2 --- Catalog, Discover and workspace
 
-Blocked by PD-12 (operator), PD-15 (UI language), PD-16 (MVP filters),
-PD-17 (derived filters, only for those filters), PD-20 (FX source, only
-for price bands).
+No pending decision (PD-12, PD-15, PD-16, PD-17, PD-20 approved).
 
 -   Catalog read APIs with filters, count, sort and cursor pagination.
 -   Discover feed/grid/list; cards with every PRD §3.2 element; card
@@ -4964,8 +4986,9 @@ records end-to-end (labelled fixtures).
 
 ## Sprint 3 --- Sources, evidence and job system
 
-Blocked by the PGMQ verification gate (ADR-004) and PD-08 for the
-structured-output provider used by D5/D6 (tests use the fake provider).
+Blocked by the PGMQ verification gate (ADR-004). Can start with the fake
+provider; the **exit gate** needs a real provider for D5/D6 (PD-24,
+pending) and per-agent threshold approvals (PD-22 process).
 
 -   AI gateway: profiles, structured output + validation, metering,
     budgets, fake provider (D5 and D6 are the first LLM agents).
@@ -4984,9 +5007,9 @@ duplicating work.
 
 ## Sprint 4 --- Pain Point Intelligence Engine
 
-Blocked by PD-08 (embedding model), PD-09 (cluster
-scope), PD-13 (order), PD-14 (review sources), PD-19 (navigation), PD-22
-(eval thresholds).
+Blocked by PD-24 (embedding model, pending). G2 is used only if PD-26 is
+approved; otherwise the sprint runs on declared CSV feedback imports.
+Per-agent thresholds follow the PD-22 process.
 
 -   Embedding support in the AI gateway (`pgvector` verified).
 -   M6; agents P1--P9; deterministic clustering and statistics.
@@ -5000,8 +5023,8 @@ companies, and generates eligible hypotheses.
 
 ## Sprint 5 --- Opportunity Engine
 
-Blocked by PD-05, PD-06, PD-07, PD-23 (scoring parameters), PD-10
-(subject model), PD-18 (export formats).
+No blocking decision (PD-05, PD-06, PD-07, PD-10, PD-18, PD-23
+approved; PD-25 is non-blocking: rule 3 applies until decided).
 
 -   M7; agents O1--O9; deterministic scoring, confidence and verdict.
 -   Analysis creation for all five subject types; progress; report UI
@@ -5015,8 +5038,7 @@ VALIDATE FIRST.
 
 ## Sprint 6 --- Discovery Engine
 
-Blocked by PD-11 (exclusion boundary cases) and the terms review of the
-search sources used (PD-14).
+Blocked by PD-28 (Discovery search sources after terms review).
 
 -   M8; agents D1, D2, D3, D7 (D4--D6 exist from Sprint 3); exclusion
     tests at every boundary; AI Discovery UI (run page per PRD §6.4,
@@ -5027,7 +5049,7 @@ evidence-backed candidates and respects all hard constraints.
 
 ## Sprint 7 --- Reliability and production readiness
 
-Blocked by PD-02 (environments) and PD-03 (hosting).
+Blocked by PD-27 (worker host vendor); PD-02 and PD-03 approved.
 
 -   Quotas, monitoring, structured logs, alerts; security and RLS review;
     E2E, load and failure-mode tests; backups and restore drill; staging
@@ -5112,8 +5134,9 @@ Use this document as the implementation contract.
 ## Next task for Claude Code
 
 The repository audit (4 November 2026) and the documentation
-consolidation are complete. The next task is **Sprint 0**, after the
-product owner approves PD-01. Do not start with AI agents.
+consolidation are complete, and PD-01 to PD-23 were arbitrated on
+4 November 2026. The next task is **Sprint 0**, which starts only on the
+product owner's explicit go-ahead. Do not start with AI agents.
 
 ------------------------------------------------------------------------
 

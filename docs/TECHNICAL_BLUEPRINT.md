@@ -55,7 +55,7 @@ SaaS Opportunity Radar is a private, evidence-first research platform (Product R
 
 - Initial user: a founder/entrepreneur (PRD §21). Public signup is out of scope (Implementation Blueprint §0 "Explicitly deferred"). **ACCEPTED.**
 - Tenancy model: workspaces with roles `owner`, `admin`, `member`, `viewer` (`CLAUDE.md` §7). **ACCEPTED.**
-- A **platform operator** role exists outside workspaces to curate the global catalog (resolve exclusion reviews, correction reports, identity merges). Need: the global catalog is shared and server-written, but PRD §16.14 requires that incorrect information can be corrected and `CLAUDE.md` §3 requires ambiguous exclusions to be reviewed. Who holds the role: **PENDING_USER_APPROVAL (PD-12)**.
+- A **platform operator** role exists outside workspaces to curate the global catalog (resolve exclusion reviews, correction reports, identity merges). Need: the global catalog is shared and server-written, but PRD §16.14 requires that incorrect information can be corrected and `CLAUDE.md` §3 requires ambiguous exclusions to be reviewed. Who holds the role: the product owner only (**ACCEPTED**, PD-12 A).
 
 ---
 
@@ -171,7 +171,7 @@ Package boundaries are **ACCEPTED** from `CLAUDE.md` §5 and Implementation Blue
 | Workspace intelligence (discovery runs/candidates, pain point runs/clusters/market gaps, generated opportunities, analyses, scores, findings, validation experiments) | Workspace | Server (results); users only create requests via the API and edit user-owned fields (status, notes, cluster corrections) | Workspace members |
 | Platform & operations (operators, jobs, agent steps, provider usage, audit logs, rate limits, platform limits, exclusion rules) | Platform | Server only | Server only |
 
-**ACCEPTED** basis: `CLAUDE.md` §6 (global catalogue, workspace-owned data, operational data). Pain Point Clusters being **workspace-scoped** (rather than global) is **PENDING_USER_APPROVAL (PD-09)**, recommended because clusters can be corrected by users (PRD §7.3.D.B "Chaque cluster doit pouvoir être réexaminé et corrigé") and one workspace's corrections must not alter another's research.
+**ACCEPTED** basis: `CLAUDE.md` §6 (global catalogue, workspace-owned data, operational data). Pain Point Clusters being **workspace-scoped** (rather than global) is **ACCEPTED** (PD-09 A), because clusters can be corrected by users (PRD §7.3.D.B "Chaque cluster doit pouvoir être réexaminé et corrigé") and one workspace's corrections must not alter another's research.
 
 ### 5.2 Evidence model
 
@@ -217,7 +217,7 @@ A product is visible in Discover and analysable only when `record_status = 'acti
 
 ### 5.5 Analysis subjects
 
-**ACCEPTED requirement** (PRD §7.2, §12.8: analyses may start from a product, a market category, a set of competitors, a Pain Point Cluster or a cross-cutting problem). Recommended model — typed nullable foreign keys plus a subject-product table, with a check constraint guaranteeing exactly one subject shape — is **PENDING_USER_APPROVAL (PD-10, ADR-009)**.
+**ACCEPTED requirement** (PRD §7.2, §12.8: analyses may start from a product, a market category, a set of competitors, a Pain Point Cluster or a cross-cutting problem). Recommended model — typed nullable foreign keys plus a subject-product table, with a check constraint guaranteeing exactly one subject shape — is **ACCEPTED** (PD-10 A, ADR-009).
 
 | `subject_type` | Subject reference | Scope products (for evidence) |
 |---|---|---|
@@ -246,7 +246,7 @@ The subject's scope is frozen into `analysis_subject_products` when the analysis
 - The Red-Team result can only make the verdict stricter, never more lenient.
 - The PRD decision bands (0–49 reject, 50–64 low potential, 65–74 to investigate, 75–84 interesting, 85–100 priority; PRD §8.8) are always displayed next to the verdict.
 
-**PENDING_USER_APPROVAL** (PD-05, PD-06, PD-07, PD-23): integer ratings, the verdict for complete scores of 50–64, the confidence formula and threshold, whether a workspace may raise (never lower) the BUILD thresholds, and the operational definitions of "sufficient demand evidence", "concrete differentiation" and "substantiated kill criterion". The Implementation Blueprint §9 specifies a complete recommended decision table so that the remaining work after approval is mechanical.
+**ACCEPTED** on 4 November 2026: integer ratings (PD-05 A); VALIDATE FIRST for complete scores of 50–64, with the band "Faible potentiel" (PD-06 B); the confidence formula, BUILD confidence threshold 70 and the demand, differentiation and kill-substantiation definitions (PD-07 A); workspaces may only raise the BUILD thresholds (PD-23 A). Still **PENDING_USER_APPROVAL**: a possible low-confidence exception to "score < 50 → REJECT" (PD-25, non-blocking). The complete decision table is in Implementation Blueprint §9.6.
 
 ---
 
@@ -263,7 +263,7 @@ The subject's scope is frozen into `analysis_subject_products` when the analysis
   - feature-level mention only (for example, a CRM with a referral feature) → `eligible` with an `incidental_mention` flag (`CLAUDE.md` §3: do not reject a general-purpose product for an incidental feature).
 - An LLM may escalate a product to `needs_review`; it can never make a product `eligible`.
 - `needs_review` blocks the product from Discover, ranking, analysis and recommendations until a platform operator resolves it (audit-logged). The operator cannot mark a product eligible while one of its primary categories is an excluded category.
-- Boundary cases not settled by the source documents — sales-commission software for employees (PRD §1.3 lists "Commission management" without "lié aux partenaires") and customer-referral-program software — are routed to `needs_review` until **PD-11** is decided.
+- Boundary cases — sales-commission software for employees (PRD §1.3 lists "Commission management" without "lié aux partenaires") and customer-referral-program software — are **not excluded** unless their core purpose is affiliate/partner commissions or distribution (**ACCEPTED**, PD-11 A). They carry an informational boundary flag.
 
 ### 7.2 Enforcement points
 
@@ -313,7 +313,7 @@ Access pattern: web and worker use the server Supabase client (secret key, serve
 - Agents cite only identifiers they were given (source snapshot IDs or evidence IDs); the server rejects any unknown or out-of-scope identifier. Agents cannot invent URLs.
 - Budgets: per-call max output tokens and timeout; per-run and per-analysis maximum cost; per-workspace concurrency. Reaching a budget yields `partial` or `needs_review`, never fabricated output.
 - Provider fallback only on retryable provider failures, and the model change is recorded.
-- Provider(s), models per profile, embedding model and default budgets: **PENDING_USER_APPROVAL (PD-08)**.
+- Selection method **ACCEPTED** (PD-08 A): one provider chosen by a cost/quality benchmark, plus a fake provider for tests. The concrete provider, models per profile, embedding model and budgets: **PENDING_USER_APPROVAL (PD-24)**, after the benchmark.
 
 ---
 
@@ -323,7 +323,7 @@ Access pattern: web and worker use the server Supabase client (secret key, serve
 
 - Every connector declares its access method (official API, contract, feed, or explicitly authorised method), terms URL, quotas and capabilities. A configured source is not "integrated" until its connector is developed and tested. Unauthorised scraping is forbidden.
 - Connectors return explicit states: `ok`, `blocked`, `unavailable`, `not_supported`, `rate_limited`, `error`. They never fabricate data and never write to catalog tables.
-- MVP acquisition paths (PRD §18: "Import de données", "Ajout manuel d'un SaaS", "nombre limité de connecteurs fiables"): manual product entry, CSV import of products and of customer feedback (with a per-import rights declaration), and an official-website connector. Which review/community sources are used first: **PENDING_USER_APPROVAL (PD-14)**; each requires a terms review before implementation.
+- MVP acquisition paths (PRD §18: "Import de données", "Ajout manuel d'un SaaS", "nombre limité de connecteurs fiables"): manual product entry, CSV import of products and of customer feedback (with a per-import rights declaration), and an official-website connector. Third-party sources are added one at a time after a written terms review (**ACCEPTED**, PD-14 A). G2 is the first to study; its approval is **PENDING_USER_APPROVAL (PD-26)**. Discovery search sources: **PENDING_USER_APPROVAL (PD-28)**.
 - **Safe fetcher** (all outbound HTTP to untrusted URLs): `http`/`https` only; DNS resolution with rejection of loopback, private, link-local, CGNAT, multicast, reserved and IPv4-mapped IPv6 ranges; connection pinned to the validated IP (DNS-rebinding defence); every redirect re-validated (max 5); timeout, response-size and content-type limits; no cookies or credentials; per-host rate limiting; robots.txt respected for the official-website connector; a neutral user agent that contains no personal data.
 
 ---
@@ -385,12 +385,12 @@ Role matrix (summary; full matrix in Implementation Blueprint §12):
 **ACCEPTED** (PRD §2, §3, §5, §17; `CLAUDE.md` §12):
 
 - Next.js App Router; server components for data loading through the internal service layer; client components only for interaction.
-- Navigation per PRD §2: Discover, AI Discovery, Opportunities, Saved, Settings; search and filters inside Discover. Placement of Pain Point Clusters, generated opportunities and the Comparator inside this navigation: **PENDING_USER_APPROVAL (PD-19)**.
+- Navigation per PRD §2: Discover, AI Discovery, Opportunities, Saved, Settings; search and filters inside Discover. Pain Point Clusters and generated opportunities are tabs under "Opportunities" (Analyses / Clusters / Generated opportunities); the Comparator is reached from Saved and from multi-select (**ACCEPTED**, PD-19 A).
 - Explicit loading, empty, partial, error and stale states; unknown values rendered as "Unknown", never as zero or "No".
 - Score, WTP, confidence, coverage and decision band are separate visual elements; every score links to its evidence.
 - Demo or sample data is labelled; no decorative dead controls; keyboard navigation and basic accessibility tested.
 - Dark mode first, light mode available (PRD §17).
-- UI language: **PENDING_USER_APPROVAL (PD-15)**.
+- UI language: French copy with the PRD's English navigation labels (**ACCEPTED**, PD-15 A).
 
 ---
 
@@ -399,10 +399,10 @@ Role matrix (summary; full matrix in Implementation Blueprint §12):
 | Environment | Purpose | Status |
 |---|---|---|
 | Local | Supabase CLI local stack (requires Docker), web, worker, fake AI provider and fake connectors | ACCEPTED |
-| CI | Install, lint, typecheck, unit tests, build; database tests (`supabase test db`) and integration tests on a Docker-capable runner | CI provider: PENDING_USER_APPROVAL (PD-01) |
-| Staging / Production | Hosted Supabase projects, web hosting, worker hosting | PENDING_USER_APPROVAL (PD-02, PD-03) |
+| CI | Install, lint, typecheck, unit tests, build; database tests (`supabase test db`) and integration tests on a Docker-capable runner | ACCEPTED: GitHub Actions (PD-01 A) |
+| Staging / Production | Staging + production Supabase projects in an EU region (PD-02 A); web on Vercel, worker on a container host (PD-03 A) | ACCEPTED; worker host vendor PENDING (PD-27) |
 
-- PRD §22 lists Vercel for hosting as "envisagée — à confirmer". A persistent worker cannot run as a request-scoped serverless function **[ASSUMPTION — Vercel limits not re-verified in this session]**, so the worker needs a container or VM host. Recommended: web on Vercel, worker on a container host in a region close to the Supabase project (PD-03).
+- PRD §22 lists Vercel for hosting as "envisagée — à confirmer". A persistent worker cannot run as a request-scoped serverless function **[ASSUMPTION — Vercel limits not re-verified in this session]**, so the worker needs a container or VM host. **ACCEPTED** (PD-03 A): web on Vercel, worker on a container host in the Supabase project's region; vendor PENDING (PD-27).
 - The cloud session used for this consolidation has no running Docker daemon and no Supabase CLI. Database tests must therefore run in CI or on a developer machine. This is an environment constraint, not an architecture choice.
 - Migrations are timestamped, forward-only, applied in CI against a clean database, and never edited once applied.
 - Backups: hosted Supabase backups plus a documented restore drill before production (Sprint 7).
@@ -459,7 +459,7 @@ These items could not be verified in the consolidation session (network policy b
 | Supabase API key model (legacy `anon`/`service_role` vs publishable/secret keys) and default grants on new objects in `public` | Sprint 1 |
 | PGMQ availability, queue-name rules and function signatures (`pgmq.create`, `send`, `read`, `set_vt`, `archive`, `delete`) in the target Supabase version | Sprint 3 (gate, before any queue code) |
 | `pgvector` availability and the embedding dimensions of the chosen model | Sprint 4 |
-| Vercel function duration limits | Before PD-03 decision |
+| Vercel function duration limits | Before Sprint 7 deployment |
 | Full-text search behaviour on French queries over English content | Sprint 2 (test with French query fixtures) |
 
 ---
@@ -469,19 +469,19 @@ These items could not be verified in the consolidation session (network policy b
 | ADR | Title | Status |
 |---|---|---|
 | ADR-000 | Reference documents, precedence and decision governance | ACCEPTED |
-| ADR-001 | Modular monolith with a persistent worker; hosting | ACCEPTED (hosting PENDING: PD-02, PD-03) |
+| ADR-001 | Modular monolith with a persistent worker; hosting | ACCEPTED (PD-02, PD-03); worker host vendor PENDING (PD-27) |
 | ADR-002 | Company/product separation and product identity | ACCEPTED |
 | ADR-003 | Evidence-first data model with versioned snapshots | ACCEPTED |
 | ADR-004 | PGMQ-based durable job system | ACCEPTED (verification gate; fallback pending if needed) |
-| ADR-005 | Server-side deterministic scoring and verdict gates | ACCEPTED (parameters PENDING: PD-05, PD-06, PD-07, PD-21, PD-23) |
-| ADR-006 | Provider-neutral AI gateway | ACCEPTED (providers and evaluation thresholds PENDING: PD-08, PD-22) |
-| ADR-007 | Workspace-scoped RLS, grants and platform operator role | ACCEPTED (operator holder PENDING: PD-12) |
-| ADR-008 | Pain Point Intelligence Engine as third engine | ACCEPTED (cluster scope PENDING: PD-09) |
-| ADR-009 | Polymorphic analysis subjects | Requirement ACCEPTED; data model PENDING (PD-10) |
-| ADR-010 | Permanent Affiliate/Partner exclusion | ACCEPTED (boundary cases PENDING: PD-11) |
-| ADR-011 | Toolchain, versions and CI | PENDING (PD-01) |
-| ADR-012 | Sprint order | PENDING (PD-13) |
-| ADR-013 | Source acquisition and compliance | ACCEPTED (first review sources PENDING: PD-14) |
-| ADR-014 | Workspace opportunity status model | PENDING (PD-04) |
+| ADR-005 | Server-side deterministic scoring and verdict gates | ACCEPTED (PD-05, PD-06 B, PD-07, PD-21, PD-23); low-confidence exception PENDING (PD-25) |
+| ADR-006 | Provider-neutral AI gateway | ACCEPTED (PD-08 method, PD-22); provider/models/budgets PENDING (PD-24) |
+| ADR-007 | Workspace-scoped RLS, grants and platform operator role | ACCEPTED (PD-12) |
+| ADR-008 | Pain Point Intelligence Engine as third engine | ACCEPTED (PD-09) |
+| ADR-009 | Polymorphic analysis subjects | ACCEPTED (PD-10) |
+| ADR-010 | Permanent Affiliate/Partner exclusion | ACCEPTED (PD-11) |
+| ADR-011 | Toolchain, versions and CI | ACCEPTED (PD-01) |
+| ADR-012 | Sprint order | ACCEPTED (PD-13) |
+| ADR-013 | Source acquisition and compliance | ACCEPTED (PD-14); G2 approval and Discovery search sources PENDING (PD-26, PD-28) |
+| ADR-014 | Workspace opportunity status model | ACCEPTED (PD-04) |
 
 The full register of pending decisions, with recommendations and blocked sprints, is in `docs/ADR/README.md`.

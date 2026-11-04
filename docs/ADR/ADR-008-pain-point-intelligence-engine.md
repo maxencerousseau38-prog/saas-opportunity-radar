@@ -1,6 +1,6 @@
 # ADR-008 — Pain Point Intelligence Engine as third engine
 
-- **Status:** ACCEPTED; cluster scope PENDING_USER_APPROVAL (PD-09)
+- **Status:** ACCEPTED (cluster scope PD-09 approved on 4 November 2026)
 - **Date:** 4 November 2026
 - **Sources:**
   - PRD §15 ("Il faut impérativement séparer les trois moteurs").
@@ -21,8 +21,8 @@
 - **No scoring:** the engine never scores and never infers willingness to pay from complaints. Generated opportunities are unscored hypotheses until an Opportunity analysis is run on them.
 - **Exclusion:** every generated hypothesis passes the permanent exclusion classifier (ADR-010).
 
-## Pending
+## Approved on 4 November 2026
 
-- **PD-09:** recommended scope:
+- **PD-09 (A):** scope:
   - workspace-scoped clusters and generated opportunities, because user corrections must not alter other workspaces' research;
   - global structured problems and embeddings, which are derived from public feedback and can be reused.

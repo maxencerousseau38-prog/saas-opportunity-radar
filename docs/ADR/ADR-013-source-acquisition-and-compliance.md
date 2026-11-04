@@ -1,6 +1,6 @@
 # ADR-013 — Source acquisition and compliance
 
-- **Status:** ACCEPTED; first third-party sources PENDING_USER_APPROVAL (PD-14)
+- **Status:** ACCEPTED (PD-14 approved on 4 November 2026); G2 approval and Discovery search sources PENDING_USER_APPROVAL (PD-26, PD-28)
 - **Date:** 4 November 2026
 - **Sources:**
   - PRD §6.3 "Gestion des sources": an access method per connector; record what was consulted and what was unavailable; never consider a source integrated before its connector is developed and tested; no unauthorised scraping.
@@ -27,9 +27,13 @@
 - **Reliability of user data:** manual and imported data is `declared`, at reliability level 4, until verified.
 - **Reviewer identities:** stored only as salted hashes, and only when permitted.
 
-## Pending
+## Approved on 4 November 2026
 
-- **PD-14:** which review, community and search sources to add first.
-  - Each one needs a written terms review before implementation.
+- **PD-14 (A):** one review or community source is added only after a written terms review. **G2 is the first source to study.**
   - G2, Capterra, Reddit, X, LinkedIn, Crunchbase and Similarweb generally require an API agreement or a licence **[ASSUMPTION — not re-verified]**.
-  - **Recommendation:** start the MVP with imports and the official website, then add one review or community source after its terms review.
+  - Until G2 is approved, the Pain Point Engine uses the declared CSV feedback imports.
+
+## Still pending
+
+- **PD-26:** approval of G2 after its written terms review (access method, licence, cost, storage rights). The review is prepared before Sprint 4.
+- **PD-28:** the search source(s) for the Discovery Engine, chosen with the same method. Blocks Sprint 6.

@@ -1,6 +1,6 @@
 # ADR-011 — Toolchain, versions and CI
 
-- **Status:** PENDING_USER_APPROVAL (PD-01) — blocks Sprint 0
+- **Status:** ACCEPTED (PD-01, option A, approved on 4 November 2026)
 - **Date:** 4 November 2026
 - **Sources:**
   - `CLAUDE.md` §5 and §15 Sprint 0.
@@ -13,9 +13,9 @@
 - The Node.js release page (read on 4 November 2026) lists v22, v24 and v26 as LTS lines, with v26 as the latest LTS.
 - The Zod, Next.js and Supabase documentation was unreachable.
 
-## Recommendation
+## Approved choice
 
-- **Node:** pin a current LTS line after verification at Sprint 0 start (v24 or v26). Node 22 is not recommended for a new project, because it is the oldest LTS line.
+- **Node:** pin the most recent LTS line after verifying the official release schedule at Sprint 0 start (v24 or v26). Node 22 is not used.
 - **Package tooling:** pnpm 10, Turborepo, strict TypeScript. pnpm and Turborepo themselves are ACCEPTED (Implementation Blueprint v1.0 §0); only the versions are pending here.
 - **Libraries:**
   - Next.js: latest stable major at Sprint 0, checking authentication-related changes against the Supabase SSR guidance.

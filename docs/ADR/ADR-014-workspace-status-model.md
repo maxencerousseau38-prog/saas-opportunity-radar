@@ -1,6 +1,6 @@
 # ADR-014 — Workspace opportunity status model
 
-- **Status:** PENDING_USER_APPROVAL (PD-04) — blocks Sprint 1
+- **Status:** ACCEPTED (PD-04, option A, approved on 4 November 2026)
 - **Date:** 4 November 2026
 - **Sources:**
   - PRD §10.3: each opportunity has a modifiable status (seven values); generated opportunities have their own statuses.
@@ -21,6 +21,6 @@
   - under option A, through the workspace state shown in each collection;
   - under option B, literally.
 
-## Recommendation
+## Decision
 
-Option A.
+Option A: one status per product per workspace in `workspace_product_states`; collection items keep notes only and display the workspace status.

@@ -1,6 +1,6 @@
 # ADR-007 — Workspace-scoped RLS, grants and platform operator role
 
-- **Status:** ACCEPTED; operator holder PENDING_USER_APPROVAL (PD-12)
+- **Status:** ACCEPTED (operator holder PD-12 approved on 4 November 2026)
 - **Date:** 4 November 2026
 - **Sources:**
   - `CLAUDE.md` §7: RLS on every exposed table, minimal grants, server-only catalog writes, explicit roles, no recursion, atomic bootstrap, no self-promotion.
@@ -29,9 +29,9 @@
   - It resolves exclusion reviews and correction reports, and performs identity merges.
 - **Signup:** public signup is disabled in every environment.
 
-## Pending
+## Approved on 4 November 2026
 
-- **PD-12:** who holds the operator role. Recommended: the product owner only.
+- **PD-12 (A):** the product owner is the only platform operator. The `platform_operators` row is inserted once, in Sprint 2, by a documented server-side procedure using the product owner's user ID. No migration hard-codes a user ID.
 
 ## Corrections to v1.0
 

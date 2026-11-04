@@ -110,7 +110,7 @@ This exclusion must be implemented as a deterministic application-level rule, no
 
 Do not reject a general-purpose product solely because it has an incidental referral feature. Apply the exclusion to the product's core purpose and primary use case; flag ambiguous cases for review.
 
-Implementation (ADR-010; Implementation Blueprint §5.4): one deterministic classifier in `packages/domain/src/exclusion` (rule set versioned, mirrored in the server-only `exclusion_rules` table) with outcomes `excluded`, `needs_review`, `eligible` (+ incidental mentions). An LLM may escalate to review but never make a product eligible. No filter, saved search, setting, discovery request or analysis request can express or remove a permanent exclusion. `needs_review` products are hidden and not analysable until a platform operator resolves them (audit-logged). Boundary cases (employee sales-commission software, customer-referral-program software) stay `needs_review` until PD-11 is decided. The same classifier runs on generated opportunity hypotheses.
+Implementation (ADR-010; Implementation Blueprint §5.4): one deterministic classifier in `packages/domain/src/exclusion` (rule set versioned, mirrored in the server-only `exclusion_rules` table) with outcomes `excluded`, `needs_review`, `eligible` (+ incidental mentions). An LLM may escalate to review but never make a product eligible. No filter, saved search, setting, discovery request or analysis request can express or remove a permanent exclusion. `needs_review` products are hidden and not analysable until a platform operator resolves them (audit-logged). Boundary cases (employee sales-commission software, customer-referral-program software) are not excluded unless their core purpose is affiliate/partner commissions or distribution; they carry an informational flag (PD-11 A, approved 4 Nov 2026). The same classifier runs on generated opportunity hypotheses.
 
 ### Research philosophy
 
@@ -203,7 +203,7 @@ Use the approved architecture unless a repository constraint or verified technic
 
 Three engines are mandatory and separate (PRD §15, §21): Discovery, Pain Point Intelligence, Opportunity. They communicate only through persisted, versioned artifacts.
 
-Hosting: Vercel for the web app is envisaged but not confirmed; the persistent worker needs a container/VM host (PD-03, ADR-001). The queue is one durable PGMQ queue named `sor_jobs` (ADR-004).
+Hosting (PD-02 A, PD-03 A, approved 4 Nov 2026): web app on Vercel, persistent worker on a container host in the Supabase region (vendor pending: PD-27); staging and production Supabase projects in an EU region (ADR-001). The queue is one durable PGMQ queue named `sor_jobs` (ADR-004).
 
 Adapt names to the existing repository only when it improves consistency. Keep boundaries clear even if the repository currently uses a simpler structure.
 
@@ -257,7 +257,7 @@ A company can own multiple products. A product can have many source records and 
 - Each evidence item has a `fact_status` (confirmed / estimated / declared / unknown, PRD §5.10) separate from its `verification_status`.
 - Products are visible to users only when `record_status = 'active'` and `exclusion_status = 'eligible'`.
 - Analyses have polymorphic subjects (product, product set, category, Pain Point Cluster, generated opportunity; ADR-009) with scope products frozen at request time.
-- Pain intelligence: structured feedback problems and embeddings are global server-only data; Pain Point Clusters and generated opportunities are workspace data (PD-09).
+- Pain intelligence: structured feedback problems and embeddings are global server-only data; Pain Point Clusters and generated opportunities are workspace data (PD-09 A).
 - Do not accept client-supplied evidence IDs without database-side ownership and scope validation.
 - Define competitor relationship direction clearly. Do not assume all relationships are symmetric.
 - Handle renamed products, acquisitions, and domain changes without losing history.
@@ -287,7 +287,7 @@ Security is part of the implementation, not a final polish task.
 12. Keep service-role credentials strictly server-side. Remember that service role bypasses RLS.
 13. Every migration that creates a table enables RLS and sets its grants in the same file. No `FOR ALL` policies: one policy per operation, always `TO authenticated`. Protect immutable columns with column-level update grants.
 14. Browsers never insert or update server-owned results (runs, candidates, clusters, analyses, scores, findings, evidence links); job-creating requests go through the API and a service-role-only RPC.
-15. Public signup is disabled in every environment. A platform operator role (outside workspaces) curates the catalog through audit-logged operator endpoints (ADR-007; holder: PD-12).
+15. Public signup is disabled in every environment. A platform operator role (outside workspaces) curates the catalog through audit-logged operator endpoints (ADR-007; holder: the product owner only, PD-12 A).
 
 ### API authorization
 
@@ -431,7 +431,7 @@ A paid plan on the pricing page does not prove paid customers.
 
 A WTP rating ≥ 4 (i.e. WTP ≥ 12/15) requires verified `payment_confirmed` or `customer_verified` evidence; otherwise the server caps the rating at 3.
 
-Ratings are integers 0–5 (recommended, PD-05); with integer ratings every score is an integer and threshold comparisons are exact.
+Ratings are integers 0–5 (PD-05 A); with integer ratings every score is an integer and threshold comparisons are exact.
 
 ### Verdict gates
 
@@ -439,13 +439,13 @@ Evaluated in order (Implementation Blueprint §9.6; ADR-005):
 
 1. Substantiated critical kill criterion → **REJECT**.
 2. Coverage < 100 → **VALIDATE FIRST**.
-3. Complete score < 50 → **REJECT** (PRD §8.8 "0–49 Rejeter"; a low-confidence exception is part of PD-06).
-4. Complete score 50–64 → recommended **REJECT** with band "Faible potentiel" (PD-06).
+3. Complete score < 50 → **REJECT** (PRD §8.8 "0–49 Rejeter"; a possible low-confidence exception is PD-25, pending — until then this rule applies).
+4. Complete score 50–64 → **VALIDATE FIRST** with band "Faible potentiel" (PD-06 B).
 5. Complete score 65–74 → **VALIDATE FIRST**.
 6. Complete score ≥ 75 → **BUILD CANDIDATE** only if WTP ≥ 10/15, verified paying-customer evidence exists (PRD §21), confidence is adequate, demand evidence is sufficient, differentiation is concrete, and no critical kill criterion is unresolved; otherwise **VALIDATE FIRST**.
-7. The red-team can only make the verdict stricter (BUILD → VALIDATE FIRST); REJECT comes only from rules 1, 3 and 4.
+7. The red-team can only make the verdict stricter (BUILD → VALIDATE FIRST); REJECT comes only from rules 1 and 3.
 
-The confidence formula, the BUILD confidence threshold (recommended 70), the demand and differentiation gate definitions, and kill-criterion substantiation are PD-07. A workspace may only raise the BUILD thresholds, never lower them (PD-23). An excluded or under-review Recommended Product blocks BUILD CANDIDATE. The PRD decision band (reject / low potential / to investigate / interesting / priority) is always shown next to a complete score.
+The confidence formula, the BUILD confidence threshold of 70, the demand and differentiation gate definitions, and kill-criterion substantiation are those of Implementation Blueprint §9.4–9.6 (PD-07 A). A workspace may only raise the BUILD thresholds, never lower them (PD-23 A). In Phase 3, a validation-experiment payment counts as paying-customer evidence only with an operator-checked proof document (PD-21 A). An excluded or under-review Recommended Product blocks BUILD CANDIDATE. The PRD decision band (reject / low potential / to investigate / interesting / priority) is always shown next to a complete score.
 
 A high numeric score cannot override a critical kill criterion. The server computes the score and final verdict from validated assessments.
 
@@ -679,20 +679,20 @@ Do not hide failed tests or known defects.
 
 ## 15. Sprint execution plan
 
-The detailed plan, with exit gates and the pending decisions that block each sprint, is in Implementation Blueprint §15. The order below is the recommended order **PENDING_USER_APPROVAL (PD-13, ADR-012)**. Sprints 0–3 are needed under either order, but their content differs from v1.0: the job system and the AI gateway move into Sprint 3, and candidate extraction (D3) moves to the Discovery sprint. **Implementation Blueprint §15 governs the content of every sprint.** Do not skip security or tests to move faster.
+The detailed plan, with exit gates and the pending decisions that block each sprint, is in Implementation Blueprint §15. The order below was approved on 4 November 2026 (PD-13 A, ADR-012). Sprint content differs from v1.0: the job system and the AI gateway move into Sprint 3, and candidate extraction (D3) moves to the Discovery sprint. **Implementation Blueprint §15 governs the content of every sprint.** Do not skip security or tests to move faster.
 
 | Sprint | Content | Blocked by |
 |---|---|---|
-| 0 | Repository audit (done 4 Nov 2026), documentation consolidation (done), tooling, CI, env validation | PD-01 |
-| 1 | Database foundation and security (M1–M4), bootstrap, pgTAP | PD-04 |
-| 2 | Catalog APIs, Discover UI, profiles, workspace organisation, manual add, operator views | PD-12, PD-15, PD-16 (+ PD-17, PD-20 for specific filters) |
-| 3 | Sources, evidence, job system (M5), AI gateway, safe fetcher, official-website connector, CSV imports, identity, enrichment, verification | PGMQ verification gate, PD-08 (D5/D6 provider), PD-22 |
-| 4 | Pain Point Intelligence Engine (M6), embeddings and UI | PD-08 (embedding model), PD-09, PD-13, PD-14, PD-19, PD-22 |
-| 5 | Opportunity Engine (M7), scoring, report, export | PD-05, PD-06, PD-07, PD-10, PD-18, PD-23 |
-| 6 | Discovery Engine (M8) and AI Discovery UI | PD-11, PD-14 |
-| 7 | Reliability and production readiness, deployment | PD-02, PD-03 |
+| 0 | Repository audit (done 4 Nov 2026), documentation consolidation (done), tooling, CI, env validation | Product owner's explicit go-ahead |
+| 1 | Database foundation and security (M1–M4), bootstrap, pgTAP | — |
+| 2 | Catalog APIs, Discover UI, profiles, workspace organisation, manual add, operator views | — |
+| 3 | Sources, evidence, job system (M5), AI gateway, safe fetcher, official-website connector, CSV imports, identity, enrichment, verification | PGMQ verification gate; exit gate needs PD-24 (real provider for D5/D6) |
+| 4 | Pain Point Intelligence Engine (M6), embeddings and UI | PD-24 (embedding model); G2 only if PD-26 approved |
+| 5 | Opportunity Engine (M7), scoring, report, export | — (PD-25 non-blocking) |
+| 6 | Discovery Engine (M8) and AI Discovery UI | PD-28 |
+| 7 | Reliability and production readiness, deployment | PD-27 |
 
-The v1.0 sprint descriptions below are **historical** (kept for traceability). Where they differ from Implementation Blueprint §15 in order or content, §15 applies; for Sprints 4–6, the order of §15 applies once PD-13 is approved.
+The v1.0 sprint descriptions below are **historical** (kept for traceability). Where they differ from Implementation Blueprint §15 in order or content, §15 applies; for Sprints 4–6, the order of §15 applies (PD-13 A).
 
 ### Sprint 0 — Repository audit and foundation
 
@@ -811,7 +811,8 @@ A feature is Done only when:
 ## 17. Current state and next step
 
 - 4 November 2026: repository audit completed; documentation consolidated (Technical Blueprint created, Implementation Blueprint v1.1, ADR-000 to ADR-014, PRD formatting fixed). No application code exists yet.
-- Next step: **Sprint 0**, after the product owner approves PD-01 (ADR-011). Then Sprint 1 after PD-04.
+- 4 November 2026: the product owner arbitrated PD-01 to PD-23 (see `docs/ADR/README.md`). Still pending: PD-24 (AI provider, models and budgets after benchmark), PD-25, PD-26 (G2), PD-27 (worker host vendor), PD-28 (Discovery search sources).
+- Next step: **Sprint 0**. It starts only on the product owner's explicit go-ahead.
 - **Do not start by writing the AI agents or building the complete UI.**
 
 The original first-session instruction is kept below for reference; its audit step has been done.

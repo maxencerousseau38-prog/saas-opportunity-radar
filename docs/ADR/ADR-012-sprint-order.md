@@ -1,6 +1,6 @@
 # ADR-012 — Sprint order
 
-- **Status:** PENDING_USER_APPROVAL (PD-13) — blocks Sprint 4 (Sprints 0–3 are identical under both options)
+- **Status:** ACCEPTED (PD-13, option A, approved on 4 November 2026)
 - **Date:** 4 November 2026
 - **Sources:**
   - `CLAUDE.md` v1.0 §15: Discovery Engine (S4) before Opportunity Engine (S5).
@@ -21,6 +21,6 @@
 - S3: sources, evidence, the job system and the AI gateway (D5 enrichment and D6 verification are the first LLM agents).
 - The job system moves from v1.0's "Sprint 6 reliability" to S3, because enrichment is the first asynchronous work.
 
-## Recommendation
+## Decision
 
-Option A.
+Option A: S0 tooling → S1 database → S2 catalog/Discover → S3 sources/evidence/jobs/AI gateway → S4 Pain Point → S5 Opportunity → S6 Discovery → S7 hardening.

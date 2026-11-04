@@ -1,6 +1,6 @@
 # ADR-010 — Permanent Affiliate/Partner exclusion
 
-- **Status:** ACCEPTED; boundary cases PENDING_USER_APPROVAL (PD-11)
+- **Status:** ACCEPTED (boundary cases PD-11 approved on 4 November 2026)
 - **Date:** 4 November 2026
 - **Sources:**
   - PRD §1.3 (excluded list), §4.2.O ("Exclusions permanentes"), §21 (locked: "Affiliate / Partner — Exclusion permanente").
@@ -30,9 +30,10 @@
 - **Resolution:** `needs_review` products are hidden and cannot be analysed until a platform operator resolves them. The resolution is audit-logged. An `excluded` outcome from a core rule cannot be overridden by an operator; a false positive is fixed by correcting the underlying data and re-running the classifier.
 - **PRD wording:** §1.3 said "Sont exclus par défaut", which conflicted with "Exclusions permanentes" (§4.2.O) and the locked decision (§21). The wording was aligned to "permanente". No item was added or removed.
 
-## Pending
+## Boundary cases (PD-11, option A, approved on 4 November 2026)
 
-- **PD-11:** two boundary cases. Until decided, both are routed to `needs_review`, so they are neither silently excluded nor silently recommended.
-  - Sales-commission software for employees. PRD §1.3 lists "Commission management" without "lié aux partenaires", while §4.2.O qualifies it with partners.
-  - Customer-referral-program software, unless its core model is affiliate/partner distribution.
-- **Recommendation:** do not exclude either category, unless the core purpose is partner or affiliate commissions or distribution.
+- **Not excluded**, unless their core purpose is affiliate/partner commissions or distribution:
+  - sales-commission software for employees (PRD §1.3 lists "Commission management" without "lié aux partenaires"; §4.2.O qualifies it with partners);
+  - customer-referral-program software.
+- **Implementation:** rule R6 no longer routes these products to `needs_review`. It records an informational boundary flag and the product stays `eligible`.
+- **Unchanged:** a product whose core text pairs commissions or payouts with affiliates or partners (R5), or describes a referral network (R4), is still excluded.
