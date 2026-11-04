@@ -49,6 +49,18 @@ begin
 end;
 $$;
 
+-- Act as the trusted server role (bypasses RLS; calls the sor_* RPCs).
+create or replace function tests.as_service_role()
+returns void
+language plpgsql
+set search_path = ''
+as $$
+begin
+  perform set_config('request.jwt.claims', '', true);
+  perform set_config('role', 'service_role', true);
+end;
+$$;
+
 -- Back to the session user (the migration/test owner).
 create or replace function tests.as_owner_role()
 returns void
