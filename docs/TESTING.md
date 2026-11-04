@@ -10,7 +10,7 @@ Implementation Blueprint §14.
 | Unit | Vitest 5 | `packages/*/src/**/__tests__/*.test.ts`, `apps/worker/src/__tests__` | Active |
 | Contract conventions | Vitest | `packages/contracts/src/__tests__/zod-conventions.test.ts` | Active (pins Zod 4 behaviours, §4.0) |
 | End-to-end | Playwright 1.64 | `apps/web/e2e/*.e2e.ts` | Smoke test active |
-| Database (RLS, grants, triggers, RPCs) | pgTAP via `supabase test db` | `supabase/tests/*.sql` | From Sprint 1 |
+| Database (RLS, grants, triggers, RPCs) | pgTAP via `supabase test db` | `supabase/tests/*.sql` | Active: 7 files, 121 assertions (see `docs/DATABASE_SECURITY.md`) |
 | Integration (jobs, engines) | Vitest + local Supabase + fake providers | per package | From Sprint 3 |
 | AI evaluation | fixtures + metrics | `evals/` | From Sprint 3 |
 

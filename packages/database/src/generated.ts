@@ -1,0 +1,973 @@
+
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+
+export type Database = {
+  
+  "public": {
+          Tables: {
+            "audit_logs": {
+                  Row: {
+                    "action": string,"actor_kind": string,"actor_user_id": string | null,"created_at": string,"id": string,"metadata": NonNullable<Json>,"request_id": string | null,"resource_id": string | null,"resource_type": string,"workspace_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "action": string,"actor_kind": string,"actor_user_id"?: string | null,"created_at"?: string,"id"?: string,"metadata"?: NonNullable<Json>,"request_id"?: string | null,"resource_id"?: string | null,"resource_type": string,"workspace_id"?: string | null
+                  }
+                  Update: {
+                    "action"?: string,"actor_kind"?: string,"actor_user_id"?: string | null,"created_at"?: string,"id"?: string,"metadata"?: NonNullable<Json>,"request_id"?: string | null,"resource_id"?: string | null,"resource_type"?: string,"workspace_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "audit_logs_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"catalog_correction_reports": {
+                  Row: {
+                    "created_at": string,"field_key": string | null,"id": string,"message": string,"product_id": string,"report_type": string,"reported_by": string,"resolution_note": string | null,"resolved_at": string | null,"resolved_by": string | null,"status": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"field_key"?: string | null,"id"?: string,"message": string,"product_id": string,"report_type": string,"reported_by": string,"resolution_note"?: string | null,"resolved_at"?: string | null,"resolved_by"?: string | null,"status"?: string,"workspace_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"field_key"?: string | null,"id"?: string,"message"?: string,"product_id"?: string,"report_type"?: string,"reported_by"?: string,"resolution_note"?: string | null,"resolved_at"?: string | null,"resolved_by"?: string | null,"status"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "catalog_correction_reports_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "catalog_correction_reports_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"catalog_field_provenance": {
+                  Row: {
+                    "company_id": string | null,"evidence_id": string,"fact_status": Database["public"]['Enums']["fact_status"],"field_key": string,"id": string,"is_current": boolean,"product_id": string | null,"selected_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "company_id"?: string | null,"evidence_id": string,"fact_status": Database["public"]['Enums']["fact_status"],"field_key": string,"id"?: string,"is_current"?: boolean,"product_id"?: string | null,"selected_at"?: string
+                  }
+                  Update: {
+                    "company_id"?: string | null,"evidence_id"?: string,"fact_status"?: Database["public"]['Enums']["fact_status"],"field_key"?: string,"id"?: string,"is_current"?: boolean,"product_id"?: string | null,"selected_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "catalog_field_provenance_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "catalog_field_provenance_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "catalog_field_provenance_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"categories": {
+                  Row: {
+                    "created_at": string,"description": string | null,"id": string,"is_active": boolean,"is_permanently_excluded": boolean,"is_user_visible": boolean,"name": string,"parent_id": string | null,"priority_weight": number,"slug": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"description"?: string | null,"id"?: string,"is_active"?: boolean,"is_permanently_excluded"?: boolean,"is_user_visible"?: boolean,"name": string,"parent_id"?: string | null,"priority_weight"?: number,"slug": string
+                  }
+                  Update: {
+                    "created_at"?: string,"description"?: string | null,"id"?: string,"is_active"?: boolean,"is_permanently_excluded"?: boolean,"is_user_visible"?: boolean,"name"?: string,"parent_id"?: string | null,"priority_weight"?: number,"slug"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "categories_parent_id_fkey"
+      columns: ["parent_id"]
+isOneToOne: false
+      referencedRelation: "categories"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"collection_items": {
+                  Row: {
+                    "added_at": string,"added_by": string,"collection_id": string,"id": string,"notes": string | null,"product_id": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "added_at"?: string,"added_by": string,"collection_id": string,"id"?: string,"notes"?: string | null,"product_id": string,"workspace_id": string
+                  }
+                  Update: {
+                    "added_at"?: string,"added_by"?: string,"collection_id"?: string,"id"?: string,"notes"?: string | null,"product_id"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "collection_items_collection_id_workspace_id_fkey"
+      columns: ["collection_id","workspace_id"]
+isOneToOne: false
+      referencedRelation: "collections"
+      referencedColumns: ["id","workspace_id"]
+    },{
+      foreignKeyName: "collection_items_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"collections": {
+                  Row: {
+                    "created_at": string,"created_by": string,"description": string | null,"id": string,"name": string,"updated_at": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"created_by": string,"description"?: string | null,"id"?: string,"name": string,"updated_at"?: string,"workspace_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"created_by"?: string,"description"?: string | null,"id"?: string,"name"?: string,"updated_at"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "collections_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"companies": {
+                  Row: {
+                    "city": string | null,"company_type": Database["public"]['Enums']["company_type"],"country_code": string | null,"created_at": string,"description": string | null,"employee_max": number | null,"employee_min": number | null,"founded_year": number | null,"founder_led": boolean | null,"funding_status": Database["public"]['Enums']["funding_status"],"id": string,"last_verified_at": string | null,"legal_name": string | null,"linkedin_url": string | null,"merged_into_company_id": string | null,"name": string,"primary_domain": string | null,"slug": string,"updated_at": string,"verification_status": Database["public"]['Enums']["verification_status"],"website_url": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "city"?: string | null,"company_type"?: Database["public"]['Enums']["company_type"],"country_code"?: string | null,"created_at"?: string,"description"?: string | null,"employee_max"?: number | null,"employee_min"?: number | null,"founded_year"?: number | null,"founder_led"?: boolean | null,"funding_status"?: Database["public"]['Enums']["funding_status"],"id"?: string,"last_verified_at"?: string | null,"legal_name"?: string | null,"linkedin_url"?: string | null,"merged_into_company_id"?: string | null,"name": string,"primary_domain"?: string | null,"slug": string,"updated_at"?: string,"verification_status"?: Database["public"]['Enums']["verification_status"],"website_url"?: string | null
+                  }
+                  Update: {
+                    "city"?: string | null,"company_type"?: Database["public"]['Enums']["company_type"],"country_code"?: string | null,"created_at"?: string,"description"?: string | null,"employee_max"?: number | null,"employee_min"?: number | null,"founded_year"?: number | null,"founder_led"?: boolean | null,"funding_status"?: Database["public"]['Enums']["funding_status"],"id"?: string,"last_verified_at"?: string | null,"legal_name"?: string | null,"linkedin_url"?: string | null,"merged_into_company_id"?: string | null,"name"?: string,"primary_domain"?: string | null,"slug"?: string,"updated_at"?: string,"verification_status"?: Database["public"]['Enums']["verification_status"],"website_url"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "companies_merged_into_company_id_fkey"
+      columns: ["merged_into_company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"company_people": {
+                  Row: {
+                    "company_id": string,"created_at": string,"evidence_id": string,"fact_status": Database["public"]['Enums']["fact_status"],"full_name": string,"id": string,"public_profile_url": string | null,"role": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "company_id": string,"created_at"?: string,"evidence_id": string,"fact_status": Database["public"]['Enums']["fact_status"],"full_name": string,"id"?: string,"public_profile_url"?: string | null,"role": string
+                  }
+                  Update: {
+                    "company_id"?: string,"created_at"?: string,"evidence_id"?: string,"fact_status"?: Database["public"]['Enums']["fact_status"],"full_name"?: string,"id"?: string,"public_profile_url"?: string | null,"role"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "company_people_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "company_people_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"company_signals": {
+                  Row: {
+                    "company_id": string | null,"confidence": number | null,"created_at": string,"evidence_id": string,"fact_status": Database["public"]['Enums']["fact_status"],"id": string,"product_id": string | null,"signal_date": string | null,"signal_type": string,"signal_value": NonNullable<Json>,"verification_status": Database["public"]['Enums']["verification_status"]
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "company_id"?: string | null,"confidence"?: number | null,"created_at"?: string,"evidence_id": string,"fact_status": Database["public"]['Enums']["fact_status"],"id"?: string,"product_id"?: string | null,"signal_date"?: string | null,"signal_type": string,"signal_value": NonNullable<Json>,"verification_status"?: Database["public"]['Enums']["verification_status"]
+                  }
+                  Update: {
+                    "company_id"?: string | null,"confidence"?: number | null,"created_at"?: string,"evidence_id"?: string,"fact_status"?: Database["public"]['Enums']["fact_status"],"id"?: string,"product_id"?: string | null,"signal_date"?: string | null,"signal_type"?: string,"signal_value"?: NonNullable<Json>,"verification_status"?: Database["public"]['Enums']["verification_status"]
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "company_signals_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "company_signals_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "company_signals_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"competitor_links": {
+                  Row: {
+                    "competitor_product_id": string,"created_at": string,"evidence_id": string | null,"explanation": string | null,"id": string,"last_verified_at": string | null,"product_id": string,"relationship_type": Database["public"]['Enums']["competitor_relationship"],"similarity_score": number | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "competitor_product_id": string,"created_at"?: string,"evidence_id"?: string | null,"explanation"?: string | null,"id"?: string,"last_verified_at"?: string | null,"product_id": string,"relationship_type": Database["public"]['Enums']["competitor_relationship"],"similarity_score"?: number | null
+                  }
+                  Update: {
+                    "competitor_product_id"?: string,"created_at"?: string,"evidence_id"?: string | null,"explanation"?: string | null,"id"?: string,"last_verified_at"?: string | null,"product_id"?: string,"relationship_type"?: Database["public"]['Enums']["competitor_relationship"],"similarity_score"?: number | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "competitor_links_competitor_product_id_fkey"
+      columns: ["competitor_product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "competitor_links_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "competitor_links_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"customer_feedback": {
+                  Row: {
+                    "author_company_reference": string | null,"author_reference_hash": string | null,"content_storage_status": Database["public"]['Enums']["content_storage_status"],"created_at": string,"deduplication_hash": string,"evidence_item_id": string,"external_review_id": string | null,"id": string,"is_near_duplicate_of": string | null,"language": string | null,"original_text": string | null,"product_id": string,"published_at": string | null,"rating": number | null,"rating_scale_max": number | null,"sentiment": Database["public"]['Enums']["review_sentiment"],"source_snapshot_id": string,"summarized_text": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "author_company_reference"?: string | null,"author_reference_hash"?: string | null,"content_storage_status": Database["public"]['Enums']["content_storage_status"],"created_at"?: string,"deduplication_hash": string,"evidence_item_id": string,"external_review_id"?: string | null,"id"?: string,"is_near_duplicate_of"?: string | null,"language"?: string | null,"original_text"?: string | null,"product_id": string,"published_at"?: string | null,"rating"?: number | null,"rating_scale_max"?: number | null,"sentiment"?: Database["public"]['Enums']["review_sentiment"],"source_snapshot_id": string,"summarized_text"?: string | null
+                  }
+                  Update: {
+                    "author_company_reference"?: string | null,"author_reference_hash"?: string | null,"content_storage_status"?: Database["public"]['Enums']["content_storage_status"],"created_at"?: string,"deduplication_hash"?: string,"evidence_item_id"?: string,"external_review_id"?: string | null,"id"?: string,"is_near_duplicate_of"?: string | null,"language"?: string | null,"original_text"?: string | null,"product_id"?: string,"published_at"?: string | null,"rating"?: number | null,"rating_scale_max"?: number | null,"sentiment"?: Database["public"]['Enums']["review_sentiment"],"source_snapshot_id"?: string,"summarized_text"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "customer_feedback_evidence_item_id_fkey"
+      columns: ["evidence_item_id"]
+isOneToOne: true
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "customer_feedback_is_near_duplicate_of_fkey"
+      columns: ["is_near_duplicate_of"]
+isOneToOne: false
+      referencedRelation: "customer_feedback"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "customer_feedback_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "customer_feedback_source_snapshot_id_fkey"
+      columns: ["source_snapshot_id"]
+isOneToOne: false
+      referencedRelation: "source_snapshots"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"entity_identifiers": {
+                  Row: {
+                    "company_id": string | null,"created_at": string,"evidence_id": string | null,"id": string,"identifier_type": string,"is_primary": boolean,"product_id": string | null,"source_id": string | null,"valid_from": string,"valid_to": string | null,"value_normalized": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "company_id"?: string | null,"created_at"?: string,"evidence_id"?: string | null,"id"?: string,"identifier_type": string,"is_primary"?: boolean,"product_id"?: string | null,"source_id"?: string | null,"valid_from"?: string,"valid_to"?: string | null,"value_normalized": string
+                  }
+                  Update: {
+                    "company_id"?: string | null,"created_at"?: string,"evidence_id"?: string | null,"id"?: string,"identifier_type"?: string,"is_primary"?: boolean,"product_id"?: string | null,"source_id"?: string | null,"valid_from"?: string,"valid_to"?: string | null,"value_normalized"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "entity_identifiers_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "entity_identifiers_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "entity_identifiers_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "entity_identifiers_source_id_fkey"
+      columns: ["source_id"]
+isOneToOne: false
+      referencedRelation: "sources"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"evidence_conflicts": {
+                  Row: {
+                    "company_id": string | null,"detected_at": string,"evidence_a_id": string,"evidence_b_id": string,"field_key": string,"id": string,"note": string | null,"product_id": string | null,"resolved_at": string | null,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "company_id"?: string | null,"detected_at"?: string,"evidence_a_id": string,"evidence_b_id": string,"field_key": string,"id"?: string,"note"?: string | null,"product_id"?: string | null,"resolved_at"?: string | null,"status"?: string
+                  }
+                  Update: {
+                    "company_id"?: string | null,"detected_at"?: string,"evidence_a_id"?: string,"evidence_b_id"?: string,"field_key"?: string,"id"?: string,"note"?: string | null,"product_id"?: string | null,"resolved_at"?: string | null,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "evidence_conflicts_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "evidence_conflicts_evidence_a_id_fkey"
+      columns: ["evidence_a_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "evidence_conflicts_evidence_b_id_fkey"
+      columns: ["evidence_b_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "evidence_conflicts_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"evidence_items": {
+                  Row: {
+                    "category_id": string | null,"claim_text": string,"claim_type": Database["public"]['Enums']["claim_type"],"claim_value": Json | null,"company_id": string | null,"confidence": number | null,"created_at": string,"evidence_type": Database["public"]['Enums']["evidence_type"],"expires_at": string | null,"extracted_by_step_id": string | null,"extraction_method": Database["public"]['Enums']["extraction_method"],"fact_status": Database["public"]['Enums']["fact_status"],"id": string,"monetization_signal": Database["public"]['Enums']["monetization_signal"] | null,"observed_at": string,"product_id": string | null,"published_at": string | null,"reliability_level": number,"source_snapshot_id": string,"verification_status": Database["public"]['Enums']["verification_status"],"verified_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "category_id"?: string | null,"claim_text": string,"claim_type": Database["public"]['Enums']["claim_type"],"claim_value"?: Json | null,"company_id"?: string | null,"confidence"?: number | null,"created_at"?: string,"evidence_type": Database["public"]['Enums']["evidence_type"],"expires_at"?: string | null,"extracted_by_step_id"?: string | null,"extraction_method": Database["public"]['Enums']["extraction_method"],"fact_status": Database["public"]['Enums']["fact_status"],"id"?: string,"monetization_signal"?: Database["public"]['Enums']["monetization_signal"] | null,"observed_at"?: string,"product_id"?: string | null,"published_at"?: string | null,"reliability_level": number,"source_snapshot_id": string,"verification_status"?: Database["public"]['Enums']["verification_status"],"verified_at"?: string | null
+                  }
+                  Update: {
+                    "category_id"?: string | null,"claim_text"?: string,"claim_type"?: Database["public"]['Enums']["claim_type"],"claim_value"?: Json | null,"company_id"?: string | null,"confidence"?: number | null,"created_at"?: string,"evidence_type"?: Database["public"]['Enums']["evidence_type"],"expires_at"?: string | null,"extracted_by_step_id"?: string | null,"extraction_method"?: Database["public"]['Enums']["extraction_method"],"fact_status"?: Database["public"]['Enums']["fact_status"],"id"?: string,"monetization_signal"?: Database["public"]['Enums']["monetization_signal"] | null,"observed_at"?: string,"product_id"?: string | null,"published_at"?: string | null,"reliability_level"?: number,"source_snapshot_id"?: string,"verification_status"?: Database["public"]['Enums']["verification_status"],"verified_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "evidence_items_category_id_fkey"
+      columns: ["category_id"]
+isOneToOne: false
+      referencedRelation: "categories"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "evidence_items_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "evidence_items_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "evidence_items_source_snapshot_id_fkey"
+      columns: ["source_snapshot_id"]
+isOneToOne: false
+      referencedRelation: "source_snapshots"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"exclusion_rules": {
+                  Row: {
+                    "created_at": string,"id": string,"is_active": boolean,"outcome": string,"pattern": string,"rule_key": string,"rule_kind": string,"rule_set_version": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"is_active"?: boolean,"outcome": string,"pattern": string,"rule_key": string,"rule_kind": string,"rule_set_version": string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"is_active"?: boolean,"outcome"?: string,"pattern"?: string,"rule_key"?: string,"rule_kind"?: string,"rule_set_version"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"fx_rates": {
+                  Row: {
+                    "currency": string,"rate_date": string,"rate_to_eur": number,"source_key": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "currency": string,"rate_date": string,"rate_to_eur": number,"source_key": string
+                  }
+                  Update: {
+                    "currency"?: string,"rate_date"?: string,"rate_to_eur"?: number,"source_key"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"platform_limits": {
+                  Row: {
+                    "description": string,"key": string,"updated_at": string,"value": NonNullable<Json>
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "description": string,"key": string,"updated_at"?: string,"value": NonNullable<Json>
+                  }
+                  Update: {
+                    "description"?: string,"key"?: string,"updated_at"?: string,"value"?: NonNullable<Json>
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"platform_operators": {
+                  Row: {
+                    "granted_at": string,"granted_by": string | null,"note": string | null,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "granted_at"?: string,"granted_by"?: string | null,"note"?: string | null,"user_id": string
+                  }
+                  Update: {
+                    "granted_at"?: string,"granted_by"?: string | null,"note"?: string | null,"user_id"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"pricing_plans": {
+                  Row: {
+                    "billing_period": string,"checked_at": string,"currency": string | null,"custom_pricing": boolean | null,"evidence_id": string,"has_free_plan": boolean | null,"has_free_trial": boolean | null,"id": string,"is_enterprise_plan": boolean,"is_entry_plan": boolean,"minimum_seats": number | null,"plan_name": string,"price_amount": number | null,"price_per_user": boolean | null,"product_id": string,"superseded_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "billing_period"?: string,"checked_at"?: string,"currency"?: string | null,"custom_pricing"?: boolean | null,"evidence_id": string,"has_free_plan"?: boolean | null,"has_free_trial"?: boolean | null,"id"?: string,"is_enterprise_plan"?: boolean,"is_entry_plan"?: boolean,"minimum_seats"?: number | null,"plan_name": string,"price_amount"?: number | null,"price_per_user"?: boolean | null,"product_id": string,"superseded_at"?: string | null
+                  }
+                  Update: {
+                    "billing_period"?: string,"checked_at"?: string,"currency"?: string | null,"custom_pricing"?: boolean | null,"evidence_id"?: string,"has_free_plan"?: boolean | null,"has_free_trial"?: boolean | null,"id"?: string,"is_enterprise_plan"?: boolean,"is_entry_plan"?: boolean,"minimum_seats"?: number | null,"plan_name"?: string,"price_amount"?: number | null,"price_per_user"?: boolean | null,"product_id"?: string,"superseded_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "pricing_plans_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "pricing_plans_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"product_categories": {
+                  Row: {
+                    "category_id": string,"confidence": number | null,"is_primary": boolean,"product_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "category_id": string,"confidence"?: number | null,"is_primary"?: boolean,"product_id": string
+                  }
+                  Update: {
+                    "category_id"?: string,"confidence"?: number | null,"is_primary"?: boolean,"product_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "product_categories_category_id_fkey"
+      columns: ["category_id"]
+isOneToOne: false
+      referencedRelation: "categories"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "product_categories_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"product_exclusion_assessments": {
+                  Row: {
+                    "created_at": string,"decided_by": string,"id": string,"incidental_mentions": NonNullable<Json>,"matched_rules": NonNullable<Json>,"operator_user_id": string | null,"product_id": string,"reason": string | null,"rule_set_version": string,"status": Database["public"]['Enums']["exclusion_status"]
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"decided_by": string,"id"?: string,"incidental_mentions"?: NonNullable<Json>,"matched_rules"?: NonNullable<Json>,"operator_user_id"?: string | null,"product_id": string,"reason"?: string | null,"rule_set_version": string,"status": Database["public"]['Enums']["exclusion_status"]
+                  }
+                  Update: {
+                    "created_at"?: string,"decided_by"?: string,"id"?: string,"incidental_mentions"?: NonNullable<Json>,"matched_rules"?: NonNullable<Json>,"operator_user_id"?: string | null,"product_id"?: string,"reason"?: string | null,"rule_set_version"?: string,"status"?: Database["public"]['Enums']["exclusion_status"]
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "product_exclusion_assessments_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"product_features": {
+                  Row: {
+                    "availability": Database["public"]['Enums']["feature_availability"],"confidence": number | null,"created_at": string,"description": string | null,"evidence_id": string | null,"feature_category": string | null,"id": string,"is_primary": boolean,"last_verified_at": string | null,"name": string,"product_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "availability"?: Database["public"]['Enums']["feature_availability"],"confidence"?: number | null,"created_at"?: string,"description"?: string | null,"evidence_id"?: string | null,"feature_category"?: string | null,"id"?: string,"is_primary"?: boolean,"last_verified_at"?: string | null,"name": string,"product_id": string
+                  }
+                  Update: {
+                    "availability"?: Database["public"]['Enums']["feature_availability"],"confidence"?: number | null,"created_at"?: string,"description"?: string | null,"evidence_id"?: string | null,"feature_category"?: string | null,"id"?: string,"is_primary"?: boolean,"last_verified_at"?: string | null,"name"?: string,"product_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "product_features_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "product_features_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"product_integrations": {
+                  Row: {
+                    "availability": Database["public"]['Enums']["feature_availability"],"created_at": string,"evidence_id": string | null,"id": string,"integration_category": Database["public"]['Enums']["integration_category"],"name": string,"product_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "availability"?: Database["public"]['Enums']["feature_availability"],"created_at"?: string,"evidence_id"?: string | null,"id"?: string,"integration_category"?: Database["public"]['Enums']["integration_category"],"name": string,"product_id": string
+                  }
+                  Update: {
+                    "availability"?: Database["public"]['Enums']["feature_availability"],"created_at"?: string,"evidence_id"?: string | null,"id"?: string,"integration_category"?: Database["public"]['Enums']["integration_category"],"name"?: string,"product_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "product_integrations_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "product_integrations_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"rate_limit_counters": {
+                  Row: {
+                    "bucket_key": string,"request_count": number,"window_start": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "bucket_key": string,"request_count"?: number,"window_start": string
+                  }
+                  Update: {
+                    "bucket_key"?: string,"request_count"?: number,"window_start"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"saas_products": {
+                  Row: {
+                    "billing_models": (Database["public"]['Enums']["billing_model"])[],"company_id": string | null,"compatibilities": (string)[],"complexity_level": string,"created_at": string,"customer_countries": (string)[],"customer_type": Database["public"]['Enums']["customer_type"],"description": string | null,"discovery_source_id": string | null,"documentation_url": string | null,"europe_presence": Database["public"]['Enums']["presence_status"],"exclusion_status": Database["public"]['Enums']["exclusion_status"],"first_discovered_at": string,"france_presence": Database["public"]['Enums']["presence_status"],"french_version": Database["public"]['Enums']["presence_status"],"id": string,"languages": (string)[],"last_verified_at": string | null,"launch_year": number | null,"maturity_stage": Database["public"]['Enums']["maturity_stage"],"merged_into_product_id": string | null,"name": string,"pricing_status": Database["public"]['Enums']["pricing_status"],"primary_domain": string | null,"problem_solved": string | null,"product_status": Database["public"]['Enums']["product_status"],"record_status": Database["public"]['Enums']["record_status"],"search_vector": unknown,"served_countries": (string)[],"short_description": string | null,"slug": string,"tagline": string | null,"technology_tags": (Database["public"]['Enums']["technology_tag"])[],"updated_at": string,"use_cases": (string)[],"value_proposition": string | null,"verification_status": Database["public"]['Enums']["verification_status"],"website_url": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "billing_models"?: (Database["public"]['Enums']["billing_model"])[],"company_id"?: string | null,"compatibilities"?: (string)[],"complexity_level"?: string,"created_at"?: string,"customer_countries"?: (string)[],"customer_type"?: Database["public"]['Enums']["customer_type"],"description"?: string | null,"discovery_source_id"?: string | null,"documentation_url"?: string | null,"europe_presence"?: Database["public"]['Enums']["presence_status"],"exclusion_status"?: Database["public"]['Enums']["exclusion_status"],"first_discovered_at"?: string,"france_presence"?: Database["public"]['Enums']["presence_status"],"french_version"?: Database["public"]['Enums']["presence_status"],"id"?: string,"languages"?: (string)[],"last_verified_at"?: string | null,"launch_year"?: number | null,"maturity_stage"?: Database["public"]['Enums']["maturity_stage"],"merged_into_product_id"?: string | null,"name": string,"pricing_status"?: Database["public"]['Enums']["pricing_status"],"primary_domain"?: string | null,"problem_solved"?: string | null,"product_status"?: Database["public"]['Enums']["product_status"],"record_status"?: Database["public"]['Enums']["record_status"],"search_vector"?: unknown,"served_countries"?: (string)[],"short_description"?: string | null,"slug": string,"tagline"?: string | null,"technology_tags"?: (Database["public"]['Enums']["technology_tag"])[],"updated_at"?: string,"use_cases"?: (string)[],"value_proposition"?: string | null,"verification_status"?: Database["public"]['Enums']["verification_status"],"website_url"?: string | null
+                  }
+                  Update: {
+                    "billing_models"?: (Database["public"]['Enums']["billing_model"])[],"company_id"?: string | null,"compatibilities"?: (string)[],"complexity_level"?: string,"created_at"?: string,"customer_countries"?: (string)[],"customer_type"?: Database["public"]['Enums']["customer_type"],"description"?: string | null,"discovery_source_id"?: string | null,"documentation_url"?: string | null,"europe_presence"?: Database["public"]['Enums']["presence_status"],"exclusion_status"?: Database["public"]['Enums']["exclusion_status"],"first_discovered_at"?: string,"france_presence"?: Database["public"]['Enums']["presence_status"],"french_version"?: Database["public"]['Enums']["presence_status"],"id"?: string,"languages"?: (string)[],"last_verified_at"?: string | null,"launch_year"?: number | null,"maturity_stage"?: Database["public"]['Enums']["maturity_stage"],"merged_into_product_id"?: string | null,"name"?: string,"pricing_status"?: Database["public"]['Enums']["pricing_status"],"primary_domain"?: string | null,"problem_solved"?: string | null,"product_status"?: Database["public"]['Enums']["product_status"],"record_status"?: Database["public"]['Enums']["record_status"],"search_vector"?: unknown,"served_countries"?: (string)[],"short_description"?: string | null,"slug"?: string,"tagline"?: string | null,"technology_tags"?: (Database["public"]['Enums']["technology_tag"])[],"updated_at"?: string,"use_cases"?: (string)[],"value_proposition"?: string | null,"verification_status"?: Database["public"]['Enums']["verification_status"],"website_url"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "saas_products_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "saas_products_discovery_source_id_fkey"
+      columns: ["discovery_source_id"]
+isOneToOne: false
+      referencedRelation: "sources"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "saas_products_merged_into_product_id_fkey"
+      columns: ["merged_into_product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"saved_searches": {
+                  Row: {
+                    "created_at": string,"created_by": string,"filters": NonNullable<Json>,"id": string,"is_pinned": boolean,"kind": string,"name": string,"search_text": string | null,"sort_key": string,"updated_at": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"created_by": string,"filters"?: NonNullable<Json>,"id"?: string,"is_pinned"?: boolean,"kind"?: string,"name": string,"search_text"?: string | null,"sort_key"?: string,"updated_at"?: string,"workspace_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"created_by"?: string,"filters"?: NonNullable<Json>,"id"?: string,"is_pinned"?: boolean,"kind"?: string,"name"?: string,"search_text"?: string | null,"sort_key"?: string,"updated_at"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "saved_searches_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"source_records": {
+                  Row: {
+                    "canonical_url": string,"external_id": string | null,"first_seen_at": string,"id": string,"source_id": string,"title": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "canonical_url": string,"external_id"?: string | null,"first_seen_at"?: string,"id"?: string,"source_id": string,"title"?: string | null
+                  }
+                  Update: {
+                    "canonical_url"?: string,"external_id"?: string | null,"first_seen_at"?: string,"id"?: string,"source_id"?: string,"title"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "source_records_source_id_fkey"
+      columns: ["source_id"]
+isOneToOne: false
+      referencedRelation: "sources"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"source_snapshots": {
+                  Row: {
+                    "content_hash": string,"extracted_metadata": NonNullable<Json>,"extraction_status": string,"fetch_status": Database["public"]['Enums']["fetch_status"],"http_status": number | null,"id": string,"last_retrieved_at": string,"published_at": string | null,"raw_content_location": string | null,"retrieved_at": string,"source_record_id": string,"storage_status": Database["public"]['Enums']["content_storage_status"]
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "content_hash": string,"extracted_metadata"?: NonNullable<Json>,"extraction_status"?: string,"fetch_status": Database["public"]['Enums']["fetch_status"],"http_status"?: number | null,"id"?: string,"last_retrieved_at"?: string,"published_at"?: string | null,"raw_content_location"?: string | null,"retrieved_at"?: string,"source_record_id": string,"storage_status"?: Database["public"]['Enums']["content_storage_status"]
+                  }
+                  Update: {
+                    "content_hash"?: string,"extracted_metadata"?: NonNullable<Json>,"extraction_status"?: string,"fetch_status"?: Database["public"]['Enums']["fetch_status"],"http_status"?: number | null,"id"?: string,"last_retrieved_at"?: string,"published_at"?: string | null,"raw_content_location"?: string | null,"retrieved_at"?: string,"source_record_id"?: string,"storage_status"?: Database["public"]['Enums']["content_storage_status"]
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "source_snapshots_source_record_id_fkey"
+      columns: ["source_record_id"]
+isOneToOne: false
+      referencedRelation: "source_records"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"sources": {
+                  Row: {
+                    "access_method": Database["public"]['Enums']["source_access_method"],"base_url": string | null,"created_at": string,"default_reliability_level": number,"id": string,"integration_status": Database["public"]['Enums']["source_integration_status"],"is_enabled": boolean,"last_error_at": string | null,"last_error_code": string | null,"last_sync_at": string | null,"name": string,"quota_per_day": number | null,"rate_limit_per_minute": number | null,"source_key": string,"source_type": Database["public"]['Enums']["source_type"],"terms_review_notes": string | null,"terms_reviewed_at": string | null,"terms_url": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "access_method": Database["public"]['Enums']["source_access_method"],"base_url"?: string | null,"created_at"?: string,"default_reliability_level": number,"id"?: string,"integration_status"?: Database["public"]['Enums']["source_integration_status"],"is_enabled"?: boolean,"last_error_at"?: string | null,"last_error_code"?: string | null,"last_sync_at"?: string | null,"name": string,"quota_per_day"?: number | null,"rate_limit_per_minute"?: number | null,"source_key": string,"source_type": Database["public"]['Enums']["source_type"],"terms_review_notes"?: string | null,"terms_reviewed_at"?: string | null,"terms_url"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "access_method"?: Database["public"]['Enums']["source_access_method"],"base_url"?: string | null,"created_at"?: string,"default_reliability_level"?: number,"id"?: string,"integration_status"?: Database["public"]['Enums']["source_integration_status"],"is_enabled"?: boolean,"last_error_at"?: string | null,"last_error_code"?: string | null,"last_sync_at"?: string | null,"name"?: string,"quota_per_day"?: number | null,"rate_limit_per_minute"?: number | null,"source_key"?: string,"source_type"?: Database["public"]['Enums']["source_type"],"terms_review_notes"?: string | null,"terms_reviewed_at"?: string | null,"terms_url"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"tag_assignments": {
+                  Row: {
+                    "assigned_at": string,"assigned_by": string,"id": string,"product_id": string,"tag_id": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "assigned_at"?: string,"assigned_by": string,"id"?: string,"product_id": string,"tag_id": string,"workspace_id": string
+                  }
+                  Update: {
+                    "assigned_at"?: string,"assigned_by"?: string,"id"?: string,"product_id"?: string,"tag_id"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tag_assignments_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tag_assignments_tag_id_workspace_id_fkey"
+      columns: ["tag_id","workspace_id"]
+isOneToOne: false
+      referencedRelation: "tags"
+      referencedColumns: ["id","workspace_id"]
+    }
+                  ]
+                },"tags": {
+                  Row: {
+                    "color": string | null,"created_at": string,"created_by": string,"id": string,"name": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "color"?: string | null,"created_at"?: string,"created_by": string,"id"?: string,"name": string,"workspace_id": string
+                  }
+                  Update: {
+                    "color"?: string | null,"created_at"?: string,"created_by"?: string,"id"?: string,"name"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tags_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"workspace_members": {
+                  Row: {
+                    "invited_by": string | null,"joined_at": string,"role": Database["public"]['Enums']["workspace_role"],"user_id": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "invited_by"?: string | null,"joined_at"?: string,"role"?: Database["public"]['Enums']["workspace_role"],"user_id": string,"workspace_id": string
+                  }
+                  Update: {
+                    "invited_by"?: string | null,"joined_at"?: string,"role"?: Database["public"]['Enums']["workspace_role"],"user_id"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "workspace_members_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"workspace_product_states": {
+                  Row: {
+                    "is_favorite": boolean,"is_hidden": boolean,"last_viewed_at": string | null,"personal_notes": string | null,"product_id": string,"status": Database["public"]['Enums']["opportunity_status"],"updated_at": string,"updated_by": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "is_favorite"?: boolean,"is_hidden"?: boolean,"last_viewed_at"?: string | null,"personal_notes"?: string | null,"product_id": string,"status"?: Database["public"]['Enums']["opportunity_status"],"updated_at"?: string,"updated_by": string,"workspace_id": string
+                  }
+                  Update: {
+                    "is_favorite"?: boolean,"is_hidden"?: boolean,"last_viewed_at"?: string | null,"personal_notes"?: string | null,"product_id"?: string,"status"?: Database["public"]['Enums']["opportunity_status"],"updated_at"?: string,"updated_by"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "workspace_product_states_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "workspace_product_states_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"workspace_settings": {
+                  Row: {
+                    "ai_preferences": NonNullable<Json>,"research_preferences": NonNullable<Json>,"updated_at": string,"updated_by": string | null,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "ai_preferences"?: NonNullable<Json>,"research_preferences"?: NonNullable<Json>,"updated_at"?: string,"updated_by"?: string | null,"workspace_id": string
+                  }
+                  Update: {
+                    "ai_preferences"?: NonNullable<Json>,"research_preferences"?: NonNullable<Json>,"updated_at"?: string,"updated_by"?: string | null,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "workspace_settings_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: true
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"workspaces": {
+                  Row: {
+                    "created_at": string,"created_by": string,"id": string,"name": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"created_by": string,"id"?: string,"name": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"created_by"?: string,"id"?: string,"name"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                }
+          }
+          Views: {
+            [_ in never]: never
+          }
+          Functions: {
+            "create_workspace":
+{ Args: { "p_name": string }; Returns: string
+                           },
+"sor_transfer_ownership":
+{ Args: { "p_current_owner": string,"p_new_owner": string,"p_workspace_id": string }; Returns: undefined
+                           }
+          }
+          Enums: {
+            "billing_model": "monthly_subscription"|"annual_subscription"|"freemium"|"free_trial"|"usage_based"|"per_user"|"volume_based"|"license"|"other","claim_type": "product_exists"|"product_description"|"category"|"pricing"|"paid_customer_signal"|"customer_identity"|"employee_count"|"founding_year"|"headquarters"|"customer_country"|"market_presence"|"language"|"platform"|"feature"|"integration"|"maturity"|"company_profile"|"traction_signal"|"customer_feedback"|"customer_pain"|"market_size"|"market_trend"|"competitor_relation"|"localization"|"funding"|"traffic"|"other","company_type": "independent"|"subsidiary"|"public_company"|"unknown","competitor_relationship": "direct"|"indirect"|"alternative"|"substitute"|"adjacent","content_storage_status": "stored_full"|"stored_excerpt"|"reference_only"|"removed","customer_type": "b2b"|"b2c"|"b2b_b2c"|"unknown","evidence_type": "official_statement"|"customer_review"|"pricing_evidence"|"customer_case_study"|"public_metric"|"technical_evidence"|"market_evidence"|"third_party_report"|"user_declared"|"inference","exclusion_status": "unassessed"|"eligible"|"excluded"|"needs_review","extraction_method": "official_api"|"structured_parse"|"llm_extraction"|"manual_entry"|"user_import","fact_status": "confirmed"|"estimated"|"declared"|"unknown","feature_availability": "available"|"beta"|"planned"|"removed"|"not_observed"|"unknown","fetch_status": "ok"|"blocked"|"unavailable"|"not_supported"|"rate_limited"|"error","funding_status": "bootstrapped"|"externally_funded"|"unknown","integration_category": "crm"|"ecommerce"|"marketing"|"analytics"|"communication"|"payments"|"other","maturity_stage": "new"|"launching"|"established"|"growing"|"mature"|"unknown","monetization_signal": "payment_confirmed"|"customer_verified"|"paid_plan_available"|"purchase_intent"|"problem_signal"|"unknown","opportunity_status": "discovered"|"to_research"|"analyzing"|"validate"|"validated"|"rejected"|"building","presence_status": "present"|"not_observed"|"unknown","pricing_status": "free"|"paid"|"freemium"|"custom"|"unknown","problem_category": "pricing"|"ux"|"missing_features"|"bugs"|"support"|"integrations"|"performance"|"documentation"|"customization"|"complexity"|"reliability"|"other","product_status": "active"|"beta"|"discontinued"|"unknown","record_status": "candidate"|"active"|"needs_review"|"archived"|"merged","resolution_status": "resolved"|"unresolved"|"unknown","review_sentiment": "positive"|"neutral"|"negative"|"mixed"|"unknown","source_access_method": "official_api"|"contract"|"public_feed"|"official_website_fetch"|"manual_entry"|"user_import","source_integration_status": "planned"|"in_development"|"integrated"|"disabled"|"blocked","source_type": "official_website"|"review_platform"|"directory"|"community"|"social"|"company_database"|"search_provider"|"manual_entry"|"user_import"|"other","technology_tag": "web_app"|"mobile_app"|"api"|"ai_native"|"no_code_low_code"|"browser_extension","verification_status": "unverified"|"verified"|"needs_review"|"rejected"|"stale","workspace_role": "owner"|"admin"|"member"|"viewer"
+          }
+          CompositeTypes: {
+            [_ in never]: never
+          }
+        }
+}
+
+type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+  ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never
+
+export const Constants = {
+  "public": {
+          Enums: {
+            "billing_model": ["monthly_subscription", "annual_subscription", "freemium", "free_trial", "usage_based", "per_user", "volume_based", "license", "other"],"claim_type": ["product_exists", "product_description", "category", "pricing", "paid_customer_signal", "customer_identity", "employee_count", "founding_year", "headquarters", "customer_country", "market_presence", "language", "platform", "feature", "integration", "maturity", "company_profile", "traction_signal", "customer_feedback", "customer_pain", "market_size", "market_trend", "competitor_relation", "localization", "funding", "traffic", "other"],"company_type": ["independent", "subsidiary", "public_company", "unknown"],"competitor_relationship": ["direct", "indirect", "alternative", "substitute", "adjacent"],"content_storage_status": ["stored_full", "stored_excerpt", "reference_only", "removed"],"customer_type": ["b2b", "b2c", "b2b_b2c", "unknown"],"evidence_type": ["official_statement", "customer_review", "pricing_evidence", "customer_case_study", "public_metric", "technical_evidence", "market_evidence", "third_party_report", "user_declared", "inference"],"exclusion_status": ["unassessed", "eligible", "excluded", "needs_review"],"extraction_method": ["official_api", "structured_parse", "llm_extraction", "manual_entry", "user_import"],"fact_status": ["confirmed", "estimated", "declared", "unknown"],"feature_availability": ["available", "beta", "planned", "removed", "not_observed", "unknown"],"fetch_status": ["ok", "blocked", "unavailable", "not_supported", "rate_limited", "error"],"funding_status": ["bootstrapped", "externally_funded", "unknown"],"integration_category": ["crm", "ecommerce", "marketing", "analytics", "communication", "payments", "other"],"maturity_stage": ["new", "launching", "established", "growing", "mature", "unknown"],"monetization_signal": ["payment_confirmed", "customer_verified", "paid_plan_available", "purchase_intent", "problem_signal", "unknown"],"opportunity_status": ["discovered", "to_research", "analyzing", "validate", "validated", "rejected", "building"],"presence_status": ["present", "not_observed", "unknown"],"pricing_status": ["free", "paid", "freemium", "custom", "unknown"],"problem_category": ["pricing", "ux", "missing_features", "bugs", "support", "integrations", "performance", "documentation", "customization", "complexity", "reliability", "other"],"product_status": ["active", "beta", "discontinued", "unknown"],"record_status": ["candidate", "active", "needs_review", "archived", "merged"],"resolution_status": ["resolved", "unresolved", "unknown"],"review_sentiment": ["positive", "neutral", "negative", "mixed", "unknown"],"source_access_method": ["official_api", "contract", "public_feed", "official_website_fetch", "manual_entry", "user_import"],"source_integration_status": ["planned", "in_development", "integrated", "disabled", "blocked"],"source_type": ["official_website", "review_platform", "directory", "community", "social", "company_database", "search_provider", "manual_entry", "user_import", "other"],"technology_tag": ["web_app", "mobile_app", "api", "ai_native", "no_code_low_code", "browser_extension"],"verification_status": ["unverified", "verified", "needs_review", "rejected", "stale"],"workspace_role": ["owner", "admin", "member", "viewer"]
+          }
+        }
+} as const

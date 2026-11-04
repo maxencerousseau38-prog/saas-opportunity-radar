@@ -4978,6 +4978,21 @@ No pending decision (PD-04 approved).
 Done when migrations apply on a clean database and all permission tests
 pass; browser roles cannot write catalog or operational data.
 
+**Status (4 November 2026): implemented.** M1--M4 are in
+`supabase/migrations/2026110418*` (applied unchanged from §3).
+`supabase/tests/` holds 7 pgTAP files with 121 assertions; in CI, on
+the real Supabase stack, they pass, `supabase db lint` reports no errors
+and the security advisors report no issues. Types are generated into
+`packages/database/src/generated.ts`, and CI fails if they drift.
+`@sor/database` provides the server and user clients, the error mapping
+to §4.11 codes and the workspace repository (`createWorkspace`,
+`listMemberships`). **Catalog repositories move to Sprint 2**: they are
+shaped by the catalog DTOs and filters built there. Verified facts: the
+local stack exposes publishable/secret keys (and the legacy anon/
+service-role keys); M1's default-privilege revoke makes new `public`
+tables invisible to `anon` and `authenticated` (pgTAP-tested). The
+security model is documented in `docs/DATABASE_SECURITY.md`.
+
 ## Sprint 2 --- Catalog, Discover and workspace
 
 No pending decision (PD-12, PD-15, PD-16, PD-17, PD-20 approved).
@@ -5104,7 +5119,7 @@ Maintained now: `docs/PRODUCT_REQUIREMENTS.md`,
 `docs/ADR/` (ADR-000 to ADR-014 and the pending-decision register).
 
 Created when the corresponding sprint starts (not before, to avoid
-duplicating this blueprint): `docs/DATABASE_SECURITY.md` (S1, generated
+duplicating this blueprint): `docs/DATABASE_SECURITY.md` (created in S1,
 from the pgTAP matrix), `docs/JOB_SYSTEM.md` (S3, verified PGMQ API),
 `docs/DATA_SOURCES.md` (S3, per-connector terms review),
 `docs/ENVIRONMENT.md` (created in S0), `docs/TESTING.md` (created in S0), `evals/README.md`
@@ -5151,9 +5166,9 @@ Use this document as the implementation contract.
 
 The repository audit (4 November 2026) and the documentation
 consolidation are complete, PD-01 to PD-23 were arbitrated, and Sprint 0
-was implemented on 4 November 2026. The next task is **Sprint 1**
-(database foundation and security), on the product owner's go-ahead. Do
-not start with AI agents.
+and Sprint 1 were implemented on 4 November 2026. The next task is
+**Sprint 2** (catalog, Discover and workspace), on the product owner's
+go-ahead. Do not start with AI agents.
 
 ------------------------------------------------------------------------
 

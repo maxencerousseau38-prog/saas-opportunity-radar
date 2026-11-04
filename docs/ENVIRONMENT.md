@@ -51,8 +51,21 @@ Validated at startup by `@sor/contracts/env`:
 | `SUPABASE_URL` | worker | server |
 | `WORKER_ID` | worker | server |
 
-The Supabase key model (publishable/secret vs legacy anon/service_role) is
-re-verified against the local stack in Sprint 1 (Technical Blueprint §19).
+Key model verified in Sprint 1: the Supabase CLI 3.0.0 local stack exposes
+publishable and secret keys (`sb_publishable_…`, `sb_secret_…`) as well as the
+legacy anon/service-role keys. The project uses the publishable/secret pair.
+
+## Database types
+
+`packages/database/src/generated.ts` is generated from the schema:
+
+```bash
+supabase gen types typescript --schema public > packages/database/src/generated.ts
+```
+
+Run it after every migration. The CI `database` job fails when the committed
+file differs from the schema and prints the expected file between markers.
+The file is excluded from Prettier and ESLint.
 
 ## Supabase project
 

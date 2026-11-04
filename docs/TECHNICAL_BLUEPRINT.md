@@ -456,7 +456,7 @@ These items could not be verified in the consolidation session (network policy b
 |---|---|
 | Exact current versions of Node LTS lines, pnpm, Next.js, Zod, Supabase CLI and PostgreSQL — **verified in Sprint 0**: Node 26.13.0 is the active LTS (official schedule), pnpm 10.34.9, Next.js 16.4.5, Zod 4.6.7, TypeScript 6.0.3 (7.x is not yet supported by typescript-eslint), Supabase CLI 3.0.0 whose local stack runs PostgreSQL 17; see `docs/ENVIRONMENT.md` | Done (Sprint 0) |
 | Zod major-version semantics — **verified in Sprint 0** by contract tests: `.default({})` skips inner defaults, enum-keyed records are exhaustive, `coerce.number("")` is 0, `.url()` accepts `javascript:` (Implementation Blueprint §4.0) | Done (Sprint 0) |
-| Supabase API key model (legacy `anon`/`service_role` vs publishable/secret keys) and default grants on new objects in `public` | Sprint 1 |
+| Supabase API key model and default grants on new objects in `public` — **verified in Sprint 1**: the CLI 3.0.0 local stack exposes `PUBLISHABLE_KEY` / `SECRET_KEY` (`sb_publishable_…`, `sb_secret_…`) alongside the legacy `ANON_KEY` / `SERVICE_ROLE_KEY`; the project uses the publishable/secret pair. After M1, tables created in `public` are not readable by `anon` or `authenticated` (pgTAP `001_schema_privileges.sql`) | Done (Sprint 1) |
 | PGMQ availability, queue-name rules and function signatures (`pgmq.create`, `send`, `read`, `set_vt`, `archive`, `delete`) in the target Supabase version | Sprint 3 (gate, before any queue code) |
 | `pgvector` availability and the embedding dimensions of the chosen model | Sprint 4 |
 | Vercel function duration limits | Before Sprint 7 deployment |
