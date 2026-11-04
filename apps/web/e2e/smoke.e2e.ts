@@ -23,5 +23,8 @@ test("wrong credentials show one generic message", async ({ page }) => {
   await page.getByLabel("Adresse e-mail").fill("nobody@demo.test");
   await page.getByLabel("Mot de passe").fill("wrong-password-123");
   await page.getByRole("button", { name: "Se connecter" }).click();
-  await expect(page.getByRole("alert")).toHaveText("Identifiants incorrects.");
+  // Next.js also renders an empty route-announcer alert: target ours by text.
+  await expect(page.getByRole("alert").filter({ hasText: "Identifiants" })).toHaveText(
+    "Identifiants incorrects.",
+  );
 });

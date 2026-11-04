@@ -233,7 +233,7 @@ test("settings: members are listed and the owner can invite an existing account"
   const ws = await signIn(page, OWNER);
   await page.goto(`/w/${ws}/settings`);
   await expect(page.getByTestId("member-row")).toHaveCount(3);
-  await expect(page.getByText("demo-viewer@demo.test")).toBeVisible();
+  await expect(page.getByRole("cell", { name: "demo-viewer@demo.test" })).toBeVisible();
   await page.getByLabel("Rôle de demo-viewer@demo.test").selectOption("member");
   await expect(page.getByText("Rôle mis à jour.")).toBeVisible();
   await page.getByLabel("Rôle de demo-viewer@demo.test").selectOption("viewer");
