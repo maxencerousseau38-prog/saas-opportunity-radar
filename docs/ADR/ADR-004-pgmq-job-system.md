@@ -31,3 +31,25 @@ The official documentation was unreachable during consolidation. If PGMQ is unav
 ## Alternatives considered
 
 - An external queue service. Rejected: an extra dependency and no transactional enqueue.
+
+## Verification gate result (Sprint 3, 4 November 2026)
+
+**Passed.** On the Supabase CLI 3.0.0 local stack (PostgreSQL 17), CI step
+"PGMQ verification gate" reports `pgmq` 1.5.1 available (also `pg_cron`
+1.6.4 and `vector` 0.8.2). Signatures used by migration
+`20261105120000_jobs_queue.sql`:
+
+- `pgmq.create(queue_name text) → void`;
+- `pgmq.send(queue_name text, msg jsonb, delay integer) → setof bigint`;
+- `pgmq.read(queue_name text, vt integer, qty integer, conditional jsonb) → setof pgmq.message_record`;
+- `pgmq.set_vt(queue_name text, msg_id bigint, vt integer) → setof pgmq.message_record`;
+- `pgmq.archive(queue_name text, msg_id bigint) → boolean`;
+- `pgmq.delete(queue_name text, msg_id bigint) → boolean`.
+
+The queue name `sor_jobs` (underscore) is accepted; its table is
+`pgmq.q_sor_jobs` (pgTAP-checked). The extension is created by the migration
+(CLI workflow); schema `pgmq` is revoked from `public`, `anon` and
+`authenticated`, and `pgmq_public` is not created. Hosted staging and
+production projects must enable Supabase Queues in the same way (to verify at
+the first deployment, Sprint 7).
+

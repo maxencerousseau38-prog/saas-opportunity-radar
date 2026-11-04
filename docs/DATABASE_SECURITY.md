@@ -137,6 +137,26 @@ the service-role functions, which re-check membership and roles themselves.
 Proved by `supabase/tests/007_catalog_search.sql`,
 `008_manual_add_operator.sql` and `009_members_directory.sql`.
 
+## Sprint 3: jobs, queue and evidence pipeline
+
+`job_executions`, `agent_step_runs` and `provider_usage` have RLS enabled, no
+policy and no grant to `anon` or `authenticated`: they are server-only. Job
+status reaches users only through API DTOs, after a membership check, and
+never with the job payload. The `pgmq` schema is revoked from `public`,
+`anon` and `authenticated`.
+
+| Function | Who can execute | Rules |
+|---|---|---|
+| `public.sor_request_job(…)` | `service_role` | Requester must be owner, admin or member; Sprint 3 kinds only (`product_enrichment`, `catalog_import`, `feedback_import`); enrichment needs an active, eligible product with an official URL (`EXCLUDED_SUBJECT` otherwise); imports need a CSV text, a row count within `import_max_rows` and, for feedback, a rights declaration. Calls `private.create_job`: idempotency scoped to (workspace, requester, kind, key) with a request hash (`IDEMPOTENCY_CONFLICT`), per-workspace concurrency limit (`LIMIT_EXCEEDED`), queue message sent in the same transaction. |
+| `public.sor_cancel_job(…)` | `service_role` | Member+ of the job's workspace; another workspace's job reads as not found; queued jobs stop at once, running ones are flagged. |
+| `public.sor_worker_*` | `service_role` | Read, claim (lease, stale recovery, dead letter), heartbeat (lease owner only, surfaces cancellation), retry (backoff), finish (archives the message), orphan requeue, poison archive (audited). |
+| `public.sor_record_snapshot(…)` | `service_role` | Only integrated, enabled sources; one snapshot per content hash. |
+| `public.sor_apply_enrichment(…)` | `service_role` | The step must belong to the job; evidence must cite a recorded snapshot; only whitelisted product and company columns; one current provenance row per field; contradictions recorded in `evidence_conflicts`; idempotent per step; re-classification only stricter. |
+| `public.sor_import_product_row(…)`, `public.sor_import_feedback_row(…)` | `service_role` | Running import job only; declared evidence of reliability 4; idempotent per canonical URL / review hash; feedback only for visible products, text stored according to the rights declaration. |
+
+Proved by `supabase/tests/010_jobs_queue.sql` and `011_evidence_pipeline.sql`,
+and end to end by the worker integration tests (`apps/worker/test/integration`).
+
 ## Running the tests
 
 - **CI** (reference): the `database` job of `.github/workflows/ci.yml` runs

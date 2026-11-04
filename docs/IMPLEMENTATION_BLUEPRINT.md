@@ -5100,6 +5100,76 @@ Done when a controlled run produces deduplicated products with traceable
 evidence and explicit unknowns, and a killed worker resumes without
 duplicating work.
 
+**Status (4 November 2026): implemented with the fake provider; exit gate
+pending PD-24.**
+
+-   **PGMQ gate passed** (ADR-004): pgmq 1.5.1 on the local stack;
+    signatures recorded in ADR-004.
+-   **M5** (`20261105120000_jobs_queue.sql`) as specified, plus
+    `job_executions.result` (user-facing outcome: import row results,
+    enrichment summary; never secrets or source text) and Sprint 3 limits
+    (`enrichment_max_pages`, `enrichment_max_seconds`, `import_max_rows`,
+    `evidence_max_age_days`, `ai_max_cost_usd_per_job` = 0 until PD-24).
+    `sor_request_job` serves `product_enrichment`, `catalog_import` and
+    `feedback_import`; `sor_cancel_job` adds cooperative cancellation.
+-   **Evidence pipeline RPCs** (`20261105120100_evidence_pipeline.sql`):
+    `sor_record_snapshot`, `sor_apply_enrichment` (atomic and idempotent per
+    verification step; whitelisted fields; provenance; conflicts; features,
+    integrations and pricing; re-classification only stricter),
+    `sor_import_product_row`, `sor_import_feedback_row`. The
+    official-website, manual and import sources are `integrated`.
+-   **Official-website connector**: public pages of the product's own site
+    (home, then up to `enrichment_max_pages − 1` same-site pages such as
+    pricing, features, integrations, about), robots.txt obeyed, 2-second
+    per-host interval, off-site redirects refused, snapshots stored as
+    `stored_excerpt` with quotes in the evidence. **[ASSUMPTION]** the
+    normalized page text is kept only in the server-only step output
+    (`agent_step_runs.output_json`) so a resumed job does not refetch; a
+    retention period is to be fixed with the deployment (Sprint 7).
+-   **D5/D6** (`@sor/discovery-engine`): D5 proposes field claims,
+    features, integrations and pricing plans, each with a quote and the
+    cited snapshot; D6 combines the deterministic check (quote found in the
+    cited snapshot, freshness, payment-proof rules) with the model's
+    judgment, which can only make a verdict stricter. Only verified items
+    become features, integrations, pricing or selected field values;
+    needs-review and stale items are stored as evidence only; rejected
+    items are not stored (counted in the job result). A paid plan is always
+    `paid_plan_available`.
+-   **Imports**: the web app sends the raw CSV (≤ 2 MB, `import_max_rows`)
+    with an `Idempotency-Key`; the worker validates rows against
+    `ProductImportRowSchema` / `FeedbackImportRowSchema`, resolves product
+    identity with D4 (canonical URL, single-product registrable domain,
+    company domain, name similarity → review), runs the §5.4 classifier and
+    reports a result per row. **[ASSUMPTION]** category slugs in a CSV cell
+    are separated by `|`; feedback duplicates are detected on the
+    normalized text per product; with `excerpt` rights, 500 characters are
+    stored.
+-   **Worker**: queue loop with leases (`job_lease_seconds`), heartbeats,
+    retry with backoff and jitter, dead letter, budget and cancellation
+    outcomes, poison messages, orphan sweeper; steps persisted and reused
+    by input hash.
+-   **AI gateway**: profiles, budget refusal before a call, timeout, Zod
+    validation, one recorded repair, cited-identifier check, usage in
+    `provider_usage`. Only the fake provider exists (labelled `fake`, deterministic
+    heuristics, zero cost).
+-   **Evaluation**: `evals/enrichment` fixtures (official pricing, paid plan
+    without customers, sparse site, prompt injection, affiliate core
+    purpose, incidental referral feature) and a runner; the fake-provider
+    baseline accepts no unsupported claim.
+-   **Verified**: pgTAP 010–011 on the real stack; worker integration tests
+    (enrichment, duplicate delivery, killed worker recovered after its lease
+    without repeating D5, transient retry, cancellation, CSV imports); E2E
+    with the worker running.
+-   **Exit gate**: "deduplicated products with traceable evidence and explicit
+    unknowns" and "a killed worker resumes without duplicating work" are met
+    with the fake provider. **Not met:** D5/D6 on a real provider (PD-24)
+    and per-agent thresholds (PD-22).
+-   **Deferred**: `product_refresh` and `source_sync` (scheduled work, Phase 2);
+    external-ID identity matching (no connector with external IDs yet);
+    operator identity merges; rate limiting of job POSTs beyond the
+    concurrency limit; ECB rate collection (no FX job yet: a currency without
+    a rate stays unknown).
+
 ## Sprint 4 --- Pain Point Intelligence Engine
 
 Blocked by PD-24 (embedding model, pending). G2 is used only if PD-26 is

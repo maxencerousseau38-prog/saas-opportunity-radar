@@ -50,6 +50,9 @@ Validated at startup by `@sor/contracts/env`:
 | `SUPABASE_SECRET_KEY` | web (server), worker | server only |
 | `SUPABASE_URL` | worker | server |
 | `WORKER_ID` | worker | server |
+| `AI_PROVIDER` | worker | server — only `fake` until PD-24 chooses a real provider |
+| `AUTHOR_HASH_SECRET` | worker | server only — salt of reviewer-identity hashes (32+ characters) |
+| `WORKER_CONCURRENCY` | worker | server — jobs processed per polling cycle (default 2) |
 
 Key model verified in Sprint 1: the Supabase CLI 3.0.0 local stack exposes
 publishable and secret keys (`sb_publishable_…`, `sb_secret_…`) as well as the
@@ -91,9 +94,24 @@ in Sprint 1.
 requests:
 
 - **checks**: install (frozen lockfile), format check, lint, typecheck, unit tests, build;
-- **e2e**: Playwright with Chromium (after `checks`);
-- **database**: Supabase CLI 3.0.0, `supabase db start`, `supabase db lint`, pgTAP
-  tests when `supabase/tests/*.sql` exist.
+- **e2e**: local Supabase stack, labelled demo fixtures, the real worker (fake AI
+  provider) and Playwright with Chromium (after `checks`);
+- **worker-integration**: local Supabase stack and the worker's integration tests
+  (real PGMQ: enrichment, duplicate delivery, crash recovery, retry, cancellation,
+  CSV imports);
+- **database**: Supabase CLI 3.0.0 local stack, PGMQ verification gate (prints
+  `pgmq` version and function signatures), pgTAP, `supabase db lint`, security
+  advisors, generated-types drift check.
+
+Running the worker locally (after `supabase start` and the variables above):
+
+```bash
+pnpm --filter @sor/worker build
+```
+
+```bash
+node apps/worker/dist/main.js
+```
 
 ## Cloud-session constraints
 
