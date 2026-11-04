@@ -1,17 +1,18 @@
-\# SAAS OPPORTUNITY RADAR
+# SAAS OPPORTUNITY RADAR
 
-\*\*Cahier des charges fonctionnel — Version 1.1\*\*
+**Cahier des charges fonctionnel — Version 1.1**
 
 Date : 3 novembre 2026
 Statut : Spécifications fonctionnelles de référence
+Révision 1.1.1 (4 novembre 2026) : correction du formatage Markdown et de la numérotation du §16 ; alignement de la formulation du §1.3 sur les exclusions permanentes déjà décidées (§4.2.O, §21) ; renvoi vers la spécification technique (§22) ; numérotation du moteur au §7.1 alignée sur §15 et §21 (Opportunity Engine = moteur IA 3). Aucune exigence fonctionnelle n'a été ajoutée, retirée ou modifiée.
 Nom du produit : SaaS Opportunity Radar (provisoire)
 Objectif : Découverte, enrichissement, analyse et identification d’opportunités SaaS.
 
-\---
+---
 
-\# 1. VISION DU PRODUIT
+# 1. VISION DU PRODUIT
 
-\## 1.1. Concept
+## 1.1. Concept
 
 Créer une plateforme privée permettant de découvrir, explorer, filtrer et analyser une grande quantité de SaaS existants à travers une interface moderne et addictive, inspirée des expériences de navigation de Product Hunt, des catalogues logiciels et des feeds de découverte.
 
@@ -29,7 +30,7 @@ La plateforme doit permettre à son utilisateur de :
 10. Regrouper ces frustrations en problématiques de marché et identifier les besoins insuffisamment satisfaits.
 11. Transformer ces problématiques en opportunités SaaS indépendantes, documentées par des preuves et évaluées selon leur potentiel commercial.
 
-\## 1.2. Positionnement
+## 1.2. Positionnement
 
 Ce produit n’est pas :
 
@@ -41,7 +42,7 @@ Ce produit n’est pas :
 
 C’est un moteur de recherche et d’intelligence sur les opportunités SaaS.
 
-\## 1.3. Philosophie de recherche
+## 1.3. Philosophie de recherche
 
 La plateforme doit privilégier :
 
@@ -58,9 +59,9 @@ Les États-Unis constituent le marché de découverte prioritaire.
 
 La plateforme ne doit toutefois pas se limiter à une seule catégorie de SaaS. Le GrowthTech, le MarTech, l’acquisition, les analytics, l’automatisation et les outils business sont des domaines prioritaires, mais d’autres catégories B2B pertinentes doivent rester accessibles.
 
-\### Exclusions permanentes
+### Exclusions permanentes
 
-Sont exclus par défaut :
+Sont exclus de manière permanente (voir §4.2.O et §21) :
 
 - Affiliate marketing et affiliation.
 - Partner programs et partner marketplaces.
@@ -71,23 +72,23 @@ Sont exclus par défaut :
 
 Les outils extrêmement spécialisés pour développeurs ne sont pas prioritaires. Ils pourront être accessibles via un filtre spécifique, mais ne doivent pas dominer les résultats.
 
-\---
+---
 
-\# 2. ARCHITECTURE GLOBALE
+# 2. ARCHITECTURE GLOBALE
 
 La plateforme comprend sept espaces principaux.
 
-\| Espace                  | Fonction                                  |
-\| ----------------------- | ----------------------------------------- |
-\| Discover                | Découvrir les SaaS dans un feed           |
-\| Search & Filters        | Rechercher avec des critères avancés      |
-\| SaaS Profiles           | Consulter les fiches détaillées           |
-\| AI Discovery            | Trouver automatiquement de nouveaux SaaS  |
-\| AI Opportunity Analyzer | Analyser le potentiel commercial          |
-\| My Opportunities        | Sauvegarder, organiser et comparer        |
-\| Settings                | Configurer les préférences et les sources |
+| Espace                  | Fonction                                  |
+| ----------------------- | ----------------------------------------- |
+| Discover                | Découvrir les SaaS dans un feed           |
+| Search & Filters        | Rechercher avec des critères avancés      |
+| SaaS Profiles           | Consulter les fiches détaillées           |
+| AI Discovery            | Trouver automatiquement de nouveaux SaaS  |
+| AI Opportunity Analyzer | Analyser le potentiel commercial          |
+| My Opportunities        | Sauvegarder, organiser et comparer        |
+| Settings                | Configurer les préférences et les sources |
 
-\### Navigation principale
+### Navigation principale
 
 - Discover
 - AI Discovery
@@ -99,41 +100,41 @@ La recherche et les filtres doivent être accessibles directement depuis Discove
 
 L’ensemble de l’interface doit être cohérent, rapide, responsive et particulièrement agréable sur ordinateur comme sur mobile.
 
-\---
+---
 
-\# 3. PAGE 01 — DISCOVER
+# 3. PAGE 01 — DISCOVER
 
-\## 3.1. Objectif
+## 3.1. Objectif
 
 C’est la page d’accueil principale et l’espace dans lequel l’utilisateur passe la majorité de son temps.
 
 Elle doit permettre une exploration continue, sans nécessiter une recherche active pour chaque nouveau SaaS.
 
-\## 3.2. Présentation
+## 3.2. Présentation
 
 Chaque SaaS apparaît sous forme d’une carte.
 
-\### Contenu obligatoire d’une carte
+### Contenu obligatoire d’une carte
 
-\| Élément      | Description                             |
-\| ------------ | --------------------------------------- |
-\| Logo         | Logo du SaaS                            |
-\| Nom          | Nom commercial                          |
-\| Description  | Une phrase claire expliquant le produit |
-\| Catégories   | Catégories et sous-catégories           |
-\| Clientèle    | B2B, B2C ou mixte                       |
-\| Pays         | Pays du siège ou marché principal       |
-\| Effectif     | Taille de l’équipe, si connue           |
-\| Année        | Année de création ou de lancement       |
-\| Tarification | Payant, freemium, gratuit               |
-\| Statut       | Nouveau, analysé, sauvegardé            |
-\| Site         | Accès au site officiel                  |
+| Élément      | Description                             |
+| ------------ | --------------------------------------- |
+| Logo         | Logo du SaaS                            |
+| Nom          | Nom commercial                          |
+| Description  | Une phrase claire expliquant le produit |
+| Catégories   | Catégories et sous-catégories           |
+| Clientèle    | B2B, B2C ou mixte                       |
+| Pays         | Pays du siège ou marché principal       |
+| Effectif     | Taille de l’équipe, si connue           |
+| Année        | Année de création ou de lancement       |
+| Tarification | Payant, freemium, gratuit               |
+| Statut       | Nouveau, analysé, sauvegardé            |
+| Site         | Accès au site officiel                  |
 
 La description doit être rédigée dans un langage simple.
 
 Exemple fictif :
 
-\*\*MetricFlow\*\*
+**MetricFlow**
 
 « Centralise les données marketing et détecte automatiquement les anomalies dans les performances de vos campagnes publicitaires. »
 
@@ -145,30 +146,30 @@ Pays : États-Unis.
 
 Business model : Abonnement SaaS.
 
-\## 3.3. Modes d’affichage
+## 3.3. Modes d’affichage
 
 Trois modes sont disponibles :
 
-\### Mode Feed
+### Mode Feed
 
 - Défilement vertical continu.
 - Cartes suffisamment compactes.
 - Chargement progressif.
 - Navigation rapide entre les SaaS.
 
-\### Mode Grid
+### Mode Grid
 
 - Grille de cartes.
 - Plusieurs SaaS visibles simultanément.
 - Idéal pour explorer rapidement.
 
-\### Mode List
+### Mode List
 
 - Liste compacte.
 - Informations essentielles alignées.
 - Idéal pour comparer un grand nombre de résultats.
 
-\## 3.4. Interactions sur une carte
+## 3.4. Interactions sur une carte
 
 Chaque carte doit proposer :
 
@@ -179,7 +180,7 @@ Chaque carte doit proposer :
 - Signaler une mauvaise catégorie ou une information incorrecte.
 - Lancer une analyse IA directement.
 
-\## 3.5. Tri des résultats
+## 3.5. Tri des résultats
 
 Proposer :
 
@@ -196,9 +197,9 @@ Proposer :
 
 Le feed doit disposer d’une pagination ou d’un chargement infini, sans charger inutilement tous les résultats.
 
-\---
+---
 
-\# 4. PAGE 02 — RECHERCHE ET FILTRES
+# 4. PAGE 02 — RECHERCHE ET FILTRES
 
 C’est une fonctionnalité centrale du produit.
 
@@ -206,7 +207,7 @@ Les filtres doivent pouvoir être combinés librement.
 
 Un utilisateur doit pouvoir enregistrer une combinaison de filtres et la retrouver plus tard.
 
-\## 4.1. Recherche textuelle
+## 4.1. Recherche textuelle
 
 La barre de recherche doit accepter :
 
@@ -225,9 +226,9 @@ Exemple :
 
 « Je cherche des SaaS qui aident les agences marketing à analyser leurs performances publicitaires. »
 
-\## 4.2. Catalogue des filtres
+## 4.2. Catalogue des filtres
 
-\### A. Type de clientèle
+### A. Type de clientèle
 
 - B2B.
 - B2C.
@@ -235,7 +236,7 @@ Exemple :
 
 Valeur par défaut : B2B.
 
-\### B. Taille de l’équipe
+### B. Taille de l’équipe
 
 - 1–5 employés.
 - 1–10 employés.
@@ -249,7 +250,7 @@ Valeur recommandée par défaut : 1 à 20 employés.
 
 Pouvoir définir une fourchette personnalisée.
 
-\### C. Localisation
+### C. Localisation
 
 Pays :
 
@@ -271,7 +272,7 @@ Filtres complémentaires :
 - Présence commerciale en France.
 - Présence internationale.
 
-\### D. Ancienneté
+### D. Ancienneté
 
 - Moins d’un an.
 - 1 à 2 ans.
@@ -281,11 +282,11 @@ Filtres complémentaires :
 
 Possibilité de sélectionner une plage d’années personnalisée.
 
-\### E. Catégories
+### E. Catégories
 
 Taxonomie organisée en catégories et sous-catégories.
 
-\*\*Marketing & Growth\*\*
+**Marketing & Growth**
 
 - Marketing Automation.
 - Campaign Management.
@@ -301,7 +302,7 @@ Taxonomie organisée en catégories et sous-catégories.
 - Advertising Management.
 - Marketing Intelligence.
 
-\*\*Sales & CRM\*\*
+**Sales & CRM**
 
 - CRM.
 - Sales Automation.
@@ -310,7 +311,7 @@ Taxonomie organisée en catégories et sous-catégories.
 - Customer Relationship Management.
 - Sales Engagement.
 
-\*\*Data & Analytics\*\*
+**Data & Analytics**
 
 - Business Intelligence.
 - Data Analytics.
@@ -320,7 +321,7 @@ Taxonomie organisée en catégories et sous-catégories.
 - Data Visualization.
 - Monitoring.
 
-\*\*Automation & AI\*\*
+**Automation & AI**
 
 - Workflow Automation.
 - AI Agents.
@@ -328,7 +329,7 @@ Taxonomie organisée en catégories et sous-catégories.
 - Business Process Automation.
 - AI Analytics.
 
-\*\*Business Operations\*\*
+**Business Operations**
 
 - Project Management.
 - Finance Operations.
@@ -336,7 +337,7 @@ Taxonomie organisée en catégories et sous-catégories.
 - Document Automation.
 - Business Management.
 
-\*\*E-commerce\*\*
+**E-commerce**
 
 - Store Management.
 - Conversion Optimization.
@@ -344,7 +345,7 @@ Taxonomie organisée en catégories et sous-catégories.
 - E-commerce Analytics.
 - Inventory Management.
 
-\*\*Developer Tools\*\*
+**Developer Tools**
 
 - API Platforms.
 - Developer Productivity.
@@ -355,7 +356,7 @@ Cette catégorie sera moins prioritaire dans les recommandations par défaut.
 
 Pouvoir créer de nouvelles catégories sans modifier l’architecture de la plateforme.
 
-\### F. Business model
+### F. Business model
 
 - Abonnement mensuel.
 - Abonnement annuel.
@@ -368,7 +369,7 @@ Pouvoir créer de nouvelles catégories sans modifier l’architecture de la pla
 - Autre.
 - Inconnu.
 
-\### G. Tarification
+### G. Tarification
 
 Filtres :
 
@@ -382,7 +383,7 @@ Filtres :
 
 Les prix doivent pouvoir être affichés dans leur devise d’origine et convertis à titre indicatif.
 
-\### H. Niveau de maturité
+### H. Niveau de maturité
 
 - Nouveau.
 - En lancement.
@@ -393,7 +394,7 @@ Les prix doivent pouvoir être affichés dans leur devise d’origine et convert
 
 La maturité doit être estimée à partir de plusieurs signaux : ancienneté, activité, taille, présence commerciale et clientèle.
 
-\### I. Validation commerciale
+### I. Validation commerciale
 
 Filtres particulièrement importants :
 
@@ -410,7 +411,7 @@ Le statut « clients payants confirmés » doit nécessiter une preuve directe o
 
 Ne pas confondre la présence d’une page de prix avec la preuve de clients payants.
 
-\### J. Profil de l’entreprise
+### J. Profil de l’entreprise
 
 - Founder-led.
 - Indie SaaS.
@@ -421,7 +422,7 @@ Ne pas confondre la présence d’une page de prix avec la preuve de clients pay
 - Filiale ou groupe.
 - Statut inconnu.
 
-\### K. Potentiel d’opportunité
+### K. Potentiel d’opportunité
 
 Filtres calculés après analyse :
 
@@ -437,7 +438,7 @@ Filtres calculés après analyse :
 
 Ces filtres ne doivent pas être utilisés comme preuve de potentiel : ils servent à organiser les SaaS déjà analysés.
 
-\### L. Géographie commerciale
+### L. Géographie commerciale
 
 - Présent aux États-Unis.
 - Faible présence en Europe.
@@ -448,7 +449,7 @@ Ces filtres ne doivent pas être utilisés comme preuve de potentiel : ils serve
 
 Ces caractéristiques doivent être vérifiées et accompagnées de sources.
 
-\### M. Niveau technologique
+### M. Niveau technologique
 
 - SaaS Web.
 - Application mobile.
@@ -460,7 +461,7 @@ Ces caractéristiques doivent être vérifiées et accompagnées de sources.
 - Intégration e-commerce.
 - Intégration marketing.
 
-\### N. Difficultés et plaintes clients
+### N. Difficultés et plaintes clients
 
 Uniquement lorsque des informations existent :
 
@@ -475,7 +476,7 @@ Uniquement lorsque des informations existent :
 - Limites de personnalisation.
 - Fonctionnalités trop complexes.
 
-\### O. Filtres d’exclusion
+### O. Filtres d’exclusion
 
 Exclusions permanentes :
 
@@ -496,7 +497,7 @@ Exclusions configurables :
 - Devtools très techniques.
 - SaaS déjà analysés et rejetés.
 
-\## 4.3. Fonctionnement des filtres
+## 4.3. Fonctionnement des filtres
 
 - Combinaison AND par défaut entre les groupes de filtres.
 - Sélection multiple OR à l’intérieur d’un même groupe.
@@ -509,17 +510,17 @@ Exclusions configurables :
 
 Règle importante : les données inconnues ne doivent pas être interprétées comme des valeurs négatives ou positives. L’utilisateur doit pouvoir choisir d’inclure ou d’exclure les entreprises dont les informations sont inconnues.
 
-\---
+---
 
-\# 5. PAGE 03 — SAAS PROFILE
+# 5. PAGE 03 — SAAS PROFILE
 
-\## 5.1. Objectif
+## 5.1. Objectif
 
 Lorsqu’un utilisateur clique sur un SaaS, il doit arriver sur une véritable page de présentation et d’intelligence concurrentielle.
 
 Cette page doit centraliser les informations nécessaires pour comprendre rapidement l’entreprise et son produit.
 
-\## 5.2. Header
+## 5.2. Header
 
 Afficher :
 
@@ -535,7 +536,7 @@ Afficher :
 - Bouton Favoris.
 - Bouton Analyser avec l’IA.
 
-\## 5.3. Informations générales
+## 5.3. Informations générales
 
 Collecter :
 
@@ -556,7 +557,7 @@ Collecter :
 
 Chaque donnée doit posséder une source et une date de vérification.
 
-\## 5.4. Informations produit
+## 5.4. Informations produit
 
 - Problème résolu.
 - Clientèle cible.
@@ -572,7 +573,7 @@ Chaque donnée doit posséder une source et une date de vérification.
 - Langues disponibles.
 - Marchés desservis.
 
-\## 5.5. Informations commerciales
+## 5.5. Informations commerciales
 
 - Modèle de facturation.
 - Prix d’entrée.
@@ -589,7 +590,7 @@ Afficher les prix avec leur devise, leur période et leur date de vérification.
 
 Ne pas supposer que tous les SaaS disposent de revenus publiquement accessibles.
 
-\## 5.6. Signaux de traction
+## 5.6. Signaux de traction
 
 Collecter lorsque possible :
 
@@ -607,7 +608,7 @@ Collecter lorsque possible :
 
 Les estimations de trafic ne doivent jamais être affichées comme des visites réellement mesurées.
 
-\## 5.7. Analyse produit
+## 5.7. Analyse produit
 
 Afficher :
 
@@ -622,7 +623,7 @@ Afficher :
 
 Cette section peut utiliser l’IA, mais toute affirmation doit être reliée à une preuve lorsque cela est possible.
 
-\## 5.8. Avis et problèmes clients
+## 5.8. Avis et problèmes clients
 
 Centraliser les retours utilisateurs disponibles.
 
@@ -640,7 +641,7 @@ Pour chaque retour :
 
 L’IA doit différencier les plaintes isolées des problèmes récurrents.
 
-\### Analyse approfondie des problèmes clients
+### Analyse approfondie des problèmes clients
 
 Chaque retour utilisateur doit pouvoir être associé à un ou plusieurs problèmes structurés.
 
@@ -673,7 +674,7 @@ L'IA doit extraire, lorsque les informations sont disponibles :
 
 Ne pas confondre le nombre d'avis avec le nombre de clients indépendants. Les doublons, les auteurs non identifiables et les informations incertaines doivent être explicitement signalés.
 
-\## 5.9. Concurrents et alternatives
+## 5.9. Concurrents et alternatives
 
 Afficher automatiquement :
 
@@ -701,7 +702,7 @@ Une comparaison sous forme de tableau doit être disponible.
 
 Le système doit permettre de sélectionner plusieurs concurrents et de lancer une comparaison avec l’IA.
 
-\## 5.10. Sources et fiabilité
+## 5.10. Sources et fiabilité
 
 Chaque fiche possède un espace Sources.
 
@@ -718,11 +719,11 @@ Pour chaque information :
 
 L’utilisateur doit pouvoir ouvrir directement les sources.
 
-\---
+---
 
-\# 6. PAGE 04 — AI DISCOVERY ENGINE
+# 6. PAGE 04 — AI DISCOVERY ENGINE
 
-\## 6.1. Objectif
+## 6.1. Objectif
 
 Le premier moteur IA est chargé de trouver automatiquement de nouveaux SaaS intéressants.
 
@@ -730,7 +731,7 @@ Il ne doit pas simplement générer des noms d’entreprises ou des idées de pr
 
 Il doit découvrir de véritables logiciels, vérifier leur existence, identifier leur entreprise et enrichir leur fiche.
 
-\## 6.2. Mode de fonctionnement
+## 6.2. Mode de fonctionnement
 
 L’utilisateur peut lancer une recherche en langage naturel.
 
@@ -740,9 +741,9 @@ Exemple :
 
 L’IA transforme cette instruction en critères structurés.
 
-\## 6.3. Workflow du moteur
+## 6.3. Workflow du moteur
 
-\### Étape 1 — Interprétation
+### Étape 1 — Interprétation
 
 - Comprendre la demande.
 - Déterminer les catégories.
@@ -750,7 +751,7 @@ L’IA transforme cette instruction en critères structurés.
 - Appliquer les exclusions permanentes.
 - Préparer les requêtes adaptées aux différentes sources.
 
-\### Étape 2 — Recherche
+### Étape 2 — Recherche
 
 Explorer les sources disponibles :
 
@@ -767,7 +768,7 @@ Explorer les sources disponibles :
 - Sites d’avis.
 - Bases de données d’entreprises.
 
-\### Gestion des sources
+### Gestion des sources
 
 Chaque connecteur doit disposer d'une méthode de collecte adaptée à ses conditions d'accès : API officielle, autorisation contractuelle, flux disponible ou autre méthode expressément autorisée.
 
@@ -784,7 +785,7 @@ Une source mentionnée dans la configuration ne doit jamais être considérée c
 
 Aucun scraping non autorisé ne doit être utilisé.
 
-\### Étape 3 — Identification
+### Étape 3 — Identification
 
 Pour chaque candidat :
 
@@ -794,7 +795,7 @@ Pour chaque candidat :
 - Déterminer sa catégorie.
 - Identifier l’entreprise derrière le produit.
 
-\### Étape 4 — Exclusions
+### Étape 4 — Exclusions
 
 Éliminer :
 
@@ -804,7 +805,7 @@ Pour chaque candidat :
 - Les catégories exclues.
 - Les solutions qui ne correspondent pas au modèle recherché.
 
-\### Étape 5 — Enrichissement
+### Étape 5 — Enrichissement
 
 Récupérer les données disponibles :
 
@@ -818,7 +819,7 @@ Récupérer les données disponibles :
 - Concurrents.
 - Présence commerciale.
 
-\### Étape 6 — Évaluation initiale
+### Étape 6 — Évaluation initiale
 
 Produire :
 
@@ -828,7 +829,7 @@ Produire :
 - Informations manquantes.
 - Motif de recommandation.
 
-\### Étape 7 — Intégration
+### Étape 7 — Intégration
 
 Les SaaS validés sont :
 
@@ -838,7 +839,7 @@ Les SaaS validés sont :
 - Disponibles dans Discover.
 - Accessibles pour une analyse approfondie.
 
-\## 6.4. Interface AI Discovery
+## 6.4. Interface AI Discovery
 
 Chaque recherche doit présenter :
 
@@ -854,7 +855,7 @@ Chaque recherche doit présenter :
 
 L’utilisateur peut relancer une recherche, la modifier ou l’enregistrer.
 
-\## 6.5. Recherche automatique récurrente
+## 6.5. Recherche automatique récurrente
 
 Prévoir la possibilité de configurer des recherches périodiques :
 
@@ -866,13 +867,13 @@ Le moteur doit identifier les nouveaux SaaS et les changements détectés sur le
 
 Les résultats nouveaux doivent être distingués des SaaS déjà connus.
 
-\---
+---
 
-\# 7. PAGE 05 — AI OPPORTUNITY ANALYZER
+# 7. PAGE 05 — AI OPPORTUNITY ANALYZER
 
-\## 7.1. Objectif
+## 7.1. Objectif
 
-C’est le deuxième moteur IA et la fonctionnalité la plus stratégique.
+C’est le troisième moteur IA (voir §15 et §21) et la fonctionnalité la plus stratégique.
 
 Son objectif n’est pas de décrire un SaaS, mais d’évaluer la possibilité de créer une entreprise concurrente plus performante.
 
@@ -880,7 +881,7 @@ Il doit répondre à la question :
 
 « Est-ce que ce SaaS représente une véritable opportunité commerciale pour nous, et avons-nous une raison crédible de construire une meilleure alternative ? »
 
-\## 7.2. Déclenchement
+## 7.2. Déclenchement
 
 Bouton présent sur chaque fiche SaaS :
 
@@ -906,9 +907,9 @@ L'analyse doit également pouvoir être lancée à partir :
 
 Dans ces cas, l'analyse ne doit pas être limitée à un seul SaaS.
 
-\## 7.3. Workflow complet
+## 7.3. Workflow complet
 
-\### Phase A — Recherche approfondie
+### Phase A — Recherche approfondie
 
 L’IA étudie le SaaS :
 
@@ -923,7 +924,7 @@ L’IA étudie le SaaS :
 
 Elle vérifie que l’entreprise possède des signes de monétisation crédibles.
 
-\### Phase B — Analyse du marché
+### Phase B — Analyse du marché
 
 - Taille et évolution du marché, si des données fiables existent.
 - Problème résolu.
@@ -935,7 +936,7 @@ Elle vérifie que l’entreprise possède des signes de monétisation crédibles
 
 Les données de marché doivent être sourcées et les hypothèses clairement identifiées.
 
-\### Phase C — Analyse des utilisateurs
+### Phase C — Analyse des utilisateurs
 
 Explorer :
 
@@ -959,15 +960,15 @@ Identifier :
 
 L’IA doit regrouper les plaintes par sujet et mesurer leur récurrence.
 
-\### Phase D — Cross-Competitor Pain Intelligence
+### Phase D — Cross-Competitor Pain Intelligence
 
-\*\*Objectif :\*\* identifier les problèmes utilisateurs récurrents à travers plusieurs SaaS concurrents afin de découvrir des lacunes communes au marché.
+**Objectif :** identifier les problèmes utilisateurs récurrents à travers plusieurs SaaS concurrents afin de découvrir des lacunes communes au marché.
 
 Cette phase ne doit pas se limiter à l'analyse individuelle des avis d'un SaaS.
 
 Elle doit pouvoir analyser simultanément les retours clients de plusieurs produits appartenant à une même catégorie ou répondant à un besoin similaire.
 
-\#### A. Extraction structurée
+#### A. Extraction structurée
 
 Pour chaque avis ou discussion accessible, extraire lorsque possible :
 
@@ -986,7 +987,7 @@ Pour chaque avis ou discussion accessible, extraire lorsque possible :
 
 Les informations non disponibles doivent rester inconnues et ne doivent pas être inventées.
 
-\#### B. Regroupement sémantique
+#### B. Regroupement sémantique
 
 Regrouper les plaintes qui décrivent un même problème, même si elles utilisent des formulations différentes.
 
@@ -1002,7 +1003,7 @@ Les regroupements doivent éviter de fusionner des problèmes simplement parce q
 
 Chaque cluster doit pouvoir être réexaminé et corrigé.
 
-\#### C. Analyse transversale
+#### C. Analyse transversale
 
 Pour chaque groupe de problèmes, identifier :
 
@@ -1023,7 +1024,7 @@ Lorsque le volume total d'avis d'un produit est connu, utiliser également des f
 
 Ne pas considérer plusieurs avis d'un même utilisateur comme plusieurs clients indépendants.
 
-\#### D. Identification des lacunes
+#### D. Identification des lacunes
 
 Détecter en priorité :
 
@@ -1036,7 +1037,7 @@ Détecter en priorité :
 
 Une absence de solution identifiée ne doit pas être automatiquement considérée comme une preuve d'absence de concurrence.
 
-\#### E. Création des Pain Point Clusters
+#### E. Création des Pain Point Clusters
 
 Chaque cluster doit avoir :
 
@@ -1057,7 +1058,7 @@ Chaque cluster doit avoir :
 - La date de première détection.
 - La date de dernière observation.
 
-\#### F. Génération d'opportunités
+#### F. Génération d'opportunités
 
 À partir des clusters les plus intéressants, générer des hypothèses de SaaS indépendants.
 
@@ -1077,7 +1078,7 @@ Pour chacune :
 
 Une opportunité peut concerner plusieurs concurrents ou répondre à un problème plus large que la catégorie initiale.
 
-\#### G. Règle fondamentale
+#### G. Règle fondamentale
 
 Un nombre élevé d'avis négatifs ne constitue pas une preuve automatique de volonté de payer.
 
@@ -1085,7 +1086,7 @@ Chaque opportunité doit être étudiée indépendamment, en recherchant des pre
 
 Le moteur doit pouvoir conclure qu'un problème est réel mais ne constitue pas une opportunité commerciale suffisamment intéressante.
 
-\### Phase E — Analyse concurrentielle
+### Phase E — Analyse concurrentielle
 
 Identifier les principaux concurrents.
 
@@ -1101,7 +1102,7 @@ Pour chacun :
 
 Produire une matrice comparative.
 
-\### Phase F — Recherche des opportunités
+### Phase F — Recherche des opportunités
 
 L’IA doit identifier des angles de différenciation concrets.
 
@@ -1121,7 +1122,7 @@ Exemples :
 
 Chaque opportunité doit être reliée à un problème utilisateur ou à une faiblesse concurrentielle observée.
 
-\### Phase G — Adaptation au marché français
+### Phase G — Adaptation au marché français
 
 Étudier :
 
@@ -1137,7 +1138,7 @@ Chaque opportunité doit être reliée à un problème utilisateur ou à une fai
 
 Une simple traduction du produit ne doit pas être considérée comme une différenciation suffisante.
 
-\### Phase H — Validation commerciale
+### Phase H — Validation commerciale
 
 L’IA doit déterminer :
 
@@ -1150,7 +1151,7 @@ L’IA doit déterminer :
 
 Il faut impérativement distinguer les intentions déclarées des achats réels.
 
-\### Phase I — Recommandation stratégique
+### Phase I — Recommandation stratégique
 
 L’IA propose :
 
@@ -1165,25 +1166,25 @@ L’IA propose :
 
 Elle doit également produire les raisons de ne pas construire.
 
-\---
+---
 
-\# 8. SCORING — SYSTÈME D’ÉVALUATION SUR 100
+# 8. SCORING — SYSTÈME D’ÉVALUATION SUR 100
 
 Le scoring doit reprendre notre méthode de sélection des opportunités.
 
 Il comporte six dimensions pondérées.
 
-\| Dimension                                            | Pondération |
-\| ---------------------------------------------------- | ----------: |
-\| 1. Demande réelle et problèmes clients               |          20 |
-\| 2. Volonté de payer et monétisation                  |          15 |
-\| 3. Faiblesses du produit et potentiel d’amélioration |          20 |
-\| 4. Attractivité du marché                            |          15 |
-\| 5. Concurrence et différenciation possible           |          15 |
-\| 6. Faisabilité, distribution et adaptation française |          15 |
-\| \*\*Total\*\*                                            |     \*\*100\*\* |
+| Dimension                                            | Pondération |
+| ---------------------------------------------------- | ----------: |
+| 1. Demande réelle et problèmes clients               |          20 |
+| 2. Volonté de payer et monétisation                  |          15 |
+| 3. Faiblesses du produit et potentiel d’amélioration |          20 |
+| 4. Attractivité du marché                            |          15 |
+| 5. Concurrence et différenciation possible           |          15 |
+| 6. Faisabilité, distribution et adaptation française |          15 |
+| **Total**                                            |     **100** |
 
-\## 8.1. Demande réelle — 20 points
+## 8.1. Demande réelle — 20 points
 
 Évaluer :
 
@@ -1204,7 +1205,7 @@ Pour les opportunités transversales, prendre également en compte :
 
 Ne pas attribuer une note élevée uniquement sur la base du nombre brut d'avis.
 
-\## 8.2. Volonté de payer — 15 points
+## 8.2. Volonté de payer — 15 points
 
 Évaluer :
 
@@ -1220,7 +1221,7 @@ Un SaaS présentant un fort potentiel théorique mais aucune preuve suffisante d
 
 Une intention déclarée, une plainte ou une demande de fonctionnalité ne constituent pas à elles seules une preuve de paiement.
 
-\## 8.3. Faiblesses et amélioration — 20 points
+## 8.3. Faiblesses et amélioration — 20 points
 
 Évaluer :
 
@@ -1233,7 +1234,7 @@ Une intention déclarée, une plainte ou une demande de fonctionnalité ne const
 
 Pour les opportunités transversales, évaluer également si le problème est suffisamment commun pour justifier une solution indépendante.
 
-\## 8.4. Attractivité du marché — 15 points
+## 8.4. Attractivité du marché — 15 points
 
 Évaluer :
 
@@ -1244,7 +1245,7 @@ Pour les opportunités transversales, évaluer également si le problème est su
 - Diversité des profils de clients.
 - Possibilité d’expansion.
 
-\## 8.5. Concurrence et différenciation — 15 points
+## 8.5. Concurrence et différenciation — 15 points
 
 Évaluer :
 
@@ -1257,7 +1258,7 @@ Pour les opportunités transversales, évaluer également si le problème est su
 
 Attention : une faible concurrence n’est pas systématiquement positive. Elle peut aussi révéler une absence de demande.
 
-\## 8.6. Faisabilité et distribution — 15 points
+## 8.6. Faisabilité et distribution — 15 points
 
 Évaluer :
 
@@ -1269,32 +1270,32 @@ Attention : une faible concurrence n’est pas systématiquement positive. Elle 
 - Possibilité d’adaptation à la France.
 - Avantage commercial réaliste.
 
-\## 8.7. Barème
+## 8.7. Barème
 
 Chaque dimension est notée de 0 à 5 puis convertie selon sa pondération.
 
-\| Note | Signification                    |
-\| ---- | -------------------------------- |
-\| 0    | Aucune preuve ou critère absent  |
-\| 1    | Très faible                      |
-\| 2    | Faible                           |
-\| 3    | Correct                          |
-\| 4    | Fort                             |
-\| 5    | Excellent et solidement démontré |
+| Note | Signification                    |
+| ---- | -------------------------------- |
+| 0    | Aucune preuve ou critère absent  |
+| 1    | Très faible                      |
+| 2    | Faible                           |
+| 3    | Correct                          |
+| 4    | Fort                             |
+| 5    | Excellent et solidement démontré |
 
 Calcul :
 
 Note de dimension = (note obtenue / 5) × pondération.
 
-\## 8.8. Seuils de décision
+## 8.8. Seuils de décision
 
-\| Score  | Décision                 |
-\| ------ | ------------------------ |
-\| 0–49   | Rejeter                  |
-\| 50–64  | Faible potentiel         |
-\| 65–74  | À approfondir            |
-\| 75–84  | Opportunité intéressante |
-\| 85–100 | Opportunité prioritaire  |
+| Score  | Décision                 |
+| ------ | ------------------------ |
+| 0–49   | Rejeter                  |
+| 50–64  | Faible potentiel         |
+| 65–74  | À approfondir            |
+| 75–84  | Opportunité intéressante |
+| 85–100 | Opportunité prioritaire  |
 
 Conditions cumulatives pour une recommandation positive :
 
@@ -1308,7 +1309,7 @@ Le score doit être accompagné d’un niveau de confiance distinct.
 
 Un 82/100 fondé sur de faibles preuves ne vaut pas un 82/100 avec plusieurs éléments vérifiés.
 
-\## 8.9. Fiabilité du scoring
+## 8.9. Fiabilité du scoring
 
 Le système doit afficher :
 
@@ -1322,15 +1323,15 @@ Le système doit afficher :
 
 Une information inconnue ne doit pas automatiquement obtenir zéro. Elle doit déclencher une insuffisance de preuve et réduire le niveau de confiance.
 
-\## 8.10. Scoring des opportunités transversales
+## 8.10. Scoring des opportunités transversales
 
 Le système doit distinguer deux types de scores :
 
-\*\*1. SaaS Fit Score\*\*
+**1. SaaS Fit Score**
 
 Mesure la pertinence d'un SaaS comme candidat à étudier, selon les critères de sélection définis dans la section 1.
 
-\*\*2. Opportunity Score\*\*
+**2. Opportunity Score**
 
 Mesure le potentiel commercial d'une opportunité de produit identifiée.
 
@@ -1352,13 +1353,13 @@ Les données insuffisantes doivent réduire le niveau de confiance et empêcher 
 
 Chaque score doit être justifié par des preuves consultables.
 
-\---
+---
 
-\# 9. FORMAT DU RAPPORT IA
+# 9. FORMAT DU RAPPORT IA
 
 Chaque analyse doit générer un rapport structuré.
 
-\### Executive Summary
+### Executive Summary
 
 - Nom du SaaS ou de l'opportunité étudiée.
 - Description.
@@ -1368,7 +1369,7 @@ Chaque analyse doit générer un rapport structuré.
 - Verdict.
 - Trois raisons principales de poursuivre ou d’abandonner.
 
-\### Market Analysis
+### Market Analysis
 
 - Marché.
 - Cible.
@@ -1376,7 +1377,7 @@ Chaque analyse doit générer un rapport structuré.
 - Tendances.
 - Concurrence.
 
-\### Customer Pain Analysis
+### Customer Pain Analysis
 
 - Top 5 des problèmes clients.
 - Nombre de sources pertinentes.
@@ -1384,7 +1385,7 @@ Chaque analyse doit générer un rapport structuré.
 - Exemples de plaintes.
 - Liens vers les sources.
 
-\### Cross-Competitor Pain Analysis
+### Cross-Competitor Pain Analysis
 
 - Principaux Pain Point Clusters identifiés.
 - Nombre de SaaS concernés.
@@ -1398,7 +1399,7 @@ Chaque analyse doit générer un rapport structuré.
 - Évolution des plaintes.
 - Sources originales et niveau de confiance.
 
-\### Market Gap Analysis
+### Market Gap Analysis
 
 - Problèmes communs à plusieurs concurrents.
 - Besoins insuffisamment satisfaits.
@@ -1407,11 +1408,11 @@ Chaque analyse doit générer un rapport structuré.
 - Opportunités de produits indépendants.
 - Raisons pour lesquelles ces opportunités pourraient ne pas fonctionner.
 
-\### Competitor Analysis
+### Competitor Analysis
 
 Tableau comparatif des concurrents.
 
-\### Opportunity Map
+### Opportunity Map
 
 Présenter les opportunités identifiées par ordre de priorité.
 
@@ -1424,7 +1425,7 @@ Pour chacune :
 - Difficulté de développement.
 - Potentiel commercial.
 
-\### Recommended Product
+### Recommended Product
 
 Décrire la meilleure version alternative à construire.
 
@@ -1436,7 +1437,7 @@ Décrire la meilleure version alternative à construire.
 - Pricing hypothétique.
 - Avantage principal.
 
-\### Go-to-Market
+### Go-to-Market
 
 - Canal d’acquisition prioritaire.
 - Première audience à cibler.
@@ -1444,7 +1445,7 @@ Décrire la meilleure version alternative à construire.
 - Stratégie de lancement.
 - Budget ou effort de validation.
 
-\### Validation Plan
+### Validation Plan
 
 Produire une série d’expériences permettant de vérifier la demande avant de développer.
 
@@ -1459,7 +1460,7 @@ Exemples :
 
 Définir des seuils de réussite et d’abandon.
 
-\### Risks & Kill Criteria
+### Risks & Kill Criteria
 
 Lister :
 
@@ -1470,7 +1471,7 @@ Lister :
 - Risques réglementaires.
 - Informations non vérifiées.
 
-\### Final Verdict
+### Final Verdict
 
 Trois verdicts possibles :
 
@@ -1480,15 +1481,15 @@ Trois verdicts possibles :
 
 Même un SaaS avec un score supérieur à 75 peut recevoir « VALIDATE FIRST » si les preuves commerciales sont insuffisantes.
 
-\---
+---
 
-\# 10. PAGE 06 — MY OPPORTUNITIES
+# 10. PAGE 06 — MY OPPORTUNITIES
 
-\## 10.1. Objectif
+## 10.1. Objectif
 
 Espace personnel regroupant les SaaS qui méritent une attention particulière.
 
-\## 10.2. Fonctionnalités
+## 10.2. Fonctionnalités
 
 - Favoris.
 - Collections personnalisées.
@@ -1499,7 +1500,7 @@ Espace personnel regroupant les SaaS qui méritent une attention particulière.
 - Statuts.
 - Comparaison.
 
-\## 10.3. Statuts
+## 10.3. Statuts
 
 Chaque opportunité dispose d’un statut modifiable :
 
@@ -1515,7 +1516,7 @@ Un SaaS rejeté doit pouvoir être consulté à nouveau et réévalué si de nou
 
 Les opportunités générées à partir de Pain Point Clusters doivent également pouvoir posséder leurs propres statuts, indépendamment des SaaS dont proviennent les preuves.
 
-\## 10.4. Collections
+## 10.4. Collections
 
 Exemples :
 
@@ -1527,9 +1528,9 @@ Exemples :
 - To Validate.
 - Rejected Ideas.
 
-\---
+---
 
-\# 11. PAGE 07 — COMPARATOR
+# 11. PAGE 07 — COMPARATOR
 
 Fonctionnalité permettant de sélectionner plusieurs SaaS et de les comparer.
 
@@ -1572,13 +1573,13 @@ Dans ce cas, comparer :
 - Scores.
 - Niveaux de confiance.
 
-\---
+---
 
-\# 12. DONNÉES À COLLECTER — MODÈLE DE DONNÉES
+# 12. DONNÉES À COLLECTER — MODÈLE DE DONNÉES
 
 Le produit doit avoir une base de données structurée.
 
-\## 12.1. SaaS
+## 12.1. SaaS
 
 Champs principaux :
 
@@ -1609,7 +1610,7 @@ Champs principaux :
 - discovery_source.
 - record_status.
 
-\## 12.2. Product Features
+## 12.2. Product Features
 
 - saas_id.
 - feature_name.
@@ -1619,7 +1620,7 @@ Champs principaux :
 - source_id.
 - confidence.
 
-\## 12.3. Pricing Plans
+## 12.3. Pricing Plans
 
 - saas_id.
 - plan_name.
@@ -1633,7 +1634,7 @@ Champs principaux :
 - checked_at.
 - source_id.
 
-\## 12.4. Company Signals
+## 12.4. Company Signals
 
 - saas_id.
 - signal_type.
@@ -1652,7 +1653,7 @@ Exemples :
 - Annonces de financement.
 - Activité commerciale.
 
-\## 12.5. Customer Feedback
+## 12.5. Customer Feedback
 
 - saas_id.
 - source_platform.
@@ -1673,7 +1674,7 @@ Exemples :
 
 Le texte original ne doit être conservé que lorsque les conditions de la source et les droits applicables le permettent. Sinon, conserver uniquement les références, métadonnées et éléments dérivés autorisés.
 
-\## 12.6. Competitors
+## 12.6. Competitors
 
 - saas_id.
 - competitor_id.
@@ -1682,7 +1683,7 @@ Le texte original ne doit être conservé que lorsque les conditions de la sourc
 - explanation.
 - source_id.
 
-\## 12.7. Sources
+## 12.7. Sources
 
 Chaque information importante doit pouvoir remonter à sa source.
 
@@ -1699,7 +1700,7 @@ Chaque information importante doit pouvoir remonter à sa source.
 - raw_reference.
 - extraction_method.
 
-\## 12.8. AI Analyses
+## 12.8. AI Analyses
 
 - id.
 - saas_id.
@@ -1719,7 +1720,7 @@ Chaque information importante doit pouvoir remonter à sa source.
 
 Les analyses d'opportunités indépendantes d'un SaaS précis doivent également pouvoir être associées à un Pain Point Cluster et à plusieurs SaaS sources.
 
-\## 12.9. Saved Searches
+## 12.9. Saved Searches
 
 - id.
 - name.
@@ -1729,7 +1730,7 @@ Les analyses d'opportunités indépendantes d'un SaaS précis doivent également
 - created_at.
 - updated_at.
 
-\## 12.10. Collections
+## 12.10. Collections
 
 - id.
 - name.
@@ -1744,7 +1745,7 @@ Table de liaison :
 - personal_notes.
 - status.
 
-\## 12.11. Pain Point Clusters
+## 12.11. Pain Point Clusters
 
 Cette table regroupe les problèmes similaires identifiés à partir de plusieurs retours utilisateurs.
 
@@ -1767,7 +1768,7 @@ Cette table regroupe les problèmes similaires identifiés à partir de plusieur
 
 Les compteurs doivent distinguer les valeurs vérifiées des estimations.
 
-\## 12.12. Pain Point Evidence
+## 12.12. Pain Point Evidence
 
 Cette table relie chaque problème à ses preuves originales.
 
@@ -1785,7 +1786,7 @@ Cette table relie chaque problème à ses preuves originales.
 
 Chaque preuve doit être traçable jusqu'à sa source d'origine.
 
-\## 12.13. Generated Opportunities
+## 12.13. Generated Opportunities
 
 Cette table stocke les hypothèses de produits SaaS générées à partir des problèmes identifiés.
 
@@ -1812,7 +1813,7 @@ Cette table stocke les hypothèses de produits SaaS générées à partir des pr
 
 Une opportunité peut être associée à plusieurs clusters et plusieurs SaaS sources. La structure doit permettre cette relation sans duplication des données.
 
-\## 12.14. Validation Experiments
+## 12.14. Validation Experiments
 
 Cette table conserve les expériences commerciales réalisées pour vérifier les opportunités.
 
@@ -1835,25 +1836,25 @@ Cette table conserve les expériences commerciales réalisées pour vérifier le
 
 Les intentions, les réponses positives, les entretiens qualifiés, les pilotes et les paiements doivent être distingués.
 
-\---
+---
 
-\# 13. SOURCES ET ENRICHISSEMENT DES DONNÉES
+# 13. SOURCES ET ENRICHISSEMENT DES DONNÉES
 
-\## 13.1. Sources prioritaires
+## 13.1. Sources prioritaires
 
-\| Source                 | Utilisation                                       |
-\| ---------------------- | ------------------------------------------------- |
-\| Site officiel          | Fonctionnalités, prix, positionnement             |
-\| Product Hunt           | Découverte et lancements                          |
-\| G2                     | Avis et retours clients                           |
-\| Capterra               | Avis et comparaison                               |
-\| Reddit                 | Problèmes et expériences utilisateurs             |
-\| X                      | Activité des fondateurs et utilisateurs           |
-\| LinkedIn               | Équipe et informations professionnelles publiques |
-\| Crunchbase             | Informations d’entreprise et financement          |
-\| AlternativeTo          | Alternatives et concurrents                       |
-\| BuiltWith / Wappalyzer | Technologies détectables                          |
-\| Similarweb             | Estimations de trafic, si accessibles             |
+| Source                 | Utilisation                                       |
+| ---------------------- | ------------------------------------------------- |
+| Site officiel          | Fonctionnalités, prix, positionnement             |
+| Product Hunt           | Découverte et lancements                          |
+| G2                     | Avis et retours clients                           |
+| Capterra               | Avis et comparaison                               |
+| Reddit                 | Problèmes et expériences utilisateurs             |
+| X                      | Activité des fondateurs et utilisateurs           |
+| LinkedIn               | Équipe et informations professionnelles publiques |
+| Crunchbase             | Informations d’entreprise et financement          |
+| AlternativeTo          | Alternatives et concurrents                       |
+| BuiltWith / Wappalyzer | Technologies détectables                          |
+| Similarweb             | Estimations de trafic, si accessibles             |
 
 L’intégration doit dépendre des API, licences, autorisations et conditions d’utilisation disponibles.
 
@@ -1861,9 +1862,9 @@ Il ne faut pas construire le système sur du scraping non autorisé ou sur une d
 
 Une source ne doit pas être considérée comme intégrée tant que son connecteur n'a pas été développé, testé et validé.
 
-\## 13.2. Hiérarchie de fiabilité
+## 13.2. Hiérarchie de fiabilité
 
-\*\*Niveau 1 : preuve primaire.\*\*
+**Niveau 1 : preuve primaire.**
 
 - Site officiel.
 - Documentation.
@@ -1871,7 +1872,7 @@ Une source ne doit pas être considérée comme intégrée tant que son connecte
 - Publication officielle.
 - Déclaration directe.
 
-\*\*Niveau 2 : source spécialisée.\*\*
+**Niveau 2 : source spécialisée.**
 
 - G2.
 - Capterra.
@@ -1879,14 +1880,14 @@ Une source ne doit pas être considérée comme intégrée tant que son connecte
 - LinkedIn.
 - Plateformes professionnelles.
 
-\*\*Niveau 3 : source communautaire.\*\*
+**Niveau 3 : source communautaire.**
 
 - Reddit.
 - X.
 - Forums.
 - Discussions publiques.
 
-\*\*Niveau 4 : estimation ou inférence.\*\*
+**Niveau 4 : estimation ou inférence.**
 
 - Estimation de revenus.
 - Trafic estimé.
@@ -1897,7 +1898,7 @@ Les niveaux 3 et 4 ne doivent pas être présentés comme des preuves directes d
 
 La fiabilité d'une source doit également être évaluée selon le type d'information recherché. Une discussion communautaire peut constituer une preuve pertinente d'une frustration utilisateur, mais pas nécessairement d'une dépense commerciale.
 
-\## 13.3. Actualisation
+## 13.3. Actualisation
 
 Prévoir une actualisation différenciée :
 
@@ -1918,11 +1919,11 @@ Pour les Pain Point Clusters, conserver également :
 - Évolution du nombre de SaaS concernés.
 - Évolution du statut des problèmes.
 
-\---
+---
 
-\# 14. SETTINGS
+# 14. SETTINGS
 
-\## 14.1. Préférences de recherche
+## 14.1. Préférences de recherche
 
 Configurer :
 
@@ -1935,7 +1936,7 @@ Configurer :
 - Seuil de validation.
 - Marché géographique d’adaptation.
 
-\## 14.2. Préférences IA
+## 14.2. Préférences IA
 
 - Modèle utilisé.
 - Mode d’analyse rapide ou approfondi.
@@ -1946,7 +1947,7 @@ Configurer :
 - Historique des analyses.
 - Version des prompts.
 
-\## 14.3. Sources
+## 14.3. Sources
 
 Afficher :
 
@@ -1957,7 +1958,7 @@ Afficher :
 - Limites d’utilisation.
 - État des quotas.
 
-\## 14.4. Gestion des données
+## 14.4. Gestion des données
 
 - Exporter les données.
 - Supprimer les recherches.
@@ -1965,19 +1966,19 @@ Afficher :
 - Export CSV.
 - Export JSON.
 
-\---
+---
 
-\# 15. ARCHITECTURE FONCTIONNELLE DES MOTEURS IA
+# 15. ARCHITECTURE FONCTIONNELLE DES MOTEURS IA
 
 Il faut impérativement séparer les trois moteurs.
 
-\## Discovery Engine
+## Discovery Engine
 
 Sa mission : trouver, identifier, filtrer et enrichir des SaaS.
 
 Son résultat est un candidat documenté et exploitable.
 
-\## Pain Point Intelligence Engine
+## Pain Point Intelligence Engine
 
 Sa mission :
 
@@ -1991,13 +1992,13 @@ Sa mission :
 
 Son résultat est un ensemble de problématiques de marché documentées et reliées à leurs preuves originales.
 
-\## Opportunity Engine
+## Opportunity Engine
 
 Sa mission : étudier un candidat précis ou un Pain Point Cluster, rechercher des preuves, analyser les faiblesses concurrentielles et évaluer le potentiel commercial.
 
 Son résultat est un rapport de décision stratégique accompagné d'un score, d'un niveau de confiance et d'un verdict.
 
-\## Composants partagés
+## Composants partagés
 
 Les trois moteurs doivent utiliser :
 
@@ -2009,7 +2010,7 @@ Les trois moteurs doivent utiliser :
 - Un journal d’exécution.
 - Un système de contrôle qualité.
 
-\## Architecture IA
+## Architecture IA
 
 Prévoir une couche indépendante du fournisseur de modèles.
 
@@ -2037,61 +2038,61 @@ Les analyses devront conserver :
 - Les erreurs.
 - Le coût estimé ou mesuré lorsque disponible.
 
-\---
+---
 
-\# 16. SÉCURITÉ, FIABILITÉ ET QUALITÉ
+# 16. SÉCURITÉ, FIABILITÉ ET QUALITÉ
 
 Exigences obligatoires :
 
 1. Ne jamais inventer une entreprise.
 
-2) Ne jamais inventer de prix.
+2. Ne jamais inventer de prix.
 
 3. Ne jamais inventer des revenus.
 
-4) Ne jamais inventer des clients.
+4. Ne jamais inventer des clients.
 
 5. Ne jamais inventer des avis.
 
-6) Ne jamais fabriquer des liens de sources.
+6. Ne jamais fabriquer des liens de sources.
 
 7. Distinguer les faits des estimations.
 
-8) Identifier les informations contradictoires.
+8. Identifier les informations contradictoires.
 
 9. Afficher les dates de vérification.
 
-10) Ne pas confondre présence d’une offre payante et preuve d’achat.
+10. Ne pas confondre présence d’une offre payante et preuve d’achat.
 
 11. Détecter les doublons de SaaS.
 
-12) Ne pas laisser les contenus récupérés depuis le web modifier les instructions internes des agents IA.
+12. Ne pas laisser les contenus récupérés depuis le web modifier les instructions internes des agents IA.
 
 13. Respecter les conditions d’utilisation, les droits d’accès et les limitations des sources.
 
-14) Permettre de corriger les informations incorrectes.
+14. Permettre de corriger les informations incorrectes.
 
 15. Ne pas confondre le nombre de retours clients avec le nombre de clients distincts.
 
-16) Ne pas considérer une plainte comme une preuve de volonté de payer.
+16. Ne pas considérer une plainte comme une preuve de volonté de payer.
 
 17. Ne pas présenter un problème comme non résolu sans élément permettant de le justifier.
 
-18) Ne pas fusionner artificiellement des problèmes différents lors du clustering.
+18. Ne pas fusionner artificiellement des problèmes différents lors du clustering.
 
 19. Relier les analyses et les opportunités aux preuves originales.
 
-20) Distinguer les informations vérifiées, estimées, déclarées et inconnues.
+20. Distinguer les informations vérifiées, estimées, déclarées et inconnues.
 
 21. Respecter les conditions de stockage et de réutilisation des contenus issus des différentes sources.
 
 Tous les résultats IA doivent être reproductibles autant que raisonnablement possible grâce à la conservation des sources et versions d’analyse.
 
-\---
+---
 
-\# 17. DESIGN ET EXPÉRIENCE UTILISATEUR
+# 17. DESIGN ET EXPÉRIENCE UTILISATEUR
 
-\### Direction artistique
+### Direction artistique
 
 Le produit doit avoir une identité professionnelle, moderne et technologique.
 
@@ -2103,7 +2104,7 @@ Références d’expérience :
 - Arc.
 - Attio.
 
-\### Principes
+### Principes
 
 - Interface premium.
 - Dark mode en priorité, avec mode clair possible.
@@ -2122,17 +2123,17 @@ Le produit doit donner une impression d’outil d’intelligence commerciale plu
 
 Les Pain Point Clusters et les opportunités générées doivent être présentés de manière claire, avec un accès direct aux preuves, aux SaaS concernés et aux analyses associées.
 
-\---
+---
 
-\# 18. PÉRIMÈTRE DU MVP
+# 18. PÉRIMÈTRE DU MVP
 
 Il est essentiel de ne pas construire toutes les fonctionnalités simultanément.
 
 Le MVP doit permettre de réaliser le parcours central de bout en bout.
 
-\## MVP — Phase 1
+## MVP — Phase 1
 
-\### Discovery
+### Discovery
 
 - Base SaaS structurée.
 - Import de données.
@@ -2143,7 +2144,7 @@ Le MVP doit permettre de réaliser le parcours central de bout en bout.
 - Pagination.
 - Cartes SaaS.
 
-\### SaaS Profiles
+### SaaS Profiles
 
 - Fiche détaillée.
 - Informations générales.
@@ -2153,7 +2154,7 @@ Le MVP doit permettre de réaliser le parcours central de bout en bout.
 - Concurrents principaux.
 - Avis disponibles.
 
-\### Opportunity Engine
+### Opportunity Engine
 
 - Analyse approfondie.
 - Recherche des plaintes.
@@ -2173,7 +2174,7 @@ Le MVP doit permettre de réaliser le parcours central de bout en bout.
 - Verdict final.
 - Rapport exportable.
 
-\### Workspace
+### Workspace
 
 - Favoris.
 - Collections.
@@ -2181,7 +2182,7 @@ Le MVP doit permettre de réaliser le parcours central de bout en bout.
 - Historique des analyses.
 - Comparaison simple.
 
-\### AI Discovery
+### AI Discovery
 
 - Première recherche en langage naturel.
 - Interprétation des filtres.
@@ -2193,7 +2194,7 @@ Le MVP doit permettre de tester le parcours complet sur un ensemble limité de S
 
 Priorité absolue : vérifier la qualité de la détection des problèmes et la pertinence des opportunités générées avant d'étendre le nombre de connecteurs.
 
-\## Phase 2 — Enrichissement
+## Phase 2 — Enrichissement
 
 - Plus de sources.
 - Synchronisation régulière.
@@ -2208,7 +2209,7 @@ Priorité absolue : vérifier la qualité de la détection des problèmes et la 
 - Suivi de leur évolution.
 - Amélioration de la détection des utilisateurs et entreprises distincts.
 
-\## Phase 3 — Intelligence avancée
+## Phase 3 — Intelligence avancée
 
 - Découverte autonome de candidats.
 - Analyse automatique des concurrents.
@@ -2221,13 +2222,13 @@ Priorité absolue : vérifier la qualité de la détection des problèmes et la 
 - Génération autonome d'opportunités à partir de plusieurs Pain Point Clusters.
 - Suivi des expériences de validation commerciale.
 
-\---
+---
 
-\# 19. CRITÈRES D’ACCEPTATION DU PRODUIT
+# 19. CRITÈRES D’ACCEPTATION DU PRODUIT
 
 Le MVP ne sera considéré comme fonctionnel que si les tests suivants sont réussis.
 
-\## Discover
+## Discover
 
 - Un utilisateur peut consulter les SaaS.
 - Les cartes présentent des données cohérentes.
@@ -2236,7 +2237,7 @@ Le MVP ne sera considéré comme fonctionnel que si les tests suivants sont réu
 - Les favoris sont conservés.
 - La pagination ne crée aucun doublon.
 
-\## SaaS Profile
+## SaaS Profile
 
 - Chaque SaaS possède une fiche unique.
 - Les données principales sont accessibles.
@@ -2244,7 +2245,7 @@ Le MVP ne sera considéré comme fonctionnel que si les tests suivants sont réu
 - Les concurrents sont identifiés.
 - Les données inconnues sont explicites.
 
-\## Discovery Engine
+## Discovery Engine
 
 - Le moteur comprend les critères en langage naturel.
 - Il trouve de vrais SaaS.
@@ -2253,7 +2254,7 @@ Le MVP ne sera considéré comme fonctionnel que si les tests suivants sont réu
 - Il affiche les sources.
 - Il n’invente pas d’informations.
 
-\## Pain Point Intelligence Engine
+## Pain Point Intelligence Engine
 
 - Il collecte les retours à partir de connecteurs autorisés.
 - Il distingue les retours individuels des problèmes structurés.
@@ -2267,7 +2268,7 @@ Le MVP ne sera considéré comme fonctionnel que si les tests suivants sont réu
 - Il produit un niveau de confiance.
 - Il peut conclure qu'un problème récurrent ne représente pas une opportunité commerciale intéressante.
 
-\## Opportunity Engine
+## Opportunity Engine
 
 - Il effectue une recherche approfondie.
 - Il distingue preuves et hypothèses.
@@ -2281,7 +2282,7 @@ Le MVP ne sera considéré comme fonctionnel que si les tests suivants sont réu
 - Il peut rejeter une opportunité.
 - Il produit un rapport sourcé.
 
-\## Workspace
+## Workspace
 
 - Les SaaS peuvent être sauvegardés.
 - Les collections fonctionnent.
@@ -2290,13 +2291,13 @@ Le MVP ne sera considéré comme fonctionnel que si les tests suivants sont réu
 - Les opportunités indépendantes peuvent être sauvegardées.
 - Les statuts des opportunités peuvent être modifiés.
 
-\---
+---
 
-\# 20. INDICATEURS DE PERFORMANCE
+# 20. INDICATEURS DE PERFORMANCE
 
 Le produit doit mesurer sa propre efficacité.
 
-\## Discovery
+## Discovery
 
 - Nombre total de SaaS en base.
 - Nouveaux SaaS découverts.
@@ -2305,7 +2306,7 @@ Le produit doit mesurer sa propre efficacité.
 - Part des fiches suffisamment enrichies.
 - Fraîcheur des données.
 
-\## AI Opportunity
+## AI Opportunity
 
 - Nombre d’analyses réalisées.
 - Coût moyen par analyse.
@@ -2314,7 +2315,7 @@ Le produit doit mesurer sa propre efficacité.
 - Répartition des verdicts.
 - Nombre d’opportunités dépassant 75/100.
 
-\## Pain Point Intelligence
+## Pain Point Intelligence
 
 - Nombre de retours clients collectés.
 - Nombre de retours exploitables.
@@ -2328,7 +2329,7 @@ Le produit doit mesurer sa propre efficacité.
 - Évolution des problèmes identifiés.
 - Nombre d'opportunités indépendantes générées à partir des clusters.
 
-\## Utilité réelle
+## Utilité réelle
 
 - Nombre de SaaS sauvegardés.
 - Nombre de SaaS approfondis.
@@ -2341,66 +2342,68 @@ L’indicateur de réussite ultime n’est pas le nombre de SaaS dans la base.
 
 C’est le nombre d’opportunités commerciales réellement validées grâce à la plateforme.
 
-\---
+---
 
-\# 21. DÉCISIONS PRODUIT VERROUILLÉES
+# 21. DÉCISIONS PRODUIT VERROUILLÉES
 
 Les décisions suivantes constituent la référence pour le développement de la V1.
 
-\| Sujet                           | Décision                                                                      |
-\| ------------------------------- | ----------------------------------------------------------------------------- |
-\| Nature du produit               | Plateforme de découverte et d’intelligence SaaS                               |
-\| Utilisateur initial             | Fondateur / entrepreneur                                                      |
-\| Clientèle recherchée            | Priorité B2B                                                                  |
-\| Marché de découverte            | États-Unis en priorité                                                        |
-\| Taille d’entreprise privilégiée | 1–20 employés                                                                 |
-\| Type d’entreprise               | Indépendante, founder-led, petite équipe                                      |
-\| Monétisation                    | Signes crédibles de clients payants obligatoires pour valider une opportunité |
-\| Marché cible d’adaptation       | France en priorité                                                            |
-\| Catégories                      | Multiples, sans restriction à une seule niche                                 |
-\| Affiliate / Partner             | Exclusion permanente                                                          |
-\| Expérience principale           | Feed de découverte                                                            |
-\| Détail produit                  | Fiche complète et concurrents                                                 |
-\| Moteur IA 1                     | Discovery Engine                                                              |
-\| Moteur IA 2                     | Pain Point Intelligence Engine                                                |
-\| Moteur IA 3                     | Opportunity Engine                                                            |
-\| Scoring                         | Six dimensions, sur 100                                                       |
-\| Score minimum                   | 75/100                                                                        |
-\| Volonté de payer                | 10/15 minimum                                                                 |
-\| Verdict                         | BUILD CANDIDATE / VALIDATE FIRST / REJECT                                     |
-\| Sources                         | Traçables et datées                                                           |
-\| Architecture IA                 | Indépendante du fournisseur de modèles                                        |
+| Sujet                           | Décision                                                                      |
+| ------------------------------- | ----------------------------------------------------------------------------- |
+| Nature du produit               | Plateforme de découverte et d’intelligence SaaS                               |
+| Utilisateur initial             | Fondateur / entrepreneur                                                      |
+| Clientèle recherchée            | Priorité B2B                                                                  |
+| Marché de découverte            | États-Unis en priorité                                                        |
+| Taille d’entreprise privilégiée | 1–20 employés                                                                 |
+| Type d’entreprise               | Indépendante, founder-led, petite équipe                                      |
+| Monétisation                    | Signes crédibles de clients payants obligatoires pour valider une opportunité |
+| Marché cible d’adaptation       | France en priorité                                                            |
+| Catégories                      | Multiples, sans restriction à une seule niche                                 |
+| Affiliate / Partner             | Exclusion permanente                                                          |
+| Expérience principale           | Feed de découverte                                                            |
+| Détail produit                  | Fiche complète et concurrents                                                 |
+| Moteur IA 1                     | Discovery Engine                                                              |
+| Moteur IA 2                     | Pain Point Intelligence Engine                                                |
+| Moteur IA 3                     | Opportunity Engine                                                            |
+| Scoring                         | Six dimensions, sur 100                                                       |
+| Score minimum                   | 75/100                                                                        |
+| Volonté de payer                | 10/15 minimum                                                                 |
+| Verdict                         | BUILD CANDIDATE / VALIDATE FIRST / REJECT                                     |
+| Sources                         | Traçables et datées                                                           |
+| Architecture IA                 | Indépendante du fournisseur de modèles                                        |
 
-\---
+---
 
-\# 22. STACK TECHNIQUE ENVISAGÉE
+# 22. STACK TECHNIQUE ENVISAGÉE
 
 À confirmer au moment de la spécification technique.
 
-\| Composant        | Technologie                                     |
-\| ---------------- | ----------------------------------------------- |
-\| Frontend         | Next.js + App Router                            |
-\| Langage          | TypeScript                                      |
-\| UI               | Tailwind CSS                                    |
-\| Composants       | shadcn/ui + Radix                               |
-\| Base de données  | Supabase / PostgreSQL                           |
-\| Recherche        | PostgreSQL Full Text + recherche vectorielle    |
-\| Authentification | Supabase Auth                                   |
-\| Backend          | Next.js API / services dédiés                   |
-\| Jobs             | Queue de tâches                                 |
-\| IA               | API multi-modèles                               |
-\| Recherche web    | Connecteurs de recherche et sources autorisées  |
-\| Clustering       | Embeddings + pgvector + logique de regroupement |
-\| Hébergement      | Vercel                                          |
-\| Monitoring       | Logs, erreurs, coût et durée des agents         |
+La spécification technique correspondante est `docs/TECHNICAL_BLUEPRINT.md`. Les choix qui restent à confirmer y sont marqués `PENDING_USER_APPROVAL` et sont suivis dans `docs/ADR/README.md`.
+
+| Composant        | Technologie                                     |
+| ---------------- | ----------------------------------------------- |
+| Frontend         | Next.js + App Router                            |
+| Langage          | TypeScript                                      |
+| UI               | Tailwind CSS                                    |
+| Composants       | shadcn/ui + Radix                               |
+| Base de données  | Supabase / PostgreSQL                           |
+| Recherche        | PostgreSQL Full Text + recherche vectorielle    |
+| Authentification | Supabase Auth                                   |
+| Backend          | Next.js API / services dédiés                   |
+| Jobs             | Queue de tâches                                 |
+| IA               | API multi-modèles                               |
+| Recherche web    | Connecteurs de recherche et sources autorisées  |
+| Clustering       | Embeddings + pgvector + logique de regroupement |
+| Hébergement      | Vercel                                          |
+| Monitoring       | Logs, erreurs, coût et durée des agents         |
 
 Architecture recommandée : séparer le frontend, les services de collecte, les tâches d’enrichissement et les moteurs IA.
 
 Ne pas lancer les analyses longues directement dans une requête HTTP classique. Elles doivent fonctionner comme des tâches asynchrones avec progression, reprise et gestion des erreurs.
 
-\---
+---
 
-\# 23. DÉFINITION DU PRODUIT TERMINÉ
+# 23. DÉFINITION DU PRODUIT TERMINÉ
 
 SaaS Opportunity Radar sera considéré comme opérationnel lorsque l’utilisateur pourra suivre ce parcours sans intervention technique :
 
@@ -2436,9 +2439,9 @@ Il doit également pouvoir suivre un second parcours :
 11. Produire un rapport stratégique.
 12. Déterminer si l'opportunité mérite une validation commerciale.
 
-\---
+---
 
-\# CONCLUSION
+# CONCLUSION
 
 SaaS Opportunity Radar doit devenir notre environnement de recherche permanent.
 
@@ -2464,4 +2467,4 @@ Il s'agit également d'identifier les problèmes qui dépassent un seul logiciel
 - Une solution indépendante pourrait apporter une valeur supérieure.
 - Des preuves commerciales permettent de justifier son développement.
 
-\*\*Principe directeur : découvrir beaucoup, vérifier les faits, analyser peu à peu les meilleurs candidats, identifier les problèmes communs aux marchés et ne construire que les opportunités véritablement validées.\*\*
+**Principe directeur : découvrir beaucoup, vérifier les faits, analyser peu à peu les meilleurs candidats, identifier les problèmes communs aux marchés et ne construire que les opportunités véritablement validées.**
