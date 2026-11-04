@@ -10,7 +10,9 @@
     "./filters": "./src/filters.ts",
     "./workspace": "./src/workspace.ts",
     "./api": "./src/api.ts",
-    "./env": "./src/env.ts"
+    "./env": "./src/env.ts",
+    "./evidence": "./src/evidence.ts",
+    "./jobs": "./src/jobs.ts"
   },
   "scripts": {
     "lint": "eslint .",

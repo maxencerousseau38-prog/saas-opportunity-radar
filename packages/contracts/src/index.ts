@@ -3,4 +3,6 @@ export * from "./catalog";
 export * from "./filters";
 export * from "./workspace";
 export * from "./api";
+export * from "./evidence";
+export * from "./jobs";
 export * from "./env";
