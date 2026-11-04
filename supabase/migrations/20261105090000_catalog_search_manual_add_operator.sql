@@ -353,12 +353,12 @@ begin
   v_hash := encode(pg_catalog.sha256(convert_to(p_entry::text, 'UTF8')), 'hex');
 
   if nullif(trim(p_entry ->> 'company_name'), '') is not null then
-    v_slug := private.unique_slug('companies', p_entry ->> 'company_name');
+    v_slug := private.unique_slug('companies', coalesce(p_entry ->> 'company_slug_base', p_entry ->> 'company_name'));
     insert into public.companies (name, slug) values (trim(p_entry ->> 'company_name'), v_slug)
       returning id into v_company;
   end if;
 
-  v_slug := private.unique_slug('saas_products', p_entry ->> 'name');
+  v_slug := private.unique_slug('saas_products', coalesce(p_entry ->> 'slug_base', p_entry ->> 'name'));
   insert into public.saas_products (company_id, name, slug, website_url, primary_domain, short_description,
                                     record_status, exclusion_status, discovery_source_id)
   values (v_company, trim(p_entry ->> 'name'), v_slug, v_url, v_domain,
@@ -427,6 +427,7 @@ end;
 $$;
 
 -- Slug helper: lowercase ascii words joined by hyphens, suffixed on collision.
+-- The API passes accent-free bases computed by @sor/domain slugify().
 create or replace function private.unique_slug(p_table text, p_name text)
 returns text
 language plpgsql
@@ -533,3 +534,71 @@ revoke all on function public.sor_operator_exclusion_decision(uuid, uuid, public
 revoke all on function public.sor_operator_resolve_report(uuid, uuid, text, text) from public, anon, authenticated;
 grant execute on function public.sor_operator_exclusion_decision(uuid, uuid, public.exclusion_status, text) to service_role;
 grant execute on function public.sor_operator_resolve_report(uuid, uuid, text, text) to service_role;
+
+-- ---------------------------------------------------------------------------
+-- Workspace members (Implementation Blueprint §10 "W/members"). Signup is
+-- disabled, so members are invited by e-mail through the server.
+-- ---------------------------------------------------------------------------
+
+-- Member list with e-mail addresses, for members of the workspace only.
+create or replace function public.workspace_member_directory(p_workspace_id uuid)
+returns table (user_id uuid, email text, role public.workspace_role, joined_at timestamptz)
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+begin
+  if not private.is_workspace_member(p_workspace_id) then
+    raise exception 'FORBIDDEN' using errcode = '42501';
+  end if;
+  return query
+    select m.user_id, u.email::text, m.role, m.joined_at
+      from public.workspace_members m
+      join auth.users u on u.id = m.user_id
+     where m.workspace_id = p_workspace_id
+     order by m.joined_at, m.user_id;
+end;
+$$;
+revoke all on function public.workspace_member_directory(uuid) from public, anon;
+grant execute on function public.workspace_member_directory(uuid) to authenticated;
+
+-- Adds an existing account to a workspace. service_role only: the API has
+-- verified the session user (p_actor). Raises P0002 when no account has this
+-- e-mail; the API then sends a Supabase Auth invitation and calls it again.
+create or replace function public.sor_add_member_by_email(
+  p_workspace_id uuid, p_actor uuid, p_email text, p_role public.workspace_role)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_user uuid;
+begin
+  if not exists (select 1 from public.workspace_members m
+                  where m.workspace_id = p_workspace_id and m.user_id = p_actor
+                    and m.role in ('owner', 'admin')) then
+    raise exception 'FORBIDDEN' using errcode = '42501';
+  end if;
+  if p_role is null or p_role = 'owner' then
+    raise exception 'VALIDATION_ERROR: role' using errcode = '22023';
+  end if;
+  select u.id into v_user from auth.users u where lower(u.email) = lower(trim(p_email));
+  if v_user is null then
+    raise exception 'NOT_FOUND' using errcode = 'P0002';
+  end if;
+  if exists (select 1 from public.workspace_members m
+              where m.workspace_id = p_workspace_id and m.user_id = v_user) then
+    raise exception 'INVALID_STATE: already a member' using errcode = '55000';
+  end if;
+  insert into public.workspace_members (workspace_id, user_id, role, invited_by)
+    values (p_workspace_id, v_user, p_role, p_actor);
+  insert into public.audit_logs (workspace_id, actor_user_id, actor_kind, action, resource_type, resource_id, metadata)
+    values (p_workspace_id, p_actor, 'user', 'workspace.member_added', 'workspace_member', v_user,
+            jsonb_build_object('role', p_role));
+  return v_user;
+end;
+$$;
+revoke all on function public.sor_add_member_by_email(uuid, uuid, text, public.workspace_role) from public, anon, authenticated;
+grant execute on function public.sor_add_member_by_email(uuid, uuid, text, public.workspace_role) to service_role;

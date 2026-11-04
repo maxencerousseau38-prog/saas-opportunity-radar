@@ -7,6 +7,9 @@
     ".": "./src/index.ts",
     "./common": "./src/common.ts",
     "./catalog": "./src/catalog.ts",
+    "./filters": "./src/filters.ts",
+    "./workspace": "./src/workspace.ts",
+    "./api": "./src/api.ts",
     "./env": "./src/env.ts"
   },
   "scripts": {

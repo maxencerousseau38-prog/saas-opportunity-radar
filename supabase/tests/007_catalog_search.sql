@@ -116,6 +116,21 @@ select is(tests.count_b1('{"text": "email"}'), 1::bigint, 'text search');
 select is(tests.count_b1('{"text": "Pilo"}'), 1::bigint, 'text search matches a name fragment');
 select is(tests.count_b1('{"text": "100%_"}'), 0::bigint, 'LIKE wildcards in the text are literal');
 
+-- French queries (Sprint 2 exit criterion). The search configuration is
+-- English: French words match through the English stemmer and the name
+-- fragment fallback; accents must be typed as in the text (documented limit).
+select tests.as_owner_role();
+update public.saas_products
+   set short_description = 'Logiciel de facturation et de relances pour les artisans et leur équipe'
+ where id = tests.id('d6');
+select tests.authenticate_as(tests.id('a3'));
+select is(tests.count_b1('{"text": "facturation"}'), 1::bigint, 'French: a French word');
+select is(tests.count_b1('{"text": "factures artisan"}'), 1::bigint,
+  'French: plural and singular forms share a stem');
+select is(tests.count_b1('{"text": "logiciel de facturation"}'), 1::bigint, 'French: a phrase with stop words');
+select is(tests.count_b1('{"text": "équipe"}'), 1::bigint, 'French: accented word typed with its accent');
+select is(tests.count_b1('{"text": "facturation -artisans"}'), 0::bigint, 'French: exclusion operator');
+
 -- ------------------------------------------------------------ configurable exclusions (O)
 select is(tests.count_b1('{"configurable_exclusions": ["b2c_only"]}'), 3::bigint, 'O: B2C only');
 select is(tests.count_b1('{"configurable_exclusions": ["groups_and_large_companies"]}'), 3::bigint,

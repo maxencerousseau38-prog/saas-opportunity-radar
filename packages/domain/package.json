@@ -16,5 +16,9 @@
     "eslint": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@sor/contracts": "workspace:*",
+    "tldts": "catalog:"
   }
 }
