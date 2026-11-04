@@ -12,7 +12,8 @@
     "./api": "./src/api.ts",
     "./env": "./src/env.ts",
     "./evidence": "./src/evidence.ts",
-    "./jobs": "./src/jobs.ts"
+    "./jobs": "./src/jobs.ts",
+    "./agents/enrichment": "./src/agents/enrichment.ts"
   },
   "scripts": {
     "lint": "eslint .",

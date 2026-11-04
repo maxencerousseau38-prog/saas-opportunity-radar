@@ -1,2 +1,4 @@
-// @sor/ai-gateway — boundary only (Sprint 0). Implemented in S3.
-export {};
+// @sor/ai-gateway — provider abstraction (no database or source access).
+export * from "./provider";
+export * from "./gateway";
+export * from "./fake-provider";

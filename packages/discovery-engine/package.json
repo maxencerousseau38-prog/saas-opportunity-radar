@@ -9,12 +9,19 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run"
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@sor/ai-gateway": "workspace:*",
+    "@sor/contracts": "workspace:*",
+    "@sor/data-sources": "workspace:*",
+    "@sor/domain": "workspace:*",
+    "zod": "catalog:"
   }
 }
