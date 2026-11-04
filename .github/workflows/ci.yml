@@ -59,22 +59,37 @@ jobs:
           retention-days: 7
 
   database:
-    name: Database (local Supabase stack)
+    name: Database (migrations, pgTAP, advisors, types)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
       - uses: supabase/setup-cli@v1
         with:
           version: 3.0.0
-      - run: supabase db start
-      - run: supabase db lint --level warning
+      - name: Start the local stack (database, auth, API) and apply migrations
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
+      - name: API key model (variable names only, never values)
+        run: supabase status -o env | cut -d= -f1
       - name: pgTAP tests
+        run: supabase test db
+      - name: Lint database functions
+        run: supabase db lint --level warning
+      - name: Security advisors
+        run: supabase db advisors --type security --level warn --fail-on error
+      - name: Generated types are up to date
         run: |
-          if compgen -G "supabase/tests/*.sql" > /dev/null; then
-            supabase test db
-          else
-            echo "No pgTAP tests yet: they arrive with the first migrations (Sprint 1)."
+          supabase gen types typescript --schema public > generated.ts
+          if ! diff -q generated.ts packages/database/src/generated.ts; then
+            echo "::error::packages/database/src/generated.ts is out of date (artifact database-generated-types)"
+            exit 1
           fi
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: database-generated-types
+          path: generated.ts
+          if-no-files-found: ignore
+          retention-days: 7
       - if: always()
         run: supabase stop --no-backup
