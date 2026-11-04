@@ -72,7 +72,7 @@ export function extractPage(html: string, baseUrl: string): ExtractedPage {
       )
       .replace(/<[^>]+>/g, " "),
   )
-    .replace(/[ \t\f\v ]+/g, " ")
+    .replace(/[ \t\f\v\u00a0]+/g, " ")
     .replace(/ *\n[ \n]*/g, "\n")
     .trim();
   const clean = (v: string | undefined) =>

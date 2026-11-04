@@ -50,7 +50,7 @@ describe("HTML extraction", () => {
 describe("CSV", () => {
   it("parses quotes, separators, CRLF and a BOM", () => {
     const t = parseCsv(
-      '﻿name,website_url,note\r\n"Acme, Inc",https://acme.test,"He said ""hi"""\r\nBeta;https://beta.test;\r\n\r\n',
+      '\uFEFFname,website_url,note\r\n"Acme, Inc",https://acme.test,"He said ""hi"""\r\nBeta;https://beta.test;\r\n\r\n',
       { maxRows: 10 },
     );
     expect(t.headers).toEqual(["name", "website_url", "note"]);
