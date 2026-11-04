@@ -58,7 +58,11 @@ export interface IdentityLookup {
 }
 
 export type IdentityDecision =
-  | { outcome: "matched_existing"; productId: string; rule: "canonical_url" | "external_id" | "domain" }
+  | {
+      outcome: "matched_existing";
+      productId: string;
+      rule: "canonical_url" | "external_id" | "domain";
+    }
   | { outcome: "new"; companyId: string | null; rule: "company_domain" | "no_match" }
   | { outcome: "needs_review"; reason: string; possibleDuplicateOf: string | null };
 
@@ -74,15 +78,26 @@ export function nameKey(name: string): string {
     .replace(/[^a-z0-9]+/g, "");
 }
 
-export function resolveIdentity(candidate: IdentityCandidate, lookup: IdentityLookup): IdentityDecision {
+export function resolveIdentity(
+  candidate: IdentityCandidate,
+  lookup: IdentityLookup,
+): IdentityDecision {
   if (lookup.productByCanonicalUrl) {
-    return { outcome: "matched_existing", productId: lookup.productByCanonicalUrl, rule: "canonical_url" };
+    return {
+      outcome: "matched_existing",
+      productId: lookup.productByCanonicalUrl,
+      rule: "canonical_url",
+    };
   }
   if (lookup.productByExternalId) {
-    return { outcome: "matched_existing", productId: lookup.productByExternalId, rule: "external_id" };
+    return {
+      outcome: "matched_existing",
+      productId: lookup.productByExternalId,
+      rule: "external_id",
+    };
   }
   // A candidate without a credible official URL goes to review (CLAUDE.md §8).
-  let registrable: string | null = null;
+  let registrable: string | null;
   if (candidate.officialUrl) {
     try {
       registrable = normalizeUrl(candidate.officialUrl).registrableDomain;
@@ -97,17 +112,27 @@ export function resolveIdentity(candidate: IdentityCandidate, lookup: IdentityLo
   if (!shared && domainProducts.length === 1 && domainProducts[0]) {
     return { outcome: "matched_existing", productId: domainProducts[0], rule: "domain" };
   }
-  const similar = lookup.similarNameProducts.find((p) => nameKey(p.name) === nameKey(candidate.name));
+  const similar = lookup.similarNameProducts.find(
+    (p) => nameKey(p.name) === nameKey(candidate.name),
+  );
   if (!shared && lookup.companyByDomain) {
     // Same company domain, different product path: a new product of that company,
     // unless a same-named product exists (then a human decides).
     if (similar) {
-      return { outcome: "needs_review", reason: "same_name_same_company", possibleDuplicateOf: similar.id };
+      return {
+        outcome: "needs_review",
+        reason: "same_name_same_company",
+        possibleDuplicateOf: similar.id,
+      };
     }
     return { outcome: "new", companyId: lookup.companyByDomain, rule: "company_domain" };
   }
   if (domainProducts.length > 1 && !shared) {
-    return { outcome: "needs_review", reason: "domain_maps_to_several_products", possibleDuplicateOf: null };
+    return {
+      outcome: "needs_review",
+      reason: "domain_maps_to_several_products",
+      possibleDuplicateOf: null,
+    };
   }
   // Name similarity is a review signal only, never a merge.
   if (similar) {

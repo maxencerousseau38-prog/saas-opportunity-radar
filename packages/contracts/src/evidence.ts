@@ -88,7 +88,10 @@ export const SourceDocumentSchema = z
     fetch_status: FetchStatusSchema,
     http_status: z.number().int().nullable(),
     storage_permitted: StoragePermittedSchema,
-    metadata: z.object({}).passthrough().default(() => ({})),
+    metadata: z
+      .object({})
+      .passthrough()
+      .default(() => ({})),
   })
   .strict();
 
