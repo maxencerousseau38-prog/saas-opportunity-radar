@@ -82,6 +82,10 @@ jobs:
           supabase gen types typescript --schema public > generated.ts
           if ! diff -q generated.ts packages/database/src/generated.ts; then
             echo "::error::packages/database/src/generated.ts is out of date (artifact database-generated-types)"
+            # Also printed in the log, between markers, for environments that cannot download artifacts.
+            echo "----- BEGIN GENERATED TYPES -----"
+            cat generated.ts
+            echo "----- END GENERATED TYPES -----"
             exit 1
           fi
       - uses: actions/upload-artifact@v4

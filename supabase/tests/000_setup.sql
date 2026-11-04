@@ -19,6 +19,7 @@ create or replace function tests.id(p_suffix text)
 returns uuid
 language sql
 immutable
+set search_path = ''
 as $$
   select ('00000000-0000-4000-8000-' || lpad(p_suffix, 12, '0'))::uuid
 $$;
@@ -27,6 +28,7 @@ $$;
 create or replace function tests.authenticate_as(p_user uuid)
 returns void
 language plpgsql
+set search_path = ''
 as $$
 begin
   perform set_config('request.jwt.claims',
@@ -39,6 +41,7 @@ $$;
 create or replace function tests.as_anon()
 returns void
 language plpgsql
+set search_path = ''
 as $$
 begin
   perform set_config('request.jwt.claims', '', true);
@@ -50,6 +53,7 @@ $$;
 create or replace function tests.as_owner_role()
 returns void
 language plpgsql
+set search_path = ''
 as $$
 begin
   perform set_config('request.jwt.claims', '', true);
@@ -62,6 +66,7 @@ $$;
 create or replace function tests.seed()
 returns void
 language plpgsql
+set search_path = ''
 as $$
 declare
   v_source uuid;
