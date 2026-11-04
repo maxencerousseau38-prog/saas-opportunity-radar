@@ -14,7 +14,15 @@ import {
   type ProductCard,
   type SourcedValue,
 } from "@sor/contracts";
-import { catalogRepo, serverRepo, workspaceRepo, type DbClient, type Json } from "@sor/database";
+import {
+  DbError,
+  catalogRepo,
+  pipelineRepo,
+  serverRepo,
+  workspaceRepo,
+  type DbClient,
+  type Json,
+} from "@sor/database";
 import {
   assertSupportedQuery,
   buildCatalogPlan,
@@ -26,6 +34,7 @@ import { ApiError } from "@/lib/api/http";
 import { decodeCursor, encodeCursor, queryHash } from "@/lib/api/cursor";
 import { getServiceClient } from "@/lib/supabase/server";
 import type { CompetitorView } from "./catalog-types";
+import { createJob } from "./jobs";
 
 const currentYear = () => new Date().getUTCFullYear();
 
@@ -249,7 +258,8 @@ export type ProductSection =
   | "competitors"
   | "feedback"
   | "evidence"
-  | "sources";
+  | "sources"
+  | "conflicts";
 
 export async function getProductSection(
   client: DbClient,
@@ -274,6 +284,8 @@ export async function getProductSection(
       return catalogRepo.listEvidence(client, product.id, product.company_id);
     case "sources":
       return sourcesOf(await catalogRepo.listEvidence(client, product.id, product.company_id));
+    case "conflicts":
+      return pipelineRepo.listConflicts(client, product.id);
   }
 }
 
@@ -513,11 +525,32 @@ export async function manualAdd(
   });
   // Only disclose the id of a product the user is allowed to see.
   const visible = (await catalogRepo.getProductById(client, result.product_id)) !== null;
+  // From Sprint 3, a newly created eligible product is enriched from its official website.
+  let enrichmentJobId: string | null = null;
+  let enrichmentNote: ManualAddResult["enrichment_note"] = "not_applicable";
+  if (result.status === "created" && visible) {
+    try {
+      const job = await createJob({
+        kind: "product_enrichment",
+        workspaceId,
+        userId,
+        idempotencyKey: `manual-add-enrichment-${result.product_id}`,
+        payload: { product_id: result.product_id },
+      });
+      enrichmentJobId = job.jobId;
+      enrichmentNote = "queued";
+    } catch (err) {
+      if (!(err instanceof DbError) || err.code !== "LIMIT_EXCEEDED") throw err;
+      enrichmentNote = "limit_reached";
+    }
+  }
   return {
     status: result.status,
     product_id: visible ? result.product_id : null,
     exclusion_status: result.exclusion_status,
     visible,
+    enrichment_job_id: enrichmentJobId,
+    enrichment_note: enrichmentNote,
   };
 }
 

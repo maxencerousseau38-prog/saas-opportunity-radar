@@ -12,6 +12,7 @@ const SECTIONS: readonly ProductSection[] = [
   "feedback",
   "evidence",
   "sources",
+  "conflicts",
 ];
 
 export const GET = workspaceRoute<P>("viewer", async ({ client }, p) => {

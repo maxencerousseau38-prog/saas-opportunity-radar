@@ -8,6 +8,7 @@ import { Field, Input, Select } from "@/components/ui/field";
 import { ErrorNote } from "@/components/ui/states";
 import { api } from "@/lib/client-api";
 import { CONFIGURABLE_EXCLUSIONS, CUSTOMER_TYPE, ROLE, formatDate } from "@/lib/labels";
+import { ImportsPanel } from "./imports-panel";
 
 interface Props {
   workspaceId: string;
@@ -395,8 +396,15 @@ export function SettingsView(p: Props) {
       </Block>
 
       <Block
+        title="Imports"
+        note="Ajout en masse de SaaS et d’avis clients déclarés (PRD §18). Le traitement est asynchrone."
+      >
+        <ImportsPanel workspaceId={p.workspaceId} canEdit={p.role !== "viewer"} />
+      </Block>
+
+      <Block
         title="Sources"
-        note="Une source n’est considérée comme intégrée qu’après le développement et la validation de son connecteur (PRD §13). Les premiers connecteurs arrivent au Sprint 3."
+        note="Une source n’est considérée comme intégrée qu’après le développement et la validation de son connecteur (PRD §13). Intégrées : site officiel (pages publiques, robots.txt respecté), saisie manuelle et imports CSV."
       >
         <table className="w-full text-left text-sm">
           <thead className="text-xs text-muted">

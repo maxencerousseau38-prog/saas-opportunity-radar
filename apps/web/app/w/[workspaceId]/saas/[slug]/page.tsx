@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
-import { catalogRepo, workspaceRepo } from "@sor/database";
+import { catalogRepo, pipelineRepo, workspaceRepo } from "@sor/database";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState, Unknown } from "@/components/ui/states";
 import { ProductLogo } from "@/components/discover/product-card";
@@ -79,6 +79,7 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
     workspaceRepo.listCollections(client, workspaceId),
     workspaceRepo.listProductCollections(client, workspaceId, product.id),
   ]);
+  const conflicts = await pipelineRepo.listConflicts(client, product.id);
   if (canEdit(membership.role)) await recordView(client, workspaceId, product.id, user.id);
 
   const g = buildGeneral(product, provenance);
@@ -591,6 +592,28 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
         ) : (
           <EmptyState title="Aucune source enregistrée" />
         )}
+        {conflicts.length ? (
+          <div className="mt-4 space-y-2" data-testid="conflicts">
+            <h3 className="text-sm font-semibold">
+              Informations contradictoires ({conflicts.length})
+            </h3>
+            <p className="text-xs text-muted">
+              Les sources ne concordent pas : les deux versions sont conservées, aucune n’écrase
+              l’autre.
+            </p>
+            <ul className="space-y-1 text-sm">
+              {conflicts.map((c) => (
+                <li key={c.id}>
+                  <span className="font-medium">{c.field_key}</span> : « {c.a?.claim_text} » ≠ «{" "}
+                  {c.b?.claim_text} »{" "}
+                  <span className="text-xs text-muted">
+                    ({c.status === "open" ? "non résolu" : c.status})
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
         <p className="mt-3 text-xs text-muted">
           <Link className="underline" href={`/w/${workspaceId}/discover`}>
             Retour à Discover

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Select, Textarea } from "@/components/ui/field";
 import { ErrorNote } from "@/components/ui/states";
 import { CollectionDialog, ReportDialog } from "@/components/discover/product-actions";
+import { EnrichmentStatus } from "./enrichment-status";
 import { api } from "@/lib/client-api";
 import { OPPORTUNITY_STATUS } from "@/lib/labels";
 
@@ -159,6 +160,11 @@ export function WorkspacePanel(props: {
           Dans {props.productCollectionIds.length} collection(s).
         </p>
       ) : null}
+      <EnrichmentStatus
+        workspaceId={props.workspaceId}
+        productId={props.productId}
+        canEdit={props.canEdit}
+      />
       {disabled ? (
         <p className="text-xs text-muted">Rôle lecteur : consultation uniquement.</p>
       ) : null}

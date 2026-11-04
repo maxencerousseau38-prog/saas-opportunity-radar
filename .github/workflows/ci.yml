@@ -59,19 +59,31 @@ jobs:
           supabase status -o env > "$RUNNER_TEMP/supabase.env"
           set -a; . "$RUNNER_TEMP/supabase.env"; set +a
           seed_password="e2e-$(openssl rand -hex 16)"
+          author_salt="$(openssl rand -hex 32)"
           echo "::add-mask::$SECRET_KEY"
           echo "::add-mask::$seed_password"
+          echo "::add-mask::$author_salt"
           {
             echo "APP_ENV=test"
             echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
             echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
             echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
             echo "SEED_PASSWORD=$seed_password"
+            echo "SUPABASE_URL=$API_URL"
+            echo "AUTHOR_HASH_SECRET=$author_salt"
+            echo "WORKER_ID=e2e-worker"
           } >> "$GITHUB_ENV"
       - name: Seed labelled demo fixtures
         run: pnpm --filter @sor/web seed:demo
+      - name: Start the worker (fake AI provider, PD-24 pending)
+        run: |
+          pnpm --filter @sor/worker build
+          nohup node apps/worker/dist/main.js > "$RUNNER_TEMP/worker.log" 2>&1 &
       - run: pnpm --filter @sor/web exec playwright install --with-deps chromium
       - run: pnpm test:e2e
+      - name: Worker log
+        if: always()
+        run: cat "$RUNNER_TEMP/worker.log" || true
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

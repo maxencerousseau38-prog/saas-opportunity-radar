@@ -157,6 +157,8 @@ test("manual add: eligible product appears, affiliate product is excluded", asyn
     .fill("Facturation simple pour les indépendants");
   await dialog.getByRole("button", { name: "Ajouter", exact: true }).click();
   await expect(dialog.getByText("Le SaaS est ajouté au catalogue")).toBeVisible();
+  // Sprint 3: the new product is enriched from its official website by a job.
+  await expect(dialog.getByTestId("enrichment-queued")).toBeVisible();
   await page.keyboard.press("Escape");
   await page.reload();
   await waitForResults(page);

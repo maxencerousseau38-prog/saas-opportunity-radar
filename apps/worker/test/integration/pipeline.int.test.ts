@@ -66,6 +66,16 @@ async function product(host: string, path = "/"): Promise<string> {
       exclusion_status: "eligible",
     })
     .throwOnError();
+  // Catalog products carry their canonical-URL identifier (ADR-002).
+  await db
+    .from("entity_identifiers")
+    .insert({
+      product_id: id,
+      identifier_type: "canonical_url",
+      value_normalized: `http://${host}:${port}${path}`.replace(/\/$/, ""),
+      is_primary: true,
+    })
+    .throwOnError();
   return id;
 }
 
@@ -261,9 +271,15 @@ run("worker on the local Supabase stack", () => {
     expect(b.provider.calls.map((c) => c.agentKey)).toEqual([D6_AGENT_KEY]); // D5 reused, not repeated
     const { data: steps } = await db
       .from("agent_step_runs")
-      .select("agent_key")
+      .select("agent_key, step_key, attempt, state")
       .eq("job_execution_id", jobId);
-    expect(new Set(steps?.map((s) => s.agent_key)).size).toBe(steps?.length);
+    // D5 ran once, during attempt 1, and was reused by attempt 2; apply completed once.
+    expect(steps?.filter((st) => st.agent_key === D5_AGENT_KEY)).toEqual([
+      { agent_key: D5_AGENT_KEY, step_key: "extract", attempt: 1, state: "completed" },
+    ]);
+    expect(
+      steps?.filter((st) => st.agent_key === "enrichment_apply").map((st) => st.state),
+    ).toEqual(["completed"]);
   });
 
   it("retries a transient upstream failure with backoff", async () => {

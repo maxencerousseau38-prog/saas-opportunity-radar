@@ -110,6 +110,9 @@ export const ManualAddResultSchema = z
     product_id: UUIDSchema.nullable(),
     exclusion_status: ExclusionStatusSchema,
     visible: z.boolean(),
+    /** product_enrichment job started for a newly created eligible product (Sprint 3). */
+    enrichment_job_id: UUIDSchema.nullable(),
+    enrichment_note: z.enum(["queued", "limit_reached", "not_applicable"]),
   })
   .strict();
 

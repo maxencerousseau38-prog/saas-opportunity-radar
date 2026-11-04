@@ -11,11 +11,14 @@ export class ClientApiError extends Error {
 
 export async function api<T = unknown>(
   path: string,
-  init: { method?: string; body?: unknown } = {},
+  init: { method?: string; body?: unknown; idempotencyKey?: string } = {},
 ): Promise<T> {
+  const headers: Record<string, string> = {};
+  if (init.body !== undefined) headers["content-type"] = "application/json";
+  if (init.idempotencyKey) headers["idempotency-key"] = init.idempotencyKey;
   const res = await fetch(`/api/v1${path}`, {
     method: init.method ?? "GET",
-    headers: init.body !== undefined ? { "content-type": "application/json" } : undefined,
+    headers,
     body: init.body !== undefined ? JSON.stringify(init.body) : undefined,
     credentials: "same-origin",
   });

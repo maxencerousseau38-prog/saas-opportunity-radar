@@ -90,6 +90,17 @@ export function ManualAddDialog({
                 : "Ajout enregistré."}
             </p>
             <p>{OUTCOME[result.exclusion_status] ?? ""}</p>
+            {result.enrichment_note === "queued" ? (
+              <p data-testid="enrichment-queued">
+                Enrichissement depuis le site officiel demandé : les informations vérifiées
+                apparaîtront sur la fiche.
+              </p>
+            ) : result.enrichment_note === "limit_reached" ? (
+              <p>
+                Trop de traitements en cours dans l’espace : lancez l’enrichissement plus tard
+                depuis la fiche.
+              </p>
+            ) : null}
             {result.visible && result.product_id ? (
               <p>
                 <Link

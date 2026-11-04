@@ -186,8 +186,12 @@ export async function safeFetch(
     let addresses: ResolvedAddress[];
     try {
       addresses = await policy.resolve(checked.hostname.replace(/^\[|\]$/g, ""));
-    } catch {
-      return failure("unavailable", "dns_resolution_failed", true);
+    } catch (err) {
+      // A name that does not exist will not exist on retry; other DNS errors may be transient.
+      const code = (err as { code?: string }).code;
+      return code === "ENOTFOUND" || code === "ENODATA"
+        ? failure("unavailable", "dns_name_not_found", false)
+        : failure("unavailable", "dns_resolution_failed", true);
     }
     if (addresses.length === 0) return failure("unavailable", "dns_no_address", true);
     if (addresses.some((a) => !policy.isAddressAllowed(a.address))) {

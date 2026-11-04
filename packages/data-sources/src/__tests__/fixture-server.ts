@@ -33,7 +33,7 @@ export function testPolicy(
   return defaultPolicy({
     resolve: async (host): Promise<ResolvedAddress[]> => {
       const list = hosts[host];
-      if (!list) throw new Error("ENOTFOUND");
+      if (!list) throw Object.assign(new Error("ENOTFOUND"), { code: "ENOTFOUND" });
       return list.map((address) => ({ address, family: address.includes(":") ? 6 : 4 }));
     },
     isAddressAllowed: (a) => a === "127.0.0.1" || isPublicAddress(a),

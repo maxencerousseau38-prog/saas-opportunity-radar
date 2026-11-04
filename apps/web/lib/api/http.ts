@@ -171,10 +171,12 @@ export function workspaceRoute<P extends { workspaceId: string }>(
 export async function parseBody<T extends z.ZodType>(
   request: Request,
   schema: T,
+  options: { maxBytes?: number } = {},
 ): Promise<z.infer<T>> {
   const text = await request.text();
-  if (text.length > 100_000)
+  if (text.length > (options.maxBytes ?? 100_000)) {
     throw new ApiError("VALIDATION_ERROR", "Corps de requête trop volumineux");
+  }
   let json: unknown = {};
   if (text.trim().length > 0) {
     try {
@@ -194,4 +196,13 @@ export function parseId(value: string): string {
 
 export function hasRole(role: Role, minRole: Role): boolean {
   return RANK[role] >= RANK[minRole];
+}
+
+/** Idempotency-Key header of job-creating POSTs (Implementation Blueprint §10). */
+export function idempotencyKey(request: Request): string {
+  const key = request.headers.get("idempotency-key");
+  if (!key || !/^[A-Za-z0-9_.:-]{8,200}$/.test(key)) {
+    throw new ApiError("VALIDATION_ERROR", "En-tête Idempotency-Key requis (8 à 200 caractères)");
+  }
+  return key;
 }

@@ -200,3 +200,32 @@ export function formatMoney(amount: number | null, currency: string | null): str
     return `${amount} ${currency}`;
   }
 }
+
+export const JOB_STATE: Record<string, string> = {
+  queued: "En file d’attente",
+  running: "En cours",
+  retrying: "Nouvelle tentative prévue",
+  completed: "Terminé",
+  partial: "Terminé partiellement",
+  failed: "Échec",
+  cancelled: "Annulé",
+  dead_letter: "Abandonné après plusieurs tentatives",
+};
+
+export const TERMINAL_STATES = new Set([
+  "completed",
+  "partial",
+  "failed",
+  "cancelled",
+  "dead_letter",
+]);
+
+export const IMPORT_ROW_STATUS: Record<string, string> = {
+  created: "Créé",
+  created_needs_review: "Créé, en revue (affiliation ou partenariat possible)",
+  created_excluded: "Créé mais exclu (affiliation ou partenariat)",
+  matched_existing: "Déjà au catalogue (rapproché)",
+  needs_review: "À vérifier (doublon possible)",
+  rejected: "Rejeté",
+  duplicate: "Doublon ignoré",
+};
