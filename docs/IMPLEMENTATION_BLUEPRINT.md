@@ -5015,6 +5015,70 @@ No pending decision (PD-12, PD-15, PD-16, PD-17, PD-20 approved).
 Done when a user can browse, filter, inspect, save and organise seeded
 records end-to-end (labelled fixtures).
 
+**Status (4 November 2026): implemented.** Summary of what was built and
+of the decisions taken inside the approved scope:
+
+-   **Migration** `20261105090000_catalog_search_manual_add_operator.sql`:
+    `saas_products.logo_url` (PRD §12.1, missing from M2; `https` only);
+    `public.catalog_search` / `public.catalog_count` (security invoker, so
+    catalog and workspace RLS apply; plan keys documented in
+    `private.catalog_filtered`; keyset pagination on `(sort value, id)`;
+    the sort value is returned as text so JSON never rounds a cursor);
+    `sor_manual_add_product`, `sor_operator_exclusion_decision`,
+    `sor_operator_resolve_report`, `sor_add_member_by_email` (service
+    role only) and `workspace_member_directory` (members only). pgTAP:
+    `007_catalog_search`, `008_manual_add_operator`,
+    `009_members_directory`.
+-   **Filter engine** (`packages/domain/src/filters`): the MVP groups of
+    PD-16 A + J. Groups H, K, L, M, N and the sort keys `least_analyzed`
+    and `ai_potential` are rejected with `VALIDATION_ERROR` (never
+    silently ignored) until their data exists (Phase 2 / Sprint 5).
+    **[ASSUMPTION]** integer age buckets on `current year − founding (else
+    launch) year`: `lt_1` = 0, `1_2` = 1--2, `2_5` = 3--5, `5_10` =
+    6--10, `gt_10` ≥ 11. Team size = `employee_max`, else `employee_min`.
+    Price bands are monthly-equivalent EUR, minimum inclusive and maximum
+    exclusive. Configurable exclusions (§4.2.O) **[ASSUMPTION]**:
+    `groups_and_large_companies` = subsidiary or public company, or
+    `employee_min > 100`; `too_recent_without_demand_proof` = started in
+    the current or previous year with no verified paying-customer
+    evidence, no feedback and no review/testimonial/case-study signal;
+    `very_technical_devtools` = primary category under Developer Tools;
+    `no_identifiable_activity` = `product_status = 'discontinued'`;
+    `already_analyzed_and_rejected` = workspace status `rejected`.
+-   **French search**: the search vector stays on the English
+    configuration; French words match through the stemmer (singular and
+    plural share a stem) and a name-fragment fallback. Accents must be
+    typed as in the source text (pgTAP-tested limitation; an `unaccent`
+    configuration can be added later).
+-   **Competitor facets** **[ASSUMPTION]**: `cheaper` = lower converted
+    entry price (both known); `more_advanced` = more observed available
+    features than the subject (subject has at least one); `free` = free
+    pricing or a free plan; `French` / `US` = company country. They are
+    labelled as indicators, not proof.
+-   **Manual add**: the API normalises the URL (§6.5), runs the §5.4
+    classifier (the one-line description is treated as the tagline, the
+    note as a secondary text) and calls the RPC; the response discloses a
+    product id only when the user can see the product.
+-   **API**: §10 routes for identity, workspaces, members (invitation
+    through Supabase Auth when the e-mail has no account), settings,
+    catalog search/count, profile sections, categories, compare, manual
+    add, reports, product state, collections, saved searches (duplicate),
+    tags, sources and the operator endpoints. Cursors are HMAC-SHA256
+    signed with a key derived from the server secret and bound to the
+    query. State-changing requests must be same-origin JSON.
+    **Deferred**: `/conflicts` (contradiction detection is the Evidence
+    Verifier, Sprint 3), `W/history` (status-change history needs the
+    analyses and runs of Sprints 5--6), rate limiting (first applied to
+    job-creating POSTs in Sprint 3), `/operator/products/{id}/merge`
+    (identity merges arrive with D4, Sprint 3), and ECB rate collection
+    (a job, Sprint 3; until then a currency without a rate counts as
+    unknown).
+-   **UI**: Discover, SaaS profile, Saved, Compare, Settings, operator
+    console; AI Discovery and Opportunities pages explain when they
+    arrive. Demo fixtures (`apps/web/scripts/seed-demo.ts`, `.test`
+    domains, badge "Donnée de démonstration") run only against a local
+    stack; the E2E suite runs on them in CI.
+
 ## Sprint 3 --- Sources, evidence and job system
 
 Blocked by the PGMQ verification gate (ADR-004). Can start with the fake

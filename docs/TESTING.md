@@ -9,8 +9,9 @@ Implementation Blueprint §14.
 |---|---|---|---|
 | Unit | Vitest 5 | `packages/*/src/**/__tests__/*.test.ts`, `apps/worker/src/__tests__` | Active |
 | Contract conventions | Vitest | `packages/contracts/src/__tests__/zod-conventions.test.ts` | Active (pins Zod 4 behaviours, §4.0) |
-| End-to-end | Playwright 1.64 | `apps/web/e2e/*.e2e.ts` | Smoke test active |
-| Database (RLS, grants, triggers, RPCs) | pgTAP via `supabase test db` | `supabase/tests/*.sql` | Active: 7 files, 121 assertions (see `docs/DATABASE_SECURITY.md`) |
+| Unit (web) | Vitest 5 | `apps/web/test/*.test.ts` | Active (cursor signing, filter chips, labels) |
+| End-to-end | Playwright 1.64 | `apps/web/e2e/*.e2e.ts` | Active: Sprint 2 journeys on the local Supabase stack with labelled demo fixtures |
+| Database (RLS, grants, triggers, RPCs) | pgTAP via `supabase test db` | `supabase/tests/*.sql` | Active: 10 files (see `docs/DATABASE_SECURITY.md`) |
 | Integration (jobs, engines) | Vitest + local Supabase + fake providers | per package | From Sprint 3 |
 | AI evaluation | fixtures + metrics | `evals/` | From Sprint 3 |
 
@@ -35,3 +36,35 @@ consolidation. Sprint 0 verified them on Zod 4.6.7:
 | `z.record(z.enum([...]), v)` | every enum key is required | use an explicit object with optional keys |
 | `z.coerce.number("")` | returns `0` | CSV cells use `CsvNullableInt` / `CsvNullableNumber` (empty → `null`) |
 | `z.string().url()` on `javascript:alert(1)` | accepted | use `HttpUrlSchema` (http/https only) |
+
+## End-to-end tests (Sprint 2)
+
+CI (`e2e` job) starts the local Supabase stack, seeds the labelled demo
+fixtures with `pnpm --filter @sor/web seed:demo` (users
+`demo-owner@demo.test` — also platform operator —, `demo-member@demo.test`,
+`demo-viewer@demo.test`; a random password per run), builds the web app and
+runs Playwright. The journeys share one database, so they run serially with no
+retry.
+
+Locally:
+
+```bash
+supabase start
+```
+
+Then export `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
+`SUPABASE_SECRET_KEY` (from `supabase status -o env`) and a `SEED_PASSWORD` of
+12+ characters, and run:
+
+```bash
+pnpm --filter @sor/web seed:demo
+```
+
+```bash
+pnpm test:e2e
+```
+
+The seed script refuses any Supabase URL other than `http://127.0.0.1` or
+`http://localhost`; reset the database (`supabase db reset`) before seeding
+again.
+

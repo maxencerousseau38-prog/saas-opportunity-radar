@@ -1,7 +1,9 @@
 # Database security
 
-**Created:** Sprint 1, 4 November 2026. Scope: migrations M1–M4
-(`supabase/migrations/2026110418*`). Decisions: ADR-003, ADR-007, ADR-010.
+**Created:** Sprint 1, 4 November 2026; updated in Sprint 2. Scope: migrations
+M1–M4 (`supabase/migrations/2026110418*`) and the Sprint 2 migration
+(`20261105090000_catalog_search_manual_add_operator.sql`). Decisions: ADR-003,
+ADR-007, ADR-010.
 Reference specification: Implementation Blueprint §3 and §12.
 
 This document describes what the migrations enforce and which pgTAP file
@@ -117,6 +119,23 @@ Additional rules:
 
 Proved by `supabase/tests/004_workspace_bootstrap.sql`,
 `005_workspace_members.sql` and `006_workspace_data.sql`.
+
+## Sprint 2 functions
+
+| Function | Who can execute | Security | Rules |
+|---|---|---|---|
+| `public.catalog_search(…)`, `public.catalog_count(…)` | `authenticated` | invoker | Caller must be a member of the workspace (else `42501`); catalog RLS limits rows to visible products; hidden products need `include_hidden`; sort keys and page size are validated (`22023`). |
+| `public.workspace_member_directory(workspace)` | `authenticated` | definer | Members only; returns member e-mails of that workspace. |
+| `public.sor_manual_add_product(…)` | `service_role` | definer | Requester must be owner, admin or member; needs an exclusion outcome; an existing canonical URL returns the existing product; active only when `eligible`; data stored as `declared` evidence (reliability 4); audit-logged. |
+| `public.sor_add_member_by_email(…)` | `service_role` | definer | Actor must be owner or admin; never `owner`; unknown e-mail → `P0002` (the API then sends a Supabase Auth invitation); audit-logged. |
+| `public.sor_operator_exclusion_decision(…)` | `service_role` | definer | Platform operator only; resolves `needs_review` only (R1–R5 exclusions are final, `55000`); reason required; audit-logged. |
+| `public.sor_operator_resolve_report(…)` | `service_role` | definer | Platform operator only; open reports only; audit-logged. |
+
+The web API derives the acting user from the verified session and passes it to
+the service-role functions, which re-check membership and roles themselves.
+
+Proved by `supabase/tests/007_catalog_search.sql`,
+`008_manual_add_operator.sql` and `009_members_directory.sql`.
 
 ## Running the tests
 

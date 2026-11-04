@@ -685,7 +685,7 @@ The detailed plan, with exit gates and the pending decisions that block each spr
 |---|---|---|
 | 0 | Repository audit, documentation consolidation, tooling, CI, env validation — **done 4 Nov 2026** | — |
 | 1 | Database foundation and security (M1–M4), bootstrap, pgTAP — **done 4 Nov 2026** | — |
-| 2 | Catalog APIs, Discover UI, profiles, workspace organisation, manual add, operator views | — |
+| 2 | Catalog APIs, Discover UI, profiles, workspace organisation, manual add, operator views — **done 4 Nov 2026** | — |
 | 3 | Sources, evidence, job system (M5), AI gateway, safe fetcher, official-website connector, CSV imports, identity, enrichment, verification | PGMQ verification gate; exit gate needs PD-24 (real provider for D5/D6) |
 | 4 | Pain Point Intelligence Engine (M6), embeddings and UI | PD-24 (embedding model); G2 only if PD-26 approved |
 | 5 | Opportunity Engine (M7), scoring, report, export | — (PD-25 non-blocking) |
@@ -815,7 +815,8 @@ A feature is Done only when:
 - 4 November 2026: **Sprint 0 implemented** — pnpm/Turborepo monorepo (Node 26.13.0, pnpm 10.34.9), `apps/web`, `apps/worker`, eight packages with ESLint-enforced boundaries, contract conventions tests, environment validation, Supabase project config (signup disabled), GitHub Actions CI. See `docs/ENVIRONMENT.md` and `docs/TESTING.md`.
 - 4 November 2026: **Sprint 1 implemented** — migrations M1–M4, 121 pgTAP assertions passing on the real Supabase stack in CI (lint and security advisors clean), generated types checked in CI, `@sor/database` clients, error mapping and workspace repository. See `docs/DATABASE_SECURITY.md`. Catalog repositories moved to Sprint 2.
 - Regenerate database types after a migration: `supabase gen types typescript --schema public > packages/database/src/generated.ts` (CI fails on drift and prints the expected file).
-- Next step: **Sprint 2** (catalog, Discover and workspace), on the product owner's go-ahead.
+- 4 November 2026: **Sprint 2 implemented** — catalog search/count RPCs (filters A–J, O; keyset pagination), manual add with the excl-1 classifier, operator RPCs and console, `/api/v1` catalog, workspace and operator routes, Discover/profile/Saved/Compare/Settings UI (French), Supabase SSR auth with invitations, Playwright journeys on the local Supabase stack with labelled demo fixtures (`apps/web/scripts/seed-demo.ts`). Assumptions and deferrals: Implementation Blueprint §15 "Sprint 2" status.
+- Next step: **Sprint 3** (sources, evidence, job system, AI gateway), on the product owner's go-ahead; its exit gate needs PD-24.
 - **Do not start by writing the AI agents or building the complete UI.**
 
 The original first-session instruction is kept below for reference; its audit step has been done.
