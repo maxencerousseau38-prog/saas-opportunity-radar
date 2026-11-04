@@ -334,7 +334,7 @@ Access pattern: web and worker use the server Supabase client (secret key, serve
 
 ### 11.1 Authentication
 
-- Supabase Auth; public signup disabled in every environment; users are invited.
+- Supabase Auth; public signup disabled in every environment; users are invited. The Supabase CLI 3.0.0 default is `enable_signup = true` (verified in Sprint 0), so `supabase/config.toml` sets it to `false` explicitly; hosted projects must be configured the same way.
 - The acting user is always derived from the verified session, never from a request body.
 
 ### 11.2 Authorization layers
@@ -454,8 +454,8 @@ These items could not be verified in the consolidation session (network policy b
 
 | Item | Verify in |
 |---|---|
-| Exact current versions of Node LTS lines, pnpm, Next.js, Zod, Supabase CLI and PostgreSQL. The Node.js release page lists v22, v24 and v26 as LTS lines (v26 the latest LTS) | Sprint 0 |
-| Zod major-version semantics (contracts are written to be version-agnostic; see Implementation Blueprint §4.0) | Sprint 0 |
+| Exact current versions of Node LTS lines, pnpm, Next.js, Zod, Supabase CLI and PostgreSQL — **verified in Sprint 0**: Node 26.13.0 is the active LTS (official schedule), pnpm 10.34.9, Next.js 16.4.5, Zod 4.6.7, TypeScript 6.0.3 (7.x is not yet supported by typescript-eslint), Supabase CLI 3.0.0 whose local stack runs PostgreSQL 17; see `docs/ENVIRONMENT.md` | Done (Sprint 0) |
+| Zod major-version semantics — **verified in Sprint 0** by contract tests: `.default({})` skips inner defaults, enum-keyed records are exhaustive, `coerce.number("")` is 0, `.url()` accepts `javascript:` (Implementation Blueprint §4.0) | Done (Sprint 0) |
 | Supabase API key model (legacy `anon`/`service_role` vs publishable/secret keys) and default grants on new objects in `public` | Sprint 1 |
 | PGMQ availability, queue-name rules and function signatures (`pgmq.create`, `send`, `read`, `set_vt`, `archive`, `delete`) in the target Supabase version | Sprint 3 (gate, before any queue code) |
 | `pgvector` availability and the embedding dimensions of the chosen model | Sprint 4 |

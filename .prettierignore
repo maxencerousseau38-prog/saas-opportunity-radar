@@ -1,0 +1,10 @@
+# Reference documentation is formatted by hand (Pandoc-style blueprint, French PRD).
+docs/
+CLAUDE.md
+PREMIER_PROMPT_AUDIT.txt
+pnpm-lock.yaml
+.next/
+dist/
+coverage/
+playwright-report/
+test-results/

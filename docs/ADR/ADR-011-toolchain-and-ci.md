@@ -24,3 +24,21 @@
 - **CI:** GitHub Actions, because the repository is hosted on GitHub.
   - Jobs: install, lint, typecheck, unit tests, build.
   - A database job runs `supabase start`, the migrations and `supabase test db` on a Docker-capable runner.
+
+## Versions pinned in Sprint 0 (4 November 2026)
+
+| Tool | Version | Note |
+|---|---|---|
+| Node.js | 26.13.0 | Active LTS since 28 Oct 2026, per the official release schedule read at Sprint 0 start |
+| pnpm | 10.34.9 | Latest of the approved 10.x line. pnpm 12 exists; moving to it would need a new decision |
+| TypeScript | 6.0.3 | The approved "latest" would be 7.0.2, but typescript-eslint 8.72 requires `<6.1.0`; 6.0.3 is the latest compatible version |
+| Next.js / React | 16.4.5 / 19.3.1 | Latest stable |
+| Zod | 4.6.7 | Latest major; behaviours pinned by contract tests |
+| ESLint / typescript-eslint | 10.14.0 / 8.72.1 | |
+| Vitest / Playwright | 5.1.0 / 1.64.1 | |
+| Turborepo / tsup / Prettier | 2.11.10 / 9.0.0 / 3.9.10 | |
+| Supabase CLI | 3.0.0 | Local stack uses PostgreSQL 17 |
+| CI | GitHub Actions | `.github/workflows/ci.yml`: checks, e2e, database jobs |
+
+All versions are centralised in the `catalog:` of `pnpm-workspace.yaml`.
+

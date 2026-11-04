@@ -138,7 +138,8 @@ saas-opportunity-radar/
 ├── packages/
 │   ├── contracts/src/
 │   │   ├── common.ts
-│   │   ├── catalog.ts
+│   │   ├── catalog.ts       (S0: CSV cell helpers; catalog schemas in S2)
+│   │   ├── env.ts           (S0: environment validation)
 │   │   ├── filters.ts
 │   │   ├── evidence.ts
 │   │   ├── workspace.ts
@@ -2795,6 +2796,13 @@ the contracts avoid constructs whose semantics are version-sensitive:
     (defaults applied, unknown keys rejected, non-http URLs rejected), so
     a Zod upgrade cannot silently change them.
 
+**Verified in Sprint 0 on Zod 4.6.7**
+(`packages/contracts/src/__tests__/zod-conventions.test.ts`):
+`.default({})` does not apply inner defaults; `z.record(z.enum(...))`
+requires every key; `z.coerce.number("")` returns `0`; `z.string().url()`
+accepts `javascript:` URLs. The conventions above are therefore required,
+not only precautionary.
+
 ## 4.1 `common.ts`
 
 ``` ts
@@ -4950,6 +4958,14 @@ PD-01 approved. **Starts only on the product owner's explicit go-ahead.**
 Done when install, lint, typecheck, unit tests and build pass locally and
 in CI.
 
+**Status (4 November 2026): implemented.** Pinned versions are in
+`docs/ENVIRONMENT.md` (Node 26.13.0, pnpm 10.34.9, TypeScript 6.0.3,
+Next.js 16.4.5, Zod 4.6.7, Supabase CLI 3.0.0). Local results: format,
+lint, typecheck, unit tests, build and the Playwright smoke test pass.
+`supabase/config.toml` was generated with signup disabled. The CI result
+is recorded in the Sprint 0 report; the database job could not run in the
+cloud session (no Docker daemon).
+
 ## Sprint 1 --- Database foundation and security
 
 No pending decision (PD-04 approved).
@@ -5091,7 +5107,7 @@ Created when the corresponding sprint starts (not before, to avoid
 duplicating this blueprint): `docs/DATABASE_SECURITY.md` (S1, generated
 from the pgTAP matrix), `docs/JOB_SYSTEM.md` (S3, verified PGMQ API),
 `docs/DATA_SOURCES.md` (S3, per-connector terms review),
-`docs/ENVIRONMENT.md` (S0), `docs/TESTING.md` (S0), `evals/README.md`
+`docs/ENVIRONMENT.md` (created in S0), `docs/TESTING.md` (created in S0), `evals/README.md`
 (S4). v1.0's list of eight further documents (architecture, database,
 API, engines, gateway, scoring) is covered by the Technical Blueprint
 and this document; split them out only if these become too large.
@@ -5134,9 +5150,10 @@ Use this document as the implementation contract.
 ## Next task for Claude Code
 
 The repository audit (4 November 2026) and the documentation
-consolidation are complete, and PD-01 to PD-23 were arbitrated on
-4 November 2026. The next task is **Sprint 0**, which starts only on the
-product owner's explicit go-ahead. Do not start with AI agents.
+consolidation are complete, PD-01 to PD-23 were arbitrated, and Sprint 0
+was implemented on 4 November 2026. The next task is **Sprint 1**
+(database foundation and security), on the product owner's go-ahead. Do
+not start with AI agents.
 
 ------------------------------------------------------------------------
 
