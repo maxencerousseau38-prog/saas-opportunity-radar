@@ -1,0 +1,22 @@
+Lis intégralement les documents de référence présents dans ce repository :
+- CLAUDE.md
+- docs/PRODUCT_REQUIREMENTS.md (cahier des charges fonctionnel)
+- docs/IMPLEMENTATION_BLUEPRINT.md
+- docs/TECHNICAL_BLUEPRINT.md, uniquement s'il est présent.
+
+Commence par l'audit complet du repository. Inspecte l'architecture, les fichiers existants, la branche et l'état Git, les dépendances et leurs versions, la configuration, les migrations, la base de données, les tests et le déploiement.
+
+Compare le code existant aux documents réellement disponibles. Identifie ce qui existe déjà, ce qui manque, les incohérences, les risques techniques et les décisions qui nécessitent une clarification.
+
+Si un document de référence est absent, indique précisément son nom et poursuis l'audit sans inventer son contenu ni prétendre l'avoir lu.
+
+Produis un Repository Audit Report détaillé avec :
+1. l'état réel du repository et son architecture ;
+2. les éléments déjà implémentés et vérifiés ;
+3. les éléments manquants ;
+4. les écarts entre le code et les documents disponibles ;
+5. les risques de sécurité, de dépendances et d'architecture ;
+6. les décisions à trancher ;
+7. un plan de développement ordonné, adapté à l'état réel du projet.
+
+IMPORTANT : cette première étape est un audit uniquement. Ne modifie aucun fichier, ne crée aucun fichier, ne lance aucune migration, n'installe aucune dépendance et ne génère aucun code. Attends ma validation explicite après avoir présenté le rapport.
