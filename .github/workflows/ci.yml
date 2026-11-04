@@ -37,10 +37,10 @@ jobs:
       - run: pnpm build
 
   e2e:
-    name: End-to-end (Playwright)
+    name: End-to-end (Playwright, local Supabase stack)
     needs: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -49,6 +49,27 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.0.0
+      - name: Start the local stack (database, auth, API) and apply migrations
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
+      - name: Export the local stack credentials (local defaults, masked)
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase.env"
+          set -a; . "$RUNNER_TEMP/supabase.env"; set +a
+          seed_password="e2e-$(openssl rand -hex 16)"
+          echo "::add-mask::$SECRET_KEY"
+          echo "::add-mask::$seed_password"
+          {
+            echo "APP_ENV=test"
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
+            echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
+            echo "SEED_PASSWORD=$seed_password"
+          } >> "$GITHUB_ENV"
+      - name: Seed labelled demo fixtures
+        run: pnpm --filter @sor/web seed:demo
       - run: pnpm --filter @sor/web exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
@@ -57,6 +78,8 @@ jobs:
           name: playwright-report
           path: apps/web/playwright-report
           retention-days: 7
+      - if: always()
+        run: supabase stop --no-backup
 
   database:
     name: Database (migrations, pgTAP, advisors, types)

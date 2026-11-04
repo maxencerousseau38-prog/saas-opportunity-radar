@@ -7,9 +7,11 @@ const isCI = Boolean(process.env.CI);
 export default defineConfig({
   testDir: "./e2e",
   testMatch: "**/*.e2e.ts",
-  fullyParallel: true,
+  // Journeys share one seeded database: run them one at a time.
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: isCI,
-  retries: isCI ? 1 : 0,
+  retries: 0, // serial journeys mutate shared state: a retry would not be meaningful
   reporter: isCI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: "http://127.0.0.1:3100",
@@ -29,5 +31,8 @@ export default defineConfig({
     url: "http://127.0.0.1:3100",
     reuseExistingServer: !isCI,
     timeout: 60_000,
+    // Server logs (structured JSON errors) appear in the CI log on failure.
+    stdout: "pipe",
+    stderr: "pipe",
   },
 });

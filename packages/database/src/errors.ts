@@ -59,6 +59,10 @@ export function mapPostgresError(error: PostgresLikeError): DbError {
       return new DbError("UNAUTHENTICATED", error);
     case "42501": // insufficient_privilege, including RLS denials
       return new DbError("FORBIDDEN", error);
+    case "55000": // object_not_in_prerequisite_state (raised by our RPCs)
+      return new DbError("INVALID_STATE", error);
+    case "P0002": // no_data_found (raised by our RPCs)
+      return new DbError("NOT_FOUND", error);
     case "54000": // program_limit_exceeded (platform limits)
       return new DbError("LIMIT_EXCEEDED", error);
     case "PGRST116": // PostgREST: no row for .single()

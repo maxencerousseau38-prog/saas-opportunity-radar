@@ -6,4 +6,7 @@ export {
   type WorkspaceMembership,
   type WorkspaceRole,
 } from "./repositories/workspaces";
-export type { Database } from "./generated";
+export * as catalogRepo from "./repositories/catalog";
+export * as workspaceRepo from "./repositories/workspace-data";
+export * as serverRepo from "./repositories/server";
+export type { Database, Json } from "./generated";

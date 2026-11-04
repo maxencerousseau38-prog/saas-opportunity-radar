@@ -218,7 +218,7 @@ create or replace function public.catalog_search(
   p_limit integer default 30)
 returns table (
   id uuid,
-  sort_value numeric,
+  sort_value text,  -- exact numeric as text: JSON numbers would lose cursor precision
   slug text,
   name text,
   tagline text,
@@ -261,7 +261,7 @@ begin
                                       f.team_size, f.monetization_score, f.last_activity_at, f.text_rank) as sv
     from private.catalog_filtered(p_workspace_id, p_plan) f
   )
-  select r.id, r.sv, p.slug, p.name, p.tagline, p.short_description, p.website_url, p.logo_url,
+  select r.id, r.sv::text, p.slug, p.name, p.tagline, p.short_description, p.website_url, p.logo_url,
          p.customer_type, p.pricing_status, p.billing_models, c.country_code, c.employee_min,
          c.employee_max, coalesce(c.founded_year, p.launch_year),
          coalesce((select jsonb_agg(jsonb_build_object('slug', cat.slug, 'name', cat.name, 'is_primary', pc.is_primary)

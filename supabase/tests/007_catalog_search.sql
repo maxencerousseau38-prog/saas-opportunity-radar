@@ -45,7 +45,7 @@ create function tests.count_b1(p_plan jsonb) returns bigint language sql
 set search_path = '' as $$ select public.catalog_count(tests.id('b1'), p_plan) $$;
 create function tests.names_b1(p_plan jsonb, p_sort text default 'relevance') returns text[] language sql
 set search_path = '' as $$
-  select coalesce(array_agg(s.name order by s.sort_value desc, s.id desc), '{}')
+  select coalesce(array_agg(s.name order by s.sort_value::numeric desc, s.id desc), '{}')
   from public.catalog_search(tests.id('b1'), p_plan, p_sort) s $$;
 grant execute on all functions in schema tests to authenticated;
 
@@ -160,14 +160,14 @@ select is(public.catalog_count(tests.id('b2'), '{}'), 4::bigint,
 -- ------------------------------------------------------------ sort and pagination
 select tests.authenticate_as(tests.id('a3'));
 select is(
-  (select array_agg(s.name order by s.sort_value desc, s.id desc)
+  (select array_agg(s.name order by s.sort_value::numeric desc, s.id desc)
      from public.catalog_search(tests.id('b1'), '{"include_hidden": true}', 'smallest_team', 0, null, null, 2) s),
   array['Email Pilot', 'Big Social'], 'first page');
 select is(
-  (select array_agg(s.name order by s.sort_value desc, s.id desc)
+  (select array_agg(s.name order by s.sort_value::numeric desc, s.id desc)
      from public.catalog_search(tests.id('b1'), '{"include_hidden": true}', 'smallest_team', 0,
-            (select p.sort_value from public.catalog_search(tests.id('b1'), '{"include_hidden": true}', 'smallest_team', 0, null, null, 2) p
-              order by p.sort_value asc, p.id asc limit 1),
+            (select p.sort_value::numeric from public.catalog_search(tests.id('b1'), '{"include_hidden": true}', 'smallest_team', 0, null, null, 2) p
+              order by p.sort_value::numeric asc, p.id asc limit 1),
             tests.id('d6'), 2) s),
   array['Log Watch', 'Product One'], 'second page continues after the cursor, unknown values last');
 select is(tests.names_b1('{"include_hidden": true}', 'oldest'),

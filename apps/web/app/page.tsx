@@ -1,12 +1,9 @@
-export default function HomePage() {
-  return (
-    <main>
-      <h1>SaaS Opportunity Radar</h1>
-      <p>Socle technique en place (Sprint 0).</p>
-      <p className="muted">
-        Aucune donnée n’est encore disponible : le catalogue et la page Discover arrivent au Sprint
-        2.
-      </p>
-    </main>
-  );
+import { redirect } from "next/navigation";
+import { getMemberships, requireUser } from "@/lib/auth";
+
+export default async function HomePage() {
+  const { user } = await requireUser();
+  const memberships = await getMemberships(user.id);
+  const first = memberships[0];
+  redirect(first ? `/w/${first.workspaceId}/discover` : "/onboarding");
 }

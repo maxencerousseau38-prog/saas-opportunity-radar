@@ -1,37 +1,49 @@
-/* Dark mode first, light mode available (PRD §17). The design system arrives in Sprint 2. */
-:root {
-  color-scheme: dark light;
-  --background: #0b0d12;
-  --foreground: #e6e8ee;
-  --muted: #9aa3b2;
+@import "tailwindcss";
+
+/* Design tokens. Dark mode first, light mode follows the system (PRD §17). */
+@theme {
+  --color-bg: #0b0d12;
+  --color-surface: #12151c;
+  --color-surface-2: #1a1e27;
+  --color-border: #262b36;
+  --color-fg: #e6e8ee;
+  --color-muted: #9aa3b2;
+  --color-accent: #6d8cff;
+  --color-accent-fg: #0b0d12;
+  --color-success: #3fbf7f;
+  --color-warning: #e5b04a;
+  --color-danger: #ef6b6b;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #ffffff;
-    --foreground: #111318;
-    --muted: #4b5563;
+    --color-bg: #f7f8fa;
+    --color-surface: #ffffff;
+    --color-surface-2: #f0f2f5;
+    --color-border: #dde1e7;
+    --color-fg: #111318;
+    --color-muted: #545d6b;
+    --color-accent: #3355dd;
+    --color-accent-fg: #ffffff;
+    --color-success: #15803d;
+    --color-warning: #a16207;
+    --color-danger: #b91c1c;
   }
 }
 
+:root {
+  color-scheme: dark light;
+}
+
 body {
-  margin: 0;
-  background: var(--background);
-  color: var(--foreground);
-  font-family:
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    sans-serif;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
   line-height: 1.5;
 }
 
-main {
-  max-width: 40rem;
-  margin: 0 auto;
-  padding: 4rem 1rem;
-}
-
-.muted {
-  color: var(--muted);
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
