@@ -81,6 +81,37 @@ jobs:
       - if: always()
         run: supabase stop --no-backup
 
+  worker-integration:
+    name: Worker integration (PGMQ, RPCs, crash recovery)
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.0.0
+      - name: Start the local stack (database, auth, API) and apply migrations
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
+      - name: Export the local stack credentials (local defaults, masked)
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase.env"
+          set -a; . "$RUNNER_TEMP/supabase.env"; set +a
+          echo "::add-mask::$SECRET_KEY"
+          {
+            echo "SUPABASE_URL=$API_URL"
+            echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
+          } >> "$GITHUB_ENV"
+      - run: pnpm --filter @sor/worker test:integration
+      - if: always()
+        run: supabase stop --no-backup
+
   database:
     name: Database (migrations, pgTAP, advisors, types)
     runs-on: ubuntu-latest

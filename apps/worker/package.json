@@ -8,10 +8,17 @@
     "start": "node dist/main.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run --exclude 'test/integration/**'",
+    "test:integration": "vitest run --dir test/integration"
   },
   "dependencies": {
-    "@sor/contracts": "workspace:*"
+    "@sor/ai-gateway": "workspace:*",
+    "@sor/contracts": "workspace:*",
+    "@sor/data-sources": "workspace:*",
+    "@sor/database": "workspace:*",
+    "@sor/discovery-engine": "workspace:*",
+    "@sor/domain": "workspace:*",
+    "@supabase/supabase-js": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",

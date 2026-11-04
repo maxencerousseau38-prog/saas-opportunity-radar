@@ -7,6 +7,7 @@ export type DbErrorCode =
   | "UNAUTHENTICATED"
   | "FORBIDDEN"
   | "NOT_FOUND"
+  | "IDEMPOTENCY_CONFLICT"
   | "INVALID_STATE"
   | "LIMIT_EXCEEDED"
   | "EXCLUDED_SUBJECT"
@@ -18,6 +19,7 @@ const PUBLIC_MESSAGES: Record<DbErrorCode, string> = {
   UNAUTHENTICATED: "Authentication required",
   FORBIDDEN: "Not allowed",
   NOT_FOUND: "Not found",
+  IDEMPOTENCY_CONFLICT: "Idempotency key already used with another payload",
   INVALID_STATE: "The resource is not in a valid state for this operation",
   LIMIT_EXCEEDED: "Limit reached",
   EXCLUDED_SUBJECT: "This subject is excluded",
@@ -51,7 +53,9 @@ export function mapPostgresError(error: PostgresLikeError): DbError {
       if (message.startsWith("EVIDENCE_SCOPE_VIOLATION")) {
         return new DbError("EVIDENCE_SCOPE_VIOLATION", error);
       }
-      if (message.startsWith("EXCLUDED_CATEGORY")) return new DbError("EXCLUDED_SUBJECT", error);
+      if (message.startsWith("EXCLUDED_CATEGORY") || message.startsWith("EXCLUDED_SUBJECT")) {
+        return new DbError("EXCLUDED_SUBJECT", error);
+      }
       return new DbError("VALIDATION_ERROR", error);
     case "23505": // unique_violation
       return new DbError("INVALID_STATE", error);
@@ -59,6 +63,10 @@ export function mapPostgresError(error: PostgresLikeError): DbError {
       return new DbError("UNAUTHENTICATED", error);
     case "42501": // insufficient_privilege, including RLS denials
       return new DbError("FORBIDDEN", error);
+    case "P0001": // raise_exception without errcode: our RPCs prefix the message
+      if (message.startsWith("IDEMPOTENCY_CONFLICT"))
+        return new DbError("IDEMPOTENCY_CONFLICT", error);
+      return new DbError("INTERNAL_ERROR", error);
     case "55000": // object_not_in_prerequisite_state (raised by our RPCs)
       return new DbError("INVALID_STATE", error);
     case "P0002": // no_data_found (raised by our RPCs)
@@ -70,4 +78,11 @@ export function mapPostgresError(error: PostgresLikeError): DbError {
     default:
       return new DbError("INTERNAL_ERROR", error);
   }
+}
+
+/** The worker lost its lease (another worker recovered the job). */
+export function isLeaseLost(error: unknown): boolean {
+  const cause =
+    error instanceof DbError ? (error.cause as { message?: string } | undefined) : undefined;
+  return typeof cause?.message === "string" && cause.message.startsWith("LEASE_LOST");
 }

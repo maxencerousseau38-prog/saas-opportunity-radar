@@ -275,12 +275,13 @@ begin
       raise exception 'VALIDATION_ERROR: product has no official URL' using errcode = '22023';
     end if;
   else
-    v_rows := jsonb_array_length(coalesce(p_payload -> 'rows', '[]'::jsonb));
-    if jsonb_typeof(p_payload -> 'rows') <> 'array' or v_rows = 0
-       or v_rows > private.limit_int('import_max_rows', 1000) then
-      raise exception 'VALIDATION_ERROR: rows' using errcode = '22023';
+    -- Imports carry the raw CSV; the worker parses and validates every row.
+    v_rows := (p_payload ->> 'row_count')::integer;
+    if coalesce(jsonb_typeof(p_payload -> 'csv'), '') <> 'string' or length(p_payload ->> 'csv') > 2000000
+       or v_rows is null or v_rows < 1 or v_rows > private.limit_int('import_max_rows', 1000) then
+      raise exception 'VALIDATION_ERROR: csv' using errcode = '22023';
     end if;
-    if p_kind = 'feedback_import' and jsonb_typeof(p_payload -> 'rights_declaration') <> 'object' then
+    if p_kind = 'feedback_import' and coalesce(jsonb_typeof(p_payload -> 'rights_declaration'), '') <> 'object' then
       raise exception 'VALIDATION_ERROR: rights declaration' using errcode = '22023';
     end if;
   end if;

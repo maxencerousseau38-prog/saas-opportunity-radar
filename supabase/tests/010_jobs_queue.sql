@@ -42,6 +42,12 @@ select throws_ok($$select tests.req(tests.id('a3'), 'candidate-key', jsonb_build
   'P0002', null, 'a non-active product cannot be enriched');
 select throws_ok($$select tests.req(tests.id('a3'), 'extra-key-1', jsonb_build_object('product_id', tests.id('d1'), 'x', 1))$$,
   '22023', null, 'unexpected payload keys are refused');
+select throws_ok($$select tests.req(tests.id('a3'), 'import-bad-1', '{"csv": 1, "row_count": 1}'::jsonb, 'catalog_import')$$,
+  '22023', null, 'an import needs a CSV text');
+select throws_ok($$select tests.req(tests.id('a3'), 'import-bad-2', '{"csv": "a", "row_count": 5000}'::jsonb, 'catalog_import')$$,
+  '22023', null, 'an import is limited to import_max_rows rows');
+select throws_ok($$select tests.req(tests.id('a3'), 'import-bad-3', '{"csv": "a", "row_count": 1}'::jsonb, 'feedback_import')$$,
+  '22023', null, 'a feedback import needs a rights declaration');
 select throws_ok($$select tests.req(tests.id('a3'), 'discovery-key', '{}'::jsonb, 'discovery_run')$$,
   '22023', null, 'job kinds of later sprints are refused');
 

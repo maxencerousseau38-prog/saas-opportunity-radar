@@ -204,9 +204,27 @@ importers:
 
   apps/worker:
     dependencies:
+      '@sor/ai-gateway':
+        specifier: workspace:*
+        version: link:../../packages/ai-gateway
       '@sor/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@sor/data-sources':
+        specifier: workspace:*
+        version: link:../../packages/data-sources
+      '@sor/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@sor/discovery-engine':
+        specifier: workspace:*
+        version: link:../../packages/discovery-engine
+      '@sor/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+      '@supabase/supabase-js':
+        specifier: 'catalog:'
+        version: 2.119.0
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

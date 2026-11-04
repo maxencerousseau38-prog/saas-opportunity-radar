@@ -1,5 +1,5 @@
 export { createServiceClient, createUserClient, type DbClient } from "./clients";
-export { DbError, mapPostgresError, type DbErrorCode } from "./errors";
+export { DbError, isLeaseLost, mapPostgresError, type DbErrorCode } from "./errors";
 export {
   createWorkspace,
   listMemberships,
@@ -9,4 +9,6 @@ export {
 export * as catalogRepo from "./repositories/catalog";
 export * as workspaceRepo from "./repositories/workspace-data";
 export * as serverRepo from "./repositories/server";
+export * as jobsRepo from "./repositories/jobs";
+export * as pipelineRepo from "./repositories/pipeline";
 export type { Database, Json } from "./generated";

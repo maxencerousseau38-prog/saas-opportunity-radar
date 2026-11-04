@@ -26,6 +26,14 @@ export const WorkerEnvSchema = z.object({
     .string()
     .regex(/^[a-z0-9-]{3,64}$/)
     .optional(),
+  /** Only the fake provider exists until the PD-24 benchmark chooses a real one. */
+  AI_PROVIDER: z.enum(["fake"]).default("fake"),
+  /** Secret salt of reviewer-identity hashes (ADR-013); never logged. */
+  AUTHOR_HASH_SECRET: z.string().min(32),
+  WORKER_CONCURRENCY: z
+    .string()
+    .regex(/^[1-9]\d{0,1}$/)
+    .default("2"),
 });
 
 export type WebPublicEnv = z.infer<typeof WebPublicEnvSchema>;
