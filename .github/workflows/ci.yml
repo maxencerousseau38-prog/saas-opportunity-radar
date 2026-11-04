@@ -94,6 +94,25 @@ jobs:
         run: supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
       - name: API key model (variable names only, never values)
         run: supabase status -o env | cut -d= -f1
+      - name: PGMQ verification gate (ADR-004) — extension and function signatures
+        run: |
+          db_url="$(supabase status -o env | sed -n 's/^DB_URL="\(.*\)"$/\1/p')"
+          psql "$db_url" -v ON_ERROR_STOP=1 -X -q <<'SQL'
+          \pset pager off
+          select name, default_version, installed_version from pg_available_extensions where name in ('pgmq', 'pg_cron', 'vector');
+          begin;
+          create extension if not exists pgmq;
+          select extversion from pg_extension where extname = 'pgmq';
+          select p.proname || '(' || pg_get_function_identity_arguments(p.oid) || ') -> ' || pg_get_function_result(p.oid) as signature
+            from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+           where n.nspname = 'pgmq'
+             and p.proname in ('create', 'send', 'send_batch', 'read', 'set_vt', 'archive', 'delete', 'pop', 'drop_queue', 'list_queues', 'metrics')
+           order by 1;
+          select pgmq.create('sor_jobs_probe');
+          select * from pgmq.send('sor_jobs_probe', '{"probe": true}'::jsonb);
+          select msg_id, read_ct, message from pgmq.read('sor_jobs_probe', 30, 1);
+          rollback;
+          SQL
       - name: pgTAP tests
         run: supabase test db
       - name: Lint database functions
