@@ -1,0 +1,63 @@
+https://docs.mistral.ai/inference/embeddings
+2026-11-05T09:02:50.355Z
+
+Docs & API
+Search docs
+⌘K
+Vibe Studio Inference & Models Admin Resources API Reference Search docs
+⌘K
+Toggle theme Reach out Try Studio
+Home
+Inference
+Get started
+Quickstarts
+Models
+Generate
+Conversations
+Embeddings
+Text Embeddings
+Code Embeddings
+Prompting
+Sampling
+Optimize cost and latency
+Batch Processing
+Prompt caching
+Predicted outputs
+Priority Tier
+Platform
+Regional inference
+Pricing
+Model lifecycle policy
+Labs
+API Reference ↗
+Inference & Models
+Inference
+Embeddings
+Embeddings
+Embeddings are vector representations of text that capture the semantic meaning of paragraphs through their position in a high-dimensional vector space. Mistral's Embeddings API provides embeddings for text and code, which you can use for natural language processing (NLP) tasks.
+Embeddings can power retrieval systems for retrieval-augmented generation, clustering for unorganized data, document classification, semantic code search, code analytics, duplicate detection, and search across raw text or code sources.
+If you want a managed feature that ingests, vectorizes, and searches documents for you, use Libraries . If you want to search connected sources such as Google Drive or SharePoint, use Connectors .
+Services
+Copy section link Services
+We provide two embedding models:
+Text embeddings : embed a wide variety of text with a general-purpose embedding model.
+Code embeddings : embed code databases and repositories for code retrieval.
+We cover the fundamentals of the embeddings API, including how to measure the distance between text embeddings, and explore two main use cases: clustering and classification.
+More
+Copy section link More
+For a quick example and introduction on how to use embeddings for RAG, see RAG Quickstart .
+WHY MISTRAL
+About us Our customers Careers Contact us
+EXPLORE
+AI Solutions Partners Research
+DOCUMENTATION
+Documentation Ambassadors Cookbooks
+BUILD
+Studio Vibe Mistral Code Mistral Compute Try the API
+LEGAL
+Terms of service Privacy policy Legal notice Privacy Choices Brand
+COMMUNITY
+Discord ↗ X ↗ Github ↗ LinkedIn ↗ Ambassadors
+Mistral AI © 2026
+Toggle theme
+Previous Text Embeddings

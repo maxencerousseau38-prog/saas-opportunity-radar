@@ -68,7 +68,7 @@
   {
     "vendor": "openai",
     "url": "https://openai.com/api/pricing/",
-    "retrieved_at": "2026-11-05T09:00:32.391Z",
+    "retrieved_at": "2026-11-05T09:02:47.366Z",
     "status": "blocked",
     "reason": "http_403"
   },
@@ -152,7 +152,7 @@
   {
     "vendor": "openai",
     "url": "https://help.openai.com/en/articles/10503543-data-residency-for-the-openai-api",
-    "retrieved_at": "2026-11-05T09:00:34.382Z",
+    "retrieved_at": "2026-11-05T09:02:47.447Z",
     "status": "blocked",
     "reason": "http_403"
   },
@@ -254,5 +254,159 @@
     "text_chars": 911,
     "html_bytes": 90642,
     "file": "mistral--help-mistral-ai-en.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/inference/pricing",
+    "final_url": "https://docs.mistral.ai/inference/pricing",
+    "retrieved_at": "2026-11-05T09:02:47.506Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 3945,
+    "html_bytes": 692409,
+    "file": "mistral--docs-mistral-ai-inference-pricing.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/inference/regional-inference",
+    "final_url": "https://docs.mistral.ai/inference/regional-inference",
+    "retrieved_at": "2026-11-05T09:02:47.822Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 8320,
+    "html_bytes": 713517,
+    "file": "mistral--docs-mistral-ai-inference-regional-inference.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/inference/conversations/structured-output/custom",
+    "final_url": "https://docs.mistral.ai/inference/conversations/structured-output/custom",
+    "retrieved_at": "2026-11-05T09:02:48.107Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 4254,
+    "html_bytes": 709977,
+    "file": "mistral--docs-mistral-ai-inference-conversations-structured-output-custom.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/inference/conversations/reasoning",
+    "final_url": "https://docs.mistral.ai/inference/conversations/reasoning",
+    "retrieved_at": "2026-11-05T09:02:48.397Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 13427,
+    "html_bytes": 841975,
+    "file": "mistral--docs-mistral-ai-inference-conversations-reasoning.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/inference/batch-processing",
+    "final_url": "https://docs.mistral.ai/inference/batch-processing",
+    "retrieved_at": "2026-11-05T09:02:48.818Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 22369,
+    "html_bytes": 1203812,
+    "file": "mistral--docs-mistral-ai-inference-batch-processing.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/inference/conversations/advanced/prompt-caching",
+    "final_url": "https://docs.mistral.ai/inference/conversations/advanced/prompt-caching",
+    "retrieved_at": "2026-11-05T09:02:49.116Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 6228,
+    "html_bytes": 692394,
+    "file": "mistral--docs-mistral-ai-inference-conversations-advanced-prompt-caching.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/models/mistral-small-4-0-26-03",
+    "final_url": "https://docs.mistral.ai/models/mistral-small-4-0-26-03",
+    "retrieved_at": "2026-11-05T09:02:49.410Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1795,
+    "html_bytes": 709513,
+    "file": "mistral--docs-mistral-ai-models-mistral-small-4-0-26-03.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/models/mistral-medium-3-5-26-04",
+    "final_url": "https://docs.mistral.ai/models/mistral-medium-3-5-26-04",
+    "retrieved_at": "2026-11-05T09:02:49.775Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1788,
+    "html_bytes": 680450,
+    "file": "mistral--docs-mistral-ai-models-mistral-medium-3-5-26-04.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/models/mistral-large-4-0",
+    "final_url": "https://docs.mistral.ai/models/mistral-large-4-0",
+    "retrieved_at": "2026-11-05T09:02:49.937Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1943,
+    "html_bytes": 711918,
+    "file": "mistral--docs-mistral-ai-models-mistral-large-4-0.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/models/mistral-embed-23-12",
+    "final_url": "https://docs.mistral.ai/models/mistral-embed-23-12",
+    "retrieved_at": "2026-11-05T09:02:50.067Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1364,
+    "html_bytes": 673432,
+    "file": "mistral--docs-mistral-ai-models-mistral-embed-23-12.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/inference/embeddings",
+    "final_url": "https://docs.mistral.ai/inference/embeddings",
+    "retrieved_at": "2026-11-05T09:02:50.355Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 2114,
+    "html_bytes": 621684,
+    "file": "mistral--docs-mistral-ai-inference-embeddings.txt"
+  },
+  {
+    "vendor": "openai",
+    "url": "https://developers.openai.com/api/docs/guides/embeddings",
+    "final_url": "https://developers.openai.com/api/docs/guides/embeddings",
+    "retrieved_at": "2026-11-05T09:02:50.632Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 69376,
+    "html_bytes": 876918,
+    "file": "openai--developers-openai-com-api-docs-guides-embeddings.txt"
+  },
+  {
+    "vendor": "openai",
+    "url": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+    "final_url": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+    "retrieved_at": "2026-11-05T09:02:51.086Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 16029,
+    "html_bytes": 463244,
+    "file": "openai--developers-openai-com-api-docs-models-gpt-6-luna.txt"
+  },
+  {
+    "vendor": "openai",
+    "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+    "final_url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+    "retrieved_at": "2026-11-05T09:02:51.254Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 15923,
+    "html_bytes": 464660,
+    "file": "openai--developers-openai-com-api-docs-models-gpt-6-1-sol.txt"
   }
 ]

@@ -1,0 +1,139 @@
+https://docs.mistral.ai/inference/pricing
+2026-11-05T09:02:47.506Z
+
+Docs & API
+Search docs
+⌘K
+Vibe Studio Inference & Models Admin Resources API Reference Search docs
+⌘K
+Toggle theme Reach out Try Studio
+Home
+Inference
+Get started
+Quickstarts
+Models
+Generate
+Conversations
+Embeddings
+Prompting
+Sampling
+Optimize cost and latency
+Batch Processing
+Prompt caching
+Predicted outputs
+Priority Tier
+Platform
+Regional inference
+Pricing
+Model lifecycle policy
+Labs
+API Reference ↗
+Inference & Models
+Inference
+Pricing
+API pricing
+Pricing for Mistral models, organized by family.
+Regional inference Standard Batch Priority
+USD EUR
+Generalist models
+Copy section link Generalist models
+Text and multimodal models for broad reasoning, coding, tool use, and agentic tasks.
+Mistral Large 4
+Input $0.7 /M Tokens
+Output $2.1 /M Tokens
+Z.ai GLM 5.3 Flash
+Input $0.15 /M Tokens
+Output $0.5 /M Tokens
+Model Input Cached input Output
+Z.ai GLM 5.3 Flash ↗ $0.15 $0.03 $0.5
+DeepSeek V4.1 Flash 1017 ↗ $0.3 $0.007 $1.2
+Z.ai GLM 5.3 ↗ $1.4 $0.14 $4.4
+Mistral Small 4 ↗ $0.15 $0.015 $0.6
+Mistral Large 4 ↗ $0.7 $0.07 $2.1
+Ministral 3 14B ↗ $0.2 $0.02 $0.2
+Ministral 3 8B ↗ $0.15 $0.015 $0.15
+Ministral 3 3B ↗ $0.1 $0.01 $0.1
+Prices /M Tokens
+OCR models
+Copy section link OCR models
+Models for document understanding, text extraction, and structured OCR outputs.
+Model Input Cached input Output
+OCR 4.1 ↗ $4 $0.4 —
+OCR 3 ↗ $2 $0.2 —
+Prices /1000 Pages
+Audio models
+Copy section link Audio models
+Models for speech transcription, realtime transcription, and speech generation.
+Voxtral Mini Transcribe 3
+Input $0.0035 /Min
+Voxtral Small Transcribe 3
+Input $0.004 /Min
+Voxtral TTS 3
+Input $13 /M Chars
+Model Input Cached input Output
+Voxtral Mini Transcribe 3 ↗ $0.0035 /Min $0.00035 /Min —
+Voxtral Mini Transcribe Realtime 3 ↗ $0.008 /Min $0.0008 /Min —
+Voxtral Small Transcribe 3 ↗ $0.004 /Min $0.0004 /Min —
+Voxtral TTS 3 ↗ $13 /M Chars $1.3 /M Chars —
+Voxtral Small ↗ $0.004 /Min $0.0004 /Min $0.4 /M Tokens
+Prices as marked
+Code models
+Copy section link Code models
+Specialized models for code generation, completion, and software engineering agents.
+Model Input Cached input Output
+Codestral ↗ $0.3 $0.03 $0.9
+Prices /M Tokens
+Embedding models
+Copy section link Embedding models
+Models that turn text or code into vectors for retrieval and similarity search.
+Model Input Cached input Output
+Codestral Embed ↗ $0.15 $0.015 —
+Mistral Embed ↗ $0.1 $0.01 —
+Prices /M Tokens
+Moderation and safety models
+Copy section link Moderation and safety models
+Models for safety filtering, moderation, and policy checks.
+Model Input Cached input Output
+Mistral Moderation 2 ↗ Free Free Free
+Shieldstral 1.0 ↗ Self-hosted · Open weights Costs depend on your own infrastructure
+Prices as marked
+Time series models
+Copy section link Time series models
+Models for zero-shot time series forecasting with covariate support and probabilistic outputs.
+Model Input Cached input Output
+Timestral 1.0 209M ↗ Self-hosted · Open weights Costs depend on your own infrastructure
+Timestral 1.0 123M ↗ Self-hosted · Open weights Costs depend on your own infrastructure
+Timestral 1.0 28M ↗ Self-hosted · Open weights Costs depend on your own infrastructure
+Timestral 1.0 5M ↗ Self-hosted · Open weights Costs depend on your own infrastructure
+Prices as marked
+Voice agents
+Copy section link Voice agents
+Pricing for the Voice Agents API, billed per minute of conversation.
+Model Price
+Mistral Small 4 $0.04/min
+Larger models $0.08/min
+Contents
+Generalist models
+OCR models
+Audio models
+Code models
+Embedding models
+Moderation and safety models
+Time series models
+Voice agents
+Go to Top
+WHY MISTRAL
+About us Our customers Careers Contact us
+EXPLORE
+AI Solutions Partners Research
+DOCUMENTATION
+Documentation Ambassadors Cookbooks
+BUILD
+Studio Vibe Mistral Code Mistral Compute Try the API
+LEGAL
+Terms of service Privacy policy Legal notice Privacy Choices Brand
+COMMUNITY
+Discord ↗ X ↗ Github ↗ LinkedIn ↗ Ambassadors
+Mistral AI © 2026
+Toggle theme
+JSON Mode Embeddings

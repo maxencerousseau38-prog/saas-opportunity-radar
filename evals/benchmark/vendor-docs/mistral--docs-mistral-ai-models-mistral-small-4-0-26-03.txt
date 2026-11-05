@@ -1,0 +1,92 @@
+https://docs.mistral.ai/models/mistral-small-4-0-26-03
+2026-11-05T09:02:49.410Z
+
+Docs & API
+Search docs
+⌘K
+Vibe Studio Inference & Models Admin Resources API Reference Search docs
+⌘K
+Toggle theme Reach out Try Studio
+Home
+Inference
+Get started
+Quickstarts
+Models
+Generate
+Conversations
+Embeddings
+Prompting
+Sampling
+Optimize cost and latency
+Batch Processing
+Prompt caching
+Predicted outputs
+Priority Tier
+Platform
+Regional inference
+Pricing
+Model lifecycle policy
+Labs
+API Reference ↗
+Inference & Models
+Models
+Mistral Small 4
+Try in playground ↗
+Compare Legal
+March 16, 2026 GA Apache 2.0 v 26.03
+Mistral Small 4
+Our powerful hybrid model unifying instruct, reasoning, and coding capabilities in a single model. 119B parameters with 6.5B active.
+mistral-small-2603 +1
+Speed
+Performance
+Modalities
+Context i
+256k
+Price i
+USD EUR
+$0.15
+/M Tokens
+$0.6
+/M Tokens
+Speed
+Performance
+Modalities
+Context 256k
+Price USD EUR
+$0.15
+/M Tokens
+$0.6
+/M Tokens
+FEATURES WEIGHTS
+Features
+Chat Completions /v1/chat/completions
+Function Calling /v1/chat/completions /v1/conversations
+Agents & Conversations /v1/agents /v1/conversations
+Built-In Tools /v1/agents /v1/conversations
+Structured Outputs /v1/chat/completions /v1/conversations
+Predicted Outputs /v1/chat/completions /v1/conversations
+Document QnA /v1/chat/completions /v1/conversations
+Prefix /v1/chat/completions /v1/conversations
+Batching /v1/batch
+Other Models
+Other Models
+Z.ai GLM 5.3 Flash
+v 5.3-flash
+DeepSeek V4.1 Flash 1017
+v v4.1-flash-1017
+Z.ai GLM 5.3
+v 5.3
+WHY MISTRAL
+About us Our customers Careers Contact us
+EXPLORE
+AI Solutions Partners Research
+DOCUMENTATION
+Documentation Ambassadors Cookbooks
+BUILD
+Studio Vibe Mistral Code Mistral Compute Try the API
+LEGAL
+Terms of service Privacy policy Legal notice Privacy Choices Brand
+COMMUNITY
+Discord ↗ X ↗ Github ↗ LinkedIn ↗ Ambassadors
+Mistral AI © 2026
+Toggle theme

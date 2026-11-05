@@ -1,0 +1,80 @@
+https://docs.mistral.ai/models/mistral-embed-23-12
+2026-11-05T09:02:50.067Z
+
+Docs & API
+Search docs
+⌘K
+Vibe Studio Inference & Models Admin Resources API Reference Search docs
+⌘K
+Toggle theme Reach out Try Studio
+Home
+Inference
+Get started
+Quickstarts
+Models
+Generate
+Conversations
+Embeddings
+Prompting
+Sampling
+Optimize cost and latency
+Batch Processing
+Prompt caching
+Predicted outputs
+Priority Tier
+Platform
+Regional inference
+Pricing
+Model lifecycle policy
+Labs
+API Reference ↗
+Inference & Models
+Models
+Mistral Embed
+Compare Legal
+December 11, 2023 Blog GA Premier v 23.12
+Mistral Embed
+A general-purpose text embedding model that turns sentences and paragraphs into vectors for retrieval, classification, and similarity search.
+mistral-embed-2312 +1
+Speed
+Performance
+Modalities
+Context i
+8k
+Price i
+USD EUR
+$0.1
+/M Tokens
+Speed
+Performance
+Modalities
+Context 8k
+Price USD EUR
+$0.1
+/M Tokens
+FEATURES
+Features
+Embeddings /v1/embeddings
+Batching /v1/batch
+Other Models
+Other Models
+Z.ai GLM 5.3 Flash
+v 5.3-flash
+DeepSeek V4.1 Flash 1017
+v v4.1-flash-1017
+Z.ai GLM 5.3
+v 5.3
+WHY MISTRAL
+About us Our customers Careers Contact us
+EXPLORE
+AI Solutions Partners Research
+DOCUMENTATION
+Documentation Ambassadors Cookbooks
+BUILD
+Studio Vibe Mistral Code Mistral Compute Try the API
+LEGAL
+Terms of service Privacy policy Legal notice Privacy Choices Brand
+COMMUNITY
+Discord ↗ X ↗ Github ↗ LinkedIn ↗ Ambassadors
+Mistral AI © 2026
+Toggle theme
