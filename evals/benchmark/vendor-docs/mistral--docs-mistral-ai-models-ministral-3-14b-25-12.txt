@@ -1,0 +1,89 @@
+https://docs.mistral.ai/models/ministral-3-14b-25-12
+2026-11-05T10:20:59.532Z
+
+Docs & API
+Search docs
+⌘K
+Vibe Studio Inference & Models Admin Resources API Reference Search docs
+⌘K
+Toggle theme Reach out Try Studio
+Home
+Inference
+Get started
+Quickstarts
+Models
+Generate
+Conversations
+Embeddings
+Prompting
+Sampling
+Optimize cost and latency
+Batch Processing
+Prompt caching
+Predicted outputs
+Priority Tier
+Platform
+Regional inference
+Pricing
+Model lifecycle policy
+Labs
+API Reference ↗
+Inference & Models
+Models
+Ministral 3 14B
+Try in playground ↗
+Compare Legal
+December 2, 2025 Blog Technical Report GA Apache 2.0 v 25.12
+Ministral 3 14B
+Ministral 3 14B is the largest model in the Ministral 3 family, offering state-of-the-art capabilities and performance comparable to its larger Mistral Small 3.2 24B counterpart. Optimized for local deployment, it delivers high performance across diverse hardware, including local setups.
+ministral-14b-2512 +1
+Speed
+Performance
+Modalities
+Context i
+256k
+Price i
+USD EUR
+$0.2
+/M Tokens
+$0.2
+/M Tokens
+Speed
+Performance
+Modalities
+Context 256k
+Price USD EUR
+$0.2
+/M Tokens
+$0.2
+/M Tokens
+FEATURES WEIGHTS
+Features
+Structured Outputs /v1/chat/completions /v1/conversations
+Function Calling /v1/chat/completions /v1/conversations
+Document QnA /v1/chat/completions /v1/conversations
+Prefix /v1/chat/completions /v1/conversations
+Chat Completions /v1/chat/completions
+Batching /v1/batch
+Other Models
+Other Models
+Z.ai GLM 5.3 Flash
+v 5.3-flash
+DeepSeek V4.1 Flash 1017
+v v4.1-flash-1017
+Z.ai GLM 5.3
+v 5.3
+WHY MISTRAL
+About us Our customers Careers Contact us
+EXPLORE
+AI Solutions Partners Research
+DOCUMENTATION
+Documentation Ambassadors Cookbooks
+BUILD
+Studio Vibe Mistral Code Mistral Compute Try the API
+LEGAL
+Terms of service Privacy policy Legal notice Privacy Choices Brand
+COMMUNITY
+Discord ↗ X ↗ Github ↗ LinkedIn ↗ Ambassadors
+Mistral AI © 2026
+Toggle theme

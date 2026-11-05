@@ -68,7 +68,7 @@
   {
     "vendor": "openai",
     "url": "https://openai.com/api/pricing/",
-    "retrieved_at": "2026-11-05T09:40:54.414Z",
+    "retrieved_at": "2026-11-05T10:20:59.375Z",
     "status": "blocked",
     "reason": "http_403"
   },
@@ -152,7 +152,7 @@
   {
     "vendor": "openai",
     "url": "https://help.openai.com/en/articles/10503543-data-residency-for-the-openai-api",
-    "retrieved_at": "2026-11-05T09:40:54.477Z",
+    "retrieved_at": "2026-11-05T10:20:59.450Z",
     "status": "blocked",
     "reason": "http_403"
   },
@@ -408,5 +408,27 @@
     "text_chars": 15923,
     "html_bytes": 464660,
     "file": "openai--developers-openai-com-api-docs-models-gpt-6-1-sol.txt"
+  },
+  {
+    "vendor": "mistral",
+    "url": "https://docs.mistral.ai/models/ministral-3-14b-25-12",
+    "final_url": "https://docs.mistral.ai/models/ministral-3-14b-25-12",
+    "retrieved_at": "2026-11-05T10:20:59.532Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1820,
+    "html_bytes": 706087,
+    "file": "mistral--docs-mistral-ai-models-ministral-3-14b-25-12.txt"
+  },
+  {
+    "vendor": "anthropic",
+    "url": "https://platform.claude.com/docs/en/build-with-claude/effort",
+    "final_url": "https://platform.claude.com/docs/en/build-with-claude/effort",
+    "retrieved_at": "2026-11-05T10:21:00.609Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 26954,
+    "html_bytes": 1140643,
+    "file": "anthropic--platform-claude-com-docs-en-build-with-claude-effort.txt"
   }
 ]
