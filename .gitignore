@@ -31,3 +31,6 @@ supabase/.temp/
 .vscode/*
 !.vscode/extensions.json
 apps/web/next-env.d.ts
+
+# Evaluation tooling build
+dist-evals/

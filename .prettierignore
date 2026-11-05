@@ -10,3 +10,7 @@ playwright-report/
 test-results/
 # Generated from the database schema (supabase gen types); checked in CI.
 packages/database/src/generated.ts
+# Frozen evaluation snapshots (machine-written)
+evals/enrichment/real/snapshots/
+evals/benchmark/vendor-docs/
+dist-evals/
