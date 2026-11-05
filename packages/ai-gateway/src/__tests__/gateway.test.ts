@@ -153,3 +153,54 @@ describe("AI gateway", () => {
     expect(() => gateway.modelFor("reasoning")).toThrow(GatewayError);
   });
 });
+
+describe("AI gateway embeddings", () => {
+  it("embeds with the embedding profile, deterministically, and records usage", async () => {
+    const { gateway, usage } = setup(() => ({}));
+    const ctx = {
+      remainingBudgetUsd: 0,
+      recordUsage: async (u: UsageRecord) => void usage.push(u),
+    };
+    const a = await gateway.embed(["CSV export times out", "The CSV exports time out"], ctx);
+    expect(a.model).toBe("fake-embedding-1");
+    expect(a.vectors).toHaveLength(2);
+    expect(a.vectors[0]).toHaveLength(a.dimensions);
+    expect((await gateway.embed(["CSV export times out"], ctx)).vectors[0]).toEqual(a.vectors[0]);
+    expect(usage.at(-1)).toMatchObject({
+      operation: "embedding",
+      outcome: "ok",
+      model: "fake-embedding-1",
+    });
+  });
+
+  it("refuses an embedding call above the budget and rejects malformed vectors", async () => {
+    const usage: UsageRecord[] = [];
+    const recordUsage = async (u: UsageRecord) => void usage.push(u);
+    const make = (vectors: number[][]): AIProvider => ({
+      id: "paid",
+      estimateMaxCostUsd: () => 0,
+      estimateMaxEmbeddingCostUsd: () => 0.5,
+      generate: async () => ({ output: {}, usage: { latencyMs: 1 }, finishReason: "stop" }),
+      embed: async () => ({
+        provider: "paid",
+        model: "e",
+        dimensions: 2,
+        vectors,
+        usage: { latencyMs: 1 },
+      }),
+    });
+    const refused = new AIGateway({ provider: make([[1, 0]]), models: { embedding: "e" } });
+    await expect(
+      refused.embed(["x"], { remainingBudgetUsd: 0.1, recordUsage }),
+    ).rejects.toMatchObject({ code: "BUDGET_EXHAUSTED" });
+    expect(usage.at(-1)).toMatchObject({ outcome: "budget_refused", estimatedCostUsd: 0.5 });
+    const bad = new AIGateway({ provider: make([[1, Number.NaN]]), models: { embedding: "e" } });
+    await expect(bad.embed(["x"], { remainingBudgetUsd: 1, recordUsage })).rejects.toMatchObject({
+      code: "SCHEMA_INVALID",
+    });
+    const short = new AIGateway({ provider: make([]), models: { embedding: "e" } });
+    await expect(short.embed(["x"], { remainingBudgetUsd: 1, recordUsage })).rejects.toMatchObject({
+      code: "SCHEMA_INVALID",
+    });
+  });
+});

@@ -31,11 +31,43 @@ export class FakeProvider implements AIProvider {
     return {
       provider: this.id,
       model,
-      dimensions: 3,
-      vectors: texts.map(() => [0, 0, 0]),
-      usage: { latencyMs: 0 },
+      dimensions: FAKE_EMBEDDING_DIMENSIONS,
+      vectors: texts.map(fakeEmbedding),
+      usage: { inputTokens: 0, estimatedCostUsd: 0, latencyMs: 0 },
     };
   }
+}
+
+export const FAKE_EMBEDDING_DIMENSIONS = 64;
+const STOPWORDS = new Set(
+  "a an the and or but of to in on for with at by from is are was were be been it its this that i we you they my our your their not no very too so just can cannot".split(
+    " ",
+  ),
+);
+const stem = (w: string) => w.replace(/(ing|ed|es|s)$/, "");
+
+/**
+ * Deterministic stand-in for an embedding model: signed feature hashing of
+ * stemmed content words, L2-normalised. Texts sharing words are close; it
+ * knows no synonyms, so it is a baseline, not a semantic model (PD-24b).
+ */
+export function fakeEmbedding(text: string): number[] {
+  const v = new Array<number>(FAKE_EMBEDDING_DIMENSIONS).fill(0);
+  const words = text
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w.length > 1 && !STOPWORDS.has(w))
+    .map(stem);
+  for (const w of words) {
+    let h = 2166136261;
+    for (let i = 0; i < w.length; i++) h = Math.imul(h ^ w.charCodeAt(i), 16777619);
+    const idx = (h >>> 0) % FAKE_EMBEDDING_DIMENSIONS;
+    v[idx] = (v[idx] ?? 0) + ((h >>> 31) & 1 ? -1 : 1);
+  }
+  const norm = Math.sqrt(v.reduce((s, x) => s + x * x, 0));
+  return norm === 0 ? v : v.map((x) => x / norm);
 }
 
 /** Profiles of the fake provider. PD-24 decides the real provider and models. */

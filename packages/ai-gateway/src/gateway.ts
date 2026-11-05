@@ -5,6 +5,7 @@ import type { z } from "zod";
 import {
   ProviderError,
   type AIProvider,
+  type EmbeddingResult,
   type ModelProfile,
   type StructuredAIRequest,
   type StructuredAIResult,
@@ -101,6 +102,86 @@ export class AIGateway {
 
   modelFor(profile: ModelProfile): string {
     return this.settingsFor(profile).model;
+  }
+
+  /**
+   * Embeddings through the `embedding` profile (Implementation Blueprint §7.2
+   * P4): budget refusal before the call, timeout, shape validation (one
+   * finite vector per text, one dimension) and usage recording.
+   */
+  async embed(
+    texts: string[],
+    context: Omit<GatewayCallContext, "allowedIds"> & { timeoutMs?: number },
+  ): Promise<EmbeddingResult> {
+    const provider = this.options.provider;
+    const model = this.modelFor("embedding");
+    const base = { provider: provider.id, model, operation: "embedding" as const };
+    const empty = { inputTokens: null, outputTokens: null, reportedCostUsd: null };
+    const worstCase = provider.estimateMaxEmbeddingCostUsd?.(texts, model) ?? 0;
+    if (worstCase > context.remainingBudgetUsd + 1e-12) {
+      await context.recordUsage({
+        ...base,
+        ...empty,
+        estimatedCostUsd: worstCase,
+        latencyMs: null,
+        outcome: "budget_refused",
+      });
+      throw new GatewayError(
+        "BUDGET_EXHAUSTED",
+        "the worst-case cost exceeds the remaining AI budget",
+      );
+    }
+    const timeout = AbortSignal.timeout(context.timeoutMs ?? 60_000);
+    const signal = context.signal ? AbortSignal.any([context.signal, timeout]) : timeout;
+    const started = Date.now();
+    let result: EmbeddingResult;
+    try {
+      const aborted = new Promise<never>((_, reject) => {
+        if (signal.aborted) reject(new Error("aborted"));
+        signal.addEventListener("abort", () => reject(new Error("aborted")), { once: true });
+      });
+      result = await Promise.race([provider.embed(texts, model, signal), aborted]);
+    } catch (err) {
+      const latencyMs = Date.now() - started;
+      if (timeout.aborted) {
+        await context.recordUsage({
+          ...base,
+          ...empty,
+          estimatedCostUsd: null,
+          latencyMs,
+          outcome: "timeout",
+        });
+        throw new GatewayError("TIMEOUT", "the provider did not answer in time");
+      }
+      await context.recordUsage({
+        ...base,
+        ...empty,
+        estimatedCostUsd: null,
+        latencyMs,
+        outcome: "provider_error",
+      });
+      const retryable = err instanceof ProviderError ? err.retryable : true;
+      throw new GatewayError(retryable ? "PROVIDER_ERROR" : "SCHEMA_INVALID", "embedding failure");
+    }
+    const usage = {
+      inputTokens: result.usage.inputTokens ?? null,
+      outputTokens: null,
+      estimatedCostUsd: result.usage.estimatedCostUsd ?? null,
+      reportedCostUsd: result.usage.reportedCostUsd ?? null,
+      latencyMs: result.usage.latencyMs ?? Date.now() - started,
+    };
+    const valid =
+      result.vectors.length === texts.length &&
+      result.dimensions > 0 &&
+      result.vectors.every(
+        (v) => v.length === result.dimensions && v.every((x) => Number.isFinite(x)),
+      );
+    if (!valid) {
+      await context.recordUsage({ ...base, ...usage, outcome: "schema_invalid" });
+      throw new GatewayError("SCHEMA_INVALID", "embedding vectors do not match the request");
+    }
+    await context.recordUsage({ ...base, ...usage, outcome: "ok" });
+    return { ...result, model };
   }
 
   async generate<S extends z.ZodType>(

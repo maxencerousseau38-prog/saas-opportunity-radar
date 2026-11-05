@@ -92,4 +92,6 @@ export interface AIProvider {
   estimateMaxCostUsd(call: Omit<ProviderCall, "signal">): number;
   generate(call: ProviderCall): Promise<ProviderResponse>;
   embed(texts: string[], model: string, signal: AbortSignal): Promise<EmbeddingResult>;
+  /** Worst-case cost of an embedding call (default: no cost known, e.g. the fake provider). */
+  estimateMaxEmbeddingCostUsd?(texts: string[], model: string): number;
 }
