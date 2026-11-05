@@ -164,3 +164,21 @@ export function computeClusterStatistics(
     frequencyRuleSetVersion: FREQUENCY_RULE_SET_VERSION,
   };
 }
+
+/** P7 statistics as cluster columns (sor_pain_save_clusters / sor_cluster_correction). */
+export function clusterStatsColumns(s: ClusterStatistics): Record<string, unknown> {
+  return {
+    feedback_count: s.feedbackCount,
+    distinct_author_count: s.distinctAuthorCount,
+    distinct_author_count_status: s.distinctAuthorCountStatus,
+    distinct_company_count: s.distinctCompanyCount,
+    distinct_company_count_status: s.distinctCompanyCountStatus,
+    affected_product_count: s.affectedProductCount,
+    product_distribution: s.productDistribution,
+    resolution_breakdown: s.resolutionBreakdown,
+    frequency_label: s.frequencyLabel,
+    severity_score: s.severityScore,
+    confidence_score: s.confidenceScore,
+    last_observed_at: s.lastObservedAt,
+  };
+}

@@ -466,3 +466,83 @@ export async function clusterMembers(service: DbClient, clusterIds: string[]) {
     };
   });
 }
+
+/**
+ * Evidence of a cluster (PRD §12.12; Implementation Blueprint "GET W/clusters/{id}/evidence"):
+ * problem → feedback → snapshot → source record. Text only when storage was permitted.
+ */
+export async function clusterEvidence(service: DbClient, clusterId: string) {
+  const rows = need(
+    await service
+      .from("pain_point_evidence")
+      .select(
+        "feedback_problem_id, removed_at, membership_source, membership_confidence, feedback_problems(problem_statement, problem_category, severity, resolution_status, switching_intent, workaround, desired_solution, customer_feedback(id, product_id, published_at, rating, rating_scale_max, original_text, summarized_text, content_storage_status, evidence_item_id, source_snapshots(retrieved_at, source_records(id, canonical_url, title, sources(source_key, name)))))",
+      )
+      .eq("cluster_id", clusterId)
+      .order("created_at"),
+  );
+  return rows.map((r) => {
+    const p = r.feedback_problems as unknown as {
+      problem_statement: string;
+      problem_category: string;
+      severity: number | null;
+      resolution_status: string;
+      switching_intent: string;
+      workaround: string | null;
+      desired_solution: string | null;
+      customer_feedback: {
+        id: string;
+        product_id: string;
+        published_at: string | null;
+        rating: number | null;
+        rating_scale_max: number | null;
+        original_text: string | null;
+        summarized_text: string | null;
+        content_storage_status: string;
+        evidence_item_id: string;
+        source_snapshots: {
+          retrieved_at: string | null;
+          source_records: {
+            id: string;
+            canonical_url: string;
+            title: string | null;
+            sources: { source_key: string; name: string } | null;
+          } | null;
+        } | null;
+      } | null;
+    } | null;
+    const f = p?.customer_feedback ?? null;
+    const record = f?.source_snapshots?.source_records ?? null;
+    return {
+      problem_id: r.feedback_problem_id,
+      removed: r.removed_at !== null,
+      membership_source: r.membership_source,
+      problem_statement: p?.problem_statement ?? "",
+      problem_category: p?.problem_category ?? "other",
+      severity: p?.severity ?? null,
+      resolution_status: p?.resolution_status ?? "unknown",
+      switching_intent: p?.switching_intent ?? "unknown",
+      workaround: p?.workaround ?? null,
+      desired_solution: p?.desired_solution ?? null,
+      feedback_id: f?.id ?? null,
+      product_id: f?.product_id ?? null,
+      published_at: f?.published_at ?? null,
+      rating: f?.rating ?? null,
+      rating_scale_max: f?.rating_scale_max ?? null,
+      excerpt: f?.original_text ?? f?.summarized_text ?? null,
+      content_storage_status: f?.content_storage_status ?? "reference_only",
+      evidence_id: f?.evidence_item_id ?? null,
+      source_id: record?.id ?? null,
+      source_name: record?.sources?.name ?? record?.title ?? null,
+      evidence_url: record?.canonical_url ?? null,
+      retrieved_at: f?.source_snapshots?.retrieved_at ?? null,
+    };
+  });
+}
+
+/** Progress of a run: its job and the agent steps completed so far (server-only steps). */
+export async function runSteps(service: DbClient, jobId: string) {
+  return need(
+    await service.from("agent_step_runs").select("agent_key, state").eq("job_execution_id", jobId),
+  );
+}

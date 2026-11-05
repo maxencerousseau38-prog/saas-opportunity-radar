@@ -229,3 +229,99 @@ export const IMPORT_ROW_STATUS: Record<string, string> = {
   rejected: "Rejeté",
   duplicate: "Doublon ignoré",
 };
+
+// ---------------------------------------------------------------- Pain Point Intelligence (Sprint 4)
+export const RUN_STATUS: Record<string, string> = {
+  queued: "En file d’attente",
+  running: "En cours",
+  completed: "Terminée",
+  partial: "Terminée partiellement",
+  failed: "Échec",
+  cancelled: "Annulée",
+  needs_review: "À vérifier",
+};
+export const RUN_TERMINAL = new Set([
+  "completed",
+  "partial",
+  "failed",
+  "cancelled",
+  "needs_review",
+]);
+
+export const PROBLEM_CATEGORY: Record<string, string> = {
+  pricing: "Prix",
+  ux: "Ergonomie",
+  missing_features: "Fonctionnalités manquantes",
+  bugs: "Bugs",
+  support: "Support",
+  integrations: "Intégrations",
+  performance: "Performance",
+  documentation: "Documentation",
+  customization: "Personnalisation",
+  complexity: "Complexité",
+  reliability: "Fiabilité",
+  other: "Autre",
+};
+
+export const FREQUENCY_LABEL: Record<string, string> = {
+  isolated: "Isolé",
+  recurring: "Récurrent",
+  widespread: "Répandu",
+  unknown: "Récurrence inconnue",
+};
+
+/** How a distinct count was established (Implementation Blueprint §7.3). */
+export const COUNT_STATUS: Record<string, string> = {
+  verified: "vérifié",
+  estimated: "estimation basse",
+  unknown: "inconnu",
+};
+
+export const CLUSTER_REVIEW: Record<string, string> = {
+  machine_proposed: "Proposé automatiquement",
+  user_confirmed: "Confirmé",
+  user_corrected: "Corrigé",
+  rejected: "Rejeté",
+};
+
+export const RESOLUTION: Record<string, string> = {
+  resolved: "Résolu",
+  unresolved: "Non résolu",
+  unknown: "Inconnu",
+};
+
+export const GAP_TYPE: Record<string, string> = {
+  shared_problem: "Problème partagé",
+  requested_feature: "Fonctionnalité réclamée",
+  manual_workflow: "Workflow manuel",
+  user_workaround: "Contournement utilisateur",
+  switching_driver: "Motif de changement",
+  unsatisfied_need: "Besoin insatisfait",
+};
+
+export const SAMPLE_LIMITATION: Record<string, string> = {
+  review_sample_not_representative:
+    "Un échantillon d’avis n’est pas représentatif de tous les clients.",
+  complaints_are_not_willingness_to_pay:
+    "Des plaintes ne prouvent pas que des clients paieraient pour une solution.",
+  absence_of_observed_solution_is_not_absence_of_competition:
+    "Ne pas observer de solution ne prouve pas l’absence de concurrence.",
+};
+
+export const RUN_LIMITATION: Record<string, string> = {
+  review_sample_not_representative:
+    "L’échantillon d’avis n’est pas représentatif de tous les clients.",
+  feedback_without_stored_text: "Avis sans texte conservé (droits de stockage) : non analysés.",
+  feedback_cap_reached: "Nombre maximal d’avis atteint : les plus récents ont été retenus.",
+  feedback_not_extracted: "Certains avis n’ont pas pu être analysés.",
+  products_no_longer_visible: "Des produits du périmètre ne sont plus visibles et ont été ignorés.",
+  scope_truncated: "Catégorie trop large : périmètre limité aux premiers produits.",
+  ai_budget_exhausted: "Budget IA épuisé : résultats partiels.",
+  stopped_cancelled: "Analyse annulée.",
+  stopped_budget: "Durée maximale atteinte : résultats partiels.",
+};
+
+export const EXCLUSION_STATUS: Record<string, string> = {
+  eligible: "Éligible",
+  needs_review: "En revue (affiliation ou partenariat possible)",
+};

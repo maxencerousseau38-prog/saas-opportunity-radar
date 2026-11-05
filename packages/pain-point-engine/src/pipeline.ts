@@ -26,6 +26,7 @@ import {
   CLUSTER_PARAMS_V1,
   classifyExclusion,
   clusterProblems,
+  clusterStatsColumns,
   computeClusterStatistics,
   deduplicate,
   type ClusterMember,
@@ -487,7 +488,7 @@ export async function runPainPointRun(ports: PainPorts): Promise<PainOutcome> {
               removed: true,
             })),
           ],
-          stats: statsColumns(stats),
+          stats: clusterStatsColumns(stats),
           _stats: stats,
           _evidence: members
             .map((m) => feedbackById.get(m.feedbackId)?.evidenceId)
@@ -786,22 +787,4 @@ export async function runPainPointRun(ports: PainPorts): Promise<PainOutcome> {
     }
     throw err;
   }
-}
-
-/** P7 statistics as cluster columns (sor_pain_save_clusters / sor_cluster_correction). */
-export function statsColumns(s: ClusterStatistics): Record<string, unknown> {
-  return {
-    feedback_count: s.feedbackCount,
-    distinct_author_count: s.distinctAuthorCount,
-    distinct_author_count_status: s.distinctAuthorCountStatus,
-    distinct_company_count: s.distinctCompanyCount,
-    distinct_company_count_status: s.distinctCompanyCountStatus,
-    affected_product_count: s.affectedProductCount,
-    product_distribution: s.productDistribution,
-    resolution_breakdown: s.resolutionBreakdown,
-    frequency_label: s.frequencyLabel,
-    severity_score: s.severityScore,
-    confidence_score: s.confidenceScore,
-    last_observed_at: s.lastObservedAt,
-  };
 }

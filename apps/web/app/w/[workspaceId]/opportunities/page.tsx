@@ -1,22 +1,123 @@
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/states";
+import { ClusterList, type ClusterRow } from "@/components/pain/cluster-summary";
+import { NewRunForm } from "@/components/pain/new-run-form";
+import { EXCLUSION_STATUS, OPPORTUNITY_STATUS, RUN_STATUS, formatDate } from "@/lib/labels";
+import { listClusters, listOpportunities, listRuns } from "@/lib/services/pain-points";
+import { canEdit, requireWorkspace } from "@/lib/workspace";
+
+export const metadata = { title: "Opportunities — SaaS Opportunity Radar" };
 
 export default async function OpportunitiesPage(
   props: PageProps<"/w/[workspaceId]/opportunities">,
 ) {
   const { workspaceId } = await props.params;
+  const { client, membership } = await requireWorkspace(workspaceId);
+  const editor = canEdit(membership.role);
+  const [runs, clusters, opportunities, products, categories] = await Promise.all([
+    listRuns(client, workspaceId, null),
+    listClusters(client, workspaceId, null),
+    listOpportunities(client, workspaceId),
+    editor
+      ? client.from("saas_products").select("id, name").order("name").limit(500)
+      : Promise.resolve({ data: [] }),
+    editor
+      ? client.from("categories").select("slug, name").eq("is_user_visible", true).order("name")
+      : Promise.resolve({ data: [] }),
+  ]);
+  const visibleClusters = clusters.filter((c) => c.review_status !== "rejected").slice(0, 30);
   return (
-    <section className="space-y-4">
-      <h1 className="text-xl font-semibold">Opportunities</h1>
-      <EmptyState title="Pas encore disponible">
-        Les problèmes clients récurrents (Sprint 4) et les analyses d’opportunité avec score,
-        confiance et verdict (Sprint 5) apparaîtront ici. Vos favoris, collections et statuts sont
-        déjà dans{" "}
-        <Link className="text-accent underline" href={`/w/${workspaceId}/saved`}>
-          Saved
-        </Link>
-        .
-      </EmptyState>
-    </section>
+    <div className="space-y-8">
+      <section className="space-y-3" aria-labelledby="pain-title">
+        <h1 id="pain-title" className="text-xl font-semibold">
+          Problèmes clients récurrents
+        </h1>
+        <p className="text-sm text-muted">
+          Regroupe les plaintes de plusieurs SaaS concurrents en problèmes reliés à leurs preuves.
+          Les analyses d’opportunité avec score, confiance et verdict arrivent au Sprint 5.
+        </p>
+        {editor ? (
+          <NewRunForm
+            workspaceId={workspaceId}
+            products={products.data ?? []}
+            categories={categories.data ?? []}
+          />
+        ) : null}
+        {runs.data.length === 0 ? (
+          <EmptyState title="Aucune analyse pour l’instant">
+            Importez des avis (Settings → Imports), puis lancez une analyse sur un ou plusieurs
+            SaaS.
+          </EmptyState>
+        ) : (
+          <ul className="divide-y divide-border rounded-lg border border-border">
+            {runs.data.map((r) => (
+              <li key={r.id} className="flex flex-wrap items-center gap-2 p-3 text-sm">
+                <Link
+                  className="font-medium text-accent underline"
+                  href={`/w/${workspaceId}/opportunities/runs/${r.id}`}
+                >
+                  {r.title}
+                </Link>
+                <Badge>{RUN_STATUS[r.status] ?? r.status}</Badge>
+                <span className="text-xs text-muted">
+                  {r.feedback_considered} avis · {r.clusters_created} cluster(s) ·{" "}
+                  {r.opportunities_generated} hypothèse(s) · {formatDate(r.created_at)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="space-y-3" aria-labelledby="clusters-title">
+        <h2 id="clusters-title" className="text-lg font-semibold">
+          Pain Point Clusters
+        </h2>
+        {visibleClusters.length === 0 ? (
+          <EmptyState title="Aucun cluster">
+            Les clusters apparaissent à la fin d’une analyse.
+          </EmptyState>
+        ) : (
+          <ClusterList workspaceId={workspaceId} clusters={visibleClusters as ClusterRow[]} />
+        )}
+      </section>
+
+      <section className="space-y-3" aria-labelledby="generated-title">
+        <h2 id="generated-title" className="text-lg font-semibold">
+          Opportunités générées (hypothèses)
+        </h2>
+        {opportunities.length === 0 ? (
+          <EmptyState title="Aucune hypothèse">
+            Une analyse peut aussi conclure qu’un problème réel n’est pas une opportunité
+            attractive.
+          </EmptyState>
+        ) : (
+          <ul className="divide-y divide-border rounded-lg border border-border">
+            {opportunities.map((o) => (
+              <li key={o.id} className="space-y-1 p-3 text-sm">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Link
+                    className="font-medium text-accent underline"
+                    href={`/w/${workspaceId}/opportunities/generated/${o.id}`}
+                  >
+                    {o.name}
+                  </Link>
+                  <Badge>Hypothèse non notée</Badge>
+                  <Badge>{OPPORTUNITY_STATUS[o.status] ?? o.status}</Badge>
+                  {o.exclusion_status !== "eligible" ? (
+                    <Badge tone="warning">
+                      {EXCLUSION_STATUS[o.exclusion_status] ?? o.exclusion_status}
+                    </Badge>
+                  ) : null}
+                  {o.is_favorite ? <Badge tone="accent">Favori</Badge> : null}
+                </div>
+                <p className="text-muted">{o.problem_statement}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </div>
   );
 }
