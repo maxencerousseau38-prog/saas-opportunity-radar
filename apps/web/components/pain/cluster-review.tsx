@@ -20,6 +20,7 @@ export interface EvidenceRow {
   excerpt: string | null;
   content_storage_status: string;
   source_name: string | null;
+  source_connector: string | null;
   evidence_url: string | null;
 }
 
@@ -213,6 +214,9 @@ export function ClusterReview({
                     >
                       Source{e.source_name ? ` : ${e.source_name}` : ""}
                     </a>
+                  ) : null}
+                  {e.source_connector && e.source_connector !== e.source_name ? (
+                    <span>via {e.source_connector}</span>
                   ) : null}
                 </p>
               </div>

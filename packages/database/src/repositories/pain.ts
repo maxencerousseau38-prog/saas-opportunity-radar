@@ -533,7 +533,10 @@ export async function clusterEvidence(service: DbClient, clusterId: string) {
       content_storage_status: f?.content_storage_status ?? "reference_only",
       evidence_id: f?.evidence_item_id ?? null,
       source_id: record?.id ?? null,
-      source_name: record?.sources?.name ?? record?.title ?? null,
+      // The declared origin of the record (e.g. the CSV source_name) first, then
+      // the registry connector it came through.
+      source_name: record?.title ?? record?.sources?.name ?? null,
+      source_connector: record?.sources?.name ?? null,
       evidence_url: record?.canonical_url ?? null,
       retrieved_at: f?.source_snapshots?.retrieved_at ?? null,
     };
