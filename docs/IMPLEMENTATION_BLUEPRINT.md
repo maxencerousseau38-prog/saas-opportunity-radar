@@ -5186,6 +5186,74 @@ Done when a run over a product set produces evidence-linked clusters
 that pass the clustering evaluation, distinguishes volume/authors/
 companies, and generates eligible hypotheses.
 
+**Status (5 November 2026): implemented with simulated providers; exit
+gate pending PD-24a/PD-24b and PD-22.** The product owner authorised the
+sprint while the Sprint 3 exit gate stays pending (ADR register, "Sprint 4
+start"); no paid call was made and production keeps the fake provider.
+
+-   **pgvector verified** on the real stack (CI applies M6 with
+    `create extension vector`); the vector column has no fixed dimension
+    and no ANN index until PD-24b fixes the embedding model.
+-   **M6** (`20261106090000_pain_points.sql`) as specified (tables,
+    triggers, RLS, grants, tag and collection targets), plus the RPCs the
+    blueprint describes: `sor_request_pain_point_run` (frozen scope of
+    visible products; category scope capped by `pain_scope_max_products`
+    = 50), a trigger that keeps `pain_point_runs.status` in step with its
+    job (cancellation, failure and dead letter included), worker writes
+    (`sor_pain_save_problems` reused per extractor version,
+    `sor_pain_save_embeddings`, `sor_pain_mark_duplicates`,
+    `sor_pain_save_clusters` with statistics and a history snapshot,
+    `sor_pain_save_insights`; deterministic ids make them idempotent),
+    and user actions through the API (`sor_cluster_correction` with
+    audit and optimistic concurrency, `sor_delete_pain_point_run`,
+    `sor_retry_pain_point_run`). 72 pgTAP assertions.
+-   **Engine** (`@sor/pain-point-engine`): the §7.1 state machine; P1–P9
+    with persisted, keyed steps (a resumed job repeats no model call);
+    excluded hypotheses discarded and counted, `needs_review` ones stored
+    and not analysable. Deterministic rules in `@sor/domain`: `dedup-1`,
+    `cluster-1`, `freq-1`, evidence quality q(e)/Q (§9.4).
+-   **AI gateway**: `embed()` (embedding profile, budget refusal, timeout,
+    vector shape validation, usage). The fake provider gives deterministic
+    hashed embeddings (64 dimensions); fake P3/P6/P8/P9 handlers are
+    labelled heuristics.
+-   **API and UI**: the routes of §10 "Pain Point Intelligence"; the
+    Opportunities page (new run, runs, clusters, hypotheses with status,
+    favourite, notes and tags), run page (progress, cancel, retry, delete,
+    limitations, gaps), cluster page (separate volume / distinct authors /
+    distinct companies with their status, relative frequency, resolution,
+    severity, confidence, time evolution, history, sample limitations,
+    evidence with sources, corrections). Statistics after a correction are
+    recomputed by the server with `@sor/domain`.
+-   **Evaluation** (`evals/pain-points`): same problem phrased differently,
+    different problems sharing vocabulary, one author counted once, many
+    vs few reviews. Fake baseline: 0 incorrect merges, counts exact,
+    grouping recall 2/3 (no synonyms without a real embedding model).
+-   **[ASSUMPTION]** `dedup-1`: near duplicates by pg_trgm-style trigram
+    similarity ≥ 0.85 within a product, computed in `@sor/domain` (no
+    `pg_trgm` dependency); near duplicates are kept, not extracted, and
+    excluded from counts. `cluster-1`: average-linkage cosine distance ≤
+    0.35, minimum size 2 (provisional, to calibrate once PD-24b is
+    decided). `freq-1` "recurring in ≥ 2 products" is read as recurring
+    overall and present in ≥ 2 products. A verified `review_count` company
+    signal `{"count": n}` gives the total known review count. P6 splits
+    are applied automatically (merges stay user corrections); singletons
+    and P6 outliers are isolated complaints, not clusters. The verifier's
+    coherence is not stored: a corrected cluster's confidence is
+    recomputed without it. P8 gaps citing evidence outside their clusters
+    are dropped with a warning.
+-   **Verified**: unit tests (contracts, domain, gateway, engine,
+    evaluation), pgTAP 012, worker integration test (CSV import → run →
+    clusters, history, hypotheses, provider usage; second run reuses
+    problems; cancellation), Playwright journey (import → run → cluster →
+    correction → hypothesis status; viewer read-only).
+-   **Exit gate**: evidence-linked clusters, separate volume / authors /
+    companies and eligible hypotheses are met with the simulated
+    providers. **Not met:** clustering evaluation thresholds on a real
+    embedding model (PD-24b, PD-22) and real P3/P6/P8/P9 (PD-24a).
+-   **Deferred**: G2 (PD-26); ANN index (PD-24b); analyses blocking run
+    deletion (M7, Sprint 5); comparison of generated opportunities
+    (Sprint 5); triggering review connectors from P1 (none integrated).
+
 ## Sprint 5 --- Opportunity Engine
 
 No blocking decision (PD-05, PD-06, PD-07, PD-10, PD-18, PD-23

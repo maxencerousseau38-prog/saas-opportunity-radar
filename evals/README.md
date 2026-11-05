@@ -5,9 +5,10 @@ Implementation Blueprint §14). They are the input of the PD-08 benchmark
 whose outcome is PD-24 (provider, models, budgets) and of the per-agent
 threshold approvals (PD-22).
 
-| Directory     | Agents                              | Runner                                              |
-| ------------- | ----------------------------------- | --------------------------------------------------- |
-| `enrichment/` | D5 Enrichment, D6 Evidence Verifier | `packages/discovery-engine/src/evals/enrichment.ts` |
+| Directory      | Agents                                                    | Runner                                              |
+| -------------- | --------------------------------------------------------- | --------------------------------------------------- |
+| `enrichment/`  | D5 Enrichment, D6 Evidence Verifier                       | `packages/discovery-engine/src/evals/enrichment.ts` |
+| `pain-points/` | P2–P7 (deduplication, embeddings, clustering, statistics) | `packages/pain-point-engine/src/evals.ts`           |
 
 Each fixture is a small official website (pages as text) and the facts a
 correct extraction may report (`expected`) or must never report

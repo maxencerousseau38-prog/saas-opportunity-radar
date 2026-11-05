@@ -687,7 +687,7 @@ The detailed plan, with exit gates and the pending decisions that block each spr
 | 1 | Database foundation and security (M1–M4), bootstrap, pgTAP — **done 4 Nov 2026** | — |
 | 2 | Catalog APIs, Discover UI, profiles, workspace organisation, manual add, operator views — **done 4 Nov 2026** | — |
 | 3 | Sources, evidence, job system (M5), AI gateway, safe fetcher, official-website connector, CSV imports, identity, enrichment, verification — **implemented 4 Nov 2026 (fake provider); exit gate awaits PD-24** | PGMQ gate passed; exit gate needs PD-24 (real provider for D5/D6) |
-| 4 | Pain Point Intelligence Engine (M6), embeddings and UI | PD-24 (embedding model); G2 only if PD-26 approved |
+| 4 | Pain Point Intelligence Engine (M6), embeddings and UI — **implemented 5 Nov 2026 (simulated providers); exit gate awaits PD-24a/b and PD-22** | PD-24 (embedding model); G2 only if PD-26 approved |
 | 5 | Opportunity Engine (M7), scoring, report, export | — (PD-25 non-blocking) |
 | 6 | Discovery Engine (M8) and AI Discovery UI | PD-28 |
 | 7 | Reliability and production readiness, deployment | PD-27 |
@@ -820,7 +820,8 @@ A feature is Done only when:
 - 5 November 2026: **PD-24 method approved** (PD-24a generation provider now, PD-24b embeddings in Sprint 4; Anthropic/OpenAI/Mistral; 30 USD cap). Benchmark inputs frozen (28 real sites by the `eval-snapshot` CI workflow, 5 adversarial cases, draft annotations pending review), official prices in `evals/benchmark/pricing.json`, plan in `evals/benchmark/PLAN.md`. Real provider adapters (`@sor/ai-gateway`), per-model settings and the benchmark runner (`apps/worker/src/evals`) are implemented and tested without any paid call; fake-provider dry run in `evals/benchmark/results/dry-run/`. Production still uses the fake provider.
 - 5 November 2026: **PD-24a preflight** (no API call): Ministral id corrected (`ministral-14b-2512`), whole-word annotation matching, references on 14 cases, calibration gate at the start of stage 1, larger output caps, GrowSurf expected excluded (needs_review accepted). Final stage-1 forecast: 13.42 USD expected / 20.99 prudent under the 22 USD cap.
 - 5 November 2026: **stage 1 approved by the product owner (cap 22 USD)**, not run yet: no API keys in the environment and `api.openai.com` / `api.mistral.ai` blocked by the network policy.
-- Next step: once the three keys and both hosts are available, run stage 1 exactly as in `evals/benchmark/PLAN.md` (22 USD cap, calibration gate); stage 2 and Sprint 4 need separate approvals.
+- 5 November 2026: the paid benchmark is deferred by the product owner; **Sprint 4 implemented** with simulated providers only (Sprint 3 exit gate still pending): M6 (pgvector verified, no fixed dimension), P1–P9 in `@sor/pain-point-engine`, deterministic dedup/clustering/statistics in `@sor/domain`, gateway embeddings, `pain_point_run` worker handler, the §10 Pain Point routes and the Opportunities UI (runs, clusters, evidence, corrections, hypotheses with status and tags). Assumptions and deferrals: Implementation Blueprint §15 "Sprint 4" status.
+- Next step: Sprint 5 (Opportunity Engine) only on the product owner's go-ahead; the Sprint 3 and Sprint 4 exit gates need PD-24a/PD-24b (benchmark stage 1 approved, pending keys and network) and PD-22.
 - **Do not start by writing the AI agents or building the complete UI.**
 
 The original first-session instruction is kept below for reference; its audit step has been done.

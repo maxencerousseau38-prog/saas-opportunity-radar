@@ -157,6 +157,26 @@ never with the job payload. The `pgmq` schema is revoked from `public`,
 Proved by `supabase/tests/010_jobs_queue.sql` and `011_evidence_pipeline.sql`,
 and end to end by the worker integration tests (`apps/worker/test/integration`).
 
+## Sprint 4: Pain Point Intelligence (M6)
+
+- `feedback_problems` and `feedback_problem_embeddings` are global and
+  server-only (no browser grant). Workspace tables (`pain_point_runs`,
+  `pain_point_run_products`, `pain_point_clusters`, `pain_point_evidence`,
+  `pain_point_cluster_snapshots`, `market_gaps` and links,
+  `generated_opportunities` and links) are readable by members only;
+  browsers write nothing there except `status`, `is_favorite` and `notes`
+  of a generated opportunity (column grants, member+).
+- Triggers keep evidence in scope: a problem takes the product of its
+  feedback; a problem joins a cluster only if its product is in the run's
+  frozen scope; gap evidence must concern the run scope (or be
+  market-level). Excluded hypotheses can never be stored (check).
+- Every pain point RPC is `security definer`, `search_path = ''` and
+  executable by `service_role` only; user actions check the actor's role
+  inside the function (member+ to start, correct or retry; admin+ to
+  delete) and corrections are audit-logged.
+- A run's status mirrors its job through a trigger on `job_executions`.
+- Tests: `supabase/tests/012_pain_points.sql`.
+
 ## Running the tests
 
 - **CI** (reference): the `database` job of `.github/workflows/ci.yml` runs

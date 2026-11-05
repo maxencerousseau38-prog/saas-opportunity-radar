@@ -68,3 +68,18 @@ The seed script refuses any Supabase URL other than `http://127.0.0.1` or
 `http://localhost`; reset the database (`supabase db reset`) before seeding
 again.
 
+## Sprint 4: Pain Point Intelligence
+
+- Unit: `@sor/domain` pain-point rules (evidence quality, `dedup-1`,
+  `cluster-1`, `freq-1`), `@sor/ai-gateway` embeddings, `@sor/pain-point-engine`
+  pipeline on in-memory ports (resume without repeated model calls, reuse
+  across runs, exclusion of hypotheses, cancellation) and the evaluation
+  fixtures of `evals/pain-points` (fake baseline: no incorrect merge,
+  exact counts).
+- Database: `supabase/tests/012_pain_points.sql` (privileges, RLS per role,
+  scope triggers, request and correction RPCs, run/job state).
+- Integration: `apps/worker/test/integration/pain.int.test.ts` (CSV feedback
+  import → run → clusters, history, hypotheses; problems reused; cancellation).
+- E2E: `apps/web/e2e/pain-points.e2e.ts` (import → run → cluster → correction
+  → hypothesis status; viewer read-only), with the worker running.
+
