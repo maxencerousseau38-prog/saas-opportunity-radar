@@ -25,6 +25,110 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"analysis_dimension_scores": {
+                  Row: {
+                    "analysis_id": string,"assessment_status": Database["public"]['Enums']["assessment_status"],"dimension_key": Database["public"]['Enums']["dimension_key"],"explanation": string,"missing_information": NonNullable<Json>,"proposed_by_step_id": string | null,"rating": number | null,"weight": number,"weighted_points": number | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "analysis_id": string,"assessment_status": Database["public"]['Enums']["assessment_status"],"dimension_key": Database["public"]['Enums']["dimension_key"],"explanation": string,"missing_information"?: NonNullable<Json>,"proposed_by_step_id"?: string | null,"rating"?: number | null,"weight": number,"weighted_points"?: never
+                  }
+                  Update: {
+                    "analysis_id"?: string,"assessment_status"?: Database["public"]['Enums']["assessment_status"],"dimension_key"?: Database["public"]['Enums']["dimension_key"],"explanation"?: string,"missing_information"?: NonNullable<Json>,"proposed_by_step_id"?: string | null,"rating"?: number | null,"weight"?: number,"weighted_points"?: never
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "analysis_dimension_scores_analysis_id_fkey"
+      columns: ["analysis_id"]
+isOneToOne: false
+      referencedRelation: "opportunity_analyses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "analysis_dimension_scores_proposed_by_step_id_fkey"
+      columns: ["proposed_by_step_id"]
+isOneToOne: false
+      referencedRelation: "agent_step_runs"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"analysis_evidence": {
+                  Row: {
+                    "added_by_step_id": string | null,"analysis_id": string,"created_at": string,"evidence_item_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "added_by_step_id"?: string | null,"analysis_id": string,"created_at"?: string,"evidence_item_id": string
+                  }
+                  Update: {
+                    "added_by_step_id"?: string | null,"analysis_id"?: string,"created_at"?: string,"evidence_item_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "analysis_evidence_added_by_step_id_fkey"
+      columns: ["added_by_step_id"]
+isOneToOne: false
+      referencedRelation: "agent_step_runs"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "analysis_evidence_analysis_id_fkey"
+      columns: ["analysis_id"]
+isOneToOne: false
+      referencedRelation: "opportunity_analyses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "analysis_evidence_evidence_item_id_fkey"
+      columns: ["evidence_item_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"analysis_findings": {
+                  Row: {
+                    "analysis_id": string,"confidence": number | null,"created_at": string,"description": string,"dimension_key": Database["public"]['Enums']["dimension_key"] | null,"finding_type": Database["public"]['Enums']["finding_type"],"id": string,"is_hypothesis": boolean,"is_substantiated": boolean | null,"priority": number | null,"recommendation": string | null,"severity": Database["public"]['Enums']["kill_severity"] | null,"source_agent": string,"title": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "analysis_id": string,"confidence"?: number | null,"created_at"?: string,"description": string,"dimension_key"?: Database["public"]['Enums']["dimension_key"] | null,"finding_type": Database["public"]['Enums']["finding_type"],"id"?: string,"is_hypothesis": boolean,"is_substantiated"?: boolean | null,"priority"?: number | null,"recommendation"?: string | null,"severity"?: Database["public"]['Enums']["kill_severity"] | null,"source_agent": string,"title": string
+                  }
+                  Update: {
+                    "analysis_id"?: string,"confidence"?: number | null,"created_at"?: string,"description"?: string,"dimension_key"?: Database["public"]['Enums']["dimension_key"] | null,"finding_type"?: Database["public"]['Enums']["finding_type"],"id"?: string,"is_hypothesis"?: boolean,"is_substantiated"?: boolean | null,"priority"?: number | null,"recommendation"?: string | null,"severity"?: Database["public"]['Enums']["kill_severity"] | null,"source_agent"?: string,"title"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "analysis_findings_analysis_id_fkey"
+      columns: ["analysis_id"]
+isOneToOne: false
+      referencedRelation: "opportunity_analyses"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"analysis_subject_products": {
+                  Row: {
+                    "analysis_id": string,"product_id": string,"role": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "analysis_id": string,"product_id": string,"role": string
+                  }
+                  Update: {
+                    "analysis_id"?: string,"product_id"?: string,"role"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "analysis_subject_products_analysis_id_fkey"
+      columns: ["analysis_id"]
+isOneToOne: false
+      referencedRelation: "opportunity_analyses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "analysis_subject_products_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"audit_logs": {
                   Row: {
                     "action": string,"actor_kind": string,"actor_user_id": string | null,"created_at": string,"id": string,"metadata": NonNullable<Json>,"request_id": string | null,"resource_id": string | null,"resource_type": string,"workspace_id": string | null
@@ -323,6 +427,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"dimension_score_evidence": {
+                  Row: {
+                    "analysis_id": string,"dimension_key": Database["public"]['Enums']["dimension_key"],"evidence_item_id": string,"support_type": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "analysis_id": string,"dimension_key": Database["public"]['Enums']["dimension_key"],"evidence_item_id": string,"support_type"?: string
+                  }
+                  Update: {
+                    "analysis_id"?: string,"dimension_key"?: Database["public"]['Enums']["dimension_key"],"evidence_item_id"?: string,"support_type"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "dimension_score_evidence_analysis_id_dimension_key_fkey"
+      columns: ["analysis_id","dimension_key"]
+isOneToOne: false
+      referencedRelation: "analysis_dimension_scores"
+      referencedColumns: ["analysis_id","dimension_key"]
+    },{
+      foreignKeyName: "dimension_score_evidence_analysis_id_evidence_item_id_fkey"
+      columns: ["analysis_id","evidence_item_id"]
+isOneToOne: false
+      referencedRelation: "analysis_evidence"
+      referencedColumns: ["analysis_id","evidence_item_id"]
+    }
+                  ]
                 },"entity_identifiers": {
                   Row: {
                     "company_id": string | null,"created_at": string,"evidence_id": string | null,"id": string,"identifier_type": string,"is_primary": boolean,"product_id": string | null,"source_id": string | null,"valid_from": string,"valid_to": string | null,"value_normalized": string
@@ -509,6 +639,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"finding_evidence": {
+                  Row: {
+                    "analysis_id": string,"evidence_item_id": string,"finding_id": string,"relevance_score": number | null,"support_type": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "analysis_id": string,"evidence_item_id": string,"finding_id": string,"relevance_score"?: number | null,"support_type"?: string
+                  }
+                  Update: {
+                    "analysis_id"?: string,"evidence_item_id"?: string,"finding_id"?: string,"relevance_score"?: number | null,"support_type"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "finding_evidence_analysis_id_evidence_item_id_fkey"
+      columns: ["analysis_id","evidence_item_id"]
+isOneToOne: false
+      referencedRelation: "analysis_evidence"
+      referencedColumns: ["analysis_id","evidence_item_id"]
+    },{
+      foreignKeyName: "finding_evidence_finding_id_analysis_id_fkey"
+      columns: ["finding_id","analysis_id"]
+isOneToOne: false
+      referencedRelation: "analysis_findings"
+      referencedColumns: ["id","analysis_id"]
+    }
+                  ]
                 },"fx_rates": {
                   Row: {
                     "currency": string,"rate_date": string,"rate_to_eur": number,"source_key": string
@@ -691,6 +847,56 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "pain_point_runs"
       referencedColumns: ["id","workspace_id"]
+    }
+                  ]
+                },"opportunity_analyses": {
+                  Row: {
+                    "analysis_depth": string,"analysis_type": Database["public"]['Enums']["analysis_type"],"analysis_version": string,"completed_at": string | null,"confidence_score": number | null,"created_at": string,"created_by": string,"decision_band": Database["public"]['Enums']["decision_band"] | null,"executive_summary": string | null,"id": string,"job_execution_id": string | null,"limitations": NonNullable<Json>,"provisional_points": number | null,"report_json": Json | null,"score_coverage": number | null,"score_total": number | null,"scoring_rules_version": string,"started_at": string | null,"status": Database["public"]['Enums']["run_status"],"subject_category_id": string | null,"subject_cluster_id": string | null,"subject_generated_opportunity_id": string | null,"subject_product_id": string | null,"subject_snapshot": NonNullable<Json>,"subject_type": Database["public"]['Enums']["analysis_subject_type"],"target_market": string,"terminal_reason": Database["public"]['Enums']["terminal_reason"] | null,"user_context": NonNullable<Json>,"verdict": Database["public"]['Enums']["analysis_verdict"] | null,"verdict_reasons": NonNullable<Json>,"willingness_to_pay_score": number | null,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "analysis_depth"?: string,"analysis_type"?: Database["public"]['Enums']["analysis_type"],"analysis_version": string,"completed_at"?: string | null,"confidence_score"?: number | null,"created_at"?: string,"created_by": string,"decision_band"?: Database["public"]['Enums']["decision_band"] | null,"executive_summary"?: string | null,"id"?: string,"job_execution_id"?: string | null,"limitations"?: NonNullable<Json>,"provisional_points"?: number | null,"report_json"?: Json | null,"score_coverage"?: number | null,"score_total"?: number | null,"scoring_rules_version": string,"started_at"?: string | null,"status"?: Database["public"]['Enums']["run_status"],"subject_category_id"?: string | null,"subject_cluster_id"?: string | null,"subject_generated_opportunity_id"?: string | null,"subject_product_id"?: string | null,"subject_snapshot": NonNullable<Json>,"subject_type": Database["public"]['Enums']["analysis_subject_type"],"target_market"?: string,"terminal_reason"?: Database["public"]['Enums']["terminal_reason"] | null,"user_context"?: NonNullable<Json>,"verdict"?: Database["public"]['Enums']["analysis_verdict"] | null,"verdict_reasons"?: NonNullable<Json>,"willingness_to_pay_score"?: number | null,"workspace_id": string
+                  }
+                  Update: {
+                    "analysis_depth"?: string,"analysis_type"?: Database["public"]['Enums']["analysis_type"],"analysis_version"?: string,"completed_at"?: string | null,"confidence_score"?: number | null,"created_at"?: string,"created_by"?: string,"decision_band"?: Database["public"]['Enums']["decision_band"] | null,"executive_summary"?: string | null,"id"?: string,"job_execution_id"?: string | null,"limitations"?: NonNullable<Json>,"provisional_points"?: number | null,"report_json"?: Json | null,"score_coverage"?: number | null,"score_total"?: number | null,"scoring_rules_version"?: string,"started_at"?: string | null,"status"?: Database["public"]['Enums']["run_status"],"subject_category_id"?: string | null,"subject_cluster_id"?: string | null,"subject_generated_opportunity_id"?: string | null,"subject_product_id"?: string | null,"subject_snapshot"?: NonNullable<Json>,"subject_type"?: Database["public"]['Enums']["analysis_subject_type"],"target_market"?: string,"terminal_reason"?: Database["public"]['Enums']["terminal_reason"] | null,"user_context"?: NonNullable<Json>,"verdict"?: Database["public"]['Enums']["analysis_verdict"] | null,"verdict_reasons"?: NonNullable<Json>,"willingness_to_pay_score"?: number | null,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "opportunity_analyses_job_execution_id_fkey"
+      columns: ["job_execution_id"]
+isOneToOne: false
+      referencedRelation: "job_executions"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "opportunity_analyses_subject_category_id_fkey"
+      columns: ["subject_category_id"]
+isOneToOne: false
+      referencedRelation: "categories"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "opportunity_analyses_subject_cluster_id_workspace_id_fkey"
+      columns: ["subject_cluster_id","workspace_id"]
+isOneToOne: false
+      referencedRelation: "pain_point_clusters"
+      referencedColumns: ["id","workspace_id"]
+    },{
+      foreignKeyName: "opportunity_analyses_subject_generated_opportunity_id_work_fkey"
+      columns: ["subject_generated_opportunity_id","workspace_id"]
+isOneToOne: false
+      referencedRelation: "generated_opportunities"
+      referencedColumns: ["id","workspace_id"]
+    },{
+      foreignKeyName: "opportunity_analyses_subject_product_id_fkey"
+      columns: ["subject_product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "opportunity_analyses_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
     }
                   ]
                 },"pain_point_cluster_snapshots": {
@@ -1015,6 +1221,38 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"report_exports": {
+                  Row: {
+                    "analysis_id": string,"content": string,"content_type": string,"created_at": string,"created_by": string | null,"filename": string,"format": string,"id": string,"job_execution_id": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "analysis_id": string,"content": string,"content_type": string,"created_at"?: string,"created_by"?: string | null,"filename": string,"format": string,"id"?: string,"job_execution_id": string,"workspace_id": string
+                  }
+                  Update: {
+                    "analysis_id"?: string,"content"?: string,"content_type"?: string,"created_at"?: string,"created_by"?: string | null,"filename"?: string,"format"?: string,"id"?: string,"job_execution_id"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "report_exports_analysis_id_workspace_id_fkey"
+      columns: ["analysis_id","workspace_id"]
+isOneToOne: false
+      referencedRelation: "opportunity_analyses"
+      referencedColumns: ["id","workspace_id"]
+    },{
+      foreignKeyName: "report_exports_job_execution_id_fkey"
+      columns: ["job_execution_id"]
+isOneToOne: true
+      referencedRelation: "job_executions"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "report_exports_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"saas_products": {
                   Row: {
                     "billing_models": (Database["public"]['Enums']["billing_model"])[],"company_id": string | null,"compatibilities": (string)[],"complexity_level": string,"created_at": string,"customer_countries": (string)[],"customer_type": Database["public"]['Enums']["customer_type"],"description": string | null,"discovery_source_id": string | null,"documentation_url": string | null,"europe_presence": Database["public"]['Enums']["presence_status"],"exclusion_status": Database["public"]['Enums']["exclusion_status"],"first_discovered_at": string,"france_presence": Database["public"]['Enums']["presence_status"],"french_version": Database["public"]['Enums']["presence_status"],"id": string,"languages": (string)[],"last_verified_at": string | null,"launch_year": number | null,"logo_url": string | null,"maturity_stage": Database["public"]['Enums']["maturity_stage"],"merged_into_product_id": string | null,"name": string,"pricing_status": Database["public"]['Enums']["pricing_status"],"primary_domain": string | null,"problem_solved": string | null,"product_status": Database["public"]['Enums']["product_status"],"record_status": Database["public"]['Enums']["record_status"],"search_vector": unknown,"served_countries": (string)[],"short_description": string | null,"slug": string,"tagline": string | null,"technology_tags": (Database["public"]['Enums']["technology_tag"])[],"updated_at": string,"use_cases": (string)[],"value_proposition": string | null,"verification_status": Database["public"]['Enums']["verification_status"],"website_url": string | null
@@ -1273,6 +1511,15 @@ isOneToOne: true
 "sor_add_member_by_email":
 { Args: { "p_actor": string,"p_email": string,"p_role": Database["public"]['Enums']["workspace_role"],"p_workspace_id": string }; Returns: string
                            },
+"sor_analysis_add_evidence":
+{ Args: { "p_analysis_id": string,"p_evidence_ids": (string)[],"p_step_id": string }; Returns: number
+                           },
+"sor_analysis_finalize":
+{ Args: { "p_analysis_id": string,"p_result": Json }; Returns: undefined
+                           },
+"sor_analysis_needs_review":
+{ Args: { "p_analysis_id": string,"p_limitations": Json }; Returns: undefined
+                           },
 "sor_apply_enrichment":
 { Args: { "p_job_id": string,"p_plan": Json,"p_product_id": string,"p_step_id": string }; Returns: Json
                            },
@@ -1281,6 +1528,9 @@ isOneToOne: true
                            },
 "sor_cluster_correction":
 { Args: { "p_actor": string,"p_cluster_id": string,"p_correction": Json,"p_expected_updated_at": string,"p_request_id": string,"p_stats": Json,"p_target_stats": Json,"p_workspace_id": string }; Returns: Json
+                           },
+"sor_delete_analysis":
+{ Args: { "p_actor": string,"p_analysis_id": string,"p_request_id": string,"p_workspace_id": string }; Returns: undefined
                            },
 "sor_delete_pain_point_run":
 { Args: { "p_actor": string,"p_request_id": string,"p_run_id": string,"p_workspace_id": string }; Returns: undefined
@@ -1318,6 +1568,11 @@ isOneToOne: true
 "sor_record_snapshot":
 { Args: { "p_canonical_url": string,"p_content_hash": string,"p_external_id": string,"p_fetch_status": Database["public"]['Enums']["fetch_status"],"p_http_status": number,"p_metadata": Json,"p_published_at": string,"p_retrieved_at": string,"p_source_key": string,"p_storage_status": Database["public"]['Enums']["content_storage_status"],"p_title": string }; Returns: string
                            },
+"sor_request_analysis":
+{ Args: { "p_analysis_type": Database["public"]['Enums']["analysis_type"],"p_idempotency_key": string,"p_request": Json,"p_request_hash": string,"p_requested_by": string,"p_subject": Json,"p_workspace_id": string }; Returns: {
+              "analysis_id": string,"created": boolean,"job_id": string
+            }[]
+                           },
 "sor_request_job":
 { Args: { "p_idempotency_key": string,"p_kind": Database["public"]['Enums']["job_kind"],"p_payload": Json,"p_request_hash": string,"p_requested_by": string,"p_workspace_id": string }; Returns: {
               "created": boolean,"job_id": string
@@ -1328,10 +1583,18 @@ isOneToOne: true
               "created": boolean,"job_id": string,"run_id": string
             }[]
                            },
+"sor_retry_analysis":
+{ Args: { "p_actor": string,"p_analysis_id": string,"p_idempotency_key": string,"p_request_hash": string,"p_workspace_id": string }; Returns: {
+              "created": boolean,"job_id": string
+            }[]
+                           },
 "sor_retry_pain_point_run":
 { Args: { "p_actor": string,"p_idempotency_key": string,"p_request_hash": string,"p_run_id": string,"p_workspace_id": string }; Returns: {
               "created": boolean,"job_id": string
             }[]
+                           },
+"sor_save_report_export":
+{ Args: { "p_content": string,"p_content_type": string,"p_filename": string,"p_format": string,"p_job_id": string }; Returns: string
                            },
 "sor_transfer_ownership":
 { Args: { "p_current_owner": string,"p_new_owner": string,"p_workspace_id": string }; Returns: undefined
@@ -1397,7 +1660,7 @@ isOneToOne: true
                            }
           }
           Enums: {
-            "billing_model": "monthly_subscription"|"annual_subscription"|"freemium"|"free_trial"|"usage_based"|"per_user"|"volume_based"|"license"|"other","claim_type": "product_exists"|"product_description"|"category"|"pricing"|"paid_customer_signal"|"customer_identity"|"employee_count"|"founding_year"|"headquarters"|"customer_country"|"market_presence"|"language"|"platform"|"feature"|"integration"|"maturity"|"company_profile"|"traction_signal"|"customer_feedback"|"customer_pain"|"market_size"|"market_trend"|"competitor_relation"|"localization"|"funding"|"traffic"|"other","cluster_review_status": "machine_proposed"|"user_confirmed"|"user_corrected"|"rejected","company_type": "independent"|"subsidiary"|"public_company"|"unknown","competitor_relationship": "direct"|"indirect"|"alternative"|"substitute"|"adjacent","content_storage_status": "stored_full"|"stored_excerpt"|"reference_only"|"removed","count_status": "verified"|"estimated"|"unknown","customer_type": "b2b"|"b2c"|"b2b_b2c"|"unknown","evidence_type": "official_statement"|"customer_review"|"pricing_evidence"|"customer_case_study"|"public_metric"|"technical_evidence"|"market_evidence"|"third_party_report"|"user_declared"|"inference","exclusion_status": "unassessed"|"eligible"|"excluded"|"needs_review","extraction_method": "official_api"|"structured_parse"|"llm_extraction"|"manual_entry"|"user_import","fact_status": "confirmed"|"estimated"|"declared"|"unknown","feature_availability": "available"|"beta"|"planned"|"removed"|"not_observed"|"unknown","fetch_status": "ok"|"blocked"|"unavailable"|"not_supported"|"rate_limited"|"error","frequency_label": "isolated"|"recurring"|"widespread"|"unknown","funding_status": "bootstrapped"|"externally_funded"|"unknown","integration_category": "crm"|"ecommerce"|"marketing"|"analytics"|"communication"|"payments"|"other","job_kind": "product_enrichment"|"product_refresh"|"source_sync"|"catalog_import"|"feedback_import"|"discovery_run"|"pain_point_run"|"opportunity_analysis"|"report_export"|"data_export","job_state": "queued"|"running"|"retrying"|"completed"|"partial"|"failed"|"cancelled"|"dead_letter","maturity_stage": "new"|"launching"|"established"|"growing"|"mature"|"unknown","monetization_signal": "payment_confirmed"|"customer_verified"|"paid_plan_available"|"purchase_intent"|"problem_signal"|"unknown","opportunity_status": "discovered"|"to_research"|"analyzing"|"validate"|"validated"|"rejected"|"building","pain_scope_type": "product"|"product_set"|"category","presence_status": "present"|"not_observed"|"unknown","pricing_status": "free"|"paid"|"freemium"|"custom"|"unknown","problem_category": "pricing"|"ux"|"missing_features"|"bugs"|"support"|"integrations"|"performance"|"documentation"|"customization"|"complexity"|"reliability"|"other","product_status": "active"|"beta"|"discontinued"|"unknown","record_status": "candidate"|"active"|"needs_review"|"archived"|"merged","resolution_status": "resolved"|"unresolved"|"unknown","review_sentiment": "positive"|"neutral"|"negative"|"mixed"|"unknown","run_status": "queued"|"running"|"completed"|"partial"|"failed"|"cancelled"|"needs_review","source_access_method": "official_api"|"contract"|"public_feed"|"official_website_fetch"|"manual_entry"|"user_import","source_integration_status": "planned"|"in_development"|"integrated"|"disabled"|"blocked","source_type": "official_website"|"review_platform"|"directory"|"community"|"social"|"company_database"|"search_provider"|"manual_entry"|"user_import"|"other","switching_intent": "stated"|"not_stated"|"unknown","technology_tag": "web_app"|"mobile_app"|"api"|"ai_native"|"no_code_low_code"|"browser_extension","terminal_reason": "completed"|"partial"|"failed"|"cancelled"|"dead_letter"|"budget_exhausted","verification_status": "unverified"|"verified"|"needs_review"|"rejected"|"stale","workspace_role": "owner"|"admin"|"member"|"viewer"
+            "analysis_subject_type": "product"|"product_set"|"category"|"pain_point_cluster"|"generated_opportunity","analysis_type": "opportunity"|"comparison","analysis_verdict": "build_candidate"|"validate_first"|"reject","assessment_status": "assessed"|"insufficient_evidence","billing_model": "monthly_subscription"|"annual_subscription"|"freemium"|"free_trial"|"usage_based"|"per_user"|"volume_based"|"license"|"other","claim_type": "product_exists"|"product_description"|"category"|"pricing"|"paid_customer_signal"|"customer_identity"|"employee_count"|"founding_year"|"headquarters"|"customer_country"|"market_presence"|"language"|"platform"|"feature"|"integration"|"maturity"|"company_profile"|"traction_signal"|"customer_feedback"|"customer_pain"|"market_size"|"market_trend"|"competitor_relation"|"localization"|"funding"|"traffic"|"other","cluster_review_status": "machine_proposed"|"user_confirmed"|"user_corrected"|"rejected","company_type": "independent"|"subsidiary"|"public_company"|"unknown","competitor_relationship": "direct"|"indirect"|"alternative"|"substitute"|"adjacent","content_storage_status": "stored_full"|"stored_excerpt"|"reference_only"|"removed","count_status": "verified"|"estimated"|"unknown","customer_type": "b2b"|"b2c"|"b2b_b2c"|"unknown","decision_band": "reject"|"low_potential"|"to_investigate"|"interesting"|"priority","dimension_key": "customer_demand"|"willingness_to_pay"|"product_gap"|"market_attractiveness"|"competitive_differentiation"|"feasibility_distribution","evidence_type": "official_statement"|"customer_review"|"pricing_evidence"|"customer_case_study"|"public_metric"|"technical_evidence"|"market_evidence"|"third_party_report"|"user_declared"|"inference","exclusion_status": "unassessed"|"eligible"|"excluded"|"needs_review","extraction_method": "official_api"|"structured_parse"|"llm_extraction"|"manual_entry"|"user_import","fact_status": "confirmed"|"estimated"|"declared"|"unknown","feature_availability": "available"|"beta"|"planned"|"removed"|"not_observed"|"unknown","fetch_status": "ok"|"blocked"|"unavailable"|"not_supported"|"rate_limited"|"error","finding_type": "pain_point"|"opportunity"|"risk"|"competitor_gap"|"recommendation"|"kill_criterion","frequency_label": "isolated"|"recurring"|"widespread"|"unknown","funding_status": "bootstrapped"|"externally_funded"|"unknown","integration_category": "crm"|"ecommerce"|"marketing"|"analytics"|"communication"|"payments"|"other","job_kind": "product_enrichment"|"product_refresh"|"source_sync"|"catalog_import"|"feedback_import"|"discovery_run"|"pain_point_run"|"opportunity_analysis"|"report_export"|"data_export","job_state": "queued"|"running"|"retrying"|"completed"|"partial"|"failed"|"cancelled"|"dead_letter","kill_severity": "critical"|"major"|"minor","maturity_stage": "new"|"launching"|"established"|"growing"|"mature"|"unknown","monetization_signal": "payment_confirmed"|"customer_verified"|"paid_plan_available"|"purchase_intent"|"problem_signal"|"unknown","opportunity_status": "discovered"|"to_research"|"analyzing"|"validate"|"validated"|"rejected"|"building","pain_scope_type": "product"|"product_set"|"category","presence_status": "present"|"not_observed"|"unknown","pricing_status": "free"|"paid"|"freemium"|"custom"|"unknown","problem_category": "pricing"|"ux"|"missing_features"|"bugs"|"support"|"integrations"|"performance"|"documentation"|"customization"|"complexity"|"reliability"|"other","product_status": "active"|"beta"|"discontinued"|"unknown","record_status": "candidate"|"active"|"needs_review"|"archived"|"merged","resolution_status": "resolved"|"unresolved"|"unknown","review_sentiment": "positive"|"neutral"|"negative"|"mixed"|"unknown","run_status": "queued"|"running"|"completed"|"partial"|"failed"|"cancelled"|"needs_review","source_access_method": "official_api"|"contract"|"public_feed"|"official_website_fetch"|"manual_entry"|"user_import","source_integration_status": "planned"|"in_development"|"integrated"|"disabled"|"blocked","source_type": "official_website"|"review_platform"|"directory"|"community"|"social"|"company_database"|"search_provider"|"manual_entry"|"user_import"|"other","switching_intent": "stated"|"not_stated"|"unknown","technology_tag": "web_app"|"mobile_app"|"api"|"ai_native"|"no_code_low_code"|"browser_extension","terminal_reason": "completed"|"partial"|"failed"|"cancelled"|"dead_letter"|"budget_exhausted","verification_status": "unverified"|"verified"|"needs_review"|"rejected"|"stale","workspace_role": "owner"|"admin"|"member"|"viewer"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1513,7 +1776,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "billing_model": ["monthly_subscription", "annual_subscription", "freemium", "free_trial", "usage_based", "per_user", "volume_based", "license", "other"],"claim_type": ["product_exists", "product_description", "category", "pricing", "paid_customer_signal", "customer_identity", "employee_count", "founding_year", "headquarters", "customer_country", "market_presence", "language", "platform", "feature", "integration", "maturity", "company_profile", "traction_signal", "customer_feedback", "customer_pain", "market_size", "market_trend", "competitor_relation", "localization", "funding", "traffic", "other"],"cluster_review_status": ["machine_proposed", "user_confirmed", "user_corrected", "rejected"],"company_type": ["independent", "subsidiary", "public_company", "unknown"],"competitor_relationship": ["direct", "indirect", "alternative", "substitute", "adjacent"],"content_storage_status": ["stored_full", "stored_excerpt", "reference_only", "removed"],"count_status": ["verified", "estimated", "unknown"],"customer_type": ["b2b", "b2c", "b2b_b2c", "unknown"],"evidence_type": ["official_statement", "customer_review", "pricing_evidence", "customer_case_study", "public_metric", "technical_evidence", "market_evidence", "third_party_report", "user_declared", "inference"],"exclusion_status": ["unassessed", "eligible", "excluded", "needs_review"],"extraction_method": ["official_api", "structured_parse", "llm_extraction", "manual_entry", "user_import"],"fact_status": ["confirmed", "estimated", "declared", "unknown"],"feature_availability": ["available", "beta", "planned", "removed", "not_observed", "unknown"],"fetch_status": ["ok", "blocked", "unavailable", "not_supported", "rate_limited", "error"],"frequency_label": ["isolated", "recurring", "widespread", "unknown"],"funding_status": ["bootstrapped", "externally_funded", "unknown"],"integration_category": ["crm", "ecommerce", "marketing", "analytics", "communication", "payments", "other"],"job_kind": ["product_enrichment", "product_refresh", "source_sync", "catalog_import", "feedback_import", "discovery_run", "pain_point_run", "opportunity_analysis", "report_export", "data_export"],"job_state": ["queued", "running", "retrying", "completed", "partial", "failed", "cancelled", "dead_letter"],"maturity_stage": ["new", "launching", "established", "growing", "mature", "unknown"],"monetization_signal": ["payment_confirmed", "customer_verified", "paid_plan_available", "purchase_intent", "problem_signal", "unknown"],"opportunity_status": ["discovered", "to_research", "analyzing", "validate", "validated", "rejected", "building"],"pain_scope_type": ["product", "product_set", "category"],"presence_status": ["present", "not_observed", "unknown"],"pricing_status": ["free", "paid", "freemium", "custom", "unknown"],"problem_category": ["pricing", "ux", "missing_features", "bugs", "support", "integrations", "performance", "documentation", "customization", "complexity", "reliability", "other"],"product_status": ["active", "beta", "discontinued", "unknown"],"record_status": ["candidate", "active", "needs_review", "archived", "merged"],"resolution_status": ["resolved", "unresolved", "unknown"],"review_sentiment": ["positive", "neutral", "negative", "mixed", "unknown"],"run_status": ["queued", "running", "completed", "partial", "failed", "cancelled", "needs_review"],"source_access_method": ["official_api", "contract", "public_feed", "official_website_fetch", "manual_entry", "user_import"],"source_integration_status": ["planned", "in_development", "integrated", "disabled", "blocked"],"source_type": ["official_website", "review_platform", "directory", "community", "social", "company_database", "search_provider", "manual_entry", "user_import", "other"],"switching_intent": ["stated", "not_stated", "unknown"],"technology_tag": ["web_app", "mobile_app", "api", "ai_native", "no_code_low_code", "browser_extension"],"terminal_reason": ["completed", "partial", "failed", "cancelled", "dead_letter", "budget_exhausted"],"verification_status": ["unverified", "verified", "needs_review", "rejected", "stale"],"workspace_role": ["owner", "admin", "member", "viewer"]
+            "analysis_subject_type": ["product", "product_set", "category", "pain_point_cluster", "generated_opportunity"],"analysis_type": ["opportunity", "comparison"],"analysis_verdict": ["build_candidate", "validate_first", "reject"],"assessment_status": ["assessed", "insufficient_evidence"],"billing_model": ["monthly_subscription", "annual_subscription", "freemium", "free_trial", "usage_based", "per_user", "volume_based", "license", "other"],"claim_type": ["product_exists", "product_description", "category", "pricing", "paid_customer_signal", "customer_identity", "employee_count", "founding_year", "headquarters", "customer_country", "market_presence", "language", "platform", "feature", "integration", "maturity", "company_profile", "traction_signal", "customer_feedback", "customer_pain", "market_size", "market_trend", "competitor_relation", "localization", "funding", "traffic", "other"],"cluster_review_status": ["machine_proposed", "user_confirmed", "user_corrected", "rejected"],"company_type": ["independent", "subsidiary", "public_company", "unknown"],"competitor_relationship": ["direct", "indirect", "alternative", "substitute", "adjacent"],"content_storage_status": ["stored_full", "stored_excerpt", "reference_only", "removed"],"count_status": ["verified", "estimated", "unknown"],"customer_type": ["b2b", "b2c", "b2b_b2c", "unknown"],"decision_band": ["reject", "low_potential", "to_investigate", "interesting", "priority"],"dimension_key": ["customer_demand", "willingness_to_pay", "product_gap", "market_attractiveness", "competitive_differentiation", "feasibility_distribution"],"evidence_type": ["official_statement", "customer_review", "pricing_evidence", "customer_case_study", "public_metric", "technical_evidence", "market_evidence", "third_party_report", "user_declared", "inference"],"exclusion_status": ["unassessed", "eligible", "excluded", "needs_review"],"extraction_method": ["official_api", "structured_parse", "llm_extraction", "manual_entry", "user_import"],"fact_status": ["confirmed", "estimated", "declared", "unknown"],"feature_availability": ["available", "beta", "planned", "removed", "not_observed", "unknown"],"fetch_status": ["ok", "blocked", "unavailable", "not_supported", "rate_limited", "error"],"finding_type": ["pain_point", "opportunity", "risk", "competitor_gap", "recommendation", "kill_criterion"],"frequency_label": ["isolated", "recurring", "widespread", "unknown"],"funding_status": ["bootstrapped", "externally_funded", "unknown"],"integration_category": ["crm", "ecommerce", "marketing", "analytics", "communication", "payments", "other"],"job_kind": ["product_enrichment", "product_refresh", "source_sync", "catalog_import", "feedback_import", "discovery_run", "pain_point_run", "opportunity_analysis", "report_export", "data_export"],"job_state": ["queued", "running", "retrying", "completed", "partial", "failed", "cancelled", "dead_letter"],"kill_severity": ["critical", "major", "minor"],"maturity_stage": ["new", "launching", "established", "growing", "mature", "unknown"],"monetization_signal": ["payment_confirmed", "customer_verified", "paid_plan_available", "purchase_intent", "problem_signal", "unknown"],"opportunity_status": ["discovered", "to_research", "analyzing", "validate", "validated", "rejected", "building"],"pain_scope_type": ["product", "product_set", "category"],"presence_status": ["present", "not_observed", "unknown"],"pricing_status": ["free", "paid", "freemium", "custom", "unknown"],"problem_category": ["pricing", "ux", "missing_features", "bugs", "support", "integrations", "performance", "documentation", "customization", "complexity", "reliability", "other"],"product_status": ["active", "beta", "discontinued", "unknown"],"record_status": ["candidate", "active", "needs_review", "archived", "merged"],"resolution_status": ["resolved", "unresolved", "unknown"],"review_sentiment": ["positive", "neutral", "negative", "mixed", "unknown"],"run_status": ["queued", "running", "completed", "partial", "failed", "cancelled", "needs_review"],"source_access_method": ["official_api", "contract", "public_feed", "official_website_fetch", "manual_entry", "user_import"],"source_integration_status": ["planned", "in_development", "integrated", "disabled", "blocked"],"source_type": ["official_website", "review_platform", "directory", "community", "social", "company_database", "search_provider", "manual_entry", "user_import", "other"],"switching_intent": ["stated", "not_stated", "unknown"],"technology_tag": ["web_app", "mobile_app", "api", "ai_native", "no_code_low_code", "browser_extension"],"terminal_reason": ["completed", "partial", "failed", "cancelled", "dead_letter", "budget_exhausted"],"verification_status": ["unverified", "verified", "needs_review", "rejected", "stale"],"workspace_role": ["owner", "admin", "member", "viewer"]
           }
         }
 } as const
