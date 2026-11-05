@@ -24,10 +24,23 @@ test("a pain point run clusters complaints across competitors and keeps them evi
   await page
     .getByLabel("Base juridique de l’utilisation")
     .fill("Export de notre propre enquête clients");
+  // Wait for this import job itself: an earlier job of the serial suite may
+  // already read "Terminé partiellement", and a run started before the import
+  // completes would analyse no feedback.
+  const queued = page.waitForResponse(
+    (r) =>
+      r.request().method() === "POST" && r.url().endsWith(`/workspaces/${ws}/imports/feedback`),
+  );
   await page.getByRole("button", { name: "Importer les avis" }).click();
-  await expect(page.getByTestId("import-job").first()).toContainText("Terminé", {
-    timeout: 30_000,
-  });
+  const { data: job } = (await (await queued).json()) as { data: { status_url: string } };
+  await expect
+    .poll(
+      async () =>
+        ((await (await page.request.get(job.status_url)).json()) as { data: { state: string } })
+          .data.state,
+      { timeout: 30_000 },
+    )
+    .toBe("completed");
 
   await page.goto(`/w/${ws}/opportunities`);
   const form = page.getByRole("form", { name: "Nouvelle analyse de problèmes" });
