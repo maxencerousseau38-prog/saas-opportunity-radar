@@ -83,3 +83,24 @@ again.
 - E2E: `apps/web/e2e/pain-points.e2e.ts` (import → run → cluster → correction
   → hypothesis status; viewer read-only), with the worker running.
 
+## Sprint 5: Opportunity Engine
+
+- Unit: `@sor/contracts` analysis and O1–O9 contracts, `@sor/domain`
+  scoring (one test per §9.2 rule and §9.6 gate, confidence formula,
+  PD-23 thresholds, red team only tightens), `@sor/opportunity-engine`
+  pipeline on in-memory ports (VALIDATE FIRST on incomplete evidence,
+  complete coverage, fatal flaw → REJECT, resume without repeated model
+  calls, needs_review after two rejected assessments, permanent exclusion
+  of recommendations and competitors, options, cancellation) and the
+  evaluation fixtures of `evals/opportunity` (fake baseline: verdict
+  consistency 1, reproducibility 1, no citation outside the index).
+- Database: `supabase/tests/013_opportunity_analyses.sql` (privileges, RLS,
+  every subject type, scope and thresholds, evidence index scope, finalize
+  consistency checks, BUILD gates, exports, retry, deletion) and
+  `014_analysis_customer_voice.sql` (analysis-owned pain point run).
+- Integration: `apps/worker/test/integration/analysis.int.test.ts` (feedback
+  import → analysis → nested P1–P7 run → report → Markdown export; second
+  analysis reuses the covering run).
+- E2E: `apps/web/e2e/opportunity-analyses.e2e.ts` (analysis from a SaaS
+  profile and from a cluster; separate score elements; cited evidence;
+  VALIDATE FIRST on incomplete evidence; export; viewer read-only).

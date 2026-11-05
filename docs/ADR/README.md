@@ -75,6 +75,17 @@ embedder); no paid call and no production change. Its exit gate stays
 pending PD-24a/PD-24b and the PD-22 thresholds. G2 is not used (PD-26
 pending): feedback comes from declared CSV imports.
 
+## Sprint 5 start (5 November 2026)
+
+The product owner authorised Sprint 5 (Opportunity Engine, Implementation
+Blueprint §15) with simulated providers only, no paid call, no spending and
+no production change, and approved the three choices of the sprint plan:
+(1) an analysis indexes existing catalog and feedback evidence only — no new
+market evidence is collected during an analysis until search sources exist
+(PD-28); (2) comparison analyses (§8.11) stay in Phase 2; (3) the analysis
+depth is stored and drives budgets and caps, never the scoring rules. The
+quality of the real agents stays pending PD-24a and the PD-22 thresholds.
+
 ## Pending decision register
 
 These questions were **not** settled by the 4 November arbitration. Each

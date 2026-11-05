@@ -177,6 +177,35 @@ and end to end by the worker integration tests (`apps/worker/test/integration`).
 - A run's status mirrors its job through a trigger on `job_executions`.
 - Tests: `supabase/tests/012_pain_points.sql`.
 
+## Sprint 5: opportunity analyses (M7)
+
+- `opportunity_analyses`, `analysis_subject_products`, `analysis_evidence`,
+  `analysis_dimension_scores`, `dimension_score_evidence`,
+  `analysis_findings` and `finding_evidence` are readable by members only;
+  browsers write nothing there (no insert, update or delete grant): a
+  browser can never store a score, a verdict or an evidence link.
+  `report_exports` is server-only (no browser grant); downloads go through
+  an authenticated route after the membership check.
+- The evidence index accepts only evidence of the frozen scope (products,
+  their companies, user-visible categories, market-level claims) and never
+  rejected evidence (trigger). Dimension and finding evidence must be in
+  the index (foreign keys); an assessed dimension and a non-hypothesis
+  finding need supporting evidence (constraint triggers at commit).
+- `sor_analysis_finalize` recomputes coverage, points, WTP, band and
+  kill-criterion substantiation from the stored rows and refuses a verdict
+  that contradicts §9.6 (fatal flaw → REJECT, incomplete coverage →
+  VALIDATE FIRST, REJECT only for a fatal flaw or a score < 50, BUILD only
+  with every database-checkable gate) and any report citation outside the
+  index. Table checks keep a final score at full coverage only and BUILD
+  CANDIDATE at ≥ 75 / ≥ 10.
+- Every analysis RPC is `security definer`, `search_path = ''` and
+  executable by `service_role` only; `sor_request_analysis` checks the
+  role (member+), visibility and permanent exclusion of the subject and
+  scope; deletion is admin+ and audit-logged. An analysis follows its job
+  through a trigger; an analysis-owned pain point run follows it too.
+- Tests: `supabase/tests/013_opportunity_analyses.sql`,
+  `supabase/tests/014_analysis_customer_voice.sql`.
+
 ## Running the tests
 
 - **CI** (reference): the `database` job of `.github/workflows/ci.yml` runs

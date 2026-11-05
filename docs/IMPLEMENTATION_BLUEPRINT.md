@@ -5269,6 +5269,81 @@ Done when a full analysis produces a validated, evidence-linked report
 with correct coverage and verdict gates, and an incomplete analysis is
 VALIDATE FIRST.
 
+**Status (5 November 2026): implemented with simulated providers; quality
+of the real agents pending PD-24a and PD-22.** Authorised by the product
+owner with the three proposals of the sprint plan (no new market-evidence
+collection during an analysis, comparison analyses kept for Phase 2,
+depth stored and used for budgets and caps). No paid call was made and
+production keeps the fake provider.
+
+-   **Contracts** (`analysis.ts`, `agents/opportunity.ts`): §4.8 as
+    written, one versioned contract per agent O1–O9 (§4.9). Statements are
+    evidence-linked or labelled hypotheses; `not_observed` unless a
+    feature is verified absent; no market size without methodology and
+    evidence; direct competitors and weaknesses need evidence; WTP
+    categories are never merged; the report contract has no score or
+    verdict field. Reason code `SCORE_BELOW_BUILD_THRESHOLD` added for a
+    workspace that raised the BUILD score threshold (PD-23 A).
+-   **Scoring** (`@sor/domain/scoring`, rules `scoring-1`): §9.2–9.6 as
+    specified, with one unit test per rule and per gate.
+-   **M7** (`20261107090000_opportunity_analyses.sql`): the blueprint SQL
+    as written plus `sor_request_analysis` (five subject types, visible
+    competitors only and excluded ones counted, category members capped by
+    depth with the selection rule recorded, BUILD thresholds frozen at
+    request time), the job/analysis status sync, evidence-index writes,
+    `sor_analysis_finalize` (one atomic write that recomputes coverage,
+    points, WTP, band and kill-criterion substantiation and refuses a
+    verdict inconsistent with §9.6 or a report citation outside the
+    index), deletion (admin, audit-logged), retry, report exports.
+    `20261107100000_analysis_customer_voice.sql`: the analysis-owned pain
+    point run of §8.4. pgTAP 013 (76 assertions) and 014 (12).
+-   **Engine** (`@sor/opportunity-engine`): the §8.1 state machine with
+    keyed steps; evidence index selected deterministically (subject first,
+    quality, recency; 60/150/300 items by depth); O3 reuses persisted
+    Pain Point clusters (P7 counts replace the agent's numbers); O7a
+    validated by the server (one retry, then `needs_review` and no
+    score); the red team only tightens (no red team → at most VALIDATE
+    FIRST); §8.10 exclusion of the recommended product, opportunity map,
+    opportunity findings and competitors outside the catalog.
+-   **Worker**: `opportunity_analysis` (customer voice: a covering pain
+    point run with the current versions is reused, otherwise P1–P7 run
+    inside the analysis job with the same budget) and `report_export`.
+-   **API and UI**: the routes of §10 "Opportunity analysis", plus
+    `GET W/analyses/{id}/exports` and `GET W/analyses/{id}/exports/{exportId}`
+    to list and download exports. "Analyze Opportunity" on the SaaS
+    profile, cluster and hypothesis pages; product-set and category
+    analyses on Opportunities; report page with score, band, WTP,
+    confidence, coverage and verdict in separate tiles, verdict rules,
+    dimension table with evidence links, scoring-reliability block, PRD
+    §9 sections, findings and kill criteria, evidence index, exports.
+    Simulated reports carry a visible banner and `simulated: true`.
+-   **Evaluation** (`evals/opportunity`): paid pricing without customers,
+    unverified paying claim, sparse information, discontinued product
+    (verified and unverified source), prompt injection, complete coverage
+    without proof. Fake baseline: verdict consistency 1, reproducibility
+    1, 0 citations outside the index.
+-   **[ASSUMPTION]** O7a also returns the findings (pain_point,
+    opportunity, risk, competitor_gap, recommendation) because the
+    differentiation gate needs them and no other contract carries
+    `FindingSchema`; kill criteria come only from O8. Counterarguments of
+    O8 are stored as `risk` findings. Exports are stored in the
+    server-only `report_exports` table and downloaded through an
+    authenticated route (no Storage bucket in the MVP; a private bucket
+    with signed URLs comes with PDF exports, PD-18). A pain point run
+    "covers" an analysis when it is completed or partial, includes every
+    visible scope product and uses the current clustering and extractor
+    versions.
+-   **Exit gate**: a full analysis produces a validated, evidence-linked
+    report with correct coverage and verdict gates, and an incomplete
+    analysis is VALIDATE FIRST — met with the simulated providers (unit,
+    pgTAP, integration and Playwright tests). **Not met:** the quality of
+    the real agents (PD-24a, PD-22); the Sprint 3 and 4 exit gates also
+    remain pending.
+-   **Deferred**: comparison analyses (§8.11, Phase 2); new market or
+    category evidence collected during an analysis (needs search sources,
+    PD-28); PDF export (PD-18); PD-25 (low-confidence exception, pending:
+    rule 3 applies).
+
 ## Sprint 6 --- Discovery Engine
 
 Blocked by PD-28 (Discovery search sources after terms review).
