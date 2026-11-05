@@ -121,8 +121,17 @@ async function snapshotDocs(file: string, outDir: string): Promise<void> {
   };
   await mkdir(outDir, { recursive: true });
   const policy = defaultPolicy({ maxBytes: 15 * 1024 * 1024, timeoutMs: 30_000 });
+  const indexFile = path.join(outDir, "index.json");
+  const previous = (await exists(indexFile))
+    ? (JSON.parse(await readFile(indexFile, "utf8")) as Array<{ url: string; status: string }>)
+    : [];
   const index: unknown[] = [];
   for (const page of config.pages) {
+    const frozen = previous.find((p) => p.url === page.url && p.status === "ok");
+    if (frozen && !FORCE) {
+      index.push(frozen); // already snapshotted: kept as read
+      continue;
+    }
     const url = new URL(page.url);
     const slug = `${page.vendor}--${`${url.host}${url.pathname}`.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "")}`;
     const retrievedAt = new Date().toISOString();
@@ -152,7 +161,7 @@ async function snapshotDocs(file: string, outDir: string): Promise<void> {
     });
     log(`${slug}: ok (${text.length} chars text)`);
   }
-  await writeFile(path.join(outDir, "index.json"), `${JSON.stringify(index, null, 2)}\n`);
+  await writeFile(indexFile, `${JSON.stringify(index, null, 2)}\n`);
 }
 
 const [mode, input, outDir] = process.argv.slice(2);
