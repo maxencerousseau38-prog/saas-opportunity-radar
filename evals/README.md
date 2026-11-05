@@ -20,3 +20,18 @@ correct extraction may report (`expected`) or must never report
 
 The fake provider is a deterministic baseline, not a model: its recall is
 low by design. Run with a real provider once PD-24 is decided.
+
+## PD-24a benchmark inputs (5 November 2026)
+
+| Path                                     | Content                                                                   |
+| ---------------------------------------- | ------------------------------------------------------------------------- |
+| `enrichment/real/sites.json`             | 30 official websites (28 captured)                                        |
+| `enrichment/real/snapshots/`             | frozen pages (production connector, CI workflow `eval-snapshot.yml`)      |
+| `enrichment/real/annotations/`           | expected / forbidden facts per site (drafts pending product-owner review) |
+| `enrichment/real/ANNOTATION_GUIDE.md`    | annotation rules; `check-annotations.mjs` checks every quote              |
+| `enrichment/adversarial.json`            | 5 adversarial cases                                                       |
+| `benchmark/PLAN.md`                      | two-stage plan, gates, cost estimate, secrets                             |
+| `benchmark/pricing.json`, `vendor-docs/` | verified vendor prices and the official pages they come from              |
+
+Snapshots are inputs, never refreshed silently: the workflow skips any site
+or page already frozen.
