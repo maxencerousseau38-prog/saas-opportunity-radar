@@ -174,6 +174,20 @@ function numberInQuote(value: number, quote: string): boolean {
   return [...forms].some((f) => q.includes(f) || q.includes(f.replace(".", ",")));
 }
 
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * Annotation matcher: the needle must start a word; needles of three
+ * characters or fewer ("ai", "api", "x", "a/b") must also end one, so "ai"
+ * does not match "email". Longer needles may be word prefixes ("schedul").
+ */
+export function matchesNeedle(text: string, needle: string): boolean {
+  const n = norm(needle);
+  if (!n) return false;
+  const end = n.length <= 3 ? "(?![a-z0-9])" : "";
+  return new RegExp(`(?<![a-z0-9])${escapeRe(n)}${end}`).test(norm(text));
+}
+
 const sameName = (reported: string, any: string[]) => {
   const r = norm(reported);
   return any.some((a) => {
@@ -230,7 +244,7 @@ export function scoreCase(c: EvalCase, run: CaseRun): CaseScore {
     );
   });
   for (const fa of c.forbidden.features_any ?? [])
-    if (featureTexts.some((t) => t.includes(norm(fa)))) forbidden.push(`feature "${fa}"`);
+    if (featureTexts.some((t) => matchesNeedle(t, fa))) forbidden.push(`feature "${fa}"`);
 
   const missed: string[] = [];
   let found = 0;
@@ -256,12 +270,12 @@ export function scoreCase(c: EvalCase, run: CaseRun): CaseScore {
   }
   for (const m of c.expected.features)
     tally(
-      featureTexts.some((t) => m.any.some((a) => t.includes(norm(a)))),
+      featureTexts.some((t) => m.any.some((a) => matchesNeedle(t, a))),
       `feature ${m.label}`,
     );
   for (const m of c.expected.integrations)
     tally(
-      integrations.some((i) => m.any.some((a) => norm(i.name).includes(norm(a)))),
+      integrations.some((i) => m.any.some((a) => matchesNeedle(i.name, a))),
       `integration ${m.label}`,
     );
   for (const ef of c.expected.fields) {

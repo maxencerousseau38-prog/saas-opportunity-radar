@@ -152,6 +152,14 @@
     {
       "vendor": "openai",
       "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/models/ministral-3-14b-25-12"
+    },
+    {
+      "vendor": "anthropic",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
     }
   ]
 }
