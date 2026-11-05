@@ -1,7 +1,11 @@
 # PD-24a benchmark — plan (generation provider for D5/D6)
 
-**Status:** prepared 5 November 2026. **No paid call has been made.** Each
-stage runs only after the product owner's explicit approval of that stage.
+**Status:** prepared and preflighted on 5 November 2026. **Stage 1 approved by
+the product owner on 5 November 2026 (cap 22 USD, calibration gate as
+described below); not run yet** — the cloud environment had no API keys and
+no network access to `api.openai.com` / `api.mistral.ai`. Run it in a session
+where the three keys and both hosts are available, with exactly the stage-1
+command below and the 22 USD cap. Stage 2 needs a separate approval.
 
 ## Decisions approved by the product owner (5 November 2026)
 
