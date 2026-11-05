@@ -108,7 +108,12 @@ export const TagUpdateSchema = z
   })
   .strict()
   .refine((v) => Object.keys(v).length > 0, { message: "Empty patch" });
-export const TagAssignmentSchema = z.object({ product_id: UUIDSchema }).strict();
+/** A tag targets a product or a generated opportunity (M6), never both. */
+export const TagAssignmentSchema = z.union([
+  z.object({ product_id: UUIDSchema }).strict(),
+  z.object({ generated_opportunity_id: UUIDSchema }).strict(),
+]);
+export type TagAssignmentTarget = z.infer<typeof TagAssignmentSchema>;
 
 export const CorrectionReportSchema = z
   .object({

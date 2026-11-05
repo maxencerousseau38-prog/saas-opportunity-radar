@@ -437,7 +437,9 @@ export async function listTags(client: DbClient, workspaceId: string) {
     check(
       await client
         .from("tags")
-        .select("id, name, color, created_at, tag_assignments(id, product_id)")
+        .select(
+          "id, name, color, created_at, tag_assignments(id, product_id, generated_opportunity_id)",
+        )
         .eq("workspace_id", workspaceId)
         .order("name"),
     ) ?? []
@@ -490,7 +492,7 @@ export async function assignTag(
   client: DbClient,
   workspaceId: string,
   tagId: string,
-  productId: string,
+  target: { product_id: string } | { generated_opportunity_id: string },
   userId: string,
 ) {
   return one(
@@ -500,10 +502,10 @@ export async function assignTag(
         .insert({
           workspace_id: workspaceId,
           tag_id: tagId,
-          product_id: productId,
+          ...target,
           assigned_by: userId,
         })
-        .select("id, tag_id, product_id"),
+        .select("id, tag_id, product_id, generated_opportunity_id"),
     ),
   );
 }
@@ -512,19 +514,18 @@ export async function unassignTag(
   client: DbClient,
   workspaceId: string,
   tagId: string,
-  productId: string,
+  target: { product_id: string } | { generated_opportunity_id: string },
 ) {
-  one(
-    check(
-      await client
-        .from("tag_assignments")
-        .delete()
-        .eq("workspace_id", workspaceId)
-        .eq("tag_id", tagId)
-        .eq("product_id", productId)
-        .select("id"),
-    ),
-  );
+  let q = client
+    .from("tag_assignments")
+    .delete()
+    .eq("workspace_id", workspaceId)
+    .eq("tag_id", tagId);
+  q =
+    "product_id" in target
+      ? q.eq("product_id", target.product_id)
+      : q.eq("generated_opportunity_id", target.generated_opportunity_id);
+  one(check(await q.select("id")));
 }
 
 export async function listProductTags(client: DbClient, workspaceId: string, productId: string) {

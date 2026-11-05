@@ -6,6 +6,7 @@ import { NewRunForm } from "@/components/pain/new-run-form";
 import { EXCLUSION_STATUS, OPPORTUNITY_STATUS, RUN_STATUS, formatDate } from "@/lib/labels";
 import { listClusters, listOpportunities, listRuns } from "@/lib/services/pain-points";
 import { canEdit, requireWorkspace } from "@/lib/workspace";
+import { workspaceRepo } from "@sor/database";
 
 export const metadata = { title: "Opportunities — SaaS Opportunity Radar" };
 
@@ -15,7 +16,7 @@ export default async function OpportunitiesPage(
   const { workspaceId } = await props.params;
   const { client, membership } = await requireWorkspace(workspaceId);
   const editor = canEdit(membership.role);
-  const [runs, clusters, opportunities, products, categories] = await Promise.all([
+  const [runs, clusters, opportunities, products, categories, tags] = await Promise.all([
     listRuns(client, workspaceId, null),
     listClusters(client, workspaceId, null),
     listOpportunities(client, workspaceId),
@@ -25,7 +26,10 @@ export default async function OpportunitiesPage(
     editor
       ? client.from("categories").select("slug, name").eq("is_user_visible", true).order("name")
       : Promise.resolve({ data: [] }),
+    workspaceRepo.listTags(client, workspaceId),
   ]);
+  const tagsOf = (id: string) =>
+    tags.filter((t) => t.tag_assignments.some((a) => a.generated_opportunity_id === id));
   const visibleClusters = clusters.filter((c) => c.review_status !== "rejected").slice(0, 30);
   return (
     <div className="space-y-8">
@@ -111,6 +115,9 @@ export default async function OpportunitiesPage(
                     </Badge>
                   ) : null}
                   {o.is_favorite ? <Badge tone="accent">Favori</Badge> : null}
+                  {tagsOf(o.id).map((t) => (
+                    <Badge key={t.id}>#{t.name}</Badge>
+                  ))}
                 </div>
                 <p className="text-muted">{o.problem_statement}</p>
               </li>

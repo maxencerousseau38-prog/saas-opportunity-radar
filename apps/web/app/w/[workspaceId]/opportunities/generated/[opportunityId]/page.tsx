@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Unknown } from "@/components/ui/states";
 import { OpportunityEditor } from "@/components/pain/opportunity-editor";
+import { OpportunityTags } from "@/components/pain/opportunity-tags";
+import { workspaceRepo } from "@sor/database";
 import { ApiError } from "@/lib/api/http";
 import { EXCLUSION_STATUS } from "@/lib/labels";
 import { getOpportunity } from "@/lib/services/pain-points";
@@ -19,6 +21,7 @@ export default async function GeneratedOpportunityPage(
     if (err instanceof ApiError && err.code === "NOT_FOUND") notFound();
     throw err;
   });
+  const tags = await workspaceRepo.listTags(client, workspaceId);
   const row = (label: string, value: string | null) => (
     <div>
       <dt className="text-xs font-medium text-muted">{label}</dt>
@@ -52,6 +55,21 @@ export default async function GeneratedOpportunityPage(
         notes={o.notes}
         canEdit={canEdit(membership.role)}
       />
+      <section className="space-y-1" aria-labelledby="tags-title">
+        <h2 id="tags-title" className="text-sm font-medium">
+          Tags
+        </h2>
+        <OpportunityTags
+          workspaceId={workspaceId}
+          opportunityId={o.id}
+          canEdit={canEdit(membership.role)}
+          tags={tags.map((t) => ({
+            id: t.id,
+            name: t.name,
+            assigned: t.tag_assignments.some((a) => a.generated_opportunity_id === o.id),
+          }))}
+        />
+      </section>
       <dl className="grid gap-3 sm:grid-cols-2">
         {row("Problème à résoudre", o.problem_statement)}
         {row("ICP", o.target_persona)}

@@ -240,6 +240,15 @@ select throws_ok($$insert into public.collection_items (collection_id, workspace
   values (tests.id('7c1'), tests.id('b1'), tests.id('d1'), tests.id('9b1'), tests.id('a3'))$$, '23514', null,
   'a collection item has exactly one target');
 
+insert into public.tags (id, workspace_id, name, created_by) values (tests.id('7d1'), tests.id('b1'), 'Prioritaire', tests.id('a3'));
+insert into public.tag_assignments (workspace_id, tag_id, generated_opportunity_id, assigned_by)
+values (tests.id('b1'), tests.id('7d1'), tests.id('9b1'), tests.id('a3'));
+select is((select count(*)::int from public.tag_assignments where generated_opportunity_id = tests.id('9b1')), 1,
+  'a generated opportunity can be tagged');
+select throws_ok($$insert into public.tag_assignments (workspace_id, tag_id, product_id, generated_opportunity_id, assigned_by)
+  values (tests.id('b1'), tests.id('7d1'), tests.id('d1'), tests.id('9b1'), tests.id('a3'))$$, '23514', null,
+  'a tag assignment has exactly one target');
+
 -- ------------------------------------------------------------ corrections
 select tests.as_service_role();
 select throws_ok($$select public.sor_cluster_correction(tests.id('b1'), tests.id('a4'), tests.id('c901'), null, null, '{"name": "x"}', null, null)$$,

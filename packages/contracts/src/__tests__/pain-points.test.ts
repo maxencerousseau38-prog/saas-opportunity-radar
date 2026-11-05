@@ -180,3 +180,15 @@ describe("user corrections", () => {
     expect(GeneratedOpportunityPatchSchema.safeParse({ status: "to_research" }).success).toBe(true);
   });
 });
+
+describe("tag assignments (M6)", () => {
+  it("target a product or a generated opportunity, never both", async () => {
+    const { TagAssignmentSchema } = await import("../workspace");
+    expect(TagAssignmentSchema.safeParse({ product_id: ID }).success).toBe(true);
+    expect(TagAssignmentSchema.safeParse({ generated_opportunity_id: ID }).success).toBe(true);
+    expect(
+      TagAssignmentSchema.safeParse({ product_id: ID, generated_opportunity_id: ID2 }).success,
+    ).toBe(false);
+    expect(TagAssignmentSchema.safeParse({}).success).toBe(false);
+  });
+});
