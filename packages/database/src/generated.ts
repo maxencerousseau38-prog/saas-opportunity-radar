@@ -1517,8 +1517,14 @@ isOneToOne: true
 "sor_analysis_finalize":
 { Args: { "p_analysis_id": string,"p_result": Json }; Returns: undefined
                            },
+"sor_analysis_finish_pain_run":
+{ Args: { "p_analysis_id": string,"p_status": Database["public"]['Enums']["run_status"] }; Returns: undefined
+                           },
 "sor_analysis_needs_review":
 { Args: { "p_analysis_id": string,"p_limitations": Json }; Returns: undefined
+                           },
+"sor_analysis_pain_run":
+{ Args: { "p_analysis_id": string,"p_max_feedback_items": number }; Returns: string
                            },
 "sor_apply_enrichment":
 { Args: { "p_job_id": string,"p_plan": Json,"p_product_id": string,"p_step_id": string }; Returns: Json

@@ -12,4 +12,5 @@ export * as serverRepo from "./repositories/server";
 export * as jobsRepo from "./repositories/jobs";
 export * as pipelineRepo from "./repositories/pipeline";
 export * as painRepo from "./repositories/pain";
+export * as analysisRepo from "./repositories/analysis";
 export type { Database, Json } from "./generated";

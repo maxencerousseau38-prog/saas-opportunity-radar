@@ -19,6 +19,7 @@
     "@sor/database": "workspace:*",
     "@sor/discovery-engine": "workspace:*",
     "@sor/domain": "workspace:*",
+    "@sor/opportunity-engine": "workspace:*",
     "@sor/pain-point-engine": "workspace:*",
     "@supabase/supabase-js": "catalog:"
   },

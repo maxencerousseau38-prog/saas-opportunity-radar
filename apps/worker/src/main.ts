@@ -7,11 +7,13 @@ import { createServiceClient, jobsRepo, type DbClient } from "@sor/database";
 import { OfficialWebsiteConnector, defaultPolicy } from "@sor/data-sources";
 import { AIGateway, FAKE_MODELS, FakeProvider } from "@sor/ai-gateway";
 import { fakeEnrichmentHandlers } from "@sor/discovery-engine";
+import { fakeOpportunityHandlers } from "@sor/opportunity-engine";
 import { fakePainPointHandlers } from "@sor/pain-point-engine";
 import { Worker, type JobHandler, type Log } from "./runtime";
 import { enrichmentHandler } from "./handlers/enrichment";
 import { catalogImportHandler, feedbackImportHandler } from "./handlers/imports";
 import { painPointRunHandler } from "./handlers/pain";
+import { opportunityAnalysisHandler, reportExportHandler } from "./handlers/analysis";
 
 const jsonLog: Log = (entry) => {
   process.stdout.write(`${JSON.stringify({ ts: new Date().toISOString(), ...entry })}\n`);
@@ -46,7 +48,11 @@ export async function buildWorker(
   const values = await limits();
   // PD-24 pending: the fake provider is the only one available.
   const gateway = new AIGateway({
-    provider: new FakeProvider({ ...fakeEnrichmentHandlers, ...fakePainPointHandlers }),
+    provider: new FakeProvider({
+      ...fakeEnrichmentHandlers,
+      ...fakePainPointHandlers,
+      ...fakeOpportunityHandlers,
+    }),
     models: FAKE_MODELS,
   });
   const connector = new OfficialWebsiteConnector({
@@ -65,6 +71,8 @@ export async function buildWorker(
       limits,
     }),
     pain_point_run: painPointRunHandler({ db: client, gateway, limits }),
+    opportunity_analysis: opportunityAnalysisHandler({ db: client, gateway, limits }),
+    report_export: reportExportHandler({ db: client }),
   };
   const lease = values.job_lease_seconds ?? 120;
   const worker = new Worker({
@@ -83,7 +91,10 @@ export async function buildWorker(
     ),
     concurrency: Number(config.WORKER_CONCURRENCY),
     jobTimeoutSeconds: values.enrichment_max_seconds ?? 600,
-    jobTimeoutSecondsByKind: { pain_point_run: values.pain_max_seconds ?? 1800 },
+    jobTimeoutSecondsByKind: {
+      pain_point_run: values.pain_max_seconds ?? 1800,
+      opportunity_analysis: values.analysis_max_seconds ?? 3600,
+    },
     log,
   });
   log({
