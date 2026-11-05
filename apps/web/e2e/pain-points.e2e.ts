@@ -56,9 +56,15 @@ test("a pain point run clusters complaints across competitors and keeps them evi
   const cluster = page.getByRole("link", { name: /CSV export/i }).first();
   await expect(cluster).toBeVisible();
   await cluster.click();
-  // Raw volume, distinct authors and distinct companies are shown separately.
-  await expect(page.getByText(/3 retour\(s\) · auteurs distincts : 3 \(vérifié\)/)).toBeVisible();
-  await expect(page.getByText(/entreprises distinctes : 2 \(estimation basse\)/)).toBeVisible();
+  // Raw volume, distinct authors and distinct companies are shown separately
+  // (first match: the header of the opened cluster; other clusters of the run
+  // — e.g. from the opportunity-analysis journey — may show the same counts).
+  await expect(
+    page.getByText(/3 retour\(s\) · auteurs distincts : 3 \(vérifié\)/).first(),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/entreprises distinctes : 2 \(estimation basse\)/).first(),
+  ).toBeVisible();
   await expect(
     page.getByText("Des plaintes ne prouvent pas que des clients paieraient"),
   ).toBeVisible();
