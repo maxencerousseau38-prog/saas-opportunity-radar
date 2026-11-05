@@ -76,6 +76,8 @@ test("a pain point run clusters complaints across competitors and keeps them evi
   const hypothesis = page.getByRole("link", { name: /^Address:/ }).first();
   await expect(hypothesis).toBeVisible();
   await hypothesis.click();
+  // Opportunities lists several hypotheses: wait for the hypothesis page itself.
+  await page.waitForURL(/\/opportunities\/generated\//);
   await expect(page.getByText("Hypothèse non notée")).toBeVisible();
   await page.getByLabel("Statut").selectOption("to_research");
   await expect(page.getByLabel("Statut")).toHaveValue("to_research");
