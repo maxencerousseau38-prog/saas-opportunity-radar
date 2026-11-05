@@ -9,6 +9,7 @@ threshold approvals (PD-22).
 | -------------- | --------------------------------------------------------- | --------------------------------------------------- |
 | `enrichment/`  | D5 Enrichment, D6 Evidence Verifier                       | `packages/discovery-engine/src/evals/enrichment.ts` |
 | `pain-points/` | P2–P7 (deduplication, embeddings, clustering, statistics) | `packages/pain-point-engine/src/evals.ts`           |
+| `opportunity/` | O1–O9 with the deterministic scoring and verdict rules    | `packages/opportunity-engine/src/evals.ts`          |
 
 Each fixture is a small official website (pages as text) and the facts a
 correct extraction may report (`expected`) or must never report
