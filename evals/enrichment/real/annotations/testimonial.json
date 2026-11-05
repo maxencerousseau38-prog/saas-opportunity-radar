@@ -1,0 +1,167 @@
+{
+  "id": "testimonial",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:56:53.122Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Free",
+      "name_any": ["free"],
+      "price_amount_any": [0],
+      "currency": "USD",
+      "billing_period_any": ["month", "unknown"],
+      "quote": "Free $0 /month Forever free",
+      "page": "https://testimonial.to/pricing"
+    },
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [25, 300],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Starter $25 /month $300 billed annually",
+      "page": "https://testimonial.to/pricing"
+    },
+    {
+      "name": "Ultimate",
+      "name_any": ["ultimate"],
+      "price_amount_any": [50, 600],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Ultimate $50 /month/space $600 billed annually",
+      "page": "https://testimonial.to/pricing"
+    },
+    {
+      "name": "Ultimate +",
+      "name_any": ["ultimate +", "ultimate+", "ultimate plus"],
+      "price_amount_any": [95, 1140],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Ultimate + $95 /month/space $1,140 billed annually",
+      "page": "https://testimonial.to/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Enterprise Custom Pricing",
+      "page": "https://testimonial.to/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Text and video testimonial collection page",
+      "any": ["collect", "collection page"],
+      "quote": "A dedicated page for collecting text and video testimonials, organized in one tidy inbox, embeddable anywhere.",
+      "page": "https://testimonial.to/"
+    },
+    {
+      "label": "Wall of Love embed widgets",
+      "any": ["wall of love", "widget", "embed"],
+      "quote": "Drop a one-line snippet on your site and show off your best testimonials.",
+      "page": "https://testimonial.to/"
+    },
+    {
+      "label": "Social and review-site import",
+      "any": ["import"],
+      "quote": "Pull existing praise from X, LinkedIn, Reddit, G2, Yelp, Google, TikTok and more.",
+      "page": "https://testimonial.to/"
+    },
+    {
+      "label": "Brand Monitor (social mention monitoring)",
+      "any": ["brand monitor", "mention", "monitoring"],
+      "quote": "Listen to X, LinkedIn, Reddit and Hacker News for mentions of your brand",
+      "page": "https://testimonial.to/"
+    },
+    {
+      "label": "Async case study collection",
+      "any": ["case stud"],
+      "quote": "Send a question set to a customer, let them answer when they have five minutes",
+      "page": "https://testimonial.to/features/case-study"
+    },
+    {
+      "label": "NPS surveys with auto-routing",
+      "any": ["nps"],
+      "quote": "NPS surveys with auto-routing",
+      "page": "https://testimonial.to/pricing"
+    },
+    {
+      "label": "Testimonial Email Assistant (automated invitations)",
+      "any": ["email assistant", "t.e.a", "invitation"],
+      "quote": "BCC us on the order confirmations and welcomes you already send. We follow up at the right moment, in your voice.",
+      "page": "https://testimonial.to/"
+    },
+    {
+      "label": "Video analytics",
+      "any": ["video analytics", "video metrics", "analytics"],
+      "quote": "Track views and clicks on every embedded video",
+      "page": "https://testimonial.to/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "REST API, MCP, webhooks, Zapier & Make",
+      "page": "https://testimonial.to/pricing"
+    },
+    {
+      "label": "Make",
+      "any": ["make"],
+      "quote": "REST API, MCP, webhooks, Zapier & Make",
+      "page": "https://testimonial.to/pricing"
+    },
+    {
+      "label": "Webflow",
+      "any": ["webflow"],
+      "quote": "We support any no-code platform (Webflow, WordPress, you name it!)",
+      "page": "https://testimonial.to/"
+    },
+    {
+      "label": "WordPress",
+      "any": ["wordpress"],
+      "quote": "We support any no-code platform (Webflow, WordPress, you name it!)",
+      "page": "https://testimonial.to/"
+    },
+    {
+      "label": "Shopify",
+      "any": ["shopify"],
+      "quote": "Webflow, WordPress, Shopify, Framer, Squarespace, Carrd, Kajabi, Bubble",
+      "page": "https://testimonial.to/features"
+    },
+    {
+      "label": "Claude (MCP)",
+      "any": ["claude"],
+      "quote": "Connect Claude, ChatGPT, Cursor & Grok",
+      "page": "https://testimonial.to/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "pricing_status",
+      "value": "freemium",
+      "quote": "Free forever, features include:",
+      "page": "https://testimonial.to/pricing"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": [
+      "Find our 3 best video testimonials about onboarding and add them to our Wall of Love.",
+      "Do this every week for new 5-star reviews.",
+      "When a great testimonial comes in, add it to the Wall of Love in my Acme space.",
+      "Buy V14gra now click here!!!"
+    ]
+  },
+  "notes": "Pricing: a Billed Monthly / Billed Yearly toggle is shown, but the snapshot renders one monthly figure plus the annual total per plan (Starter $25/mo and $300 billed annually; Ultimate $50/month/space and $600; Ultimate + $95/month/space and $1,140). Since 25x12=300 etc., the monthly figures may be annual-billed equivalents and the monthly-billed prices may not be rendered; the PO may want to check. Ultimate and Ultimate + are priced per space (extra spaces +$600 / +$1,140 per year are add-ons, not plans). Free is a real 'Forever free' plan (2 video and 10 text testimonials), hence pricing_status freemium. Enterprise shows 'Custom Pricing' / 'Contact us'. Prices are shown with '$' only; USD assumed. Name matching: 'ultimate' also matches 'Ultimate +'; the scorer should prefer the most specific match. The 'make' substring for the Make integration is short but only applied to reported integration names. Other stated integrations not listed (max 6): ChatGPT, Cursor, Grok, Notion, Framer, Squarespace, Carrd, Kajabi, Bubble, eGift cards; '100+ integrations' is a company claim. Exclusion: eligible; the footer 'Join affiliate program' is Testimonial's own incidental affiliate program, not its core purpose. Forbidden texts: the sample prompts in the MCP/Claude demo mock-ups (instruction-like text aimed at an AI assistant) and the spam example from the AI spam-filter demo. The demo inbox content (Acme, Maria López, '3X'd my conversions', NPS score 62, 847/2,000 mentions) is fictional UI mock-up data and must not be reported as facts. 'Trusted by 50,000+ businesses', 'Loved by Fortune 500 companies' and 'SOC 2 Type II compliant' are company claims, not payment proof. No company location, founding year or headcount is stated."
+}

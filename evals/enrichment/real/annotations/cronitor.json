@@ -1,0 +1,138 @@
+{
+  "id": "cronitor",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:59:38.343Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Hacker",
+      "name_any": ["hacker", "free"],
+      "price_amount_any": [0],
+      "currency": "USD",
+      "billing_period_any": ["month", "unknown"],
+      "quote": "Hacker $0 free forever",
+      "page": "https://cronitor.io/pricing"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [2, 5],
+      "currency": "USD",
+      "billing_period_any": ["usage", "month"],
+      "quote": "$2 /mo per monitor + $5 /mo per user",
+      "page": "https://cronitor.io/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [6000, null],
+      "currency": "USD",
+      "billing_period_any": ["year", "custom"],
+      "quote": "from $6,000 /yr annual invoice billing",
+      "page": "https://cronitor.io/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Cron job and scheduled task monitoring",
+      "any": ["cron", "job monitoring", "scheduled job", "scheduled task"],
+      "quote": "Know when a scheduled job fails, runs late, or never starts.",
+      "page": "https://cronitor.io/"
+    },
+    {
+      "label": "Uptime monitoring for websites and APIs",
+      "any": ["uptime", "website", "api monitoring", "checks"],
+      "quote": "Check websites and APIs from 12+ locations worldwide.",
+      "page": "https://cronitor.io/"
+    },
+    {
+      "label": "Heartbeat monitoring",
+      "any": ["heartbeat"],
+      "quote": "Send heartbeats from any service, script, device, or agent.",
+      "page": "https://cronitor.io/"
+    },
+    {
+      "label": "Status pages",
+      "any": ["status page"],
+      "quote": "Create public or private status pages.",
+      "page": "https://cronitor.io/"
+    },
+    {
+      "label": "Website analytics and real user monitoring",
+      "any": ["real user", "rum", "analytics"],
+      "quote": "Cookie-free analytics from one lightweight script.",
+      "page": "https://cronitor.io/"
+    },
+    {
+      "label": "Alerting via team tools",
+      "any": ["alert"],
+      "quote": "send the right person a detailed alert in the tools your team already uses",
+      "page": "https://cronitor.io/"
+    },
+    {
+      "label": "SSL certificate monitoring",
+      "any": ["ssl", "certificate"],
+      "quote": "Detect downtime, performance issues, and SSL certificate problems.",
+      "page": "https://cronitor.io/"
+    },
+    {
+      "label": "Synthetic browser checks",
+      "any": ["browser check", "synthetic"],
+      "quote": "Synthetic browser checks",
+      "page": "https://cronitor.io/pricing"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Slack",
+      "any": ["slack"],
+      "quote": "Slack Send alerts to channels or direct messages with rich formatting and action buttons",
+      "page": "https://cronitor.io/docs/integrations"
+    },
+    {
+      "label": "PagerDuty",
+      "any": ["pagerduty"],
+      "quote": "PagerDuty Create incidents with automatic escalation, on-call routing, and resolution tracking",
+      "page": "https://cronitor.io/docs/integrations"
+    },
+    {
+      "label": "Microsoft Teams",
+      "any": ["teams"],
+      "quote": "Microsoft Teams Deliver alerts to Teams channels with embedded monitor details and quick actions",
+      "page": "https://cronitor.io/docs/integrations"
+    },
+    {
+      "label": "Discord",
+      "any": ["discord"],
+      "quote": "Discord Post formatted alerts to Discord servers with customizable webhooks",
+      "page": "https://cronitor.io/docs/integrations"
+    },
+    {
+      "label": "OpsGenie",
+      "any": ["opsgenie"],
+      "quote": "OpsGenie Trigger OpsGenie alerts with intelligent routing and escalation policies",
+      "page": "https://cronitor.io/docs/integrations"
+    },
+    {
+      "label": "Datadog On-Call",
+      "any": ["datadog"],
+      "quote": "Datadog On-Call Route Cronitor alerts to a Datadog On-Call team for escalation and incident response",
+      "page": "https://cronitor.io/docs/integrations"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "founded_year",
+      "value": 2014,
+      "quote": "2014 FOUNDED IN CALIFORNIA",
+      "page": "https://cronitor.io/customers"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["city", "employee_min", "employee_max"],
+    "texts": []
+  },
+  "notes": "Business is usage-based: $2/mo per monitor plus $5/mo per user, no base fee; the '$55 /mo' bill is a worked example, not a price. Per-unit rates for analytics events, browser checks, branded/private status pages and SAML SSO are add-on rates, not plans. Enterprise shows 'from $6,000 /yr' (null also accepted since it is 'Contact Us'). Hacker is the free plan. Founding: '2014 FOUNDED IN CALIFORNIA' (customers page) and 'Cronitor started in March 2014' (about page). Country: California implies US but no country is written, so country_code is neither expected nor forbidden; no city is stated. launch_year is not annotated: the about page says it 'launched on Hacker News' 'a few months' after March 2014 without stating the year explicitly. Two co-founders are named, but no headcount is stated. Contradictory audience claims: 'over 70,000 developers' (about) vs '100,000+ developers' (customers); the homepage says '12+ integrations' while pricing says 'All 11 alert integrations'. Customer testimonials with 'CUSTOMER SINCE' years are company-published claims, not payment proof. The homepage mock dashboard (acme.com monitors, '+1 415 555' SMS number) is illustrative data, not facts. The 'cronitor.io/llms.txt — agent quick start' link and MCP mentions describe developer resources; no instruction addressed to an AI reader is present in the captured text."
+}

@@ -1,0 +1,145 @@
+{
+  "id": "instatus",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:59:46.457Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Starter",
+      "name_any": ["starter", "free"],
+      "price_amount_any": [0],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "Starter 15 Monitors 2 min checks Email alerts 5 team members",
+      "page": "https://instatus.com/pricing"
+    },
+    {
+      "name": "Pro",
+      "name_any": ["pro"],
+      "price_amount_any": [null],
+      "billing_period_any": ["month", "year", "unknown"],
+      "quote": "Pro 50 Monitors 30 sec checks Email & SMS alerts 50 team members",
+      "page": "https://instatus.com/pricing"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [null],
+      "billing_period_any": ["month", "year", "unknown"],
+      "quote": "Business 1,000 Monitors 30 sec checks SMS & Calls alerts",
+      "page": "https://instatus.com/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Multiple SSO connections Custom contracts Custom policies Contact us Book a demo",
+      "page": "https://instatus.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Status pages (public or private, custom domain)",
+      "any": ["status page"],
+      "quote": "Publish to status page Make it yours Make it private Or share to the world!",
+      "page": "https://instatus.com/"
+    },
+    {
+      "label": "Uptime and performance monitoring",
+      "any": ["monitor", "uptime", "availability"],
+      "quote": "Track availability and performance",
+      "page": "https://instatus.com/"
+    },
+    {
+      "label": "Real-time alerts (email, SMS, calls)",
+      "any": ["alert"],
+      "quote": "Real-time alerts across all channels",
+      "page": "https://instatus.com/"
+    },
+    {
+      "label": "Incident collaboration with the team",
+      "any": ["incident"],
+      "quote": "Collaborate on incidents with your team",
+      "page": "https://instatus.com/"
+    },
+    {
+      "label": "On-call members and escalations",
+      "any": ["on-call", "on call", "escalation"],
+      "quote": "On-call members 2 20 50",
+      "page": "https://instatus.com/pricing"
+    },
+    {
+      "label": "Status page subscribers (notifications)",
+      "any": ["subscriber"],
+      "quote": "Subscribers 200 5,000 25,000",
+      "page": "https://instatus.com/pricing"
+    },
+    {
+      "label": "SAML SSO",
+      "any": ["sso", "saml"],
+      "quote": "SAML SSO All status pages",
+      "page": "https://instatus.com/pricing"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Slack",
+      "any": ["slack"],
+      "quote": "Update your status page, right from Slack!",
+      "page": "https://instatus.com/integrations"
+    },
+    {
+      "label": "Microsoft Teams",
+      "any": ["teams"],
+      "quote": "Microsoft Teams Notify teammates about status updates",
+      "page": "https://instatus.com/integrations"
+    },
+    {
+      "label": "Datadog",
+      "any": ["datadog"],
+      "quote": "Use Datadog to automate your page.",
+      "page": "https://instatus.com/integrations"
+    },
+    {
+      "label": "PagerDuty",
+      "any": ["pagerduty"],
+      "quote": "Create an incident on your status page when there is a PagerDuty incident",
+      "page": "https://instatus.com/integrations"
+    },
+    {
+      "label": "Intercom",
+      "any": ["intercom"],
+      "quote": "Show your status in your Intercom widget",
+      "page": "https://instatus.com/integrations"
+    },
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "Trigger workflows when incidents are created or updated",
+      "page": "https://instatus.com/integrations"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "pricing_status",
+      "value": "freemium",
+      "quote": "Status page and monitoring, free forever. Paid plans are a flat price, never per seat.",
+      "page": "https://instatus.com/pricing"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "The snapshot did not capture the Pro and Business amounts: the pricing page shows only '/ month' next to these plans (prices are probably rendered client-side), so their amounts must be null/unknown and any dollar figure reported for them is unsupported. Starter is free ('Free' on the pricing page, '$0/month' and 'Free forever plan' on the home page). A yearly toggle ('Yearly 25% off'; FAQ: 'three months free') exists but no yearly amount is displayed. Enterprise has no price ('Contact us Book a demo'). The savings calculator mentions Pingdom, PagerDuty and Atlassian Statuspage as replaced tools, not as plans. The customers page lists logos and quotes (Vercel, Siemens, KFC, etc.): company-stated, not payment proof. 'Instatus, Inc' gives no country, so country_code is forbidden. The non-profit/open-source free Pro account is a discount, not a plan. 'It really felt like a partnership' (customer quote) is incidental; the product is status pages and monitoring, eligible."
+}

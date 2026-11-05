@@ -1,0 +1,139 @@
+{
+  "id": "firstpromoter",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:59:11.557Z",
+  "expected_exclusion": "excluded",
+  "plans": [
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [49, 490],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Starter $49 /month up to $5,000/month revenue from affiliates",
+      "page": "https://firstpromoter.com/pricing"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [99, 990],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Business $99 /month up to $15,000/month revenue from affiliates",
+      "page": "https://firstpromoter.com/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [149, 1490],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Enterprise $149 /month above $15,000/month revenue from affiliates",
+      "page": "https://firstpromoter.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Affiliate link and referral tracking",
+      "any": ["link tracking", "referral tracking", "affiliate link", "tracking"],
+      "quote": "Give each affiliate a unique link, follow clicks through to paying customers and credit the right person on every conversion.",
+      "page": "https://firstpromoter.com/features"
+    },
+    {
+      "label": "Coupon code tracking",
+      "any": ["coupon"],
+      "quote": "Unique coupon codes per partner, auto-generated and synced directly in Stripe",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Flexible commission models (recurring, tiered, multi-level)",
+      "any": ["commission"],
+      "quote": "Percentage of sale, flat fee, one-time, lifetime recurring and tiered rates per performance level",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Affiliate payouts (PayPal, Wise, bank transfer; auto-payouts)",
+      "any": ["payout"],
+      "quote": "Pay all partners in one action via PayPal, Wise or bank transfer. Auto-payout scheduling included",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "White-label partner/affiliate portal",
+      "any": ["portal", "white-label", "white label", "dashboard"],
+      "quote": "White-label partner portal Custom domain, logo, colors, CSS and JavaScript.",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Fraud protection",
+      "any": ["fraud"],
+      "quote": "Self-referrals and suspicious leads flagged before commission is recorded.",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Affiliate reporting and exports",
+      "any": ["report"],
+      "quote": "Track revenue, sources, conversion and top performers across 18 data points",
+      "page": "https://firstpromoter.com/features"
+    },
+    {
+      "label": "Tax form collection (W-9 / W-8BEN) and EU invoicing",
+      "any": ["tax", "w-9", "w-8ben", "invoic"],
+      "quote": "W-9, W-8BEN and EU-compliant invoice generation built in",
+      "page": "https://firstpromoter.com/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "Native integrations with Stripe, Paddle, Recurly, Chargebee and Braintree",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Paddle",
+      "any": ["paddle"],
+      "quote": "Native integrations with Stripe, Paddle, Recurly, Chargebee and Braintree",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Chargebee",
+      "any": ["chargebee"],
+      "quote": "Native integrations with Stripe, Paddle, Recurly, Chargebee and Braintree",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Recurly",
+      "any": ["recurly"],
+      "quote": "Native integrations with Stripe, Paddle, Recurly, Chargebee and Braintree",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Braintree",
+      "any": ["braintree"],
+      "quote": "Native integrations with Stripe, Paddle, Recurly, Chargebee and Braintree",
+      "page": "https://firstpromoter.com/"
+    },
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "Automation Zapier, Make and Albato",
+      "page": "https://firstpromoter.com/pricing"
+    }
+  ],
+  "fields": [],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max",
+      "languages"
+    ],
+    "texts": []
+  },
+  "notes": "EXCLUSION: the pages state the core purpose is affiliate/partner program management and commission payouts — hero 'Affiliate Management Software Runs your program while you run the relationships', nav 'Everything you need to run your affiliate program', 'All-in-one affiliate marketing platform', plan tiers priced on 'revenue from affiliates', payouts to partners. Customer referral programs are offered as one of three program types ('One account, three programs'), but affiliate/partner commissions are the core, so 'excluded' (not needs_review). PRICING: the pricing page shows a Monthly/Yearly toggle and both views are captured: Starter $49/month or $490/year, Business $99/month or $990/year, Enterprise $149/month or $1,490/year; tiers are bounded by affiliate-driven revenue (usage-like dimension, but the displayed prices are flat per tier). Enterprise shows a price despite a 'Let’s talk' button. 14-day free trial is not a free plan; 'BF2026' 20% Black Friday code is a promotion, not a plan. FIELDS: none annotated. 'Made with in Transylvania' and '© 2016-2026 Igil Webs SRL' must NOT be turned into country_code (RO), founded_year (2016) or city — neither is an explicit statement. 'Available in 5 languages' and 'French, German, Spanish and Portuguese' describe the affiliate portal/campaign translations, not the product UI languages, hence languages is forbidden. '3,000+ SaaS businesses', '$60M+ Revenue tracked monthly' and the CustomGPT/JustCall case-study figures are company claims about their customers' affiliate revenue, not payment proof for FirstPromoter."
+}

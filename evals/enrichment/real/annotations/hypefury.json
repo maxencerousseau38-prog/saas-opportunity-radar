@@ -1,0 +1,150 @@
+{
+  "id": "hypefury",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:56:59.218Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Flexible",
+      "name_any": ["flexible"],
+      "price_amount_any": [6, 60],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "usage"],
+      "quote": "Flexible $6 /month per platform $60/year per platform",
+      "page": "https://hypefury.com/features-pricing/"
+    },
+    {
+      "name": "Creator",
+      "name_any": ["creator"],
+      "price_amount_any": [19, 190],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "$19 /month $190 billed yearly",
+      "page": "https://hypefury.com/features-pricing/"
+    },
+    {
+      "name": "Pro",
+      "name_any": ["pro"],
+      "price_amount_any": [39, 390],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "$39 /month $390 billed yearly",
+      "page": "https://hypefury.com/features-pricing/"
+    }
+  ],
+  "features": [
+    {
+      "label": "AI writer (posts written in the user's voice)",
+      "any": ["ai writer", "in your voice", "writes your posts", "ai-written", "ai writ"],
+      "quote": "Hypefury reads your best posts and writes your first ones in your voice.",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "Automatic scheduling at best times across 6 platforms",
+      "any": ["schedul", "best time"],
+      "quote": "You write. Hypefury picks the best times and publishes on every platform",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "Instagram auto DMs (comment keyword to DM, email capture)",
+      "any": ["auto dm", "direct message", "dm"],
+      "quote": "Anyone who comments a keyword you choose gets your link by DM.",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "Engagement Builder (reply feed for Threads and Bluesky)",
+      "any": ["engagement builder", "reply feed", "suggested repl"],
+      "quote": "The only reply feed built for Threads and Bluesky.",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "Social listening on Reddit and Hacker News",
+      "any": ["social listening", "listening", "monitoring", "mention"],
+      "quote": "Watch up to 5 keywords on Reddit and Hacker News.",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "Analytics and best posts ranked",
+      "any": ["analytic", "best posts"],
+      "quote": "Analytics for Instagram, Threads, LinkedIn",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "Autoplug (automatic plug on winning posts)",
+      "any": ["autoplug", "auto-plug", "auto plug"],
+      "quote": "Global Autoplug with AI-written variations",
+      "page": "https://hypefury.com/features-pricing/"
+    },
+    {
+      "label": "Link in bio and short links with click analytics",
+      "any": ["link in bio", "short link", "click analytics"],
+      "quote": "Short links with click analytics 10 20 50",
+      "page": "https://hypefury.com/features-pricing/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Instagram",
+      "any": ["instagram"],
+      "quote": "You log in on Instagram's own page, through Meta's official Instagram API.",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "LinkedIn",
+      "any": ["linkedin"],
+      "quote": "LinkedIn (personal profiles and company pages)",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "Threads",
+      "any": ["threads"],
+      "quote": "Which platforms does Hypefury post to? Instagram, Facebook Pages, Threads, LinkedIn",
+      "page": "https://hypefury.com/"
+    },
+    {
+      "label": "TikTok",
+      "any": ["tiktok"],
+      "quote": "Instagram, Facebook, Threads, LinkedIn, TikTok and Bluesky are 1 platform each.",
+      "page": "https://hypefury.com/features-pricing/"
+    },
+    {
+      "label": "Bluesky",
+      "any": ["bluesky"],
+      "quote": "Instagram, Facebook, Threads, LinkedIn, TikTok and Bluesky are 1 platform each.",
+      "page": "https://hypefury.com/features-pricing/"
+    },
+    {
+      "label": "Claude and ChatGPT (MCP)",
+      "any": ["mcp", "claude", "chatgpt"],
+      "quote": "MCP: Use Hypefury from Claude or ChatGPT",
+      "page": "https://hypefury.com/features-pricing/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "launch_year",
+      "value": 2019,
+      "quote": "Hypefury started in 2019 as a weekend project.",
+      "page": "https://hypefury.com/about/"
+    },
+    {
+      "field_key": "employee_min",
+      "value": 7,
+      "quote": "7 humans, 1 falcon.",
+      "page": "https://hypefury.com/about/"
+    },
+    {
+      "field_key": "employee_max",
+      "value": 7,
+      "quote": "7 humans, 1 falcon.",
+      "page": "https://hypefury.com/about/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["country_code", "city"],
+    "texts": []
+  },
+  "notes": "Three plans shown as current offers (Flexible, Creator, Pro); the 7-day free trial is not a plan. Flexible is priced per connected platform ($6/month or $60/year each), hence 'usage' is also accepted. Yearly prices are displayed as totals ($190, $390) on the pricing page and as '$190 a year' on the home page. The free link-in-bio page is a free side tool, not a plan; because of it pricing_status is left unannotated (paid vs freemium is debatable). The home-page comparison table lists competitor prices (Buffer, ManyChat, etc.): those are not Hypefury plans. Facebook (Pages) is also a stated publishing platform but left out to respect the 6-integration cap. 'Hypefury started in 2019' is annotated as launch_year (product start); founded_year is neither expected nor forbidden because the sentence could be read either way. '7 humans' on the About page is read as a team of 7 (employee_min = employee_max = 7) - product owner to confirm. 'Hypefury, Inc.' does not state a country, so country_code is forbidden. 'App in 18 languages' is stated but the languages are not listed (the footer is the website language switcher), so languages is not annotated. Footer 'Affiliate program' link is incidental: the core product is social-media content creation and scheduling, so eligible."
+}

@@ -1,0 +1,161 @@
+{
+  "id": "leadpages",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:58:27.797Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Pro",
+      "name_any": ["pro"],
+      "price_amount_any": [29],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Pro Solo creators publishing pages with AI in the loop. $ 29 /mo",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [49],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Business Small teams and agencies publishing at volume. $ 49 /mo",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "name": "Grow",
+      "name_any": ["grow"],
+      "price_amount_any": [99],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Solo marketers and small teams starting CRO. $ 99 /mo",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "name": "Optimize",
+      "name_any": ["optimize"],
+      "price_amount_any": [199],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Optimize Growing teams and performance marketers. $ 199 /mo",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Custom pricing for teams that need SSO, custom contracts, dedicated support and volume publishing.",
+      "page": "https://leadpages.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "AI landing page builder (prompt to branded page)",
+      "any": ["ai page", "ai landing page", "page builder", "ai builder", "ai page creation"],
+      "quote": "Describe what you sell and get a finished, on-brand page in seconds.",
+      "page": "https://www.leadpages.com/"
+    },
+    {
+      "label": "A/B testing and multivariate testing",
+      "any": ["a/b", "split test", "multivariate"],
+      "quote": "Create variants with AI, split your traffic, and see what converts without leaving Leadpages.",
+      "page": "https://leadpages.com/product/ab-testing"
+    },
+    {
+      "label": "Smart Traffic (AI visitor routing)",
+      "any": ["smart traffic", "routing"],
+      "quote": "Smart Traffic learns which landing page variant converts for each type of visitor, then sends them there.",
+      "page": "https://leadpages.com/product/smart-traffic"
+    },
+    {
+      "label": "Click and scroll heatmaps",
+      "any": ["heatmap"],
+      "quote": "Click + scroll heatmaps See where visitors engage and drop off",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "label": "Dynamic text replacement and personalization",
+      "any": ["dynamic text", "personaliz"],
+      "quote": "Dynamic text replacement Match ad copy to landing page automatically",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "label": "Lead enrichment and anonymous traffic detection",
+      "any": ["lead enrichment", "anonymous", "visitor intelligence"],
+      "quote": "Lead enrichment (1K/mo) Know who's visiting before they fill a form",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "label": "Websites, blogs and custom domains with SSL",
+      "any": ["custom domain", "website", "blog"],
+      "quote": "Publishing features come with every plan: build and ship landing pages, websites, and blogs with custom domains, SSL, and the AI editor.",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "label": "Analytics with UTM tracking",
+      "any": ["analytic", "utm"],
+      "quote": "90-day analytics + UTM",
+      "page": "https://leadpages.com/pricing"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "HubSpot",
+      "any": ["hubspot"],
+      "quote": "HubSpot, Salesforce, Mailchimp, Google Ads, Stripe, Shopify, Slack, Zapier, and 200+ more through Paragon.",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "label": "Salesforce",
+      "any": ["salesforce"],
+      "quote": "HubSpot, Salesforce, Mailchimp, Google Ads, Stripe, Shopify, Slack, Zapier, and 200+ more through Paragon.",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "label": "Mailchimp",
+      "any": ["mailchimp"],
+      "quote": "HubSpot, Salesforce, Mailchimp, Google Ads, Stripe, Shopify, Slack, Zapier, and 200+ more through Paragon.",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "label": "Google Ads",
+      "any": ["google ads"],
+      "quote": "Connect landing pages with Google Analytics, Google Ads, and Meta Pixel",
+      "page": "https://www.leadpages.com/"
+    },
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "HubSpot, Salesforce, Mailchimp, Google Ads, Stripe, Shopify, Slack, Zapier, and 200+ more through Paragon.",
+      "page": "https://leadpages.com/pricing"
+    },
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "HubSpot, Salesforce, Mailchimp, Google Ads, Stripe, Shopify, Slack, Zapier, and 200+ more through Paragon.",
+      "page": "https://leadpages.com/pricing"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "launch_year",
+      "value": 2012,
+      "quote": "400K+ served since 2012",
+      "page": "https://www.leadpages.com/"
+    },
+    {
+      "field_key": "pricing_status",
+      "value": "paid",
+      "quote": "Publishing to a live URL, with a custom domain and free SSL, happens on a paid plan.",
+      "page": "https://www.leadpages.com/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["country_code", "city", "employee_min", "employee_max"],
+    "texts": []
+  },
+  "notes": "Plan cards (pricing page and home page) show Pro $29, Business $49, Grow $99, Optimize $199 per month and Enterprise (custom pricing). 'Save 20% with annual billing' is shown but no annual amount is displayed, so only the monthly amounts are expected (period month or year accepted). The pages contradict themselves: FAQs and the A/B testing / Smart Traffic pages mention a 'Scale' plan at $399/mo that has no plan card, one FAQ says 'Leadpages plans start at $99/month for Grow', and another page says 'Standard starts at $49/mo' and 'A/B testing on every plan' while the pricing table says A/B testing starts on Grow. Scale is therefore neither expected nor forbidden; a good run should flag the contradiction. Credit top-up packs (from $2.50) are add-ons. The home-page 'Lumen' smart-glasses page ($349 pre-order) is a demo of a generated page, NOT a Leadpages plan or product - reporting it is an error. Competitor prices in the 'separate tools' table (Unbounce, Hotjar, VWO, Clearbit, Zapier) are not Leadpages plans. '400K+ served since 2012' and 'same 13-year track record' support launch_year 2012 (product owner to confirm the reading); founded_year is neither expected nor forbidden. 'Leadpages is part of the Redbrick family of brands' - not independently owned, relevant for research fit but not for exclusion. 'Ask AI how Leadpages increases your conversion rates.' is a user-facing CTA, not an instruction to the extractor. Footer 'Affiliate Program' and 'Partners' links are incidental; the core product is a landing-page builder / CRO platform, eligible."
+}

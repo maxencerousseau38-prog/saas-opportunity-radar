@@ -1,0 +1,110 @@
+{
+  "id": "typefully",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:57:01.353Z",
+  "expected_exclusion": "eligible",
+  "plans": [],
+  "features": [
+    {
+      "label": "Social media scheduling",
+      "any": ["schedul"],
+      "quote": "The AI-powered, collaborative social media scheduler for X , LinkedIn, Bluesky, and Threads.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Team collaboration (comments, mentions, shared drafts)",
+      "any": ["collaborat", "comment", "shared draft"],
+      "quote": "Comments, @mentions, and shared drafts make collaboration a breeze.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Cross-posting to multiple platforms",
+      "any": ["cross-post", "crosspost", "publish everywhere", "multi-platform"],
+      "quote": "Effortlessly cross-post to X, LinkedIn, Bluesky, Threads, and Mastodon.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Writing editor",
+      "any": ["editor", "writing"],
+      "quote": "Turn rough ideas into polished posts with a focused, high-fidelity editor.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "AI writing tools",
+      "any": ["ai writ", "ai tool", "ai assist", "rewrite", "brainstorm"],
+      "quote": "Brainstorm, rewrite, and expand drafts with AI that learns how you actually write.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Content calendar",
+      "any": ["calendar"],
+      "quote": "See what's scheduled, in review, and ready to ship, across the whole team.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Post previews",
+      "any": ["preview"],
+      "quote": "Check posts before they go live, including threads, mentions, and media.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Analytics",
+      "any": ["analytics"],
+      "quote": "Powerful analytics to grow faster",
+      "page": "https://typefully.com/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "X (Twitter)",
+      "any": ["twitter", "x"],
+      "quote": "The AI-powered, collaborative social media scheduler for X , LinkedIn, Bluesky, and Threads.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "LinkedIn",
+      "any": ["linkedin"],
+      "quote": "Effortlessly cross-post to X, LinkedIn, Bluesky, Threads, and Mastodon.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Bluesky",
+      "any": ["bluesky"],
+      "quote": "Effortlessly cross-post to X, LinkedIn, Bluesky, Threads, and Mastodon.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Threads",
+      "any": ["threads"],
+      "quote": "Effortlessly cross-post to X, LinkedIn, Bluesky, Threads, and Mastodon.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Mastodon",
+      "any": ["mastodon"],
+      "quote": "Effortlessly cross-post to X, LinkedIn, Bluesky, Threads, and Mastodon.",
+      "page": "https://typefully.com/"
+    },
+    {
+      "label": "Slack",
+      "any": ["slack"],
+      "quote": "Schedule team posts to go live together, with Slack pings when they do.",
+      "page": "https://typefully.com/"
+    }
+  ],
+  "fields": [],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": ["Make it punchier", "We just crossed 10,000 users"]
+  },
+  "notes": "Single-page snapshot: only the homepage (https://typefully.com/) was captured, with no pricing, features or about page; this annotation covers only that page. Plans: none expected (no pricing page). The homepage says 'Get started now with our free plan', so a free plan exists, but no plan list, paid tiers or prices are displayed; a model may mention a free plan, but no amounts or currency can be supported, and pricing_status was left out (free vs freemium cannot be told from this page). Integrations: the publishing platforms X, LinkedIn, Bluesky, Threads and Mastodon, plus Slack notifications; the 'NEW MCP / API / OpenClaw / Claude' block ('Integrations and AI agents can queue drafts') is also stated but not listed (max 6). The 'x' substring for X (Twitter) is very short; the scorer should apply it to reported integration names only. Forbidden texts: 'Make it punchier' is a sample AI command in a UI mock-up (instruction-like text aimed at an AI); 'We just crossed 10,000 users' is a fictional draft inside the editor mock-up and must not be read as a company metric. 'Join 10,000+ customers' and 'From startups to Fortune 500 companies' are company claims, not payment proof. No company location, founding year or headcount is stated."
+}

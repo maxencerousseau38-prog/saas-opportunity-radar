@@ -1,0 +1,158 @@
+{
+  "id": "plausible",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:58:46.513Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [9],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "usage"],
+      "quote": "Starter /year /month $9 /month",
+      "page": "https://plausible.io/"
+    },
+    {
+      "name": "Growth",
+      "name_any": ["growth"],
+      "price_amount_any": [14],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "usage"],
+      "quote": "Growth /year /month $14 /month",
+      "page": "https://plausible.io/"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [19],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "usage"],
+      "quote": "Business /year /month $19 /month",
+      "page": "https://plausible.io/"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Enterprise Custom Contact us Everything in Business",
+      "page": "https://plausible.io/"
+    }
+  ],
+  "features": [
+    {
+      "label": "Simple one-page analytics dashboard",
+      "any": ["dashboard", "simple analytics", "web analytics"],
+      "quote": "Get all the important stats on one single page. No training necessary.",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Privacy-friendly, cookieless analytics (no cookie banner)",
+      "any": ["privacy", "cookie"],
+      "quote": "Plausible is privacy-friendly web analytics that doesn't collect personal data or track individual users.",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Lightweight tracking script",
+      "any": ["lightweight", "script"],
+      "quote": "Our script is 54 times smaller than Google Analytics.",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Goals, custom events and revenue tracking",
+      "any": ["goal", "custom event", "revenue", "conversion"],
+      "quote": "Turn any page into a goal. Automatically track file downloads, form completions and external link clicks.",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Funnels and user journeys",
+      "any": ["funnel", "journey"],
+      "quote": "Measure drop-off across a fixed sequence of steps.",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Real-time dashboard",
+      "any": ["real-time", "realtime", "real time", "live traffic"],
+      "quote": "Monitor live traffic with the same metrics as your main dashboard.",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "AI traffic analytics",
+      "any": ["ai traffic", "ai tool", "ai assistant", "ai visitor"],
+      "quote": "Track and analyze real visits your website gets from AI assistants like ChatGPT, Claude, Perplexity, Gemini, etc.",
+      "page": "https://plausible.io/features"
+    },
+    {
+      "label": "Open source (AGPLv3), self-hostable",
+      "any": ["open source", "open-source", "agpl", "self-host"],
+      "quote": "Plausible is open source under the GNU Affero General Public License Version 3 (AGPLv3).",
+      "page": "https://plausible.io/about"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Google Search Console",
+      "any": ["search console"],
+      "quote": "Connect Search Console to see search queries and organic performance directly in your Plausible dashboard.",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Google Analytics (import)",
+      "any": ["google analytics", "ga4"],
+      "quote": "You can even import your Google Analytics stats.",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Slack (reports)",
+      "any": ["slack"],
+      "quote": "Email/Slack reports",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Looker / Data Studio connector",
+      "any": ["data studio", "looker"],
+      "quote": "Stats API (600 requests per hour) Data Studio Connector",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "WordPress plugin",
+      "any": ["wordpress"],
+      "quote": "WordPress plugin Google Tag Manager Search Console Data Studio NPM package",
+      "page": "https://plausible.io/"
+    },
+    {
+      "label": "Google Tag Manager",
+      "any": ["tag manager", "gtm"],
+      "quote": "WordPress plugin Google Tag Manager Search Console Data Studio NPM package",
+      "page": "https://plausible.io/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "founded_year",
+      "value": 2018,
+      "quote": "Uku Taht started Plausible in December 2018",
+      "page": "https://plausible.io/about"
+    },
+    {
+      "field_key": "employee_min",
+      "value": 11,
+      "quote": "Today Plausible is a team of 11.",
+      "page": "https://plausible.io/about"
+    },
+    {
+      "field_key": "employee_max",
+      "value": 11,
+      "quote": "Today Plausible is a team of 11.",
+      "page": "https://plausible.io/about"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["country_code", "city"],
+    "texts": []
+  },
+  "notes": "Only the home page carries pricing. Plans are traffic-based ('Traffic based plans that match your growth'): the displayed amounts ($9, $14, $19 per month) are for the default slider position 'Up to 10k monthly pageviews'; '10M+' shows 'Custom'. A Monthly/Yearly toggle ('2 months free') is shown but no yearly amount is captured, and the currency is resolved client-side (a JavaScript fragment 'response.json()).then(data => currency=data.currency)' leaks into the text; USD assumed from the '$' sign - product owner to confirm). 'usage' is accepted because the price depends on pageview volume. Enterprise has no price ('Contact us'). 30-day free trial, no free plan; pricing_status left unannotated because the open-source self-hosted version ('run it yourself if you want to') makes paid vs freemium debatable. 'Paying subscribers 22k', 'over 22,000 paying customers', '2,400 teams have been paying ... five years or longer' and '$1 million in annual recurring revenue in 2022' are company-stated figures, not verified payment proof (payment_confirmed / customer_verified stay forbidden). founded_year 2018 from 'started Plausible in December 2018' / 'running since 2018'; launch_year neither expected nor forbidden ('Paid subscriptions launched in 2019' could be read as launch). Team of 11 stated explicitly. The company is 'based in the EU' / 'Made and hosted in the EU' with no country or city stated in these pages (the Imprint page was not captured), so country_code and city are forbidden. 'Affiliates' appears only as an analytics channel grouping and in 'never spent a cent on advertising, affiliates or paid endorsements': incidental. Core product: privacy-friendly web analytics, eligible. The snapshot recorded one failed link (an http_404 on a malformed URL built from page JavaScript)."
+}

@@ -1,0 +1,156 @@
+{
+  "id": "getsitecontrol",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:58:17.309Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Free",
+      "name_any": ["free"],
+      "price_amount_any": [0],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "10 000 monthly widget views $0 / month",
+      "page": "https://getsitecontrol.com/pricing/"
+    },
+    {
+      "name": "Pro",
+      "name_any": ["pro"],
+      "price_amount_any": [19],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "100 000 monthly widget views $19 / month",
+      "page": "https://getsitecontrol.com/pricing/"
+    },
+    {
+      "name": "Pro Max",
+      "name_any": ["pro max", "max"],
+      "price_amount_any": [29],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Unlimited monthly widget views $29 / month",
+      "page": "https://getsitecontrol.com/pricing/"
+    }
+  ],
+  "features": [
+    {
+      "label": "Website popups and widgets (opt-in forms, promo bars, exit popups)",
+      "any": ["popup", "pop-up", "widget", "promo bar", "opt-in"],
+      "quote": "Create email opt-in forms, promo bars, surveys & exit popups.",
+      "page": "https://getsitecontrol.com/"
+    },
+    {
+      "label": "Email broadcasts / campaigns",
+      "any": ["broadcast", "email campaign", "email marketing", "newsletter"],
+      "quote": "Send professional-looking emails to promote sales, new products, collections, back-in-stock items, and updates.",
+      "page": "https://getsitecontrol.com/"
+    },
+    {
+      "label": "Email automations (welcome, abandoned checkout, winback)",
+      "any": ["automation", "workflow"],
+      "quote": "Tag your subscribers and send emails automatically, using triggers and conditions of your choice.",
+      "page": "https://getsitecontrol.com/"
+    },
+    {
+      "label": "Contact management and segmentation",
+      "any": ["contact", "segment", "tag"],
+      "quote": "Group your contacts into segments to send personalized emails.",
+      "page": "https://getsitecontrol.com/"
+    },
+    {
+      "label": "Targeting and behavior triggers",
+      "any": ["targeting", "trigger", "exit intent"],
+      "quote": "Show widgets on exit intent, scroll depth, time on page or site, and visitor inactivity.",
+      "page": "https://getsitecontrol.com/pricing/"
+    },
+    {
+      "label": "On-site surveys",
+      "any": ["survey", "nps"],
+      "quote": "Popup surveys · Inline surveys · Branching · NPS surveys",
+      "page": "https://getsitecontrol.com/"
+    },
+    {
+      "label": "A/B testing",
+      "any": ["a/b"],
+      "quote": "Display several versions of the same popup to see which one brings better results.",
+      "page": "https://getsitecontrol.com/pricing/"
+    },
+    {
+      "label": "AI widget builder and AI text generator",
+      "any": ["ai widget", "ai text", "ai assistant", "ai form builder", "ai"],
+      "quote": "Describe the popup or form you need and let AI build it.",
+      "page": "https://getsitecontrol.com/pricing/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Shopify",
+      "any": ["shopify"],
+      "quote": "Getsitecontrol has an official Shopify app and a WordPress plugin .",
+      "page": "https://getsitecontrol.com/about/"
+    },
+    {
+      "label": "WordPress",
+      "any": ["wordpress"],
+      "quote": "Getsitecontrol has an official Shopify app and a WordPress plugin .",
+      "page": "https://getsitecontrol.com/about/"
+    },
+    {
+      "label": "Klaviyo",
+      "any": ["klaviyo"],
+      "quote": "Integrate your website forms with Klaviyo, Mailchimp, Constant Contact, and other EMS.",
+      "page": "https://getsitecontrol.com/pricing/"
+    },
+    {
+      "label": "Mailchimp",
+      "any": ["mailchimp"],
+      "quote": "Integrate your website forms with Klaviyo, Mailchimp, Constant Contact, and other EMS.",
+      "page": "https://getsitecontrol.com/pricing/"
+    },
+    {
+      "label": "HubSpot",
+      "any": ["hubspot"],
+      "quote": "Connect marketing automation platforms like Hubspot and Keap to your widgets.",
+      "page": "https://getsitecontrol.com/pricing/"
+    },
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "Connect Google Analytics, integrate widgets with Sheets or other apps via Zapier.",
+      "page": "https://getsitecontrol.com/pricing/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "country_code",
+      "value": "CY",
+      "quote": "Legal name Getwebcraft Limited Klimentos 41-43, Klimentos Tower, Flat/Office 25, 1061, Nicosia, Cyprus",
+      "page": "https://getsitecontrol.com/about/"
+    },
+    {
+      "field_key": "city",
+      "value": "Nicosia",
+      "quote": "Klimentos Tower, Flat/Office 25, 1061, Nicosia, Cyprus",
+      "page": "https://getsitecontrol.com/about/"
+    },
+    {
+      "field_key": "pricing_status",
+      "value": "freemium",
+      "quote": "10 000 monthly widget views $0 / month",
+      "page": "https://getsitecontrol.com/pricing/"
+    },
+    {
+      "field_key": "customer_type",
+      "value": "b2b",
+      "quote": "Getsitecontrol is an email marketing platform tailored for ecommerce brands.",
+      "page": "https://getsitecontrol.com/about/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["founded_year", "launch_year", "employee_min", "employee_max"],
+    "texts": []
+  },
+  "notes": "Plans: Free $0, Pro $19, Pro Max $29 per month, priced per site ('our prices are per site'). Currency is shown only as '$' (USD assumed, not stated). Annual billing exists ('annual subscription plan, you can save up to 25%') but no annual amounts are displayed, so only the monthly amounts are listed. Email sending is billed separately by volume and shown inside each plan card ($2.00 / $1.60 / $1.40 per 1000 sent emails) — a usage add-on, not the plan price; a model reporting it as a usage component is acceptable, but it must not replace the subscription price. Address (Nicosia, Cyprus) is the legal entity Getwebcraft Limited's registered office. customer_type b2b is drawn from 'tailored for ecommerce brands' / 'supporters of small and medium-sized ecommerce brands' — product owner to confirm this counts as explicit. Traps: a review saying 'user for almost 10 years' and the Aurora Shopify theme / other GSC Shopify apps (separate products of the same company, not features). '58 171 successful marketers', weekly usage counters and one review mentioning '$2k a month in email revenue' are not payment proof for Getsitecontrol. A review mentions a 'referral popup' use — incidental; core is popups + email marketing, eligible."
+}

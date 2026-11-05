@@ -1,0 +1,153 @@
+{
+  "id": "transistor",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:56:15.315Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [19],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "$19 / mo Buy now — Starter",
+      "page": "https://transistor.fm/pricing/"
+    },
+    {
+      "name": "Professional",
+      "name_any": ["professional"],
+      "price_amount_any": [49],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "$49 / mo Buy now — Professional",
+      "page": "https://transistor.fm/pricing/"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [99],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "$99 / mo Buy now — Business",
+      "page": "https://transistor.fm/pricing/"
+    },
+    {
+      "name": "Enterprise 1",
+      "name_any": ["enterprise"],
+      "price_amount_any": [199],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "Enterprise 1 $199 / mo",
+      "page": "https://transistor.fm/pricing/"
+    }
+  ],
+  "features": [
+    {
+      "label": "Podcast hosting (unlimited shows per account)",
+      "any": ["hosting", "unlimited podcasts", "multiple podcasts", "unlimited shows"],
+      "quote": "Host unlimited shows on one account",
+      "page": "https://transistor.fm/"
+    },
+    {
+      "label": "Video podcast hosting",
+      "any": ["video"],
+      "quote": "Upload your video podcast and have it distributed to Apple, Spotify, YouTube, and more.",
+      "page": "https://transistor.fm/features/video/"
+    },
+    {
+      "label": "Podcast distribution",
+      "any": ["distribut"],
+      "quote": "Your simple dashboard for managing distribution of your podcast to apps & players.",
+      "page": "https://transistor.fm/"
+    },
+    {
+      "label": "Private podcasts",
+      "any": ["private"],
+      "quote": "Host a members-only podcast for your company or online community.",
+      "page": "https://transistor.fm/"
+    },
+    {
+      "label": "Podcast analytics",
+      "any": ["analytics"],
+      "quote": "See your average downloads per episode, popular podcast apps, number of subscribers, trends.",
+      "page": "https://transistor.fm/"
+    },
+    {
+      "label": "Podcast website builder",
+      "any": ["website"],
+      "quote": "Choose a design and we'll automatically generate a website for your show.",
+      "page": "https://transistor.fm/"
+    },
+    {
+      "label": "Dynamic ads",
+      "any": ["dynamic ad", "ad insertion", "ads"],
+      "quote": "Dynamic ads (pre-roll, mid-roll, post-roll)",
+      "page": "https://transistor.fm/pricing/"
+    },
+    {
+      "label": "Transcription",
+      "any": ["transcri"],
+      "quote": "Transcription Automatically transcribe your podcast",
+      "page": "https://transistor.fm/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Mailchimp",
+      "any": ["mailchimp"],
+      "quote": "Integrates with MailChimp, ConvertKit, and Drip.",
+      "page": "https://transistor.fm/features/host-multiple-podcasts-on-the-same-account/"
+    },
+    {
+      "label": "ConvertKit",
+      "any": ["convertkit"],
+      "quote": "Integrates with MailChimp, ConvertKit, and Drip.",
+      "page": "https://transistor.fm/features/host-multiple-podcasts-on-the-same-account/"
+    },
+    {
+      "label": "Drip",
+      "any": ["drip"],
+      "quote": "Integrates with MailChimp, ConvertKit, and Drip.",
+      "page": "https://transistor.fm/features/host-multiple-podcasts-on-the-same-account/"
+    },
+    {
+      "label": "Apple Podcasts",
+      "any": ["apple podcasts", "apple"],
+      "quote": "Get your podcast on Apple Podcasts, Spotify, YouTube, Overcast, Pocket Casts, and many more!",
+      "page": "https://transistor.fm/"
+    },
+    {
+      "label": "Spotify",
+      "any": ["spotify"],
+      "quote": "Get your podcast on Apple Podcasts, Spotify, YouTube, Overcast, Pocket Casts, and many more!",
+      "page": "https://transistor.fm/"
+    },
+    {
+      "label": "YouTube",
+      "any": ["youtube"],
+      "quote": "Add your video episode and we’ll automatically publish it to YouTube, Apple Podcasts, Spotify, RSS, and more.",
+      "page": "https://transistor.fm/features/video/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "founded_year",
+      "value": 2018,
+      "quote": "Founded in 2018 by Jon Buda and Justin Jackson",
+      "page": "https://transistor.fm/features/host-multiple-podcasts-on-the-same-account/"
+    },
+    {
+      "field_key": "pricing_status",
+      "value": "paid",
+      "quote": "All prices in USD. Billed monthly.",
+      "page": "https://transistor.fm/pricing/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["country_code", "city", "employee_min", "employee_max"],
+    "texts": []
+  },
+  "notes": "Pricing: 'All prices in USD. Billed monthly.' Only monthly amounts are displayed; a Yearly toggle ('Save 17%') exists but no annual amounts are rendered, so only 'month' is expected. Enterprise 1 has a displayed price ($199/mo) and is a plan, not 'contact us'. Transcription (5 h $5/mo, 20 h $20/mo) are subscription add-ons, not plans. There is a 14-day free trial but no free plan (pricing_status paid). The comparison table prices for Simplecast, Buzzsprout, Podbean and Libsyn are competitors' prices and must not be attached to Transistor. Integrations: Mailchimp, ConvertKit and Drip are stated integrations; Apple Podcasts, Spotify and YouTube are distribution destinations the product publishes to (the PO may decide whether distribution targets count as integrations). Zapier is mentioned only inside a customer testimonial ('I also like that they integrate with Zapier'), so it is not listed. Claude/ChatGPT/Gemini/Grok via MCP appear only in a blog teaser. Fields: founded_year 2018 is stated; launch_year is not separately stated. 'They're a small team' appears only in a testimonial and gives no headcount. 'We serve over 27,000 podcasts', 'Join 680 podcasters who moved to Transistor this month' and 'thousands of organizations' are company claims, not payment proof. 'Transistor Inc.' does not state a country or city. Exclusion: eligible; the footer 'Affiliates' link is Transistor's own incidental affiliate program."
+}

@@ -1,0 +1,114 @@
+{
+  "id": "buttondown",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:55:55.081Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Free (first 100 subscribers)",
+      "name_any": ["free", "100"],
+      "price_amount_any": [0],
+      "currency": "USD",
+      "billing_period_any": ["month", "usage", "unknown"],
+      "quote": "Absolutely nothing for your first 100 subscribers.",
+      "page": "https://buttondown.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Newsletter editor (rich text and Markdown)",
+      "any": ["markdown", "editor", "rich text"],
+      "quote": "Our editor is best-in-class, allowing you to write WYSIWYG with rich text",
+      "page": "https://buttondown.com/features/markdown"
+    },
+    {
+      "label": "Paid subscriptions (no fee taken by Buttondown)",
+      "any": ["paid subscription", "paid newsletter", "charge for", "monetiz", "paywall"],
+      "quote": "Charge for access to your newsletter with Buttondown.",
+      "page": "https://buttondown.com/features/paid-subscriptions"
+    },
+    {
+      "label": "Email automations (welcome sequences)",
+      "any": ["automat", "sequence"],
+      "quote": "Automate your newsletter without having it be a full-time job.",
+      "page": "https://buttondown.com/features/automation"
+    },
+    {
+      "label": "Tagging and segmentation",
+      "any": ["tag", "segment"],
+      "quote": "Tagging & segmentation",
+      "page": "https://buttondown.com/pricing"
+    },
+    {
+      "label": "Email analytics",
+      "any": ["analytic"],
+      "quote": "Tap into our robust analytics platform",
+      "page": "https://buttondown.com/features/automation"
+    },
+    {
+      "label": "Send from a custom domain",
+      "any": ["custom domain"],
+      "quote": "Send from a custom domain",
+      "page": "https://buttondown.com/pricing"
+    },
+    {
+      "label": "RSS-to-email",
+      "any": ["rss"],
+      "quote": "RSS-to-email support",
+      "page": "https://buttondown.com/pricing"
+    },
+    {
+      "label": "API",
+      "any": ["api"],
+      "quote": "our API is feature-complete & beloved in the industry",
+      "page": "https://buttondown.com/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "We use Stripe for our payment processor",
+      "page": "https://buttondown.com/features/paid-subscriptions"
+    },
+    {
+      "label": "Discord",
+      "any": ["discord"],
+      "quote": "Connect your email to tools like Discord, Memberful, YouTube, and more.",
+      "page": "https://buttondown.com/"
+    },
+    {
+      "label": "Memberful",
+      "any": ["memberful"],
+      "quote": "Connect your email to tools like Discord, Memberful, YouTube, and more.",
+      "page": "https://buttondown.com/"
+    },
+    {
+      "label": "YouTube",
+      "any": ["youtube"],
+      "quote": "Connect your email to tools like Discord, Memberful, YouTube, and more.",
+      "page": "https://buttondown.com/"
+    },
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "tags can be applied via the API or through integrations like Zapier",
+      "page": "https://buttondown.com/features/automation"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "founded_year",
+      "value": 2017,
+      "quote": "fully remote and have been since our founding in 2017",
+      "page": "https://buttondown.com/pricing"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["country_code", "city", "employee_min", "employee_max", "launch_year"],
+    "texts": []
+  },
+  "notes": "Snapshot limit: the pricing page uses a subscriber-count slider rendered by script; the captured text only shows the free tier ('Absolutely nothing for your first 100 subscribers') and no paid base price for larger lists, so only the free tier is annotated (no plan name is displayed; name_any accepts 'free'). Billing is per active subscriber (usage-like). The twelve '+$9/+$29/+$79 /month' items are add-ons, not plans. The 50% non-profit discount is a discount, not a plan. The profit calculator on the paid-subscriptions page ($4,971/mo vs Substack etc.) is an illustrative simulation, not a price. 'Beehiiv, Ghost, and Substack' are migration sources, not integrations. 'We're profitable, self-funded' and 'used by tens of thousands of people every month' are company statements, not payment proof. 'A small team ... fully remote' gives no employee count and no country. The Markdown page quotes John Gruber about 'formatting instructions'; that is not instruction-like text aimed at AI."
+}

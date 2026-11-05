@@ -1,0 +1,134 @@
+{
+  "id": "savvycal",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:56:05.185Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Basic",
+      "name_any": ["basic"],
+      "price_amount_any": [10, 12, 120],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "$ 120 per user billed annually, or $ 12 per user billed monthly.",
+      "page": "https://savvycal.com/pricing"
+    },
+    {
+      "name": "Premium",
+      "name_any": ["premium"],
+      "price_amount_any": [17, 20, 200],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "$ 200 per user billed annually, or $ 20 per user billed monthly.",
+      "page": "https://savvycal.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Calendar overlay for invitees",
+      "any": ["overlay"],
+      "quote": "Recipients can lay their own calendar on top of your link and spot a time that works for both of you",
+      "page": "https://savvycal.com/"
+    },
+    {
+      "label": "Team scheduling (collective, round robin)",
+      "any": ["team scheduling", "round robin", "collective"],
+      "quote": "Team scheduling Collective, round robin, and outside colleagues",
+      "page": "https://savvycal.com/features"
+    },
+    {
+      "label": "Availability controls (buffers, limits, time blocks)",
+      "any": ["availability", "buffer", "frequency limit", "focus time", "time block"],
+      "quote": "Focus time defenses Limits, buffers, time blocks, and clustered meetings",
+      "page": "https://savvycal.com/features"
+    },
+    {
+      "label": "Paid bookings via Stripe",
+      "any": ["paid booking", "payment"],
+      "quote": "Paid bookings Stripe, any payment method, and taxes",
+      "page": "https://savvycal.com/features"
+    },
+    {
+      "label": "Meeting polls",
+      "any": ["poll"],
+      "quote": "Meeting polls Free, with no ads",
+      "page": "https://savvycal.com/features"
+    },
+    {
+      "label": "Reminders and workflows",
+      "any": ["workflow", "reminder"],
+      "quote": "Workflows Reminders and follow-ups, in your words",
+      "page": "https://savvycal.com/features"
+    },
+    {
+      "label": "Website embeds",
+      "any": ["embed"],
+      "quote": "Website embeds Inline, floating, or in a popup",
+      "page": "https://savvycal.com/features"
+    },
+    {
+      "label": "AI assistant access (MCP)",
+      "any": ["mcp", "ai assistant"],
+      "quote": "AI assistant access Claude, ChatGPT, and other MCP apps",
+      "page": "https://savvycal.com/features"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Google Calendar",
+      "any": ["google calendar", "google"],
+      "quote": "SavvyCal connects to Google, Microsoft 365 (Outlook), iCloud, and Fastmail calendars.",
+      "page": "https://savvycal.com/"
+    },
+    {
+      "label": "Microsoft 365 / Outlook",
+      "any": ["outlook", "microsoft 365", "microsoft"],
+      "quote": "SavvyCal connects to Google, Microsoft 365 (Outlook), iCloud, and Fastmail calendars.",
+      "page": "https://savvycal.com/"
+    },
+    {
+      "label": "iCloud",
+      "any": ["icloud"],
+      "quote": "SavvyCal connects to Google, Microsoft 365 (Outlook), iCloud, and Fastmail calendars.",
+      "page": "https://savvycal.com/"
+    },
+    {
+      "label": "Zoom",
+      "any": ["zoom"],
+      "quote": "It creates Zoom links on any calendar",
+      "page": "https://savvycal.com/"
+    },
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "Connect your Stripe account, and clients pay through Stripe’s checkout as they book.",
+      "page": "https://savvycal.com/features"
+    },
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "Zapier integration Included Included",
+      "page": "https://savvycal.com/pricing"
+    }
+  ],
+  "fields": [],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": [
+      "Find 30 minutes with Priya next week. Mornings are best.",
+      "Turn off my sales demo link until January.",
+      "Cancel my 3 pm with Priya.",
+      "Block off Friday afternoon, and make my intro call 45 minutes."
+    ]
+  },
+  "notes": "Pricing is per user. Both billing variants are displayed: Basic $10/user/mo billed annually ($120/yr) or $12 billed monthly; Premium $17/user/mo billed annually ($200/yr) or $20 billed monthly. Prices are shown with '$' only; USD is the natural reading but is not written on the page. No free plan card is displayed: the FAQ says you can sign up, connect calendars and use meeting polls for free, but booking from links needs Basic or Premium, so no Free plan is expected and pricing_status was left out (paid vs freemium is ambiguous). The 25% student/non-profit discount and >50-user volume pricing are not plans. Fastmail calendars, Google Meet and Microsoft Teams links, and Claude/ChatGPT via MCP are also stated; only 6 integrations are listed. Forbidden texts are the sample chat prompts shown in the AI-assistant demo mock-ups (instruction-like text aimed at an AI assistant); they must not be reported as facts. Demo names (Noah Wilson, Mara Okafor, Acme) are fictional UI mock-ups. 'Join over 2,000 happy customers' is a company-stated count, not payment proof. 'SavvyCal, Inc.' does not state a country or city; no founding year or team size is stated."
+}

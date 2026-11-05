@@ -1,0 +1,119 @@
+{
+  "id": "clearscope",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:57:52.905Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Essentials",
+      "name_any": ["essentials"],
+      "price_amount_any": [129],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "Essentials Everything you need to get started optimizing content. $129 /month",
+      "page": "https://www.clearscope.io/pricing"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [399],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "Advanced functionality for productive content teams. $399 /month",
+      "page": "https://www.clearscope.io/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Custom solutions for businesses that produce content at scale. Custom",
+      "page": "https://www.clearscope.io/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "AI search visibility / mention tracking (Track)",
+      "any": ["track", "mention", "visibility"],
+      "quote": "Track how often Google, ChatGPT, Gemini and Claude mention you for each query",
+      "page": "https://www.clearscope.io/"
+    },
+    {
+      "label": "Query and question research (Discover)",
+      "any": ["discover", "question", "keyword research", "topic research", "query research"],
+      "quote": "Discover returns the questions people ask Google and AI",
+      "page": "https://www.clearscope.io/"
+    },
+    {
+      "label": "AI content drafting (Write)",
+      "any": ["draft", "writ", "content generation"],
+      "quote": "get an outline, then a full draft that follows your brand guidelines",
+      "page": "https://www.clearscope.io/product/write"
+    },
+    {
+      "label": "Content grade and optimization guidance",
+      "any": ["grade", "optimiz", "term guidance"],
+      "quote": "A++ to F, scored against the pages that rank today.",
+      "page": "https://www.clearscope.io/product/write"
+    },
+    {
+      "label": "Content monitoring and decay alerts (Monitor)",
+      "any": ["monitor", "decay", "refresh"],
+      "quote": "Saved views flag content decay and striking-distance queries",
+      "page": "https://www.clearscope.io/"
+    },
+    {
+      "label": "Term map / competitive content research",
+      "any": ["term map", "terms", "research"],
+      "quote": "The term map lines up the terms top-ranking pages use against your draft",
+      "page": "https://www.clearscope.io/product/write"
+    },
+    {
+      "label": "Query fan-out awareness",
+      "any": ["fan-out", "fan out"],
+      "quote": "See the web searches AI platforms trigger to construct their answers",
+      "page": "https://www.clearscope.io/pricing"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Google Docs",
+      "any": ["google docs"],
+      "quote": "Works in Google Docs, Microsoft Word and WordPress.",
+      "page": "https://www.clearscope.io/"
+    },
+    {
+      "label": "Microsoft Word",
+      "any": ["word"],
+      "quote": "Works in Google Docs, Microsoft Word and WordPress.",
+      "page": "https://www.clearscope.io/"
+    },
+    {
+      "label": "WordPress",
+      "any": ["wordpress"],
+      "quote": "Works in Google Docs, Microsoft Word and WordPress.",
+      "page": "https://www.clearscope.io/"
+    },
+    {
+      "label": "Google Search Console",
+      "any": ["search console"],
+      "quote": "Connect Search Console to watch every page",
+      "page": "https://www.clearscope.io/"
+    }
+  ],
+  "fields": [],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "Plans shown monthly only ('There's no minimum contract with our monthly plans'); yearly billing is mentioned only for custom plans paid by invoice. The '$6.50/mo', '$25/mo', '$50' etc. rows are add-on usage rates (extra tracked queries, pages, drafts), not plans. 14-day free trial is not a plan. Copyright is '© 2026 Mushi Labs': the legal entity name differs from the product; no country, founding year or headcount is stated. ChatGPT, Gemini, Claude and Google are AI/search engines that the product monitors, not integrations; Google Ads keyword data is a data source. Testimonial traffic figures and LLM mentions in quotes are customer claims, not payment proof; no instruction aimed at an AI reader was found (the page text contains leftover HTML/Stimulus attribute fragments, which are markup noise)."
+}

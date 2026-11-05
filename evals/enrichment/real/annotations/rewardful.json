@@ -1,0 +1,139 @@
+{
+  "id": "rewardful",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:58:58.650Z",
+  "expected_exclusion": "excluded",
+  "plans": [
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [49, 490],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Starter $49 /month Up to $7,500/month in affiliate-attributed revenue",
+      "page": "https://www.rewardful.com/pricing"
+    },
+    {
+      "name": "Growth",
+      "name_any": ["growth"],
+      "price_amount_any": [99, 990],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Growth Most Popular $99 /month Up to $15,000/month in affiliate-attributed revenue",
+      "page": "https://www.rewardful.com/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [149, 1490],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Enterprise $149+ /month Up to $30,000/month on the entry Enterprise tier",
+      "page": "https://www.rewardful.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Affiliate conversion tracking",
+      "any": ["tracking", "track affiliate", "attribution"],
+      "quote": "Rewardful lets you track affiliate conversions, manage commissions, set-up cookies, plan payouts, and monitor multiple campaigns",
+      "page": "https://www.rewardful.com/"
+    },
+    {
+      "label": "Flexible commission structures",
+      "any": ["commission"],
+      "quote": "Customize your affiliate commissions. Choose between recurring or one-time payments, percentage or fixed amounts, and minimum payout thresholds.",
+      "page": "https://www.rewardful.com/"
+    },
+    {
+      "label": "Affiliate payouts (Managed Payouts, PayPal/Wise mass payouts)",
+      "any": ["payout", "mass payment"],
+      "quote": "Pay your affiliates with our PayPal or Wise mass payment feature in seconds.",
+      "page": "https://www.rewardful.com/"
+    },
+    {
+      "label": "Self-service affiliate portal",
+      "any": ["portal"],
+      "quote": "Empower your affiliates with a self-service affiliate portal.",
+      "page": "https://www.rewardful.com/"
+    },
+    {
+      "label": "Coupon code tracking",
+      "any": ["coupon", "promo code"],
+      "quote": "Use coupons to track referrals from influencers and on platforms where link-based attribution isn't an option.",
+      "page": "https://www.rewardful.com/features"
+    },
+    {
+      "label": "Self-referral fraud detection",
+      "any": ["fraud", "self-referral"],
+      "quote": "We automatically identify and deactivate suspected self-referrals.",
+      "page": "https://www.rewardful.com/features"
+    },
+    {
+      "label": "API for white-labeled programs",
+      "any": ["api", "white-label"],
+      "quote": "Build a fully white-labeled program with our flexible API.",
+      "page": "https://www.rewardful.com/"
+    },
+    {
+      "label": "Affiliate Finder",
+      "any": ["affiliate finder", "finder"],
+      "quote": "Rewardful has a built-in Affiliate Finder search engine that tries to surface proven affiliates around the web",
+      "page": "https://www.rewardful.com/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "helps SaaS companies launch and scale affiliate programs through native Stripe integration",
+      "page": "https://www.rewardful.com/"
+    },
+    {
+      "label": "PayPal",
+      "any": ["paypal"],
+      "quote": "Yes, you can connect Rewardful with PayPal",
+      "page": "https://www.rewardful.com/"
+    },
+    {
+      "label": "Wise",
+      "any": ["wise"],
+      "quote": "You can also pay your affiliates in bulk using Wise.",
+      "page": "https://www.rewardful.com/"
+    },
+    {
+      "label": "Paddle",
+      "any": ["paddle"],
+      "quote": "Set up referral and affiliate programs with Stripe and Paddle in 5 steps.",
+      "page": "https://www.rewardful.com/features"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "pricing_status",
+      "value": "paid",
+      "quote": "Rewardful starts at $49 per month",
+      "page": "https://www.rewardful.com/pricing"
+    },
+    {
+      "field_key": "customer_type",
+      "value": "b2b",
+      "quote": "Rewardful is an affiliate and referral management platform that helps SaaS companies launch and scale affiliate programs",
+      "page": "https://www.rewardful.com/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "Exclusion: excluded, not needs_review. The pages state the core purpose unambiguously: 'All-in-One Affiliate Management Software for SaaS' and 'an affiliate and referral management platform that helps SaaS companies launch and scale affiliate programs'; commissions, affiliate payouts, affiliate portal and Affiliate Finder are the whole product (core affiliate program management and payouts, CLAUDE.md §3), not an incidental referral feature. Pricing: the snapshot holds both /pricing and /pricing-old with byte-identical text; quotes cite /pricing and the plans are not duplicated. Monthly and annual ('2 months free') amounts are both displayed: Starter $49/mo or $490/yr, Growth $99/mo or $990/yr, Enterprise $149+/mo or $1,490+/yr. Enterprise is tiered by affiliate-attributed revenue ('Enterprise is tiered. Higher usage moves to a higher tier'); $149/$1,490 are entry-tier starting prices, so 'usage' could also be argued for that plan. Managed Payouts (3% processing fee) and Affiliate Finder credits are add-ons/usage fees, not plans. 'Trusted by 3,000+ teams', 'Rated #1 for Ease of Setup on G2' and testimonial revenue figures are company-stated or third-party claims, not payment proof. The founded year is not stated ('built on 10 years of expertise' is not a founding date); 'Rewardful Inc.' does not state a country. The 'Rewardful Skill for Claude' promo block is marketing addressed to human visitors, not an instruction to the extractor, so no forbidden text was added."
+}
