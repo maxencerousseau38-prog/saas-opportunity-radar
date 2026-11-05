@@ -5,4 +5,5 @@ export * from "./filters";
 export * from "./jobs";
 export * from "./identity";
 export * from "./evidence";
+export * from "./pain-points";
 export type * from "./agent";

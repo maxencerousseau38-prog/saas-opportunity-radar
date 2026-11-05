@@ -13,7 +13,8 @@
     "./env": "./src/env.ts",
     "./evidence": "./src/evidence.ts",
     "./jobs": "./src/jobs.ts",
-    "./agents/enrichment": "./src/agents/enrichment.ts"
+    "./agents/enrichment": "./src/agents/enrichment.ts",
+    "./pain-points": "./src/pain-points.ts"
   },
   "scripts": {
     "lint": "eslint .",

@@ -6,4 +6,5 @@ export * from "./api";
 export * from "./evidence";
 export * from "./jobs";
 export * from "./agents/enrichment";
+export * from "./pain-points";
 export * from "./env";

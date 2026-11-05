@@ -54,6 +54,7 @@ separate decisions.
 | PD-11 | Exclusion boundary cases | **A** — employee sales-commission software and customer-referral-program software are **not excluded** unless their core purpose is affiliate/partner commissions or distribution | Rule R6 becomes an informational flag (`eligible`); R1–R5 unchanged | ADR-010 |
 | PD-12 | Platform operator | **A** — the product owner only | The product owner handles exclusion reviews, correction reports and merges | ADR-007 |
 | PD-13 | Sprint order | **A** — S4 Pain Point → S5 Opportunity → S6 Discovery → S7 hardening | AI Discovery arrives in S6; the catalog is fed by manual entry and CSV imports until then | ADR-012 |
+
 | PD-14 | First third-party sources | **A** — add one review/community source only after a written terms review; **G2 is the first source to study** | Until G2 is approved (PD-26), the Pain Point Engine relies on declared CSV feedback imports | ADR-013 |
 | PD-15 | UI language | **A** — French UI copy, PRD English navigation labels | | --- |
 | PD-16 | MVP filters | **A + J** — groups A, B, C (HQ country), D, E, F, G, I, J, O in the MVP; H, K, L, M, N in Phase 2 | Company profile filters (founder-led, indie, independent…) ship in Sprint 2 | --- |
@@ -64,6 +65,16 @@ separate decisions.
 | PD-21 | Experiment payments as WTP evidence (Phase 3) | **A** — yes, when backed by a proof document (invoice or payment record) | See ADR-005 for how such evidence is recorded | ADR-005 |
 | PD-22 | AI evaluation thresholds | **A** — proposed from the first baseline run, approved per agent | Each agent needs a product-owner approval of its thresholds before shipping | ADR-006 |
 | PD-23 | Workspace validation threshold (PRD §14.1) | **A** — a workspace may only raise the BUILD thresholds above 75 / 10, never lower them | | ADR-005 |
+
+## Sprint 4 start (5 November 2026)
+
+The product owner deferred the paid PD-24a benchmark and authorised Sprint 4
+(Pain Point Intelligence Engine, Implementation Blueprint §15 — option A of
+the Sprint 4 plan) **while the Sprint 3 exit gate stays pending**. Sprint 4
+uses only simulated providers (fake LLM handlers and a deterministic fake
+embedder); no paid call and no production change. Its exit gate stays
+pending PD-24a/PD-24b and the PD-22 thresholds. G2 is not used (PD-26
+pending): feedback comes from declared CSV imports.
 
 ## Pending decision register
 
