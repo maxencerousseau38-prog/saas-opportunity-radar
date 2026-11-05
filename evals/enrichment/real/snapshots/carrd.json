@@ -1,0 +1,16 @@
+{
+  "id": "carrd",
+  "url": "https://carrd.co/",
+  "segment": "web/site-builder",
+  "retrieved_at": "2026-11-05T08:59:13.640Z",
+  "connector": "official_website (production connector, robots.txt obeyed)",
+  "home_links": [],
+  "pages": [],
+  "failures": [
+    {
+      "url": "https://carrd.co/",
+      "status": "blocked",
+      "reason": "redirected_off_site"
+    }
+  ]
+}

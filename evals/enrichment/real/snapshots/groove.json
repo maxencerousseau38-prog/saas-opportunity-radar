@@ -1,0 +1,16 @@
+{
+  "id": "groove",
+  "url": "https://www.groovehq.com/",
+  "segment": "support/helpdesk",
+  "retrieved_at": "2026-11-05T08:59:48.709Z",
+  "connector": "official_website (production connector, robots.txt obeyed)",
+  "home_links": [],
+  "pages": [],
+  "failures": [
+    {
+      "url": "https://www.groovehq.com/",
+      "status": "blocked",
+      "reason": "redirected_off_site"
+    }
+  ]
+}
