@@ -222,6 +222,9 @@ importers:
       '@sor/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@sor/pain-point-engine':
+        specifier: workspace:*
+        version: link:../../packages/pain-point-engine
       '@supabase/supabase-js':
         specifier: 'catalog:'
         version: 2.119.0

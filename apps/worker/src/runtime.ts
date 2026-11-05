@@ -36,6 +36,8 @@ export interface WorkerOptions {
   heartbeatSeconds: number;
   concurrency: number;
   jobTimeoutSeconds: number;
+  /** Per job kind wall-clock budgets (default: jobTimeoutSeconds). */
+  jobTimeoutSecondsByKind?: Partial<Record<jobsRepo.JobKind, number>>;
   backoff?: { baseSeconds: number; capSeconds: number; random?: () => number };
   log: Log;
 }
@@ -143,7 +145,12 @@ export class Worker {
         job,
         signal,
         cancelRequested: () => cancelRequested,
-        deadline: new Date(Date.now() + this.options.jobTimeoutSeconds * 1000),
+        deadline: new Date(
+          Date.now() +
+            (this.options.jobTimeoutSecondsByKind?.[job.job_kind] ??
+              this.options.jobTimeoutSeconds) *
+              1000,
+        ),
       });
       clearInterval(beat);
       if (leaseLost) return;
