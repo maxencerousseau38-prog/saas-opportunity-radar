@@ -42,23 +42,23 @@ fixtures + `rewardful`, `firstpromoter`, `growsurf`, `frase`.
 Prices verified in the official documentation (`pricing.json`, snapshots in
 `vendor-docs/`). D5 = `fast_extraction`, D6 = `verification`.
 
-| Id  | Model                        | Setting                                         | USD / MTok in–out |
-| --- | ---------------------------- | ----------------------------------------------- | ----------------- |
-| A1  | claude-haiku-5-5             | thinking disabled                               | 0.10 – 0.50       |
-| A2  | claude-haiku-5-5             | adaptive thinking, effort medium                | 0.10 – 0.50       |
-| A3  | claude-sonnet-5-5            | thinking `between_tools`, effort low            | 2 – 10            |
-| A4  | claude-sonnet-5-5            | adaptive thinking, effort medium                | 2 – 10            |
-| A5  | claude-opus-5-5              | effort low — **top-tier reference**             | 4 – 20            |
-| O1  | gpt-6-luna                   | reasoning none                                  | 0.10 – 0.50       |
-| O2  | gpt-6-luna                   | reasoning medium                                | 0.10 – 0.50       |
-| O3  | gpt-6.1-sol                  | reasoning low (no "none" on Sol)                | 2 – 10            |
-| O4  | gpt-6.1-sol                  | reasoning medium                                | 2 – 10            |
-| O5  | gpt-6-astra                  | reasoning low — **top-tier reference**          | 10 – 50           |
-| M1  | Ministral 3 14B              | no reasoning (entry tier has no effort setting) | 0.20 – 0.20       |
-| M2  | mistral-small-2603 (Small 4) | reasoning none                                  | 0.15 – 0.60       |
-| M3  | mistral-small-2603 (Small 4) | reasoning high                                  | 0.15 – 0.60       |
-| M4  | mistral-large-4              | reasoning low                                   | 0.70 – 2.10       |
-| M5  | mistral-large-4              | reasoning high — **top-tier reference**         | 0.70 – 2.10       |
+| Id  | Model                                | Setting                                         | USD / MTok in–out |
+| --- | ------------------------------------ | ----------------------------------------------- | ----------------- |
+| A1  | claude-haiku-5-5                     | thinking disabled                               | 0.10 – 0.50       |
+| A2  | claude-haiku-5-5                     | adaptive thinking, effort medium                | 0.10 – 0.50       |
+| A3  | claude-sonnet-5-5                    | thinking `between_tools`, effort low            | 2 – 10            |
+| A4  | claude-sonnet-5-5                    | adaptive thinking, effort medium                | 2 – 10            |
+| A5  | claude-opus-5-5                      | effort low — **top-tier reference**             | 4 – 20            |
+| O1  | gpt-6-luna                           | reasoning none                                  | 0.10 – 0.50       |
+| O2  | gpt-6-luna                           | reasoning medium                                | 0.10 – 0.50       |
+| O3  | gpt-6.1-sol                          | reasoning low (no "none" on Sol)                | 2 – 10            |
+| O4  | gpt-6.1-sol                          | reasoning medium                                | 2 – 10            |
+| O5  | gpt-6-astra                          | reasoning low — **top-tier reference**          | 10 – 50           |
+| M1  | ministral-14b-2512 (Ministral 3 14B) | no reasoning (entry tier has no effort setting) | 0.20 – 0.20       |
+| M2  | mistral-small-2603 (Small 4)         | reasoning none                                  | 0.15 – 0.60       |
+| M3  | mistral-small-2603 (Small 4)         | reasoning high                                  | 0.15 – 0.60       |
+| M4  | mistral-large-4                      | reasoning low                                   | 0.70 – 2.10       |
+| M5  | mistral-large-4                      | reasoning high — **top-tier reference**         | 0.70 – 2.10       |
 
 Mistral has no current mid tier (Medium 3.5 deprecated on 31 Oct 2026), so
 Small 4 plays the mid tier and Large 4 (public preview) the top tier.
@@ -193,7 +193,7 @@ NODE_USE_ENV_PROXY=1 node apps/worker/dist-evals/benchmark.js --stage stage2 --c
 `NODE_USE_ENV_PROXY=1` makes Node's `fetch` use the environment's HTTPS
 proxy (needed for `api.openai.com` and `api.mistral.ai` in the cloud
 session). Before stage 1, a free model listing per vendor confirms the
-exact model ids (notably Ministral 3 14B).
+exact model ids (Ministral 3 14B is `ministral-14b-2512`, checked on its official page on 5 Nov 2026).
 
 ## Secrets and network
 

@@ -63,14 +63,6 @@
       "notes": "Flagship; reasoning.effort low..max.",
       "source": "openai--developers-openai-com-api-docs-pricing.txt"
     },
-    "ministral-3-14b": {
-      "vendor": "mistral",
-      "input": 0.2,
-      "output": 0.2,
-      "cache_read": 0.02,
-      "notes": "Exact API model id to confirm with GET /v1/models (docs page slug ministral-3-14b-25-12).",
-      "source": "mistral--docs-mistral-ai-inference-pricing.txt"
-    },
     "mistral-small-2603": {
       "vendor": "mistral",
       "input": 0.15,
@@ -86,6 +78,14 @@
       "cache_read": 0.07,
       "notes": "Public Preview (6 Oct 2026); reasoning_effort low, medium, high.",
       "source": "mistral--docs-mistral-ai-inference-pricing.txt; mistral--docs-mistral-ai-models-mistral-large-4-0.txt"
+    },
+    "ministral-14b-2512": {
+      "vendor": "mistral",
+      "input": 0.2,
+      "output": 0.2,
+      "cache_read": 0.02,
+      "notes": "Ministral 3 14B; API id from the official model page (mistral--docs-mistral-ai-models-ministral-3-14b-25-12.txt).",
+      "source": "mistral--docs-mistral-ai-inference-pricing.txt; mistral--docs-mistral-ai-models-ministral-3-14b-25-12.txt"
     }
   },
   "discounts_and_uplifts": {

@@ -179,16 +179,16 @@
     },
     "M1": {
       "provider": "mistral",
-      "label": "Ministral 3 14B (API id to confirm via GET /v1/models)",
+      "label": "Ministral 3 14B (ministral-14b-2512), no reasoning",
       "d5": {
         "maxOutputTokens": 8000,
         "timeoutMs": 180000,
-        "model": "ministral-3-14b"
+        "model": "ministral-14b-2512"
       },
       "d6": {
         "maxOutputTokens": 4000,
         "timeoutMs": 180000,
-        "model": "ministral-3-14b"
+        "model": "ministral-14b-2512"
       }
     },
     "M2": {
