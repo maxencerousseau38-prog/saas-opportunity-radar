@@ -171,6 +171,9 @@ export const VerdictReasonCodeSchema = z.enum([
   "SCORE_BELOW_REJECT_THRESHOLD",
   "LOW_POTENTIAL",
   "TO_INVESTIGATE",
+  // A workspace raised the BUILD score threshold above 75 (PD-23 A) and the
+  // score is below it: the gate fails like the other row-6 gates.
+  "SCORE_BELOW_BUILD_THRESHOLD",
   "WTP_BELOW_THRESHOLD",
   "NO_PAYING_CUSTOMER_EVIDENCE",
   "LOW_CONFIDENCE",
