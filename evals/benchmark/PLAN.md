@@ -140,22 +140,60 @@ cumulative spend above the stage cap; the run then stops with a partial
 report. A spending limit set in each vendor console (e.g. 15 USD) is a
 second, independent safeguard.
 
-## Engineering before execution (no paid call)
+## Engineering before execution (done 5 November 2026, no paid call)
 
-1. Provider adapters in `@sor/ai-gateway`, tested against recorded HTTP
-   responses: Anthropic Messages API (`output_config.format` JSON schema;
-   unsupported schema keywords such as `minLength`/`maximum` stripped — Zod
-   still validates; no `temperature` on Claude 5.5 models), OpenAI Responses
-   API (`text.format` strict JSON schema; the polymorphic claim `value`
-   carried as a JSON string), Mistral chat completions (`response_format`
-   JSON schema).
-2. Configurable max output tokens per profile/model (today D5 and D6 are
-   fixed at 4,000).
-3. Benchmark runner (`apps/worker/src/evals`): replays the frozen
-   snapshots through the production `runEnrichment` pipeline, scores against
-   the annotations, records tokens, cost and latency per call, enforces the
-   cap, writes `evals/benchmark/results/` (JSON + Markdown report).
-4. End-to-end dry run with the fake provider (zero cost).
+1. **Provider adapters** — `packages/ai-gateway/src/providers.ts`: Anthropic
+   Messages API (`output_config.format` JSON schema, `output_config.effort`,
+   `thinking`; never `temperature`), OpenAI Responses API (strict
+   `text.format` JSON schema, `reasoning.effort`, `store: false`), Mistral
+   chat completions (`response_format` JSON schema, `reasoning_effort`).
+   Plain HTTPS with a few retries on 408/409/429/5xx/529 (never on other
+   client errors); refusals are permanent errors; truncation is reported as
+   `length` and goes through the gateway's single repair. Schemas are
+   prepared per vendor (`prompt.ts`): constraint keywords a vendor rejects
+   are dropped (Zod still validates everything), every object is strict with
+   all properties required, and the polymorphic claim `value` is typed as
+   string | number | boolean | string[] | null. Tested against simulated
+   responses that follow the documented shapes — **no real call has been
+   made, so a first stage-1 call may still reveal a shape difference**.
+2. **Per-model settings** — the gateway's profile configuration now carries
+   `maxOutputTokens`, `timeoutMs`, `reasoningEffort` and `thinking`
+   (`ModelSettings`); production keeps the fake provider and its defaults.
+3. **Runner** — `apps/worker/src/evals/benchmark-runner.ts` and the CLI
+   `benchmark.ts` (built by `pnpm --filter @sor/worker eval:build`). It
+   replays the frozen pages through the production `runEnrichment`, scores
+   each case (`packages/discovery-engine/src/evals/benchmark.ts`): quotes
+   found in the page and numbers found in the quote, forbidden items,
+   recall of annotated plans/features/integrations/fields, exclusion,
+   first-attempt validity, lost enrichments, cost and latency. Prices come
+   from `pricing.json`, configurations and stages from `configs.json`.
+   Guards: a stage with a real provider refuses to start without
+   `--confirm-paid`, a positive cap and every needed key; before each call
+   the gateway reserves its worst case and refuses it above the remaining
+   cap; the run then stops and the report says so.
+4. **Dry run** — `evals/benchmark/results/dry-run/` (fake provider, 39
+   cases, 0 USD). The fake provider is not a model and fails the gates, as
+   expected; the run shows the scorer catching prices misread from
+   "$4,971", archived plans reported as current and missed exclusions.
+
+Commands (from the repository root, after `pnpm --filter @sor/worker eval:build`):
+
+```bash
+node apps/worker/dist-evals/benchmark.js --stage dry-run
+```
+
+```bash
+NODE_USE_ENV_PROXY=1 node apps/worker/dist-evals/benchmark.js --stage stage1 --confirm-paid
+```
+
+```bash
+NODE_USE_ENV_PROXY=1 node apps/worker/dist-evals/benchmark.js --stage stage2 --configs <approved finalists> --cap <30 minus stage-1 spend> --confirm-paid
+```
+
+`NODE_USE_ENV_PROXY=1` makes Node's `fetch` use the environment's HTTPS
+proxy (needed for `api.openai.com` and `api.mistral.ai` in the cloud
+session). Before stage 1, a free model listing per vendor confirms the
+exact model ids (notably Ministral 3 14B).
 
 ## Secrets and network
 

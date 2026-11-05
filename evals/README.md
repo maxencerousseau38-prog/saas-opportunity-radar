@@ -35,3 +35,8 @@ low by design. Run with a real provider once PD-24 is decided.
 
 Snapshots are inputs, never refreshed silently: the workflow skips any site
 or page already frozen.
+
+Runner: `pnpm --filter @sor/worker eval:build`, then
+`node apps/worker/dist-evals/benchmark.js --stage dry-run` (fake provider,
+zero cost). Paid stages need the product owner's approval, `--confirm-paid`,
+a cap and the API keys (see `benchmark/PLAN.md`).

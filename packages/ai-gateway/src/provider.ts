@@ -50,10 +50,21 @@ export interface EmbeddingResult {
   usage: AIUsage;
 }
 
+/** Per-model call settings resolved by the gateway from its profile configuration. */
+export interface CallSettings {
+  /** Output cap, reasoning tokens included (overrides the request's cap when configured). */
+  maxOutputTokens: number;
+  /** Vendor reasoning effort (e.g. none, low, medium, high); omitted = vendor default. */
+  reasoningEffort?: string;
+  /** Anthropic thinking mode (adaptive, disabled, between_tools); omitted = vendor default. */
+  thinking?: string;
+}
+
 /** What the gateway sends to a provider (one call). */
 export interface ProviderCall {
   request: StructuredAIRequest<unknown>;
   model: string;
+  settings: CallSettings;
   /** Present on the single repair call: the validation problems of the first answer. */
   repair?: { previousOutput: unknown; problems: string[] };
   signal: AbortSignal;

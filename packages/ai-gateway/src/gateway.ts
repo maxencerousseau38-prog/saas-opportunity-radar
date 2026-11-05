@@ -68,10 +68,21 @@ export function citedIds(value: unknown, key = ""): string[] {
   return [];
 }
 
+/** A configured model of a profile: id plus optional call settings. */
+export interface ModelSettings {
+  model: string;
+  /** Replaces the request's output cap (reasoning included). */
+  maxOutputTokens?: number;
+  /** Replaces the request's timeout (reasoning models can be slow). */
+  timeoutMs?: number;
+  reasoningEffort?: string;
+  thinking?: string;
+}
+
 export interface GatewayOptions {
   provider: AIProvider;
   /** Server-side profile → model mapping (PD-24 fixes the real one). */
-  models: Partial<Record<ModelProfile, string>>;
+  models: Partial<Record<ModelProfile, string | ModelSettings>>;
 }
 
 export class AIGateway {
@@ -81,11 +92,15 @@ export class AIGateway {
     return this.options.provider.id;
   }
 
-  modelFor(profile: ModelProfile): string {
-    const model = this.options.models[profile];
-    if (!model)
+  settingsFor(profile: ModelProfile): ModelSettings {
+    const entry = this.options.models[profile];
+    if (!entry)
       throw new GatewayError("PROVIDER_ERROR", `no model configured for profile ${profile}`);
-    return model;
+    return typeof entry === "string" ? { model: entry } : entry;
+  }
+
+  modelFor(profile: ModelProfile): string {
+    return this.settingsFor(profile).model;
   }
 
   async generate<S extends z.ZodType>(
@@ -93,7 +108,14 @@ export class AIGateway {
     context: GatewayCallContext,
   ): Promise<StructuredAIResult<z.infer<S>>> {
     const provider = this.options.provider;
-    const model = this.modelFor(request.modelProfile);
+    const configured = this.settingsFor(request.modelProfile);
+    const model = configured.model;
+    const settings = {
+      maxOutputTokens: configured.maxOutputTokens ?? request.maxOutputTokens,
+      ...(configured.reasoningEffort ? { reasoningEffort: configured.reasoningEffort } : {}),
+      ...(configured.thinking ? { thinking: configured.thinking } : {}),
+    };
+    const timeoutMs = configured.timeoutMs ?? request.timeoutMs;
     const base = { provider: provider.id, model };
     const record = (
       operation: UsageRecord["operation"],
@@ -120,6 +142,7 @@ export class AIGateway {
       const callRequest = {
         request: request as StructuredAIRequest<unknown>,
         model,
+        settings,
         ...(repair ? { repair } : {}),
       };
       const worstCase = provider.estimateMaxCostUsd(callRequest);
@@ -131,7 +154,7 @@ export class AIGateway {
           "the worst-case cost exceeds the remaining AI budget",
         );
       }
-      const timeout = AbortSignal.timeout(request.timeoutMs);
+      const timeout = AbortSignal.timeout(timeoutMs);
       const signal = context.signal ? AbortSignal.any([context.signal, timeout]) : timeout;
       const started = Date.now();
       try {
