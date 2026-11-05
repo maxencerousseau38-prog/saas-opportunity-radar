@@ -1,2 +1,8 @@
-// @sor/pain-point-engine — boundary only (Sprint 0). Implemented in S4.
-export {};
+// @sor/pain-point-engine — Pain Point Intelligence Engine (Implementation
+// Blueprint §7; ADR-008): orchestration of P1–P9. Never scores.
+export * from "./types";
+export * from "./prompts";
+export * from "./pipeline";
+export * from "./fake";
+export * from "./memory";
+export * from "./evals";

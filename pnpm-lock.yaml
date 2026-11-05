@@ -390,6 +390,19 @@ importers:
         version: 5.1.0(@types/node@26.6.6)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0))
 
   packages/pain-point-engine:
+    dependencies:
+      '@sor/ai-gateway':
+        specifier: workspace:*
+        version: link:../ai-gateway
+      '@sor/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@sor/domain':
+        specifier: workspace:*
+        version: link:../domain
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
