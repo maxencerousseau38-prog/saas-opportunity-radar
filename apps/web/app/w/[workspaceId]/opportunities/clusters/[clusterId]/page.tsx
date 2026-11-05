@@ -20,6 +20,9 @@ import {
   listClusters,
 } from "@/lib/services/pain-points";
 import { canEdit, requireWorkspace } from "@/lib/workspace";
+import { AnalyzeButton } from "@/components/analysis/analyze-form";
+import { AnalysisList, type AnalysisListRow } from "@/components/analysis/analysis-list";
+import { analysisDefaults, listAnalyses } from "@/lib/services/analyses";
 
 export const metadata = { title: "Pain Point Cluster — SaaS Opportunity Radar" };
 
@@ -32,10 +35,12 @@ export default async function ClusterPage(
     if (err instanceof ApiError && err.code === "NOT_FOUND") notFound();
     throw err;
   });
-  const [evidence, history, siblings] = await Promise.all([
+  const [evidence, history, siblings, analyses, defaults] = await Promise.all([
     clusterEvidence(client, workspaceId, cluster.id),
     clusterHistory(client, workspaceId, cluster.id),
     listClusters(client, workspaceId, cluster.run_id),
+    listAnalyses(client, workspaceId, { limit: 10, cluster_id: cluster.id }),
+    analysisDefaults(client, workspaceId),
   ]);
   const names = new Map(cluster.products.map((p) => [p.product_id, p.name]));
   const resolution = cluster.resolution_breakdown as {
@@ -62,6 +67,17 @@ export default async function ClusterPage(
         </div>
         <p className="text-sm">{cluster.description}</p>
         <CountsLine c={cluster as ClusterRow} />
+        {canEdit(membership.role) && cluster.review_status !== "rejected" ? (
+          <AnalyzeButton
+            workspaceId={workspaceId}
+            subject={{ type: "pain_point_cluster", cluster_id: cluster.id }}
+            defaults={defaults}
+            label="Analyser l’opportunité de ce problème"
+          />
+        ) : null}
+        {analyses.data.length > 0 ? (
+          <AnalysisList workspaceId={workspaceId} rows={analyses.data as AnalysisListRow[]} />
+        ) : null}
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2" aria-label="Indicateurs du cluster">

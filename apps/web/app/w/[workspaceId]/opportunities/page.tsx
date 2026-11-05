@@ -6,6 +6,9 @@ import { NewRunForm } from "@/components/pain/new-run-form";
 import { EXCLUSION_STATUS, OPPORTUNITY_STATUS, RUN_STATUS, formatDate } from "@/lib/labels";
 import { listClusters, listOpportunities, listRuns } from "@/lib/services/pain-points";
 import { canEdit, requireWorkspace } from "@/lib/workspace";
+import { NewAnalysisForm } from "@/components/analysis/analyze-form";
+import { AnalysisList, type AnalysisListRow } from "@/components/analysis/analysis-list";
+import { analysisDefaults, listAnalyses } from "@/lib/services/analyses";
 import { workspaceRepo } from "@sor/database";
 
 export const metadata = { title: "Opportunities — SaaS Opportunity Radar" };
@@ -16,18 +19,21 @@ export default async function OpportunitiesPage(
   const { workspaceId } = await props.params;
   const { client, membership } = await requireWorkspace(workspaceId);
   const editor = canEdit(membership.role);
-  const [runs, clusters, opportunities, products, categories, tags] = await Promise.all([
-    listRuns(client, workspaceId, null),
-    listClusters(client, workspaceId, null),
-    listOpportunities(client, workspaceId),
-    editor
-      ? client.from("saas_products").select("id, name").order("name").limit(500)
-      : Promise.resolve({ data: [] }),
-    editor
-      ? client.from("categories").select("slug, name").eq("is_user_visible", true).order("name")
-      : Promise.resolve({ data: [] }),
-    workspaceRepo.listTags(client, workspaceId),
-  ]);
+  const [runs, clusters, opportunities, products, categories, tags, analyses, defaults] =
+    await Promise.all([
+      listRuns(client, workspaceId, null),
+      listClusters(client, workspaceId, null),
+      listOpportunities(client, workspaceId),
+      editor
+        ? client.from("saas_products").select("id, name").order("name").limit(500)
+        : Promise.resolve({ data: [] }),
+      editor
+        ? client.from("categories").select("slug, name").eq("is_user_visible", true).order("name")
+        : Promise.resolve({ data: [] }),
+      workspaceRepo.listTags(client, workspaceId),
+      listAnalyses(client, workspaceId, { limit: 30 }),
+      analysisDefaults(client, workspaceId),
+    ]);
   const tagsOf = (id: string) =>
     tags.filter((t) => t.tag_assignments.some((a) => a.generated_opportunity_id === id));
   const visibleClusters = clusters.filter((c) => c.review_status !== "rejected").slice(0, 30);
@@ -39,7 +45,7 @@ export default async function OpportunitiesPage(
         </h1>
         <p className="text-sm text-muted">
           Regroupe les plaintes de plusieurs SaaS concurrents en problèmes reliés à leurs preuves.
-          Les analyses d’opportunité avec score, confiance et verdict arrivent au Sprint 5.
+          Une analyse d’opportunité (ci-dessous) peut ensuite évaluer un cluster ou une hypothèse.
         </p>
         {editor ? (
           <NewRunForm
@@ -71,6 +77,33 @@ export default async function OpportunitiesPage(
               </li>
             ))}
           </ul>
+        )}
+      </section>
+
+      <section className="space-y-3" aria-labelledby="analyses-title">
+        <h2 id="analyses-title" className="text-lg font-semibold">
+          Analyses d’opportunité
+        </h2>
+        <p className="text-sm text-muted">
+          Évalue un SaaS (depuis sa fiche), un ensemble de concurrents, une catégorie, un cluster ou
+          une hypothèse : score sur 100, volonté de payer, confiance, couverture et verdict,
+          calculés par le serveur à partir des preuves.
+        </p>
+        {editor ? (
+          <NewAnalysisForm
+            workspaceId={workspaceId}
+            products={products.data ?? []}
+            categories={categories.data ?? []}
+            defaults={defaults}
+          />
+        ) : null}
+        {analyses.data.length === 0 ? (
+          <EmptyState title="Aucune analyse d’opportunité">
+            Lancez « Analyze Opportunity » depuis la fiche d’un SaaS, ou analysez un ensemble de
+            concurrents ou une catégorie ci-dessus.
+          </EmptyState>
+        ) : (
+          <AnalysisList workspaceId={workspaceId} rows={analyses.data as AnalysisListRow[]} />
         )}
       </section>
 

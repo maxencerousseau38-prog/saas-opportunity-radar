@@ -30,6 +30,8 @@ import {
   sourcesOf,
 } from "@/lib/services/catalog";
 import { canEdit, requireWorkspace } from "@/lib/workspace";
+import { AnalyzeButton } from "@/components/analysis/analyze-form";
+import { analysisDefaults } from "@/lib/services/analyses";
 
 const PERIOD: Record<string, string> = {
   month: "/ mois",
@@ -80,6 +82,7 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
     workspaceRepo.listProductCollections(client, workspaceId, product.id),
   ]);
   const conflicts = await pipelineRepo.listConflicts(client, product.id);
+  const defaults = await analysisDefaults(client, workspaceId);
   if (canEdit(membership.role)) await recordView(client, workspaceId, product.id, user.id);
 
   const g = buildGeneral(product, provenance);
@@ -154,6 +157,15 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
               <dd className="inline">{PRICING_STATUS[product.pricing_status]}</dd>
             </div>
           </dl>
+          {canEdit(membership.role) ? (
+            <div className="pt-2">
+              <AnalyzeButton
+                workspaceId={workspaceId}
+                subject={{ type: "product", product_id: product.id }}
+                defaults={defaults}
+              />
+            </div>
+          ) : null}
         </div>
         <WorkspacePanel
           workspaceId={workspaceId}

@@ -23,7 +23,10 @@ export function requestHash(kind: string, payload: unknown): string {
 }
 
 export async function createJob(args: {
-  kind: Extract<JobKind, "product_enrichment" | "catalog_import" | "feedback_import">;
+  kind: Extract<
+    JobKind,
+    "product_enrichment" | "catalog_import" | "feedback_import" | "report_export"
+  >;
   workspaceId: string;
   userId: string;
   idempotencyKey: string;

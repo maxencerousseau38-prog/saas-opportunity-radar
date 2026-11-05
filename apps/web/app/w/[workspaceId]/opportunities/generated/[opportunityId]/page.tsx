@@ -9,6 +9,9 @@ import { ApiError } from "@/lib/api/http";
 import { EXCLUSION_STATUS } from "@/lib/labels";
 import { getOpportunity } from "@/lib/services/pain-points";
 import { canEdit, requireWorkspace } from "@/lib/workspace";
+import { AnalyzeButton } from "@/components/analysis/analyze-form";
+import { AnalysisList, type AnalysisListRow } from "@/components/analysis/analysis-list";
+import { analysisDefaults, listAnalyses } from "@/lib/services/analyses";
 
 export const metadata = { title: "Opportunité générée — SaaS Opportunity Radar" };
 
@@ -21,7 +24,11 @@ export default async function GeneratedOpportunityPage(
     if (err instanceof ApiError && err.code === "NOT_FOUND") notFound();
     throw err;
   });
-  const tags = await workspaceRepo.listTags(client, workspaceId);
+  const [tags, analyses, defaults] = await Promise.all([
+    workspaceRepo.listTags(client, workspaceId),
+    listAnalyses(client, workspaceId, { limit: 10, generated_opportunity_id: o.id }),
+    analysisDefaults(client, workspaceId),
+  ]);
   const row = (label: string, value: string | null) => (
     <div>
       <dt className="text-xs font-medium text-muted">{label}</dt>
@@ -46,6 +53,17 @@ export default async function GeneratedOpportunityPage(
           ) : null}
         </div>
         <p className="text-sm">{o.description}</p>
+        {canEdit(membership.role) && o.exclusion_status === "eligible" ? (
+          <AnalyzeButton
+            workspaceId={workspaceId}
+            subject={{ type: "generated_opportunity", generated_opportunity_id: o.id }}
+            defaults={defaults}
+            label="Évaluer cette hypothèse"
+          />
+        ) : null}
+        {analyses.data.length > 0 ? (
+          <AnalysisList workspaceId={workspaceId} rows={analyses.data as AnalysisListRow[]} />
+        ) : null}
       </header>
       <OpportunityEditor
         workspaceId={workspaceId}

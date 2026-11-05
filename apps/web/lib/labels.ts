@@ -325,3 +325,120 @@ export const EXCLUSION_STATUS: Record<string, string> = {
   eligible: "Éligible",
   needs_review: "En revue (affiliation ou partenariat possible)",
 };
+
+// ------------------------------------------------------------ Opportunity analyses (Sprint 5)
+export const VERDICT: Record<string, string> = {
+  build_candidate: "BUILD CANDIDATE",
+  validate_first: "VALIDATE FIRST",
+  reject: "REJECT",
+};
+
+/** PRD §8.8 decision bands. */
+export const DECISION_BAND: Record<string, string> = {
+  reject: "Rejeter",
+  low_potential: "Faible potentiel",
+  to_investigate: "À approfondir",
+  interesting: "Intéressant",
+  priority: "Prioritaire",
+};
+
+export const CONFIDENCE_LEVEL: Record<string, string> = {
+  low: "faible",
+  medium: "moyenne",
+  high: "élevée",
+};
+
+/** §9.7 display levels: low < 40, medium 40–69, high ≥ 70. */
+export function confidenceLevelOf(value: number): string {
+  return value < 40 ? "low" : value < 70 ? "medium" : "high";
+}
+
+export const DIMENSION: Record<string, string> = {
+  customer_demand: "Demande réelle et problèmes clients",
+  willingness_to_pay: "Volonté de payer",
+  product_gap: "Faiblesses et amélioration",
+  market_attractiveness: "Attractivité du marché",
+  competitive_differentiation: "Concurrence et différenciation",
+  feasibility_distribution: "Faisabilité et distribution",
+};
+
+export const ANALYSIS_SUBJECT: Record<string, string> = {
+  product: "SaaS",
+  product_set: "Ensemble de SaaS",
+  category: "Catégorie",
+  pain_point_cluster: "Cluster de problèmes",
+  generated_opportunity: "Hypothèse d’opportunité",
+};
+
+export const ANALYSIS_STAGE: Record<string, string> = {
+  building_evidence_index: "index des preuves",
+  product_research: "analyse produit",
+  market_research: "analyse du marché",
+  customer_voice: "voix des clients",
+  competitor_research: "concurrence",
+  localization: "marché cible",
+  feasibility_wtp: "volonté de payer et faisabilité",
+  dimension_assessment: "évaluation des dimensions",
+  red_team: "contre-analyse",
+  report: "rapport",
+};
+
+/** §9.6 reason codes. */
+export const VERDICT_REASON: Record<string, string> = {
+  FATAL_FLAW: "Critère d’arrêt critique étayé",
+  INCOMPLETE_COVERAGE: "Couverture incomplète : score final impossible",
+  SCORE_BELOW_REJECT_THRESHOLD: "Score inférieur à 50",
+  LOW_POTENTIAL: "Score entre 50 et 64 (faible potentiel)",
+  TO_INVESTIGATE: "Score entre 65 et 74 (à approfondir)",
+  SCORE_BELOW_BUILD_THRESHOLD: "Score sous le seuil BUILD de l’espace",
+  WTP_BELOW_THRESHOLD: "Volonté de payer sous le seuil",
+  NO_PAYING_CUSTOMER_EVIDENCE: "Aucune preuve vérifiée de clients payants",
+  LOW_CONFIDENCE: "Confiance inférieure à 70",
+  INSUFFICIENT_DEMAND_EVIDENCE: "Preuves de demande insuffisantes",
+  NO_CONCRETE_DIFFERENTIATION: "Différenciation non démontrée",
+  UNRESOLVED_CRITICAL_KILL_CRITERION: "Critère d’arrêt critique non résolu",
+  EXCLUDED_RECOMMENDATION: "Produit recommandé exclu ou en revue",
+  ALL_GATES_PASSED: "Toutes les conditions BUILD sont remplies",
+  RED_TEAM_OBJECTION: "Objection de la contre-analyse",
+};
+
+export const ANALYSIS_LIMITATION: Record<string, string> = {
+  simulated_provider:
+    "Fournisseur IA simulé : contenu de démonstration produit par des règles fixes, pas un résultat réel.",
+  products_no_longer_visible: "Des produits du périmètre ne sont plus visibles et ont été ignorés.",
+  no_evidence_in_scope: "Aucune preuve disponible dans le périmètre.",
+  evidence_index_capped: "Trop de preuves : l’index retient les plus fiables et les plus récentes.",
+  customer_reviews_not_analysed: "Avis clients non analysés (option désactivée).",
+  competitors_not_analysed: "Concurrence non analysée (option désactivée).",
+  local_market_not_analysed: "Marché cible non analysé (option désactivée).",
+  review_sample_not_representative:
+    "L’échantillon d’avis n’est pas représentatif de tous les clients.",
+  pain_point_run_reused: "Voix des clients : analyse de problèmes existante réutilisée.",
+  pain_point_run_created: "Voix des clients : analyse de problèmes lancée pour ce périmètre.",
+  agent_output_rejected: "Une étape a produit un résultat invalide et a été ignorée.",
+  ai_budget_exhausted: "Budget IA épuisé : résultats partiels.",
+  red_team_unavailable: "Contre-analyse indisponible : le verdict ne peut pas être BUILD.",
+  report_narrative_unavailable:
+    "Rédaction du rapport indisponible : seuls les blocs calculés sont affichés.",
+  excluded_items_removed: "Éléments relevant de l’exclusion permanente retirés.",
+  recommended_product_excluded:
+    "Le produit recommandé relève de l’exclusion permanente : section retirée.",
+  dimension_assessment_needs_review:
+    "Évaluation des dimensions rejetée deux fois : vérification manuelle requise.",
+  budget_exhausted_before_scoring: "Budget épuisé avant le calcul du score.",
+};
+
+export const FINDING_TYPE: Record<string, string> = {
+  pain_point: "Problème client",
+  opportunity: "Opportunité",
+  risk: "Risque",
+  competitor_gap: "Lacune concurrente",
+  recommendation: "Recommandation",
+  kill_criterion: "Critère d’arrêt",
+};
+
+export const SEVERITY: Record<string, string> = {
+  critical: "critique",
+  major: "majeur",
+  minor: "mineur",
+};
