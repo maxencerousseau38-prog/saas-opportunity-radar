@@ -80,7 +80,19 @@ const isPermanent = (err: unknown) =>
   err instanceof GatewayError && (err.code === "SCHEMA_INVALID" || err.code === "UNKNOWN_CITED_ID");
 const isBudget = (err: unknown) => err instanceof GatewayError && err.code === "BUDGET_EXHAUSTED";
 
-export async function runPainPointRun(ports: PainPorts): Promise<PainOutcome> {
+export interface PainRunOptions {
+  /**
+   * "statistics": P1–P7 only (no gaps, no hypotheses), used by an opportunity
+   * analysis whose customer voice has no covering run (Implementation Blueprint §8.4).
+   */
+  through?: "all" | "statistics";
+}
+
+export async function runPainPointRun(
+  ports: PainPorts,
+  options: PainRunOptions = {},
+): Promise<PainOutcome> {
+  const statisticsOnly = options.through === "statistics";
   const summary: PainSummary = {
     stage: "collecting",
     feedback_considered: 0,
@@ -552,7 +564,8 @@ export async function runPainPointRun(ports: PainPorts): Promise<PainOutcome> {
     // ---------------------------------------------------------- P8 gaps
     summary.stage = "identifying_gaps";
     let gaps: GapRecord[] = [];
-    if (clusters.length > 0 && !budgetHit) {
+    if (statisticsOnly) limitations.push({ code: "gaps_and_hypotheses_not_requested" });
+    if (clusters.length > 0 && !budgetHit && !statisticsOnly) {
       checkpoint();
       try {
         const step = await ports.step<MarketGapOutput>(
@@ -623,7 +636,7 @@ export async function runPainPointRun(ports: PainPorts): Promise<PainOutcome> {
     // ---------------------------------------------------------- P9 opportunities + exclusion
     summary.stage = "generating_opportunities";
     const opportunities: OpportunityRecord[] = [];
-    if (clusters.length > 0 && !budgetHit) {
+    if (clusters.length > 0 && !budgetHit && !statisticsOnly) {
       checkpoint();
       try {
         const step = await ports.step<OpportunityHypothesisOutput>(

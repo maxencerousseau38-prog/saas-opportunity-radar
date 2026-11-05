@@ -188,4 +188,13 @@ describe("pain point run (fake provider)", () => {
     );
     expect(cancelled.state).toBe("cancelled");
   });
+
+  it("stops after the statistics when an opportunity analysis needs customer voice only", async () => {
+    const { ports, store } = memoryPorts({ run, feedback, gateway: gateway() });
+    const out = await runPainPointRun(ports, { through: "statistics" });
+    expect(out.state).toBe("completed");
+    expect(store.clusters.size).toBeGreaterThan(0);
+    expect(store.gaps.size + store.opportunities.size).toBe(0);
+    expect(store.run.limitations).toContainEqual({ code: "gaps_and_hypotheses_not_requested" });
+  });
 });
