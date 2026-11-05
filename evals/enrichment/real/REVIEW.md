@@ -7,13 +7,13 @@ reviewed, set `"status": "reviewed"` (or ask Claude to apply your answers).
 
 ## Exclusion (gate: 100 % correct)
 
-| Site                                         | Draft            | Question                                                                                                                                                                                                                                                                            |
-| -------------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| rewardful                                    | excluded         | Core purpose stated as affiliate management — confirm                                                                                                                                                                                                                               |
-| firstpromoter                                | excluded         | Same — confirm                                                                                                                                                                                                                                                                      |
-| growsurf                                     | **needs_review** | Customer-referral headline, but affiliate programs sold as a full product line (own pricing, "Referral and affiliate program software" footer). PD-11 A says referral tools stay eligible _unless_ the core is affiliate/partner distribution — eligible, needs_review or excluded? |
-| convertflow                                  | eligible         | Runs its own partner program (commissions) but the product is a funnel builder — confirm                                                                                                                                                                                            |
-| testimonial, transistor, baremetrics, others | eligible         | Footer "affiliate program" links are side programs — confirm the rule                                                                                                                                                                                                               |
+| Site                                         | Draft                  | Question                                                                                                                                    |
+| -------------------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| rewardful                                    | excluded               | Core purpose stated as affiliate management — confirm                                                                                       |
+| firstpromoter                                | excluded               | Same — confirm                                                                                                                              |
+| growsurf                                     | **excluded** — decided | Product owner, 5 Nov 2026: excluded; `needs_review` also accepted (it equally keeps the product out of the catalog); `eligible` is an error |
+| convertflow                                  | eligible               | Runs its own partner program (commissions) but the product is a funnel builder — confirm                                                    |
+| testimonial, transistor, baremetrics, others | eligible               | Footer "affiliate program" links are side programs — confirm the rule                                                                       |
 
 ## Prices the page states ambiguously
 

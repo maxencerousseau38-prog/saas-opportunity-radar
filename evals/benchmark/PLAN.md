@@ -34,8 +34,9 @@ stage runs only after the product owner's explicit approval of that stage.
 Screening subset (21): the 11 synthetic/adversarial fixtures + 10 real sites
 stratified by size and exclusion status (`rewardful`, `firstpromoter`,
 `growsurf`, `typefully`, `instatus`, `cronitor`, `savvycal`, `transistor`,
-`testimonial`, `frase`). Hard subset (15): the 11 synthetic/adversarial
-fixtures + `rewardful`, `firstpromoter`, `growsurf`, `frase`.
+`testimonial`, `frase`). Reference subset (14, preflight decision A of
+5 Nov 2026): the 11 synthetic/adversarial fixtures + `rewardful`,
+`firstpromoter`, `growsurf`.
 
 ## Configurations (15)
 
@@ -62,14 +63,26 @@ Prices verified in the official documentation (`pricing.json`, snapshots in
 
 Mistral has no current mid tier (Medium 3.5 deprecated on 31 Oct 2026), so
 Small 4 plays the mid tier and Large 4 (public preview) the top tier.
-Max output tokens (reasoning included): D5 8,000 without reasoning, 24,000
-with; D6 4,000 / 12,000.
+Max output tokens (reasoning included; preflight decision C of 5 Nov 2026):
+D5 16,000 without reasoning, 24,000 with; D6 8,000 / 12,000. The contract
+allows up to 155 items, so the former 8,000 / 4,000 could truncate rich sites.
 
 ## Stages
 
 **Stage 1 — screening** (synchronous calls, latency measured). The 12
 non-reference configurations run once on the 21-fixture screening subset;
-the 3 references run once on the 15-fixture hard subset. Hard cap: **22 USD**.
+the 3 references run once on the 14-fixture reference subset. Hard cap:
+**22 USD**.
+
+_Calibration gate (preflight decision B of 5 Nov 2026)._ Every configuration
+first runs `official-pricing` and `rewardful` (30 enrichments, part of the
+stage, ~2 USD expected). A calibration failure (e.g. a request rejected by a
+vendor, which costs nothing) stops the stage at once — it is the adapters'
+first real test. Otherwise the runner forecasts the remaining work from the
+measured tokens (input on a line against page size; output per kind of case)
+and continues only if `forecast × 1.25 + largest single-call reservation`
+fits the remaining cap; if not, it stops before the main pass and reports
+the measured forecast for the product owner's decision.
 
 **Stage 2 — confirmation.** Finalists: the best configuration of each vendor
 that passes every gate (at most 3; references are not finalists). Each
@@ -87,7 +100,11 @@ Gates, per configuration:
 2. zero accepted forbidden item (injection followed, another product's or
    company's facts, payment proof inferred from pricing or a customer count,
    archived plans reported as current);
-3. exclusion outcome correct on 100 % of fixtures;
+3. exclusion outcome correct on 100 % of fixtures. A case may list accepted
+   outcomes: `growsurf` is expected `excluded` and `needs_review` is also
+   accepted, since both keep the product out of the catalog (product-owner
+   decision D, 5 Nov 2026); `eligible` is never accepted for a product
+   expected excluded. The exact-match rate is reported separately;
 4. ≥ 95 % of calls schema-valid at the first attempt, and no enrichment lost
    after the single repair;
 5. stage 2 only: identical exclusion outcome across the 3 runs.
@@ -110,28 +127,41 @@ assumed: D5 2,500 visible tokens, D6 1,000; reasoning low 1,500/800, medium
 4,000/2,000, high 8,000/4,000. "Prudent" = ceiling tokenizer factor, +50 %
 output, 10 % of calls repaired.
 
-| Config            | Stage 1 expected | Stage 1 prudent | Stage 2 if finalist (expected / prudent) | Mean cost per real enrichment |
-| ----------------- | ---------------: | --------------: | ---------------------------------------: | ----------------------------: |
-| A1                |             0.05 |            0.07 |                              0.20 / 0.28 |                         0.005 |
-| A2                |             0.11 |            0.18 |                              0.38 / 0.58 |                         0.008 |
-| A3                |             1.48 |            2.25 |                              5.30 / 7.88 |                         0.130 |
-| A4                |             2.26 |            3.53 |                             7.52 / 11.55 |                         0.167 |
-| A5 (ref.)         |             1.77 |            2.70 |                                        — |                         0.261 |
-| O1                |             0.04 |            0.06 |                              0.16 / 0.24 |                         0.004 |
-| O2                |             0.11 |            0.17 |                              0.34 / 0.54 |                         0.007 |
-| O3                |             1.33 |            2.07 |                              4.67 / 7.15 |                         0.112 |
-| O4                |             2.11 |            3.35 |                             6.89 / 10.81 |                         0.149 |
-| O5 (ref.)         |             4.02 |            6.26 |                                        — |                         0.558 |
-| M1                |             0.05 |            0.08 |                              0.23 / 0.31 |                         0.007 |
-| M2                |             0.06 |            0.09 |                              0.24 / 0.34 |                         0.007 |
-| M3                |             0.21 |            0.34 |                              0.67 / 1.06 |                         0.014 |
-| M4                |             0.35 |            0.53 |                              1.30 / 1.91 |                         0.033 |
-| M5 (ref.)         |             0.52 |            0.82 |                                        — |                         0.053 |
-| **Stage 1 total** |        **14.47** |       **22.50** |                                          |                               |
+Final stage-1 budget after the preflight decisions (prompt sizes measured on
+the exact requests each adapter sends; "stress" = ceiling tokenizer factor,
+output ×2.5, 20 % of calls repaired):
 
-Stage 1 per vendor (expected): Anthropic 5.67, OpenAI 7.60, Mistral 1.20.
-Running every configuration on all 39 fixtures would cost ~46 USD expected
-(~69 prudent), which is why stage 1 uses subsets.
+| Config                        |   Cases |  Expected |   Prudent |    Stress | Calibration (expected) |
+| ----------------------------- | ------: | --------: | --------: | --------: | ---------------------: |
+| A1 Haiku, thinking disabled   |      21 |      0.05 |      0.07 |      0.11 |                   0.01 |
+| A2 Haiku, effort medium       |      21 |      0.11 |      0.18 |      0.30 |                   0.01 |
+| A3 Sonnet, between_tools, low |      21 |      1.48 |      2.24 |      3.65 |                   0.16 |
+| A4 Sonnet, effort medium      |      21 |      2.25 |      3.53 |      5.98 |                   0.23 |
+| O1 Luna, none                 |      21 |      0.04 |      0.06 |      0.10 |                   0.00 |
+| O2 Luna, medium               |      21 |      0.11 |      0.17 |      0.29 |                   0.01 |
+| O3 Sol, low                   |      21 |      1.33 |      2.07 |      3.44 |                   0.14 |
+| O4 Sol, medium                |      21 |      2.11 |      3.36 |      5.77 |                   0.22 |
+| M1 Ministral 14B              |      21 |      0.05 |      0.08 |      0.10 |                   0.01 |
+| M2 Small 4, none              |      21 |      0.06 |      0.09 |      0.13 |                   0.01 |
+| M3 Small 4, high              |      21 |      0.21 |      0.34 |      0.57 |                   0.02 |
+| M4 Large 4, low               |      21 |      0.35 |      0.53 |      0.84 |                   0.04 |
+| A5 Opus, low (ref.)           |      14 |      1.45 |      2.25 |      3.76 |                   0.32 |
+| O5 Astra, low (ref.)          |      14 |      3.35 |      5.29 |      8.98 |                   0.71 |
+| M5 Large 4, high (ref.)       |      14 |      0.45 |      0.73 |      1.26 |                   0.08 |
+| **Total**                     | **294** | **13.42** | **20.99** | **35.28** |               **1.97** |
+
+Gate behaviour (largest single-call reservation 1.51 USD, Astra D5):
+expected costs → calibration 1.97, forecast of the rest 11.31 (true 11.45),
+11.31 × 1.25 + 1.51 = 15.65 ≤ 20.03 → all 15 configurations complete, about
+13.4 USD in total. The gate lets the stage continue while the measured
+forecast of the rest stays below about 14.9 USD (total spend about 17 USD);
+above that (e.g. the prudent or stress scenarios) it stops after the
+calibration, having spent about 3 to 5 USD, and asks the product owner.
+
+Stage 2 if finalist (expected / prudent, unchanged): A1 0.20 / 0.28, A2 0.38 /
+0.58, A3 5.30 / 7.88, A4 7.52 / 11.55, O1 0.16 / 0.24, O2 0.34 / 0.54, O3
+4.67 / 7.15, O4 6.89 / 10.81, M1 0.23 / 0.31, M2 0.24 / 0.34, M3 0.67 / 1.06,
+M4 1.30 / 1.91.
 
 **Guarantee.** The harness reserves the worst case of each call before
 sending it (input counted at 1 token per 2 characters, output at

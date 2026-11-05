@@ -11,6 +11,8 @@ import {
   FakeProvider,
   MistralProvider,
   OpenAIProvider,
+  costUsd,
+  worstCaseCostUsd,
   type AIProvider,
   type EmbeddingResult,
   type ModelPricing,
@@ -26,6 +28,7 @@ import {
   runCase,
   scoreCase,
   summarize,
+  type CaseRun,
   type CaseScore,
   type ConfigSummary,
   type EvalCase,
@@ -57,6 +60,7 @@ export interface BenchFiles {
     {
       cap_usd: number | null;
       groups: Array<{ configs: string[] | string; cases: string; runs: number }>;
+      calibration?: Calibration;
     }
   >;
   pricing: Record<string, ModelPricing>;
@@ -192,7 +196,7 @@ export function planStage(
   stage: string,
   finalists: string[] = [],
   only: string[] = [],
-): { cap: number | null; runs: PlannedRun[] } {
+): { cap: number | null; runs: PlannedRun[]; calibration: Calibration | null } {
   const def = files.stages[stage];
   if (!def) throw new Error(`unknown stage ${stage}`);
   const runs: PlannedRun[] = [];
@@ -206,7 +210,7 @@ export function planStage(
       runs.push({ configId: id, cases: selectCases(files, g.cases), runs: g.runs });
     }
   }
-  return { cap: def.cap_usd, runs };
+  return { cap: def.cap_usd, runs, calibration: def.calibration ?? null };
 }
 
 /** Refuses paid runs without confirmation, a positive cap and every key. */
@@ -296,8 +300,77 @@ export interface ConfigResult {
   providerErrors: string[];
 }
 
+/** Calibration gate of a paid stage (PD-24a B, approved 5 Nov 2026). */
+export interface Calibration {
+  /** Cases each configuration runs first. */
+  cases: string[];
+  /** Safety factor on the measured forecast. */
+  margin: number;
+}
+
+export interface CalibrationReport {
+  spentUsd: number;
+  /** Forecast of the remaining work from measured tokens, before the margin. */
+  forecastUsd: number;
+  margin: number;
+  /** Largest worst-case reservation of a single remaining call. */
+  reservationUsd: number;
+  /** Remaining cap when the gate was evaluated. */
+  remainingUsd: number;
+  proceeded: boolean;
+  perConfig: Record<string, { measuredCases: number; forecastUsd: number; remainingCases: number }>;
+}
+
+/** Characters per enrichment besides the pages (instructions, schemas, items, wrappers). */
+const OVERHEAD_CHARS = 20_000;
+const pageChars = (c: EvalCase) => Object.values(c.pages).reduce((n, t) => n + t.length, 0);
+
+/**
+ * Forecast of a configuration's remaining cases from its calibration scores.
+ * Input tokens: a line through the measured points against the page size
+ * (never decreasing). Output tokens (reasoning included): the measurement of
+ * the same kind of case — real site vs synthetic/adversarial — or the highest.
+ */
+export function forecastConfig(
+  measured: CaseScore[],
+  measuredCases: EvalCase[],
+  remaining: EvalCase[],
+  pricing: ModelPricing,
+): number {
+  if (remaining.length === 0) return 0;
+  const points = measured
+    .map((s, i) => ({ s, c: measuredCases[i] }))
+    .filter((p): p is { s: CaseScore; c: EvalCase } => p.c !== undefined && p.s.error === null);
+  if (points.length === 0) return Number.POSITIVE_INFINITY;
+  const byChars = [...points].sort((a, b) => pageChars(a.c) - pageChars(b.c));
+  const lo = byChars[0] as (typeof points)[number];
+  const hi = byChars[byChars.length - 1] as (typeof points)[number];
+  const span = pageChars(hi.c) - pageChars(lo.c);
+  // One point (or equal sizes): tokens proportional to the page size, overhead included — conservative.
+  const slope =
+    span > 0
+      ? Math.max(0, (hi.s.inputTokens - lo.s.inputTokens) / span)
+      : hi.s.inputTokens / Math.max(1, pageChars(hi.c));
+  const intercept = span > 0 ? Math.max(0, lo.s.inputTokens - slope * pageChars(lo.c)) : 0;
+  const maxOut = Math.max(...points.map((p) => p.s.outputTokens));
+  const outFor = (c: EvalCase) => {
+    const same = points.filter((p) => (p.c.kind === "real") === (c.kind === "real"));
+    return same.length > 0 ? Math.max(...same.map((p) => p.s.outputTokens)) : maxOut;
+  };
+  return remaining.reduce(
+    (sum, c) =>
+      sum +
+      costUsd(pricing, {
+        inputTokens: Math.ceil(intercept + slope * pageChars(c)),
+        outputTokens: outFor(c),
+      }),
+    0,
+  );
+}
+
 export interface StageReport {
   stage: string;
+  calibration: CalibrationReport | null;
   startedAt: string;
   finishedAt: string;
   capUsd: number;
@@ -314,68 +387,162 @@ export async function runStage(
   cap: number,
   options: RunOptions,
   log: (line: string) => void = () => undefined,
+  calibration: Calibration | null = null,
 ): Promise<StageReport> {
   checkPaidGuard(files, planned, cap, options);
   await preflightModels(files, planned, options);
   const startedAt = new Date().toISOString();
   let spent = 0;
   let stoppedReason: string | null = null;
-  const results: ConfigResult[] = [];
-  for (const plan of planned) {
-    if (stoppedReason) break;
+  let calibrationReport: CalibrationReport | null = null;
+
+  const contexts = planned.map((plan) => {
     const config = files.configs[plan.configId] as BenchConfig;
     const provider = new RecordingProvider(buildProvider(config, files, options));
     const gateway = new AIGateway({
       provider,
       models: { fast_extraction: config.d5, verification: config.d6 },
     });
-    const runs: CaseScore[][] = [];
-    for (let r = 0; r < plan.runs && !stoppedReason; r++) {
-      const scores: CaseScore[] = [];
-      for (const c of plan.cases) {
-        const run = await runCase(c, gateway, {
-          remainingUsd: () => cap - spent,
-          onSpend: (usd) => {
-            spent += usd;
-          },
-        });
-        const score = scoreCase(c, run);
-        scores.push(score);
-        log(
-          `${plan.configId} run ${r + 1} ${c.id}: found ${score.expectedFound}/${score.expectedTotal}, ` +
-            `unsupported ${score.unsupported.length}, forbidden ${score.forbidden.length}, ` +
-            `exclusion ${score.exclusion ?? "-"}, ${score.costUsd.toFixed(4)} USD, total ${spent.toFixed(4)} USD` +
-            (score.error ? `, ERROR ${score.error}` : ""),
-        );
-        if (run.outcome?.terminalReason === "budget_exhausted") {
-          stoppedReason = `spending cap of ${cap} USD reached during ${plan.configId}/${c.id}`;
-          break;
-        }
-      }
-      runs.push(scores);
-    }
-    const all = runs.flat();
-    let reproducibility: ConfigResult["reproducibility"] = null;
-    if (runs.length > 1) {
-      const ids = runs[0]?.map((s) => s.caseId) ?? [];
-      const stable = ids.filter(
-        (id) => new Set(runs.map((rs) => rs.find((s) => s.caseId === id)?.exclusion)).size === 1,
-      );
-      reproducibility = { cases: ids.length, exclusionStable: stable.length };
-    }
-    results.push({
-      configId: plan.configId,
-      label: config.label,
-      provider: config.provider,
-      models: { d5: config.d5.model, d6: config.d6.model },
-      runs,
-      summary: summarize(all),
-      reproducibility,
-      providerErrors: provider.errors.slice(0, 50),
+    const runs: CaseScore[][] = Array.from({ length: plan.runs }, () => []);
+    return { plan, config, provider, gateway, runs };
+  });
+
+  /** Runs one case; returns false when the stage must stop. */
+  const runOne = async (ctx: (typeof contexts)[number], c: EvalCase, r: number) => {
+    const run: CaseRun = await runCase(c, ctx.gateway, {
+      remainingUsd: () => cap - spent,
+      onSpend: (usd) => {
+        spent += usd;
+      },
     });
+    const score = scoreCase(c, run);
+    ctx.runs[r]?.push(score);
+    log(
+      `${ctx.plan.configId} run ${r + 1} ${c.id}: found ${score.expectedFound}/${score.expectedTotal}, ` +
+        `unsupported ${score.unsupported.length}, forbidden ${score.forbidden.length}, ` +
+        `exclusion ${score.exclusion ?? "-"}, ${score.costUsd.toFixed(4)} USD, total ${spent.toFixed(4)} USD` +
+        (score.error ? `, ERROR ${score.error}` : ""),
+    );
+    if (run.outcome?.terminalReason === "budget_exhausted") {
+      stoppedReason = `spending cap of ${cap} USD reached during ${ctx.plan.configId}/${c.id}`;
+      return false;
+    }
+    return true;
+  };
+
+  // Phase 1 — calibration: each configuration runs the calibration cases first.
+  const calibrated = new Map<string, Set<string>>();
+  if (calibration) {
+    for (const ctx of contexts) {
+      const cases = ctx.plan.cases.filter((c) => calibration.cases.includes(c.id));
+      calibrated.set(ctx.plan.configId, new Set(cases.map((c) => c.id)));
+      for (const c of cases) {
+        if (!(await runOne(ctx, c, 0))) break;
+        if (ctx.runs[0]?.at(-1)?.error) break; // first failure ends the smoke test
+      }
+      if (stoppedReason) break;
+      const failed = ctx.runs[0]?.find((s) => s.error);
+      if (failed) {
+        stoppedReason = `calibration failed for ${ctx.plan.configId}/${failed.caseId}: ${failed.error}`;
+        break;
+      }
+    }
+    if (!stoppedReason) {
+      const perConfig: CalibrationReport["perConfig"] = {};
+      let forecast = 0;
+      let reservation = 0;
+      for (const ctx of contexts) {
+        const done = calibrated.get(ctx.plan.configId) ?? new Set<string>();
+        const measured = ctx.runs[0] ?? [];
+        const measuredCases = measured.map(
+          (m) => ctx.plan.cases.find((c) => c.id === m.caseId) as EvalCase,
+        );
+        const remaining = [
+          ...ctx.plan.cases.filter((c) => !done.has(c.id)),
+          ...Array.from({ length: ctx.plan.runs - 1 }, () => ctx.plan.cases).flat(),
+        ];
+        const pricing = files.pricing[ctx.config.d5.model] ?? { inputPerMTok: 0, outputPerMTok: 0 };
+        const f =
+          ctx.config.provider === "fake"
+            ? 0
+            : forecastConfig(measured, measuredCases, remaining, pricing);
+        perConfig[ctx.plan.configId] = {
+          measuredCases: measured.length,
+          forecastUsd: f,
+          remainingCases: remaining.length,
+        };
+        forecast += f;
+        if (ctx.config.provider !== "fake")
+          for (const c of remaining)
+            reservation = Math.max(
+              reservation,
+              worstCaseCostUsd(
+                pricing,
+                pageChars(c) + OVERHEAD_CHARS,
+                ctx.config.d5.maxOutputTokens ?? 4000,
+              ),
+            );
+      }
+      const remainingUsd = cap - spent;
+      const proceeded = forecast * calibration.margin + reservation <= remainingUsd + 1e-9;
+      calibrationReport = {
+        spentUsd: spent,
+        forecastUsd: forecast,
+        margin: calibration.margin,
+        reservationUsd: reservation,
+        remainingUsd,
+        proceeded,
+        perConfig,
+      };
+      log(
+        `calibration: spent ${spent.toFixed(4)} USD, forecast ${forecast.toFixed(4)} USD x ${calibration.margin} ` +
+          `+ reservation ${reservation.toFixed(4)} vs remaining ${remainingUsd.toFixed(4)} -> ${proceeded ? "proceed" : "stop"}`,
+      );
+      if (!proceeded)
+        stoppedReason =
+          `calibration forecast ${(forecast * calibration.margin + reservation).toFixed(2)} USD ` +
+          `exceeds the remaining ${remainingUsd.toFixed(2)} USD: stopped before the main pass for the product owner's decision`;
+    }
   }
+
+  // Phase 2 — main pass.
+  for (const ctx of contexts) {
+    if (stoppedReason) break;
+    const done = calibrated.get(ctx.plan.configId) ?? new Set<string>();
+    for (let r = 0; r < ctx.plan.runs && !stoppedReason; r++) {
+      for (const c of ctx.plan.cases) {
+        if (r === 0 && done.has(c.id)) continue;
+        if (!(await runOne(ctx, c, r))) break;
+      }
+    }
+  }
+
+  const results: ConfigResult[] = contexts
+    .filter((ctx) => ctx.runs.some((rs) => rs.length > 0))
+    .map((ctx) => {
+      const runs = ctx.runs.filter((rs) => rs.length > 0);
+      let reproducibility: ConfigResult["reproducibility"] = null;
+      if (runs.length > 1) {
+        const ids = runs[0]?.map((s) => s.caseId) ?? [];
+        const stable = ids.filter(
+          (id) => new Set(runs.map((rs) => rs.find((s) => s.caseId === id)?.exclusion)).size === 1,
+        );
+        reproducibility = { cases: ids.length, exclusionStable: stable.length };
+      }
+      return {
+        configId: ctx.plan.configId,
+        label: ctx.config.label,
+        provider: ctx.config.provider,
+        models: { d5: ctx.config.d5.model, d6: ctx.config.d6.model },
+        runs,
+        summary: summarize(runs.flat()),
+        reproducibility,
+        providerErrors: ctx.provider.errors.slice(0, 50),
+      };
+    });
   return {
     stage,
+    calibration: calibrationReport,
     startedAt,
     finishedAt: new Date().toISOString(),
     capUsd: cap,
@@ -396,6 +563,11 @@ export function renderReport(report: StageReport): string {
     `- Started ${report.startedAt}, finished ${report.finishedAt}`,
     `- Spending cap ${report.capUsd} USD, spent ${report.spentUsd.toFixed(4)} USD`,
     `- Stopped early: ${report.stoppedReason ?? "no"}`,
+    ...(report.calibration
+      ? [
+          `- Calibration: spent ${report.calibration.spentUsd.toFixed(4)} USD; forecast of the remaining work ${report.calibration.forecastUsd.toFixed(4)} USD x ${report.calibration.margin} + largest call reservation ${report.calibration.reservationUsd.toFixed(4)} USD vs remaining ${report.calibration.remainingUsd.toFixed(4)} USD: ${report.calibration.proceeded ? "proceeded" : "stopped"}`,
+        ]
+      : []),
     `- Real-site annotations: ${report.annotationStatus.reviewed} reviewed, ${report.annotationStatus.draft} draft`,
     "",
     "| Config | Cases | Gates | Unsupported | Forbidden | Exclusion | 1st-attempt valid | Lost | Recall | Cost USD | Mean / p95 per real site | p95 latency s |",

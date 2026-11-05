@@ -49,6 +49,7 @@ try {
     cap,
     { env: process.env, confirmPaid: process.argv.includes("--confirm-paid") },
     log,
+    planned.calibration,
   );
   const out = arg("out") ?? path.join(root, "evals/benchmark/results", stage);
   mkdirSync(out, { recursive: true });

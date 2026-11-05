@@ -3,6 +3,7 @@
 // before any call that could exceed it, and the fake dry run costs nothing.
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { acceptedExclusions } from "@sor/discovery-engine";
 import {
   checkPaidGuard,
   loadBenchFiles,
@@ -33,7 +34,10 @@ describe("benchmark inputs", () => {
     expect(s1.cap).toBe(22);
     expect(s1.runs).toHaveLength(15);
     expect(s1.runs.filter((r) => r.cases.length === 21)).toHaveLength(12);
-    expect(s1.runs.filter((r) => r.cases.length === 15).map((r) => r.configId)).toEqual([
+    expect(s1.calibration).toEqual(
+      expect.objectContaining({ cases: ["official-pricing", "rewardful"], margin: 1.25 }),
+    );
+    expect(s1.runs.filter((r) => r.cases.length === 14).map((r) => r.configId)).toEqual([
       "A5",
       "O5",
       "M5",
@@ -121,5 +125,111 @@ describe("dry run (fake provider)", () => {
       "plan Starter",
     );
     expect(renderReport(report)).toContain("| FAKE | 12 |");
+  });
+});
+
+describe("calibration gate (PD-24a B)", () => {
+  const empty = {
+    claims: [],
+    features: [],
+    integrations: [],
+    pricing_plans: [],
+    primary_use_case: null,
+    core_purpose_flag: "unknown",
+    unknown_fields: [],
+    warnings: [],
+  };
+  const anthropic = (outputTokens: number, status = 200) => {
+    let posts = 0;
+    const fetch = async (_url: string, init: RequestInit) => {
+      if (init.method === "GET")
+        return new Response(JSON.stringify({ data: [{ id: "claude-haiku-5-5" }] }), {
+          status: 200,
+        });
+      posts++;
+      if (status !== 200) return new Response("invalid request", { status });
+      return new Response(
+        JSON.stringify({
+          content: [{ type: "text", text: JSON.stringify(empty) }],
+          stop_reason: "end_turn",
+          usage: { input_tokens: 1000, output_tokens: outputTokens },
+        }),
+        { status: 200 },
+      );
+    };
+    return { fetch, posts: () => posts };
+  };
+  const cases = ["official-pricing", "rewardful", "sparse", "savvycal"].map((id) =>
+    files.cases.find((c) => c.id === id)!,
+  );
+  const planned = [{ configId: "A1", cases, runs: 1 }];
+  const calibration = { cases: ["official-pricing", "rewardful"], margin: 1.25 };
+  const env = { ANTHROPIC_API_KEY: "k-test" };
+
+  it("runs the calibration cases first and proceeds when the forecast fits", async () => {
+    const api = anthropic(500);
+    const report = await runStage(
+      files,
+      "t",
+      planned,
+      1,
+      { env, confirmPaid: true, fetch: api.fetch },
+      undefined,
+      calibration,
+    );
+    expect(report.calibration?.proceeded).toBe(true);
+    expect(report.stoppedReason).toBeNull();
+    expect(report.results[0]?.runs[0]?.map((s) => s.caseId)).toEqual([
+      "official-pricing",
+      "rewardful",
+      "sparse",
+      "savvycal",
+    ]);
+    expect(api.posts()).toBe(4); // D6 is skipped when D5 proposes nothing
+  });
+
+  it("stops before the main pass when the measured forecast does not fit", async () => {
+    const api = anthropic(200_000); // 0.10 USD per call at Haiku prices
+    const report = await runStage(
+      files,
+      "t",
+      planned,
+      0.4,
+      { env, confirmPaid: true, fetch: api.fetch },
+      undefined,
+      calibration,
+    );
+    expect(api.posts()).toBe(2);
+    expect(report.calibration).toMatchObject({ proceeded: false });
+    expect(report.calibration?.forecastUsd).toBeCloseTo(0.2, 2);
+    expect(report.stoppedReason).toMatch(/calibration forecast/);
+    expect(report.spentUsd).toBeLessThanOrEqual(0.4);
+  });
+
+  it("stops when a calibration call fails (adapter smoke test), at no cost", async () => {
+    const api = anthropic(500, 400);
+    const report = await runStage(
+      files,
+      "t",
+      planned,
+      1,
+      { env, confirmPaid: true, fetch: api.fetch },
+      undefined,
+      calibration,
+    );
+    expect(report.stoppedReason).toMatch(/calibration failed for A1\/official-pricing/);
+    expect(report.spentUsd).toBe(0);
+    expect(api.posts()).toBe(1);
+  });
+});
+
+describe("GrowSurf exclusion decision (PD-24a D)", () => {
+  it("expects excluded, accepts needs_review, never eligible", () => {
+    const growsurf = files.cases.find((c) => c.id === "growsurf")!;
+    expect(growsurf.expected_exclusion).toBe("excluded");
+    expect(acceptedExclusions(growsurf)).toEqual(["excluded", "needs_review"]);
+    expect(
+      acceptedExclusions({ ...growsurf, accepted_exclusions: ["excluded", "eligible"] }),
+    ).toEqual(["excluded"]);
   });
 });

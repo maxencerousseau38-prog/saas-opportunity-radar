@@ -60,6 +60,18 @@ for (const id of wanted.length > 0 ? wanted : sites) {
   if (ann.snapshot_retrieved_at !== snap.retrieved_at)
     problems.push("snapshot_retrieved_at mismatch");
   if (!EXCLUSION.has(ann.expected_exclusion)) problems.push("expected_exclusion invalid");
+  if (ann.accepted_exclusions !== undefined) {
+    const acc = ann.accepted_exclusions;
+    if (
+      !Array.isArray(acc) ||
+      !acc.every((x) => EXCLUSION.has(x)) ||
+      !acc.includes(ann.expected_exclusion)
+    )
+      problems.push("accepted_exclusions must list valid statuses including expected_exclusion");
+    // Only non-eligible alternatives may be accepted for an excluded product (never eligible).
+    if (ann.expected_exclusion !== "eligible" && acc.includes("eligible"))
+      problems.push("accepted_exclusions cannot make an excluded product eligible");
+  }
   for (const [i, p] of (ann.plans ?? []).entries()) {
     const w = `plans[${i}] ${p.name}`;
     if (!Array.isArray(p.name_any) || p.name_any.length === 0) problems.push(`${w}: name_any`);

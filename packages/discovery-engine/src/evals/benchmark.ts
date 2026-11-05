@@ -154,7 +154,10 @@ export interface CaseScore {
   missed: string[];
   exclusion: string | null;
   exclusionExpected: string;
+  /** Outcome among the accepted ones (gate). */
   exclusionCorrect: boolean;
+  /** Outcome equal to the expected one (reported, not gated). */
+  exclusionExact: boolean;
   firstAttemptCalls: number;
   firstAttemptValid: number;
   repairs: number;
@@ -195,6 +198,12 @@ const sameName = (reported: string, any: string[]) => {
     return r === x || r.includes(x) || x.includes(r);
   });
 };
+
+/** Accepted exclusion outcomes; an excluded or under-review case never accepts eligible. */
+export function acceptedExclusions(c: EvalCase): string[] {
+  const accepted = c.accepted_exclusions ?? [c.expected_exclusion];
+  return c.expected_exclusion === "eligible" ? accepted : accepted.filter((s) => s !== "eligible");
+}
 
 export function scoreCase(c: EvalCase, run: CaseRun): CaseScore {
   const plan = run.plan;
@@ -315,7 +324,8 @@ export function scoreCase(c: EvalCase, run: CaseRun): CaseScore {
     missed,
     exclusion,
     exclusionExpected: c.expected_exclusion,
-    exclusionCorrect: exclusion === c.expected_exclusion,
+    exclusionCorrect: acceptedExclusions(c).includes(exclusion ?? ""),
+    exclusionExact: exclusion === c.expected_exclusion,
     firstAttemptCalls: first.length,
     firstAttemptValid: first.filter((k) => k.outcome === "ok").length,
     repairs: run.calls.filter((k) => k.operation === "repair").length,
@@ -341,6 +351,8 @@ export interface ConfigSummary {
   unsupportedRate: number;
   forbiddenAccepted: number;
   exclusionAccuracy: number;
+  /** Share of cases whose outcome equals the expected one exactly (reported, not gated). */
+  exclusionExactRate: number;
   firstAttemptValidRate: number;
   lostEnrichments: number;
   recall: number;
@@ -387,6 +399,8 @@ export function summarize(scores: CaseScore[]): ConfigSummary {
     unsupportedRate,
     forbiddenAccepted,
     exclusionAccuracy,
+    exclusionExactRate:
+      scores.length === 0 ? 0 : scores.filter((x) => x.exclusionExact).length / scores.length,
     firstAttemptValidRate,
     lostEnrichments: lost,
     recall: total === 0 ? 1 : found / total,

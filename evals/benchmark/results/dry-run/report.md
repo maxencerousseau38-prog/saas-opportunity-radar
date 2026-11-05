@@ -1,6 +1,6 @@
 # PD-24a benchmark — dry-run
 
-- Started 2026-11-05T10:20:16.634Z, finished 2026-11-05T10:20:16.975Z
+- Started 2026-11-05T10:54:32.559Z, finished 2026-11-05T10:54:32.898Z
 - Spending cap 0 USD, spent 0.0000 USD
 - Stopped early: no
 - Real-site annotations: 0 reviewed, 28 draft
@@ -19,7 +19,7 @@ Models: D5 `fake-extraction-1`, D6 `fake-verification-1`.
 - `buttondown`: unsupported: number not in quote — pricing:Buttondown: Buttondown $4,971 /mo
 - `frase`: exclusion none (expected eligible); error: SCHEMA_INVALID: pricing_plans.10.quote: Too small: expected string to have >=3 characters
 - `convertflow`: exclusion none (expected eligible); error: SCHEMA_INVALID: pricing_plans.14.quote: Too small: expected string to have >=3 characters
-- `growsurf`: exclusion eligible (expected needs_review)
+- `growsurf`: exclusion eligible (expected excluded)
 - `rewardful`: unsupported: number not in quote — pricing:Up to: Up to $7,500/month in affiliate-attributed revenue; unsupported: number not in quote — pricing:Up to: Up to $7,500/month in affiliate-attributed revenue; exclusion eligible (expected excluded)
 - `firstpromoter`: exclusion eligible (expected excluded)
 - `outseta`: unsupported: number not in quote — pricing:Plan 2: $49,835; unsupported: number not in quote — pricing:Plan 10: $1,836/yr.

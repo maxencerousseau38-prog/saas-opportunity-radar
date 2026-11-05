@@ -47,6 +47,8 @@ export interface EvalCase {
     enterprise_plans?: string[];
   };
   expected_exclusion: "eligible" | "needs_review" | "excluded";
+  /** Outcomes counted as correct (default: the expected one only). Never adds eligible to an excluded case. */
+  accepted_exclusions?: Array<"eligible" | "needs_review" | "excluded">;
 }
 
 type Raw = Record<string, unknown>;
@@ -136,5 +138,8 @@ export function fromRealSite(site: Raw, snapshot: Raw, annotation: Raw): EvalCas
     },
     forbidden: (annotation.forbidden as EvalCase["forbidden"]) ?? {},
     expected_exclusion: annotation.expected_exclusion as EvalCase["expected_exclusion"],
+    ...(Array.isArray(annotation.accepted_exclusions)
+      ? { accepted_exclusions: annotation.accepted_exclusions as EvalCase["expected_exclusion"][] }
+      : {}),
   };
 }
