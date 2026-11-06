@@ -148,3 +148,18 @@ again.
   prints the cgroup `memory.peak`, then checks a clean SIGTERM shutdown
   (exit code 0).
 
+S7.2 (job quotas and rate limits):
+
+- Database: `supabase/tests/017_job_quotas.sql` (hourly per-user limit with
+  retry delay, refused requests leave nothing behind, idempotent replays
+  answered and not counted, per-user budgets, daily per-workspace quota
+  reset by UTC day, concurrency unchanged, usage RPC and its membership
+  check).
+- Unit: `packages/database/src/__tests__/errors.test.ts` (54000 →
+  `RATE_LIMITED` / `LIMIT_EXCEEDED` with limit kind and retry delay),
+  `packages/contracts/src/__tests__/jobs.test.ts` (usage DTO),
+  `apps/web/test/limits.test.ts` (French message, details, `Retry-After`).
+- Integration: `pipeline.int.test.ts` — the 31st job request of a user in
+  an hour is refused through PostgREST with `RATE_LIMITED`, `job_posts`
+  and a retry delay; a replay is still answered; usage reports 30/30.
+- E2E: Settings shows the Quotas table to a viewer; `GET W/usage` answers.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countryName, isDemoUrl, teamLabel } from "@/lib/labels";
+import { countryName, formatDateTime, isDemoUrl, teamLabel } from "@/lib/labels";
 
 describe("labels", () => {
   it("flags reserved demo domains only", () => {
@@ -12,5 +12,9 @@ describe("labels", () => {
     expect(teamLabel(3, 5)).toBe("3–5 pers.");
     expect(teamLabel(null, null)).toBeNull();
     expect(countryName("US")).toBe("États-Unis");
+  });
+
+  it("formats quota reset times in UTC", () => {
+    expect(formatDateTime("2026-11-07T00:00:00+00:00")).toBe("07/11/2026 00:00 UTC");
   });
 });

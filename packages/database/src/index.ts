@@ -1,5 +1,12 @@
 export { createServiceClient, createUserClient, type DbClient } from "./clients";
-export { DbError, isLeaseLost, mapPostgresError, type DbErrorCode } from "./errors";
+export {
+  DbError,
+  isLeaseLost,
+  mapPostgresError,
+  parseLimitMessage,
+  type DbErrorCode,
+  type LimitKind,
+} from "./errors";
 export {
   createWorkspace,
   listMemberships,

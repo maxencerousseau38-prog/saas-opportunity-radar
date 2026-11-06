@@ -4654,6 +4654,7 @@ platform operator. `W` = `/workspaces/{workspaceId}`.
 | Method | Path | Role |
 |---|---|---|
 | GET | `W/sources` | V (connector status, last sync, errors, limits, quotas; PRD §14.3) |
+| GET | `W/usage` | V (job usage and quotas of the workspace, the caller's own hourly budget; PRD §14.3; S7.2) |
 | POST | `W/exports` | A (`data_export`, CSV/JSON of workspace data, 202; PRD §14.4) |
 | GET | `W/exports/{jobId}` | A (short-lived signed URL) |
 
@@ -5477,11 +5478,30 @@ exits, periodic memory logs; CI runs the E2E worker from the image limited
 to 512 MB and checks a clean SIGTERM exit. Runbook: `docs/DEPLOYMENT.md`.
 Memory measured: idle ≈ 110 MB RSS; deep discovery (80 pages) ≈ +72 MB.
 
+Validated by CI run 59 (all jobs green): image built, E2E against the
+worker container, cgroup `memory.peak` 72.5 MiB of 512 MiB, SIGTERM exit 0.
+
+**S7.2 (6 November 2026) — job quotas and rate limits:** migration
+`20261110090000_job_quotas.sql` enforces, in `private.create_job` (every
+job-creating RPC), the concurrency limit (M5), a daily job quota per
+workspace (`workspace_max_jobs_per_day`, 200 per UTC day) and the per-user
+hourly limit on job requests (`api_rate_limit_job_posts_per_hour`, fixed
+windows in `rate_limit_counters`, as specified in §10); refusals are 429
+`LIMIT_EXCEEDED` / `RATE_LIMITED` with the limit kind and `Retry-After`;
+idempotent replays are answered without consuming; `sor_workspace_usage`,
+`GET W/usage` and Settings > Quotas show usage (PRD §14.3). pgTAP 017,
+unit, integration and E2E tests.
+
 -   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
     (`0.5c-512mb` = former "Starter"); to verify when the service is created.
 
--   Quotas, monitoring, structured logs, alerts; security and RLS review;
-    E2E, load and failure-mode tests; backups and restore drill; staging
+-   **[ASSUMPTION]** `workspace_max_jobs_per_day` = 200: a safety ceiling,
+    not a product limit; to tune on staging. Per-workspace AI cost caps wait
+    for the PD-24 budgets (AI cost is 0 with the fake provider).
+
+-   Remaining: monitoring, alerts (dead letters, stale leases, budget
+    exhaustion, provider errors, cost per day); security and RLS review;
+    load and failure-mode tests; backups and restore drill; staging
     deployment; operational runbooks.
 
 Done when the application handles retries, source/provider outages,

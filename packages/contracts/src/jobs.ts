@@ -1,6 +1,6 @@
 // Implementation Blueprint §4.10 — queue envelope and job DTOs.
 import { z } from "zod";
-import { UUIDSchema } from "./common";
+import { ISODateTimeSchema, UUIDSchema } from "./common";
 
 const Base = { schema_version: z.literal("job.v1"), job_execution_id: UUIDSchema };
 
@@ -79,3 +79,18 @@ export type JobKind = z.infer<typeof JobKindSchema>;
 export type JobState = z.infer<typeof JobStateSchema>;
 export type TerminalReason = z.infer<typeof TerminalReasonSchema>;
 export type JobStatus = z.infer<typeof JobStatusSchema>;
+
+/** Workspace job usage and quotas (S7.2; PRD §14.3 "État des quotas"). */
+export const WorkspaceUsageSchema = z
+  .object({
+    active_jobs: z.number().int().nonnegative(),
+    max_concurrent_jobs: z.number().int().positive(),
+    jobs_today: z.number().int().nonnegative(),
+    max_jobs_per_day: z.number().int().positive(),
+    day_resets_at: ISODateTimeSchema,
+    my_job_requests_this_hour: z.number().int().nonnegative(),
+    max_job_requests_per_hour: z.number().int().positive(),
+    hour_resets_at: ISODateTimeSchema,
+  })
+  .strict();
+export type WorkspaceUsage = z.infer<typeof WorkspaceUsageSchema>;

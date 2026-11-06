@@ -36,4 +36,33 @@ describe("mapPostgresError", () => {
     expect(error.message).not.toContain("audit_logs");
     expect(error.cause).toBe(raw);
   });
+  it("maps rate limits and quotas with the limit kind and retry delay (S7.2)", () => {
+    const rate = mapPostgresError({
+      code: "54000",
+      message: "RATE_LIMITED: job posts retry_after=125",
+    });
+    expect(rate.code).toBe("RATE_LIMITED");
+    expect(rate.limit).toBe("job_posts");
+    expect(rate.retryAfterSeconds).toBe(125);
+    expect(rate.message).toBe("Too many requests");
+
+    const daily = mapPostgresError({
+      code: "54000",
+      message: "LIMIT_EXCEEDED: daily jobs retry_after=3600",
+    });
+    expect(daily.code).toBe("LIMIT_EXCEEDED");
+    expect(daily.limit).toBe("daily_jobs");
+    expect(daily.retryAfterSeconds).toBe(3600);
+
+    const concurrent = mapPostgresError({
+      code: "54000",
+      message: "LIMIT_EXCEEDED: concurrent jobs",
+    });
+    expect(concurrent.limit).toBe("concurrent_jobs");
+    expect(concurrent.retryAfterSeconds).toBeUndefined();
+
+    const unknown = mapPostgresError({ code: "54000", message: "something else" });
+    expect(unknown.code).toBe("LIMIT_EXCEEDED");
+    expect(unknown.limit).toBeUndefined();
+  });
 });

@@ -359,3 +359,16 @@ export async function readLimits(service: DbClient): Promise<Record<string, numb
   const rows = check(await service.from("platform_limits").select("key, value")) ?? [];
   return Object.fromEntries(rows.map((r) => [r.key, Number(r.value)]));
 }
+
+/** Workspace job usage and quotas (S7.2). Membership is checked again in SQL. */
+export async function workspaceUsage(
+  service: DbClient,
+  args: { workspaceId: string; userId: string },
+): Promise<Json> {
+  return check(
+    await service.rpc("sor_workspace_usage", {
+      p_workspace_id: args.workspaceId,
+      p_user_id: args.userId,
+    }),
+  );
+}

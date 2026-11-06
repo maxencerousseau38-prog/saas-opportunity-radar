@@ -49,7 +49,7 @@ SIGTERM shutdown (exit code 0).
 | Idle worker (real bundle, empty queue, mock API) | RSS ≈ 110 MB (peak 117 MB), JS heap ≈ 22 MB |
 | Heaviest job measured: deep discovery, 80 official pages of ~100 KB, in-process with the fake provider | +≈ 72 MB RSS, JS heap ≈ 61 MB |
 | Estimate with `WORKER_CONCURRENCY=2` heavy jobs | ≈ 260 MB, below the 512 MB plan |
-| E2E suite on the real stack, container limited to 512 MB | printed by CI (`memory.peak`) |
+| E2E suite on the real stack (23 journeys, 12 jobs of every kind), container limited to 512 MB — CI run 59, 6 Nov 2026 | cgroup `memory.peak` 72.5 MiB (14 % of 512 MiB); process RSS 105 MB at start, 124 MB at shutdown; JS heap 24 MB; SIGTERM exit 0 |
 
 Real AI providers (PD-24a) change little in memory (responses are small);
 re-measure from the `worker stats` logs on staging.
@@ -73,8 +73,22 @@ re-measure from the `worker stats` logs on staging.
 6. Production: same steps with a `sor-worker-production` service, after
    staging is validated.
 
-## 5. Not covered yet (rest of Sprint 7)
+## 5. Platform limits (S7.2)
+
+Job requests are limited in the database (`platform_limits`, server-only;
+change a value with an audited SQL update on the target project, never from
+the browser):
+
+| Key | Default | Refusal |
+|---|---|---|
+| `max_concurrent_jobs_per_workspace` | 3 | 429 `LIMIT_EXCEEDED` (`concurrent_jobs`) |
+| `workspace_max_jobs_per_day` | 200 (UTC day) [ASSUMPTION, tune on staging] | 429 `LIMIT_EXCEEDED` (`daily_jobs`) + `Retry-After` |
+| `api_rate_limit_job_posts_per_hour` | 30 per user | 429 `RATE_LIMITED` (`job_posts`) + `Retry-After` |
+
+Usage is shown in Settings > Quotas and by `GET /api/v1/workspaces/{id}/usage`.
+
+## 6. Not covered yet (rest of Sprint 7)
 
 Web deployment on Vercel (region `fra1`), monitoring and alerts (stale jobs,
-dead letters, provider spend), per-workspace quotas, backups and restore
-drill, load and failure-mode tests, operational runbooks.
+dead letters, provider spend), backups and restore drill, load and
+failure-mode tests, operational runbooks.

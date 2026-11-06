@@ -9,6 +9,7 @@ export type DbErrorCode =
   | "NOT_FOUND"
   | "IDEMPOTENCY_CONFLICT"
   | "INVALID_STATE"
+  | "RATE_LIMITED"
   | "LIMIT_EXCEEDED"
   | "EXCLUDED_SUBJECT"
   | "EVIDENCE_SCOPE_VIOLATION"
@@ -21,19 +22,53 @@ const PUBLIC_MESSAGES: Record<DbErrorCode, string> = {
   NOT_FOUND: "Not found",
   IDEMPOTENCY_CONFLICT: "Idempotency key already used with another payload",
   INVALID_STATE: "The resource is not in a valid state for this operation",
+  RATE_LIMITED: "Too many requests",
   LIMIT_EXCEEDED: "Limit reached",
   EXCLUDED_SUBJECT: "This subject is excluded",
   EVIDENCE_SCOPE_VIOLATION: "Evidence outside the allowed scope",
   INTERNAL_ERROR: "Unexpected error",
 };
 
+/** Which platform limit refused a request (S7.2); safe to show. */
+export type LimitKind = "concurrent_jobs" | "daily_jobs" | "job_posts" | "workspaces";
+
+export interface LimitInfo {
+  limit?: LimitKind;
+  /** Seconds until the limit window resets, when the database says so. */
+  retryAfterSeconds?: number;
+}
+
 export class DbError extends Error {
   readonly code: DbErrorCode;
-  constructor(code: DbErrorCode, cause?: unknown) {
+  readonly limit?: LimitKind;
+  readonly retryAfterSeconds?: number;
+  constructor(code: DbErrorCode, cause?: unknown, info: LimitInfo = {}) {
     super(PUBLIC_MESSAGES[code], { cause });
     this.name = "DbError";
     this.code = code;
+    if (info.limit) this.limit = info.limit;
+    if (info.retryAfterSeconds !== undefined) this.retryAfterSeconds = info.retryAfterSeconds;
   }
+}
+
+const LIMIT_REASONS: Record<string, LimitKind> = {
+  "concurrent jobs": "concurrent_jobs",
+  "daily jobs": "daily_jobs",
+  "job posts": "job_posts",
+  workspaces: "workspaces",
+};
+
+/** Parses "RATE_LIMITED: job posts retry_after=120" / "LIMIT_EXCEEDED: daily jobs". */
+export function parseLimitMessage(message: string): LimitInfo {
+  const match = /^(?:RATE_LIMITED|LIMIT_EXCEEDED): ([a-z ]+?)(?: retry_after=(\d+))?$/.exec(
+    message,
+  );
+  if (!match) return {};
+  const info: LimitInfo = {};
+  const limit = LIMIT_REASONS[match[1] ?? ""];
+  if (limit) info.limit = limit;
+  if (match[2]) info.retryAfterSeconds = Number(match[2]);
+  return info;
 }
 
 export interface PostgresLikeError {
@@ -71,8 +106,12 @@ export function mapPostgresError(error: PostgresLikeError): DbError {
       return new DbError("INVALID_STATE", error);
     case "P0002": // no_data_found (raised by our RPCs)
       return new DbError("NOT_FOUND", error);
-    case "54000": // program_limit_exceeded (platform limits)
-      return new DbError("LIMIT_EXCEEDED", error);
+    case "54000": // program_limit_exceeded (platform limits, S7.2 rate limits)
+      return new DbError(
+        message.startsWith("RATE_LIMITED") ? "RATE_LIMITED" : "LIMIT_EXCEEDED",
+        error,
+        parseLimitMessage(message),
+      );
     case "PGRST116": // PostgREST: no row for .single()
       return new DbError("NOT_FOUND", error);
     default:

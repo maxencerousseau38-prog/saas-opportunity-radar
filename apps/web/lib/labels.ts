@@ -188,6 +188,15 @@ export function formatDate(iso: string | null): string | null {
   return new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium" }).format(new Date(iso));
 }
 
+/** Date and time in UTC (stable between server and browser rendering). */
+export function formatDateTime(iso: string): string {
+  return `${new Intl.DateTimeFormat("fr-FR", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "UTC",
+  }).format(new Date(iso))} UTC`;
+}
+
 export function formatMoney(amount: number | null, currency: string | null): string | null {
   if (amount === null || !currency) return null;
   try {

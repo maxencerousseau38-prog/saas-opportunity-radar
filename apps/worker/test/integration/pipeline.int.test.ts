@@ -5,7 +5,7 @@ import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createServiceClient, jobsRepo, type DbClient } from "@sor/database";
+import { DbError, createServiceClient, jobsRepo, type DbClient } from "@sor/database";
 import { OfficialWebsiteConnector, defaultPolicy, isPublicAddress } from "@sor/data-sources";
 import { AIGateway, FAKE_MODELS, FakeProvider } from "@sor/ai-gateway";
 import { D5_AGENT_KEY, D6_AGENT_KEY, fakeEnrichmentHandlers } from "@sor/discovery-engine";
@@ -398,5 +398,60 @@ run("worker on the local Supabase stack", () => {
     expect(stored?.[0]?.content_storage_status).toBe("stored_excerpt");
     expect(stored?.[0]?.author_reference_hash).toMatch(/^[a-f0-9]{64}$/);
     expect(JSON.stringify(stored)).not.toContain("jane@example.com");
+  });
+
+  it("rate-limits job requests per user with a retry delay; replays are still answered (S7.2)", async () => {
+    // The per-user hourly counter does not depend on the queue (other test
+    // files' workers may take these jobs), so this check is deterministic.
+    const owner = await workspace();
+    const spaces = [owner];
+    for (let i = 0; i < 10; i++) {
+      const id = randomUUID();
+      await db
+        .from("workspaces")
+        .insert({ id, name: `Quota ${i}`, created_by: owner.user })
+        .throwOnError();
+      await db
+        .from("workspace_members")
+        .insert({ workspace_id: id, user_id: owner.user, role: "owner" })
+        .throwOnError();
+      spaces.push({ id, user: owner.user });
+    }
+    const csv = "name,website_url\nQuota Co,https://quota.test/";
+    const hash = "a".repeat(64);
+    const ask = (ws: { id: string; user: string }, key: string) =>
+      jobsRepo.requestJob(db, {
+        kind: "catalog_import",
+        workspaceId: ws.id,
+        requestedBy: ws.user,
+        idempotencyKey: key,
+        requestHash: hash,
+        payload: { csv, row_count: 1 } as never,
+      });
+    // 30 = api_rate_limit_job_posts_per_hour; 3 per workspace stays within
+    // max_concurrent_jobs_per_workspace.
+    for (let i = 0; i < 30; i++) {
+      const res = await ask(spaces[Math.floor(i / 3)]!, `quota-${owner.user}-${i}`);
+      expect(res.created).toBe(true);
+    }
+    const refused = await ask(spaces[10]!, `quota-${owner.user}-30`).catch((e: unknown) => e);
+    expect(refused).toBeInstanceOf(DbError);
+    expect((refused as DbError).code).toBe("RATE_LIMITED");
+    expect((refused as DbError).limit).toBe("job_posts");
+    expect((refused as DbError).retryAfterSeconds).toBeGreaterThan(0);
+    expect((refused as DbError).retryAfterSeconds).toBeLessThanOrEqual(3600);
+
+    const replay = await ask(spaces[0]!, `quota-${owner.user}-0`);
+    expect(replay.created).toBe(false);
+    const { count } = await db
+      .from("job_executions")
+      .select("id", { count: "exact", head: true })
+      .eq("workspace_id", spaces[10]!.id);
+    expect(count).toBe(0);
+    const usage = (await jobsRepo.workspaceUsage(db, {
+      workspaceId: spaces[0]!.id,
+      userId: owner.user,
+    })) as { my_job_requests_this_hour: number; max_job_requests_per_hour: number };
+    expect(usage).toMatchObject({ my_job_requests_this_hour: 30, max_job_requests_per_hour: 30 });
   });
 });

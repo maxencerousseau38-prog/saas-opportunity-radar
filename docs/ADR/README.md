@@ -133,6 +133,13 @@ Supabase staging and production projects should be created in Frankfurt
 (`eu-central-1`) when the product owner creates them; no hosted Supabase
 project is linked to the repository yet (checked 6 Nov 2026).
 
+## Sprint 7 status (6 November 2026)
+
+S7.1 (worker deployability) is validated by CI; S7.2 (job quotas and rate
+limits) is implemented. Nothing is deployed and nothing was spent. The
+daily job quota per workspace (200) is an [ASSUMPTION] safety default, not
+a product decision; per-workspace AI cost caps wait for the PD-24 budgets.
+
 ## Pending decision register
 
 These questions were **not** settled by the 4 November arbitration. Each

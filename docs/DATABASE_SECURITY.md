@@ -237,6 +237,30 @@ and end to end by the worker integration tests (`apps/worker/test/integration`).
   permanent-exclusion override. A run follows its job through a trigger.
 - Tests: `supabase/tests/015_discovery.sql`.
 
+## Sprint 7: worker release and job quotas
+
+- `sor_worker_release` (S7.1): service role only; only the lease owner can
+  release a running job (attempt given back, message visible at once).
+  Tests: `supabase/tests/016_worker_release.sql`.
+- Job quotas (S7.2, migration `20261110090000_job_quotas.sql`), enforced in
+  `private.create_job`, the single path of every job-creating RPC, in the
+  same transaction as the job row and the queue message:
+  - concurrent jobs per workspace (`max_concurrent_jobs_per_workspace`,
+    M5) → `LIMIT_EXCEEDED: concurrent jobs`;
+  - jobs per workspace per UTC day (`workspace_max_jobs_per_day`, default
+    200) → `LIMIT_EXCEEDED: daily jobs retry_after=<s>`;
+  - job requests per user per hour (`api_rate_limit_job_posts_per_hour`,
+    30; fixed-window counters in the server-only `rate_limit_counters`) →
+    `RATE_LIMITED: job posts retry_after=<s>`.
+  An idempotent replay returns the existing job before any check and
+  consumes nothing; a refused request rolls back its job row and its
+  counter increment; a per-workspace advisory lock serialises the checks.
+  `private.consume_rate_limit` is not executable by any API role.
+- `sor_workspace_usage(workspace, user)`: service role only, checks
+  membership again, returns the workspace's usage and the caller's own
+  hourly budget (never another user's).
+- Tests: `supabase/tests/017_job_quotas.sql`.
+
 ## Running the tests
 
 - **CI** (reference): the `database` job of `.github/workflows/ci.yml` runs

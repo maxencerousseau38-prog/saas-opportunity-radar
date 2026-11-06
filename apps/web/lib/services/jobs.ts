@@ -3,7 +3,12 @@
 // RPC (atomic insert + queue message) and answers 202.
 import "server-only";
 import { createHash } from "node:crypto";
-import type { JobKind, JobStatus } from "@sor/contracts";
+import {
+  WorkspaceUsageSchema,
+  type JobKind,
+  type JobStatus,
+  type WorkspaceUsage,
+} from "@sor/contracts";
 import { jobsRepo } from "@sor/database";
 import { getServiceClient } from "@/lib/supabase/server";
 
@@ -79,4 +84,10 @@ export function accepted(workspaceId: string, jobId: string, created: boolean) {
 /** Upper bound of data rows for the RPC's size check; the worker counts exactly. */
 export function roughRowCount(csv: string): number {
   return Math.max(0, csv.split(/\r?\n/).filter((l) => l.trim() !== "").length - 1);
+}
+
+/** Job usage and quotas of a workspace, for the caller (S7.2; PRD §14.3). */
+export async function workspaceUsage(workspaceId: string, userId: string): Promise<WorkspaceUsage> {
+  const raw = await jobsRepo.workspaceUsage(getServiceClient(), { workspaceId, userId });
+  return WorkspaceUsageSchema.parse(raw);
 }

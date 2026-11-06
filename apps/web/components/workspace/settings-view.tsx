@@ -1,13 +1,19 @@
 "use client";
 import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import type { ResearchPreferences } from "@sor/contracts";
+import type { ResearchPreferences, WorkspaceUsage } from "@sor/contracts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select } from "@/components/ui/field";
 import { ErrorNote } from "@/components/ui/states";
 import { api } from "@/lib/client-api";
-import { CONFIGURABLE_EXCLUSIONS, CUSTOMER_TYPE, ROLE, formatDate } from "@/lib/labels";
+import {
+  CONFIGURABLE_EXCLUSIONS,
+  CUSTOMER_TYPE,
+  ROLE,
+  formatDate,
+  formatDateTime,
+} from "@/lib/labels";
 import { ImportsPanel } from "./imports-panel";
 
 interface Props {
@@ -35,6 +41,7 @@ interface Props {
     requests_today: number;
   }>;
   categories: Array<{ slug: string; name: string }>;
+  usage: WorkspaceUsage;
 }
 
 const STORAGE_LABELS: Record<string, string> = {
@@ -42,6 +49,31 @@ const STORAGE_LABELS: Record<string, string> = {
   metadata_only: "Métadonnées seules",
   transient: "Aucune (transitoire)",
 };
+
+function UsageRow({
+  label,
+  used,
+  limit,
+  note,
+}: {
+  label: string;
+  used: number;
+  limit: number;
+  note: string;
+}) {
+  const full = used >= limit;
+  return (
+    <tr className="border-t border-border">
+      <td className="py-1.5">{label}</td>
+      <td className="py-1.5">
+        <Badge tone={full ? "warning" : "neutral"}>
+          {used} / {limit}
+        </Badge>
+      </td>
+      <td className="py-1.5 text-xs text-muted">{note}</td>
+    </tr>
+  );
+}
 
 function Block({ title, children, note }: { title: string; children: ReactNode; note?: string }) {
   return (
@@ -410,6 +442,41 @@ export function SettingsView(p: Props) {
         note="Ajout en masse de SaaS et d’avis clients déclarés (PRD §18). Le traitement est asynchrone."
       >
         <ImportsPanel workspaceId={p.workspaceId} canEdit={p.role !== "viewer"} />
+      </Block>
+
+      <Block
+        title="Quotas"
+        note="Limites de la plateforme appliquées à chaque demande de traitement (recherche IA, analyse, import, enrichissement, export). Une demande refusée n’est ni enregistrée ni décomptée ; renvoyer la même demande (même clé d’idempotence) ne consomme rien."
+      >
+        <table className="w-full text-left text-sm" aria-label="Quotas de traitements">
+          <thead className="text-xs text-muted">
+            <tr>
+              <th className="py-1">Limite</th>
+              <th className="py-1">Utilisation</th>
+              <th className="py-1">Remise à zéro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <UsageRow
+              label="Traitements en cours (workspace)"
+              used={p.usage.active_jobs}
+              limit={p.usage.max_concurrent_jobs}
+              note="À la fin d’un traitement"
+            />
+            <UsageRow
+              label="Traitements créés aujourd’hui (workspace)"
+              used={p.usage.jobs_today}
+              limit={p.usage.max_jobs_per_day}
+              note={`Le ${formatDateTime(p.usage.day_resets_at)}`}
+            />
+            <UsageRow
+              label="Mes demandes de traitement cette heure"
+              used={p.usage.my_job_requests_this_hour}
+              limit={p.usage.max_job_requests_per_hour}
+              note={`Le ${formatDateTime(p.usage.hour_resets_at)}`}
+            />
+          </tbody>
+        </table>
       </Block>
 
       <Block

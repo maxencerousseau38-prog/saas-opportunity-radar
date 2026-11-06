@@ -1803,6 +1803,9 @@ isOneToOne: true
 "sor_worker_retry":
 { Args: { "p_delay_seconds": number,"p_error_code": string,"p_error_message": string,"p_job_id": string,"p_worker_id": string }; Returns: undefined
                            },
+"sor_workspace_usage":
+{ Args: { "p_user_id": string,"p_workspace_id": string }; Returns: Json
+                           },
 "workspace_member_directory":
 { Args: { "p_workspace_id": string }; Returns: {
               "email": string,"joined_at": string,"role": Database["public"]['Enums']["workspace_role"],"user_id": string

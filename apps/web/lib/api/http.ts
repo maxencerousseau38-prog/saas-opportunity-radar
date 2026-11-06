@@ -9,6 +9,7 @@ import { API_ERROR_HTTP_STATUS, type ApiErrorCode, UUIDSchema } from "@sor/contr
 import { DbError, workspaceRepo, type DbClient } from "@sor/database";
 import { UnsupportedFilterError } from "@sor/domain";
 import { createUserServerClient } from "@/lib/supabase/server";
+import { limitResponse } from "./limits";
 import type { SessionUser } from "@/lib/auth";
 
 export type Role = "owner" | "admin" | "member" | "viewer";
@@ -44,12 +45,14 @@ function errorResponse(requestId: string, err: unknown): NextResponse {
   let code: ApiErrorCode = "INTERNAL_ERROR";
   let message: string | undefined;
   let details: Record<string, unknown> | undefined;
+  let retryAfter: number | undefined;
   if (err instanceof ApiError) {
     code = err.code;
     message = err.message !== err.code ? err.message : undefined;
     details = err.details;
   } else if (err instanceof DbError) {
     code = err.code;
+    ({ message, details, retryAfter } = limitResponse(err));
   } else if (err instanceof z.ZodError) {
     code = "VALIDATION_ERROR";
     details = {
@@ -72,7 +75,13 @@ function errorResponse(requestId: string, err: unknown): NextResponse {
         request_id: requestId,
       },
     },
-    { status: API_ERROR_HTTP_STATUS[code], headers: { "x-request-id": requestId } },
+    {
+      status: API_ERROR_HTTP_STATUS[code],
+      headers: {
+        "x-request-id": requestId,
+        ...(retryAfter !== undefined ? { "retry-after": String(retryAfter) } : {}),
+      },
+    },
   );
 }
 

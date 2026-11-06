@@ -70,7 +70,7 @@ test("candidates show fit, coverage and confidence separately; an eligible one i
   await expect(page.getByRole("heading", { name: "Pixelpulse (démo)", level: 1 })).toBeVisible();
 });
 
-test("viewers read runs but cannot start one; settings list the source registry", async ({
+test("viewers read runs but cannot start one; settings list the source registry and quotas", async ({
   page,
 }) => {
   const ws = await signIn(page, VIEWER);
@@ -87,4 +87,13 @@ test("viewers read runs but cannot start one; settings list the source registry"
   const hn = page.getByRole("row", { name: /Hacker News/ });
   await expect(hn).toContainText("Métadonnées seules");
   await expect(hn).toContainText("Revue à terminer");
+
+  // Job quotas (S7.2): the viewer sees the workspace usage and their own budget.
+  const quotas = page.getByRole("table", { name: "Quotas de traitements" });
+  await expect(quotas.getByRole("row", { name: /créés aujourd’hui/ })).toContainText("/ 200");
+  await expect(quotas.getByRole("row", { name: /Mes demandes/ })).toContainText("0 / 30");
+  const usage = await page.request.get(`/api/v1/workspaces/${ws}/usage`);
+  expect(usage.status()).toBe(200);
+  const body = (await usage.json()) as { data: { max_concurrent_jobs: number } };
+  expect(body.data.max_concurrent_jobs).toBe(3);
 });
