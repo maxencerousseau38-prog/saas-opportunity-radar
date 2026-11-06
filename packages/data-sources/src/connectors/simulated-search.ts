@@ -34,9 +34,10 @@ export class SimulatedSearchConnector implements SourceConnector {
 
   async search(
     input: SourceSearchRequest,
-    _signal: AbortSignal,
+    signal: AbortSignal,
   ): Promise<ConnectorOutcome<SourceSearchResult[]>> {
     this.calls.push(input.query);
+    if (signal.aborted) return failure("error", "aborted", false);
     if (this.options.failWith) {
       return failure(
         this.options.failWith,
