@@ -30,6 +30,10 @@ export interface SourceSearchResult {
   snippet?: string;
   publishedAt?: string | null;
   externalId?: string | null;
+  /** Page of the source that gave the result (e.g. the HN item page). */
+  referenceUrl?: string | null;
+  /** Small metadata allowed by the source's storage policy. */
+  metadata?: Record<string, string | number | null>;
 }
 
 export interface SourceConnector {

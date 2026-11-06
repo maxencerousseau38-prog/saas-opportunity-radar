@@ -134,6 +134,20 @@ export class OfficialWebsiteConnector implements SourceConnector {
         }
       })
       .slice(0, 200);
+    // Links to other sites: input of the controlled discovery rebound
+    // (docs/DATA_SOURCES.md); never fetched by this connector itself.
+    const externalLinks = [
+      ...new Set(
+        page.links.filter((l) => {
+          try {
+            const d = normalizeUrl(l).registrableDomain;
+            return d !== null && d !== requestedDomain;
+          } catch {
+            return false;
+          }
+        }),
+      ),
+    ].slice(0, 200);
     return {
       status: "ok",
       data: {
@@ -151,6 +165,7 @@ export class OfficialWebsiteConnector implements SourceConnector {
         metadata: {
           description: page.description,
           links: sameSiteLinks,
+          external_links: externalLinks,
           redirects: res.data.redirects,
         },
       },

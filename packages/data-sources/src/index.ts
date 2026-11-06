@@ -5,4 +5,8 @@ export * from "./safe-fetch";
 export * from "./robots";
 export * from "./html";
 export * from "./connectors/official-website";
+export * from "./connectors/hacker-news";
+export * from "./connectors/simulated-search";
+export * from "./rebound";
+export * from "./registry";
 export * from "./import/csv";

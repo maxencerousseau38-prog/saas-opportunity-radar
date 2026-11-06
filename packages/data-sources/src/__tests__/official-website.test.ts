@@ -52,6 +52,8 @@ describe("official-website connector", () => {
       "/pricing",
       "/features/",
     ]);
+    // Links to other sites are kept separately, for the controlled rebound.
+    expect(res.data.metadata.external_links).toEqual(["https://elsewhere.test/pricing"]);
   });
 
   it("obeys robots.txt and caches it per origin", async () => {
