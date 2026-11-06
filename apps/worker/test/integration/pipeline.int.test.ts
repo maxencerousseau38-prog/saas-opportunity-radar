@@ -401,8 +401,10 @@ run("worker on the local Supabase stack", () => {
   });
 
   it("rate-limits job requests per user with a retry delay; replays are still answered (S7.2)", async () => {
-    // The per-user hourly counter does not depend on the queue (other test
-    // files' workers may take these jobs), so this check is deterministic.
+    // The per-user hourly counter does not depend on the queue, so this check
+    // is deterministic. Each job is cancelled at once (its message archived)
+    // so that the workers of the other test files, which share the queue,
+    // are not slowed down by 30 foreign messages.
     const owner = await workspace();
     const spaces = [owner];
     for (let i = 0; i < 10; i++) {
@@ -431,8 +433,10 @@ run("worker on the local Supabase stack", () => {
     // 30 = api_rate_limit_job_posts_per_hour; 3 per workspace stays within
     // max_concurrent_jobs_per_workspace.
     for (let i = 0; i < 30; i++) {
-      const res = await ask(spaces[Math.floor(i / 3)]!, `quota-${owner.user}-${i}`);
+      const ws = spaces[Math.floor(i / 3)]!;
+      const res = await ask(ws, `quota-${owner.user}-${i}`);
       expect(res.created).toBe(true);
+      await jobsRepo.cancelJob(db, { jobId: res.jobId, workspaceId: ws.id, actor: owner.user });
     }
     const refused = await ask(spaces[10]!, `quota-${owner.user}-30`).catch((e: unknown) => e);
     expect(refused).toBeInstanceOf(DbError);
