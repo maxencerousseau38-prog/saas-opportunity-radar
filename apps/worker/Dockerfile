@@ -8,8 +8,9 @@
 
 FROM node:26.13.0-slim AS build
 WORKDIR /repo
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack enable
+# Node.js 25+ no longer ships Corepack: install the pnpm version pinned by
+# the root package.json ("packageManager") explicitly.
+RUN npm install --global --no-fund --no-audit pnpm@10.34.9
 COPY . .
 RUN pnpm install --frozen-lockfile --filter "@sor/worker..." \
  && pnpm --filter @sor/worker build:container

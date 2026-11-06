@@ -36,7 +36,8 @@ select is((select state::text || '/' || attempt_count || '/' || coalesce(lease_o
              from public.job_executions where id = (select id from rj)),
   'retrying/0/none/WORKER_SHUTDOWN', 'the job is due again, its attempt given back, no lease');
 select tests.as_owner_role();
-select ok((select vt <= now() from pgmq.q_sor_jobs where msg_id = (select msg from rj)),
+-- set_vt uses clock_timestamp(); now() is frozen at the transaction start.
+select ok((select vt <= clock_timestamp() from pgmq.q_sor_jobs where msg_id = (select msg from rj)),
   'its message is visible at once');
 select tests.as_service_role();
 select throws_ok($$select public.sor_worker_release((select id from rj), 'worker-a', 'again')$$,
