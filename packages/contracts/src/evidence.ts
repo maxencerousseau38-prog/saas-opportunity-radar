@@ -74,6 +74,14 @@ export const FetchStatusSchema = z.enum([
 
 export const StoragePermittedSchema = z.enum(["full", "excerpt", "reference_only"]);
 
+/**
+ * What a connector may keep from a source, set by its terms review
+ * (docs/DATA_SOURCES.md): full text, listed metadata fields only, or nothing
+ * beyond the run (transient pointer).
+ */
+export const SourceStoragePolicySchema = z.enum(["full", "metadata_only", "transient"]);
+export type SourceStoragePolicy = z.infer<typeof SourceStoragePolicySchema>;
+
 /** Normalized output of every connector (never written by connectors themselves). */
 export const SourceDocumentSchema = z
   .object({

@@ -16,7 +16,8 @@
     "./agents/enrichment": "./src/agents/enrichment.ts",
     "./pain-points": "./src/pain-points.ts",
     "./analysis": "./src/analysis.ts",
-    "./agents/opportunity": "./src/agents/opportunity.ts"
+    "./agents/opportunity": "./src/agents/opportunity.ts",
+    "./discovery": "./src/discovery.ts"
   },
   "scripts": {
     "lint": "eslint .",

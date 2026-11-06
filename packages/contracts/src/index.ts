@@ -8,5 +8,6 @@ export * from "./jobs";
 export * from "./agents/enrichment";
 export * from "./pain-points";
 export * from "./analysis";
+export * from "./discovery";
 export * from "./agents/opportunity";
 export * from "./env";

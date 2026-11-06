@@ -5351,6 +5351,32 @@ official API (metadata only), product CSV seeds, controlled rebound from
 official websites; Product Hunt pending (PD-29); Brave deferred. No source
 is enabled in production during the sprint.
 
+**Status (6 November 2026):** S6.0 (terms review, `docs/DATA_SOURCES.md`)
+and S6.1 (contracts and deterministic rules) implemented.
+
+-   Contracts (`packages/contracts/src/discovery.ts`): request, D1
+    `QueryPlanSchema` (`d1.query-plan.v1`), D2 leads, D3 extraction
+    (`d3.candidate-extraction.v1`), run status and stages, source report
+    entry, candidate review; `SourceStoragePolicySchema` (full /
+    metadata_only / transient) in `evidence.ts`.
+-   Domain (`packages/domain/src/discovery`): fit score `fit-1`,
+    planner guard (§6.2), per-depth budgets.
+-   **[ASSUMPTION]** decisions of S6.1:
+    -   the request gains `channels` (search on/off, controlled rebound
+        with optional seed products, seed URL list) for the PD-28 channels;
+    -   only **explicit** filter groups known not to be satisfied act as
+        hard filters; inferred groups and preferences only change the fit
+        score; unknown values never reject a candidate;
+    -   the research preferences (independent, founder-led, small team,
+        paid offer observed) count as equal-weight criteria, only when no
+        explicit or inferred filter covers them; "underdeveloped" is not
+        evaluated (no deterministic definition);
+    -   commercial-validation values not observed are `unknown`, never
+        "not satisfied" (absence of evidence);
+    -   budgets per depth: standard 5 queries/source, 300 requests/source,
+        60 leads, 90 official pages, 5 rebound seeds; deep 10 / 1,000 /
+        150 / 240 / 15 (3 pages and 20 leads per rebound seed).
+
 -   M8; agents D1, D2, D3, D7 (D4--D6 exist from Sprint 3); exclusion
     tests at every boundary; AI Discovery UI (run page per PRD §6.4,
     candidate review).

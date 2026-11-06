@@ -106,6 +106,20 @@ function coreRule(text: string): "R2" | "R3" | "R4" | "R5" | null {
   return null;
 }
 
+/**
+ * R2–R5 theme of a free text (a planned query or a prompt), on normalized
+ * text. Same patterns as the classifier (no rule-set change): used by the
+ * Discovery planner guard (Implementation Blueprint §6.2).
+ */
+export function excludedThemeRule(text: string): "R2" | "R3" | "R4" | "R5" | null {
+  return coreRule(normalizeExclusionText(text));
+}
+
+/** True for a permanently excluded category slug (R1). */
+export function isPermanentlyExcludedCategory(slug: string): boolean {
+  return PERMANENTLY_EXCLUDED_CATEGORY_SLUGS.includes(slug) || slug.startsWith("excluded-");
+}
+
 const STATUS_RANK: Record<ExclusionStatus, number> = { eligible: 0, needs_review: 1, excluded: 2 };
 
 export function classifyExclusion(input: ExclusionInput): ExclusionResult {

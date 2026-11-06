@@ -7,4 +7,5 @@ export * from "./identity";
 export * from "./evidence";
 export * from "./pain-points";
 export * from "./scoring";
+export * from "./discovery";
 export type * from "./agent";
