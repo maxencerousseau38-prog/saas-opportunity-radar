@@ -5418,12 +5418,48 @@ and fake handlers, in-memory ports.
 -   Ranking: fit score, then confidence, then name; eligible pending
     candidates beyond `max_results` are rejected with `beyond_max_results`.
 
--   M8; agents D1, D2, D3, D7 (D4--D6 exist from Sprint 3); exclusion
-    tests at every boundary; AI Discovery UI (run page per PRD §6.4,
-    candidate review).
+**S6.5 (6 November 2026):** `discovery_run` worker handler
+(`apps/worker/src/handlers/discovery.ts`) on the database ports; search
+connectors built only for sources the registry reports integrated and
+enabled; integration tests `apps/worker/test/integration/discovery.int.test.ts`
+(synthetic pages, no network).
 
-Done when natural-language discovery returns relevant, deduplicated,
-evidence-backed candidates and respects all hard constraints.
+**S6.6 (6 November 2026):** §10 discovery routes, AI Discovery page and run
+page (PRD §6.4), candidate review, Settings > Sources (storage policy,
+today's usage, terms-review state), labelled demo discovery run in
+`seed-demo.ts`, Playwright journey `apps/web/e2e/discovery.e2e.ts`.
+
+-   **[ASSUMPTION]** "Relancer / modifier" (PRD §6.4) opens the form
+    prefilled from a run and starts a new run with `rerun_of_run_id`;
+    "Reprendre" (retry) reuses the same run only while no candidate has
+    been reviewed.
+-   The E2E journey never fetches a site: a live run uses only the search
+    channel (Hacker News disabled → reported, no request); candidate
+    review is exercised on a labelled demo run on `.test` sites.
+
+Scope delivered: M8; agents D1, D2, D3, D7 (D4--D6 from Sprint 3);
+exclusion at every boundary (planner guard, lead hosts, classifier on the
+candidate's official site, fit/ranking, database upsert and review); AI
+Discovery UI (run page per PRD §6.4, candidate review).
+
+**Exit gate** ("natural-language discovery returns relevant, deduplicated,
+evidence-backed candidates and respects all hard constraints"):
+
+-   **Met with simulated providers and synthetic pages**: deduplication,
+    evidence (official-site snapshot per candidate), hard constraints and
+    permanent exclusions are enforced by deterministic code and tested at
+    unit, pgTAP, integration and E2E levels.
+-   **Not met for real use**: (1) relevance and extraction quality need a
+    real provider for D1/D3 (PD-24a, thresholds PD-22); (2) the only
+    approved search source, Hacker News, stays disabled until the Y
+    Combinator terms page is read (blocked by the network policy) and the
+    product owner enables it; (3) Product Hunt awaits written permission
+    (PD-29). Until then discovery works from seed URLs and the controlled
+    rebound, which fetch real official sites only when a member runs them.
+-   **Deferred**: recurring discovery (PRD §6.5, Phase 2); Product Hunt
+    (PD-29); Brave or another web-search API (deferred, no spending);
+    full D5/D6 enrichment inside a run (the `product_enrichment` job
+    covers it per product).
 
 ## Sprint 7 --- Reliability and production readiness
 

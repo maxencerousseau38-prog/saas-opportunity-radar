@@ -1,6 +1,6 @@
 # Data sources — terms reviews and integration status
 
-**Last updated:** 6 November 2026 (Sprint 6, slice S6.0)
+**Last updated:** 6 November 2026 (Sprint 6 implemented; S6.0 review, S6.7 status update)
 **Governs:** ADR-013 (source acquisition and compliance), PD-14 method, PD-28.
 
 This document is the written terms review required by ADR-013 before a
@@ -21,8 +21,8 @@ Sprint 6** (product-owner instruction, 6 November 2026).
 |---|---|---|---|---|---|---|
 | `manual_entry` | Catalog | Operator form | 0 | 4 (declared) until verified | Full (user-supplied) | Integrated (Sprint 2) |
 | `user_import` | Catalog, feedback | CSV with per-import rights declaration | 0 | 4 (declared) until verified | Per declaration (`content_storage_status`) | Integrated (Sprint 3) |
-| `official_website` | Enrichment, identity, **discovery rebound** (S6) | Safe fetcher, robots.txt | 0 | 1 (primary) | Full text of public pages (snapshots) | Integrated for enrichment (Sprint 3); rebound approved 6 Nov 2026, built in S6.3 |
-| `hacker_news` | Discovery leads | Official HN API (Firebase), read-only, no key | 0 | 3 (community) for the launch fact only | Metadata only (see below) | **Approved 6 Nov 2026 (PD-28); not integrated**; activation blocked until the open verification below is done |
+| `official_website` | Enrichment, identity, **discovery rebound** | Safe fetcher, robots.txt | 0 | 1 (primary) | Full text of public pages (snapshots) | Integrated (Sprint 3); controlled rebound implemented in Sprint 6 (`packages/data-sources/src/rebound.ts`) |
+| `hacker_news` | Discovery leads | Official HN API (Firebase), read-only, no key | 0 | 3 (community) for the launch fact only | Metadata only (see below) | **Approved 6 Nov 2026 (PD-28); connector implemented and tested on synthetic responses; registry row `planned`, disabled** (migration M8); activation blocked until the open verification below is done |
 | `product_hunt` | Discovery leads | API v2 (OAuth token) | 0 | 3 | — | **Not approved**: written permission requested from Product Hunt first (draft: `docs/sources/product-hunt-permission-request.md`, not sent) |
 | `brave_search` | Web search leads | API key, metered billing | Paid | — | Transient only | **Deferred** by the product owner (no spending) |
 
@@ -218,3 +218,17 @@ owner on 6 November 2026; no account, no key, no call.
 | HN / Y Combinator site terms (data licence, commercial use, storage) | `https://www.ycombinator.com/legal/` | Activation of `hacker_news` |
 | Product Hunt API terms (commercial use, storage, attribution) | `https://www.producthunt.com/v2/docs`, `https://www.producthunt.com/legal/terms-of-service` | Any Product Hunt work |
 | Brave Search API terms and pricing | `https://brave.com/search/api/`, `https://api-dashboard.search.brave.com/documentation/resources/terms-of-service` | Nothing (deferred) |
+
+## Activation procedure (no source is enabled yet)
+
+1. Complete the open verifications above (read the official pages; no API
+   call) and record the result in this document.
+2. The product owner approves activation for one environment (staging
+   first).
+3. A migration sets `terms_reviewed_at`, `terms_review_notes`,
+   `integration_status = 'integrated'` and `is_enabled = true` for that
+   source (the database refuses `is_enabled` without a terms review and an
+   integrated status).
+4. The worker then builds the connector for discovery runs; every request
+   goes through `sor_source_consume` (daily quota) and the safe fetcher.
+

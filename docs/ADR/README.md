@@ -113,6 +113,16 @@ Y Combinator site terms (blocked by the network policy on 6 November 2026)
 and a product-owner go-ahead. The quality of the real agents (D1, D3)
 stays pending PD-24a and the PD-22 thresholds.
 
+## Sprint 6 status (6 November 2026)
+
+Sprint 6 (Discovery Engine) is implemented with simulated providers only
+(Implementation Blueprint §15 "Sprint 6"). No source was enabled and no
+paid call was made. Hacker News (official API) is registered `planned`
+and disabled: enabling it needs the Y Combinator terms review (page
+blocked by the cloud network policy on 6 Nov 2026) and a product-owner
+go-ahead per environment. Product Hunt waits for PD-29. Real-use quality
+of D1/D3 waits for PD-24a and the PD-22 thresholds.
+
 ## Pending decision register
 
 These questions were **not** settled by the 4 November arbitration. Each
