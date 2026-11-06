@@ -5397,6 +5397,27 @@ and `supabase/tests/015_discovery.sql`.
     once a candidate has been reviewed (a new run is started instead);
     deleting a run keeps the catalog products it created.
 
+**S6.3 (6 November 2026):** `@sor/data-sources` Hacker News connector
+(official API only, metadata only, run budget and quota hook; tested on
+synthetic responses, source not enabled), controlled rebound
+(`rebound.ts`), simulated search connector, source descriptors.
+
+**S6.4 (6 November 2026):** `@sor/discovery-engine` `runDiscovery`
+(planning → searching → extracting → resolving_identity →
+classifying_exclusion → filtering → ranking → persisting), D1/D3 prompts
+and fake handlers, in-memory ports.
+
+-   **[ASSUMPTION]** the run's "enriching/verifying" stages are the D3
+    extraction from the lead's official site plus deterministic checks
+    (cited snapshot given to the step, name present in the page, official
+    URL on the fetched site); full D5/D6 enrichment of a candidate stays
+    the existing `product_enrichment` job.
+-   Evidence confidence of a candidate = §9.4 aggregate quality of its
+    official-site evidence and search leads (nothing is verified during a
+    run); the fit score stays separate.
+-   Ranking: fit score, then confidence, then name; eligible pending
+    candidates beyond `max_results` are rejected with `beyond_max_results`.
+
 -   M8; agents D1, D2, D3, D7 (D4--D6 exist from Sprint 3); exclusion
     tests at every boundary; AI Discovery UI (run page per PRD §6.4,
     candidate review).

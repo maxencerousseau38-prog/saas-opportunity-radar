@@ -47,6 +47,8 @@ export const DiscoveryChannelsSchema = z
   })
   .strict();
 
+export type DiscoveryChannels = z.infer<typeof DiscoveryChannelsSchema>;
+
 export const DiscoveryRequestSchema = z
   .object({
     title: z.string().trim().min(1).max(200),
