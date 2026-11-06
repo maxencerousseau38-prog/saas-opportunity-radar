@@ -133,7 +133,7 @@ export function painPorts(
     },
     updateRun: (patch) =>
       painRepo.updateRun(db, runId, patch as Parameters<typeof painRepo.updateRun>[2]),
-    step: stepRunner(db, ctx.job),
+    step: stepRunner(db, ctx.job, ctx.signal),
     gateway: deps.gateway,
     remainingAiBudgetUsd: () => budget.remaining(),
     recordUsage: async (stepId, u) => {

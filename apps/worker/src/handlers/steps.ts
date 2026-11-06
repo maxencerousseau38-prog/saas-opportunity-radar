@@ -6,7 +6,17 @@ import type { StepMeta, StepRecord, StepRunResult } from "@sor/discovery-engine"
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
-export function stepRunner(db: DbClient, job: { id: string; attempt_count: number }) {
+/**
+ * `signal` is the job's signal: an output produced while the job is being
+ * aborted (shutdown, lost lease, cancellation) is never stored as a
+ * completed step, so the next attempt runs that step again instead of
+ * reusing a result truncated by the abort.
+ */
+export function stepRunner(
+  db: DbClient,
+  job: { id: string; attempt_count: number },
+  signal?: AbortSignal,
+) {
   return async function step<T>(
     meta: StepMeta,
     run: (stepId: string) => Promise<StepRunResult<T>>,
@@ -31,6 +41,11 @@ export function stepRunner(db: DbClient, job: { id: string; attempt_count: numbe
     });
     try {
       const res = await run(stepId);
+      if (signal?.aborted) {
+        throw Object.assign(new Error("step interrupted by the job abort"), {
+          code: "STEP_ABORTED",
+        });
+      }
       await jobsRepo.completeStep(db, stepId, {
         output: res.output as unknown as NonNullable<Json>,
         outputHash: hash(res.output),

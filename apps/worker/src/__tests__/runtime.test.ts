@@ -166,3 +166,61 @@ describe("worker runtime", () => {
     });
   });
 });
+
+describe("Worker.shutdown (SIGTERM drain, Sprint 7)", () => {
+  it("lets a running job finish within the grace period, then stops reading", async () => {
+    const job = newJob();
+    const { db, calls, send } = fakeDb([job]);
+    let release!: () => void;
+    const handler: JobHandler = () =>
+      new Promise<HandlerOutcome>((resolve) => {
+        release = () => resolve({ state: "completed", terminalReason: "completed", result: {} });
+      });
+    const w = worker(db, handler);
+    send(envelope);
+    const tick = w.tick();
+    await new Promise((r) => setTimeout(r, 10));
+    expect(w.runningJobs()).toBe(1);
+    const done = w.shutdown(1000);
+    release();
+    expect(await done).toEqual({ released: 0 });
+    await tick;
+    expect(job.state).toBe("completed");
+    expect(calls.some((c) => c.fn === "sor_worker_release")).toBe(false);
+    // Stopped: a new message is not processed.
+    send(envelope, 2);
+    await w.process({ msg_id: 2, read_ct: 1, message: envelope });
+    expect(calls.filter((c) => c.fn === "sor_worker_claim")).toHaveLength(1);
+  });
+
+  it("releases a job still running after the grace period instead of failing it", async () => {
+    const job = newJob();
+    const { db, calls, send } = fakeDb([job]);
+    const handler: JobHandler = ({ signal }) =>
+      new Promise<HandlerOutcome>((_resolve, reject) => {
+        signal.addEventListener("abort", () => reject(new Error("aborted")));
+      });
+    const w = worker(db, handler);
+    send(envelope);
+    const tick = w.tick();
+    await new Promise((r) => setTimeout(r, 10));
+    expect(await w.shutdown(20)).toEqual({ released: 1 });
+    await tick;
+    const fns = calls.map((c) => c.fn);
+    expect(fns).toContain("sor_worker_release");
+    expect(fns).not.toContain("sor_worker_retry");
+    expect(fns).not.toContain("sor_worker_finish");
+    expect(calls.find((c) => c.fn === "sor_worker_release")?.args.p_job_id).toBe(JOB_ID);
+  });
+
+  it("returns at once when nothing runs", async () => {
+    const { db } = fakeDb([]);
+    const w = worker(db, async () => ({
+      state: "completed",
+      terminalReason: "completed",
+      result: {},
+    }));
+    expect(await w.shutdown(10_000)).toEqual({ released: 0 });
+    expect(w.msSinceProgress()).toBeGreaterThanOrEqual(0);
+  });
+});

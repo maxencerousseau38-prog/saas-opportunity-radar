@@ -45,12 +45,57 @@ export interface WorkerOptions {
 export class Worker {
   private stopped = false;
   private readonly controller = new AbortController();
+  /** Wakes the polling sleep without touching running jobs. */
+  private readonly poll = new AbortController();
+  /** Set when a planned shutdown interrupts running jobs: they are released, not failed. */
+  private draining = false;
+  private readonly inFlight = new Map<string, Promise<void>>();
+  /** Time of the last completed loop iteration or job heartbeat (watchdog input). */
+  private lastProgressAt = Date.now();
 
   constructor(private readonly options: WorkerOptions) {}
 
+  /** Immediate stop (tests and second signal): running jobs are aborted. */
   stop(): void {
     this.stopped = true;
+    this.poll.abort();
     this.controller.abort();
+  }
+
+  /** Number of jobs this process is running. */
+  runningJobs(): number {
+    return this.inFlight.size;
+  }
+
+  /** Milliseconds since the loop or a job heartbeat last made progress. */
+  msSinceProgress(): number {
+    return Date.now() - this.lastProgressAt;
+  }
+
+  /**
+   * Planned shutdown (SIGTERM, Implementation Blueprint §11): stop reading
+   * the queue, let running jobs finish within `graceMs`, then abort the rest
+   * and release their leases so they restart at once elsewhere. Completed
+   * agent steps are reused by the next attempt, so nothing is repeated.
+   */
+  async shutdown(graceMs: number, releaseWaitMs = 5000): Promise<{ released: number }> {
+    this.stopped = true;
+    this.poll.abort();
+    const pending = [...this.inFlight.values()];
+    if (pending.length === 0) return { released: 0 };
+    const finished = await Promise.race([
+      Promise.allSettled(pending).then(() => true),
+      new Promise<boolean>((r) => setTimeout(() => r(false), graceMs).unref()),
+    ]);
+    if (finished) return { released: 0 };
+    const left = this.inFlight.size;
+    this.draining = true;
+    this.controller.abort();
+    await Promise.race([
+      Promise.allSettled([...this.inFlight.values()]),
+      new Promise((r) => setTimeout(r, releaseWaitMs).unref()),
+    ]);
+    return { released: left };
   }
 
   /** One polling cycle; returns the number of messages read. */
@@ -72,19 +117,30 @@ export class Worker {
             this.options.log({ level: "warn", msg: "orphan jobs requeued", count: requeued });
         }
         const read = await this.tick();
-        if (read === 0) await sleep(pollIntervalMs, this.controller.signal);
+        this.lastProgressAt = Date.now();
+        if (read === 0) await sleep(pollIntervalMs, this.poll.signal);
       } catch (err) {
         this.options.log({
           level: "error",
           msg: "worker cycle failed",
           error: classifyError(err).code,
         });
-        await sleep(pollIntervalMs, this.controller.signal);
+        // The loop is alive (a database outage is not cured by a restart).
+        this.lastProgressAt = Date.now();
+        await sleep(pollIntervalMs, this.poll.signal);
       }
     }
   }
 
   async process(message: jobsRepo.QueueMessage): Promise<void> {
+    if (this.stopped) return; // never start a job while stopping
+    const key = `msg-${message.msg_id}`;
+    const run = this.processMessage(message).finally(() => this.inFlight.delete(key));
+    this.inFlight.set(key, run);
+    return run;
+  }
+
+  private async processMessage(message: jobsRepo.QueueMessage): Promise<void> {
     const { db, workerId, leaseSeconds, heartbeatSeconds, log } = this.options;
     const envelope = JobEnvelopeSchema.safeParse(message.message);
     if (!envelope.success) {
@@ -129,6 +185,7 @@ export class Worker {
       jobsRepo
         .workerHeartbeat(db, { jobId: job.id, workerId, leaseSeconds, messageId: message.msg_id })
         .then((cancel) => {
+          this.lastProgressAt = Date.now();
           cancelRequested = cancelRequested || cancel;
         })
         .catch((err: unknown) => {
@@ -154,6 +211,10 @@ export class Worker {
       });
       clearInterval(beat);
       if (leaseLost) return;
+      if (this.draining && this.controller.signal.aborted) {
+        await this.release(job, base);
+        return;
+      }
       await jobsRepo.workerFinish(db, {
         jobId: job.id,
         workerId,
@@ -173,6 +234,10 @@ export class Worker {
       clearInterval(beat);
       if (leaseLost || isLeaseLost(err)) {
         log({ level: "warn", msg: "lease lost; another worker owns the job", ...base });
+        return;
+      }
+      if (this.draining && this.controller.signal.aborted) {
+        await this.release(job, base);
         return;
       }
       const c = classifyError(err);
@@ -206,6 +271,26 @@ export class Worker {
         );
         log({ level: "error", msg: "job failed", ...base, error_code: c.code });
       }
+    }
+  }
+
+  /** Planned shutdown: give the job back (attempt returned, visible at once). */
+  private async release(job: JobRow, base: Record<string, unknown>): Promise<void> {
+    try {
+      await jobsRepo.workerRelease(this.options.db, {
+        jobId: job.id,
+        workerId: this.options.workerId,
+        reason: "worker shutdown (SIGTERM)",
+      });
+      this.options.log({ level: "warn", msg: "job released on shutdown", ...base });
+    } catch (err) {
+      // The lease expires anyway; the job is recovered by the next worker.
+      this.options.log({
+        level: "error",
+        msg: "job release failed; recovered after lease expiry",
+        ...base,
+        error: classifyError(err).code,
+      });
     }
   }
 

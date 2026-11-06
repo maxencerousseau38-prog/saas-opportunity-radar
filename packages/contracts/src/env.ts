@@ -34,6 +34,24 @@ export const WorkerEnvSchema = z.object({
     .string()
     .regex(/^[1-9]\d{0,1}$/)
     .default("2"),
+  /**
+   * Seconds running jobs get to finish after SIGTERM before they are released
+   * (keep below the host's shutdown delay: Render maxShutdownDelaySeconds 60).
+   */
+  WORKER_SHUTDOWN_GRACE_SECONDS: z
+    .string()
+    .regex(/^\d{1,3}$/)
+    .default("40"),
+  /** Exit for a restart when neither the loop nor a job heartbeat progressed for this long. */
+  WORKER_WATCHDOG_STALL_SECONDS: z
+    .string()
+    .regex(/^\d{2,4}$/)
+    .default("300"),
+  /** Kill the process when the event loop is blocked for this long. */
+  WORKER_WATCHDOG_BLOCKED_SECONDS: z
+    .string()
+    .regex(/^\d{2,4}$/)
+    .default("60"),
 });
 
 export type WebPublicEnv = z.infer<typeof WebPublicEnvSchema>;

@@ -23,6 +23,7 @@ export default defineConfig(
       "**/node_modules/**",
       "**/dist/**",
       "**/dist-evals/**",
+      "**/dist-container/**",
       "**/.next/**",
       "**/.turbo/**",
       "**/coverage/**",

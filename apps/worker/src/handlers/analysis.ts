@@ -130,7 +130,7 @@ export function opportunityAnalysisHandler(deps: AnalysisDeps) {
       finalize: (result) => analysisRepo.finalize(db, row.id, result as unknown as JsonValue),
       markNeedsReview: (limitations) =>
         analysisRepo.markNeedsReview(db, row.id, limitations as unknown as JsonValue),
-      step: stepRunner(db, ctx.job),
+      step: stepRunner(db, ctx.job, ctx.signal),
       gateway: deps.gateway,
       remainingAiBudgetUsd: () => budget.remaining(),
       recordUsage: async (stepId, u) => {

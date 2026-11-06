@@ -75,15 +75,30 @@ jobs:
           } >> "$GITHUB_ENV"
       - name: Seed labelled demo fixtures
         run: pnpm --filter @sor/web seed:demo
-      - name: Start the worker (fake AI provider, PD-24 pending)
+      # The worker runs from its production image (PD-27: Render, plan
+      # 0.5c-512mb), limited to 512 MB like the Render instance.
+      - name: Build the worker image
+        run: docker build -f apps/worker/Dockerfile -t sor-worker:ci .
+      - name: Start the worker container (fake AI provider, PD-24 pending)
         run: |
-          pnpm --filter @sor/worker build
-          nohup node apps/worker/dist/main.js > "$RUNNER_TEMP/worker.log" 2>&1 &
+          docker run -d --name sor-worker --network host --memory 512m \
+            -e APP_ENV -e SUPABASE_URL -e SUPABASE_SECRET_KEY -e AUTHOR_HASH_SECRET -e WORKER_ID \
+            sor-worker:ci
       - run: pnpm --filter @sor/web exec playwright install --with-deps chromium
       - run: pnpm test:e2e
+      - name: Worker memory peak and graceful SIGTERM
+        if: always()
+        run: |
+          echo "memory.peak (bytes): $(docker exec sor-worker cat /sys/fs/cgroup/memory.peak 2>/dev/null || echo unavailable)"
+          docker stats --no-stream sor-worker || true
+          docker stop -t 60 sor-worker
+          code=$(docker inspect -f '{{.State.ExitCode}}' sor-worker)
+          docker logs sor-worker 2>&1 | grep -E '"msg":"(shutdown requested|worker stopped)"'
+          echo "worker exit code: $code"
+          test "$code" = "0"
       - name: Worker log
         if: always()
-        run: cat "$RUNNER_TEMP/worker.log" || true
+        run: docker logs sor-worker 2>&1 | tail -200 || true
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

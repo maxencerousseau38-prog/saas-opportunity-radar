@@ -10,6 +10,7 @@ import { fakeDiscoveryHandlers, fakeEnrichmentHandlers } from "@sor/discovery-en
 import { fakeOpportunityHandlers } from "@sor/opportunity-engine";
 import { fakePainPointHandlers } from "@sor/pain-point-engine";
 import { Worker, type JobHandler, type Log } from "./runtime";
+import { startWatchdog } from "./watchdog";
 import { enrichmentHandler } from "./handlers/enrichment";
 import { catalogImportHandler, feedbackImportHandler } from "./handlers/imports";
 import { painPointRunHandler } from "./handlers/pain";
@@ -117,21 +118,88 @@ export async function buildWorker(
   return { worker, config, limits: values };
 }
 
+/** One JSON line of process health (memory is the main sizing input, PD-27). */
+export function processStats(worker: Worker) {
+  const m = process.memoryUsage();
+  const mb = (n: number) => Math.round(n / 1048576);
+  return {
+    rss_mb: mb(m.rss),
+    heap_used_mb: mb(m.heapUsed),
+    heap_total_mb: mb(m.heapTotal),
+    external_mb: mb(m.external),
+    running_jobs: worker.runningJobs(),
+    ms_since_progress: worker.msSinceProgress(),
+  };
+}
+
+/**
+ * Process lifecycle on a container host: SIGTERM drains (running jobs get a
+ * grace period, then are released), a second signal stops at once, fatal
+ * errors exit non-zero so the host restarts the process, and a watchdog
+ * exits when the worker stops making progress.
+ */
+export async function runProcess(env: Record<string, string | undefined>, log: Log = jsonLog) {
+  const { worker, config } = await buildWorker(env, log);
+  const watchdog = startWatchdog({
+    blockedMs: Number(config.WORKER_WATCHDOG_BLOCKED_SECONDS) * 1000,
+    stalledMs: Number(config.WORKER_WATCHDOG_STALL_SECONDS) * 1000,
+    msSinceProgress: () => worker.msSinceProgress(),
+    log,
+  });
+  const stats = setInterval(
+    () => log({ level: "info", msg: "worker stats", ...processStats(worker) }),
+    300_000,
+  );
+  stats.unref();
+
+  let stopping = false;
+  const onSignal = (signal: NodeJS.Signals) => {
+    if (stopping) {
+      log({ level: "warn", msg: "second signal: stopping now", signal });
+      worker.stop();
+      process.exit(1);
+    }
+    stopping = true;
+    const graceMs = Number(config.WORKER_SHUTDOWN_GRACE_SECONDS) * 1000;
+    log({
+      level: "info",
+      msg: "shutdown requested",
+      signal,
+      running_jobs: worker.runningJobs(),
+      grace_ms: graceMs,
+    });
+    void worker.shutdown(graceMs).then(({ released }) => {
+      watchdog.stop();
+      log({
+        level: "info",
+        msg: "worker stopped",
+        released_jobs: released,
+        ...processStats(worker),
+      });
+      process.exit(0);
+    });
+  };
+  process.on("SIGTERM", onSignal);
+  process.on("SIGINT", onSignal);
+  const fatal = (kind: string) => (err: unknown) => {
+    log({ level: "fatal", msg: kind, error: err instanceof Error ? err.name : "unknown" });
+    process.exit(1);
+  };
+  process.on("uncaughtException", fatal("uncaught exception"));
+  process.on("unhandledRejection", fatal("unhandled rejection"));
+
+  log({ level: "info", msg: "worker started", ...processStats(worker) });
+  await worker.run(2000);
+}
+
 const invokedDirectly =
   process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (invokedDirectly) {
-  buildWorker(process.env)
-    .then(({ worker }) => {
-      const stop = () => worker.stop();
-      process.on("SIGTERM", stop);
-      process.on("SIGINT", stop);
-      return worker.run(2000);
-    })
-    .catch((error: unknown) => {
-      jsonLog({
-        level: "error",
-        msg: error instanceof Error ? error.name : "worker failed to start",
-      });
-      process.exitCode = 1;
+  runProcess(process.env).catch((error: unknown) => {
+    jsonLog({
+      level: "error",
+      msg: error instanceof Error ? error.name : "worker failed to start",
     });
+    process.exitCode = 1;
+  });
 }

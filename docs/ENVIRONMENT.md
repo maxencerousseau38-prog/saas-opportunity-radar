@@ -113,6 +113,16 @@ pnpm --filter @sor/worker build
 node apps/worker/dist/main.js
 ```
 
+Container image (Sprint 7, PD-27; see `docs/DEPLOYMENT.md`):
+
+```bash
+docker build -f apps/worker/Dockerfile -t sor-worker .
+```
+
+Worker lifecycle variables (optional, validated by `@sor/contracts/env`):
+`WORKER_SHUTDOWN_GRACE_SECONDS` (default 40), `WORKER_WATCHDOG_STALL_SECONDS`
+(300), `WORKER_WATCHDOG_BLOCKED_SECONDS` (60).
+
 ## Cloud-session constraints
 
 Claude Code cloud sessions may have no Docker daemon (observed 4 Nov 2026): the

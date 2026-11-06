@@ -400,9 +400,9 @@ Role matrix (summary; full matrix in Implementation Blueprint §12):
 |---|---|---|
 | Local | Supabase CLI local stack (requires Docker), web, worker, fake AI provider and fake connectors | ACCEPTED |
 | CI | Install, lint, typecheck, unit tests, build; database tests (`supabase test db`) and integration tests on a Docker-capable runner | ACCEPTED: GitHub Actions (PD-01 A) |
-| Staging / Production | Staging + production Supabase projects in an EU region (PD-02 A); web on Vercel, worker on a container host (PD-03 A) | ACCEPTED; worker host vendor PENDING (PD-27) |
+| Staging / Production | Staging + production Supabase projects in an EU region (PD-02 A); web on Vercel, worker on a container host (PD-03 A): Render Background Worker in Frankfurt (PD-27, 6 Nov 2026) | ACCEPTED |
 
-- PRD §22 lists Vercel for hosting as "envisagée — à confirmer". A persistent worker cannot run as a request-scoped serverless function **[ASSUMPTION — Vercel limits not re-verified in this session]**, so the worker needs a container or VM host. **ACCEPTED** (PD-03 A): web on Vercel, worker on a container host in the Supabase project's region; vendor PENDING (PD-27).
+- PRD §22 lists Vercel for hosting as "envisagée — à confirmer". A persistent worker cannot run as a request-scoped serverless function **[ASSUMPTION — Vercel limits not re-verified in this session]**, so the worker needs a container or VM host. **ACCEPTED** (PD-03 A): web on Vercel, worker on a container host in the Supabase project's region; vendor ACCEPTED: Render Background Worker in Frankfurt (PD-27, 6 Nov 2026).
 - The cloud session used for this consolidation has no running Docker daemon and no Supabase CLI. Database tests must therefore run in CI or on a developer machine. This is an environment constraint, not an architecture choice.
 - Migrations are timestamped, forward-only, applied in CI against a clean database, and never edited once applied.
 - Backups: hosted Supabase backups plus a documented restore drill before production (Sprint 7).
@@ -469,7 +469,7 @@ These items could not be verified in the consolidation session (network policy b
 | ADR | Title | Status |
 |---|---|---|
 | ADR-000 | Reference documents, precedence and decision governance | ACCEPTED |
-| ADR-001 | Modular monolith with a persistent worker; hosting | ACCEPTED (PD-02, PD-03); worker host vendor PENDING (PD-27) |
+| ADR-001 | Modular monolith with a persistent worker; hosting | ACCEPTED (PD-02, PD-03, PD-27) |
 | ADR-002 | Company/product separation and product identity | ACCEPTED |
 | ADR-003 | Evidence-first data model with versioned snapshots | ACCEPTED |
 | ADR-004 | PGMQ-based durable job system | ACCEPTED (verification gate; fallback pending if needed) |

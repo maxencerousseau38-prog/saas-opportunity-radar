@@ -311,6 +311,39 @@ run("worker on the local Supabase stack", () => {
     expect(data).toEqual({ state: "cancelled", terminal_reason: "cancelled" });
   });
 
+  it("a SIGTERM drain releases a running job, which another worker completes at once", async () => {
+    const ws = await workspace();
+    const productId = await product("drain.test", "/slow");
+    const a = makeWorker(undefined, "int-worker-drain-a");
+    const { jobId } = await request(ws, "product_enrichment", { product_id: productId });
+    const ticking = a.worker.tick();
+    await sleep(300);
+    // Grace shorter than the slow page: the job is aborted and released.
+    expect(await a.worker.shutdown(100)).toEqual({ released: 1 });
+    await ticking;
+    const { data: released } = await db
+      .from("job_executions")
+      .select("state, attempt_count, last_error_code, lease_owner")
+      .eq("id", jobId)
+      .single();
+    expect(released).toEqual({
+      state: "retrying",
+      attempt_count: 0,
+      last_error_code: "WORKER_SHUTDOWN",
+      lease_owner: null,
+    });
+    // No interrupted step is stored as completed.
+    const { data: steps } = await db
+      .from("agent_step_runs")
+      .select("state")
+      .eq("job_execution_id", jobId);
+    expect(steps?.every((st) => st.state !== "completed")).toBe(true);
+
+    const b = makeWorker(undefined, "int-worker-drain-b");
+    const job = await waitFor(jobId, b.worker);
+    expect(job).toMatchObject({ state: "completed", attempt_count: 1 });
+  });
+
   it("imports products and feedback from CSV with per-row results", async () => {
     const ws = await workspace();
     const existing = await product("existing.test");

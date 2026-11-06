@@ -131,3 +131,20 @@ again.
   shown separately, cited evidence, excluded candidate rejected and never
   addable, eligible candidate accepted into Discover; viewer read-only;
   Settings > Sources with storage policy and terms-review state).
+
+## Sprint 7: worker deployability
+
+- Unit: `apps/worker/src/__tests__/runtime.test.ts` (SIGTERM drain: a job
+  finishing within the grace period completes normally; a job still
+  running is released, never retried or failed; no new job after stop) and
+  `watchdog.test.ts` (exit on stalled progress, quiet while progressing).
+- Database: `supabase/tests/016_worker_release.sql` (only the lease owner
+  releases; attempt given back; message visible at once; next claim is
+  attempt 1).
+- Integration: `pipeline.int.test.ts` — a SIGTERM drain releases a running
+  job, no interrupted step is stored as completed, another worker completes
+  the job at once.
+- E2E: the CI runs the worker from its Docker image limited to 512 MB,
+  prints the cgroup `memory.peak`, then checks a clean SIGTERM shutdown
+  (exit code 0).
+

@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run --exclude 'test/integration/**'",
     "test:integration": "vitest run --dir test/integration",
-    "eval:build": "tsup --config tsup.evals.config.ts"
+    "eval:build": "tsup --config tsup.evals.config.ts",
+    "build:container": "tsup --config tsup.container.config.ts"
   },
   "dependencies": {
     "@sor/ai-gateway": "workspace:*",

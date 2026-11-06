@@ -34,3 +34,4 @@ apps/web/next-env.d.ts
 
 # Evaluation tooling build
 dist-evals/
+dist-container/

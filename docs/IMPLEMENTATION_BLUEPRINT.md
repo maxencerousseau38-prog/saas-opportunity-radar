@@ -5463,7 +5463,22 @@ evidence-backed candidates and respects all hard constraints"):
 
 ## Sprint 7 --- Reliability and production readiness
 
-Blocked by PD-27 (worker host vendor); PD-02 and PD-03 approved.
+PD-27 approved on 6 November 2026: Render Background Worker in Frankfurt
+(plan `0.5c-512mb`); Supabase projects to be created in Frankfurt. No
+deployment, paid service or spending without a further approval.
+
+**S7.1 (6 November 2026) — worker deployability:** `apps/worker/Dockerfile`
+(self-contained bundle, Node.js 26.13.0 slim, non-root), `.dockerignore`,
+`render.yaml` (staging worker, not applied), SIGTERM drain with lease
+release (`sor_worker_release`, migration `20261109090000_worker_release.sql`,
+pgTAP 016), steps never stored as completed when produced during a job
+abort, watchdog (blocked event loop / stalled progress) and fatal-error
+exits, periodic memory logs; CI runs the E2E worker from the image limited
+to 512 MB and checks a clean SIGTERM exit. Runbook: `docs/DEPLOYMENT.md`.
+Memory measured: idle ≈ 110 MB RSS; deep discovery (80 pages) ≈ +72 MB.
+
+-   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
+    (`0.5c-512mb` = former "Starter"); to verify when the service is created.
 
 -   Quotas, monitoring, structured logs, alerts; security and RLS review;
     E2E, load and failure-mode tests; backups and restore drill; staging

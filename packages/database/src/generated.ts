@@ -1794,6 +1794,9 @@ isOneToOne: true
               "message": Json,"msg_id": number,"read_ct": number
             }[]
                            },
+"sor_worker_release":
+{ Args: { "p_job_id": string,"p_reason": string,"p_worker_id": string }; Returns: undefined
+                           },
 "sor_worker_requeue_orphans":
 { Args: { "p_older_than_seconds": number }; Returns: number
                            },

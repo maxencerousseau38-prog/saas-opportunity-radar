@@ -150,7 +150,7 @@ export function discoveryRunHandler(deps: DiscoveryDeps) {
       upsertCandidate: (payload) =>
         discoveryRepo.upsertCandidate(db, runId, payload as unknown as JsonValue),
       finalize: (summary) => discoveryRepo.finalizeRun(db, runId, summary as unknown as JsonValue),
-      step: stepRunner(db, ctx.job),
+      step: stepRunner(db, ctx.job, ctx.signal),
       gateway: deps.gateway,
       remainingAiBudgetUsd: () => budget.remaining(),
       recordUsage: async (stepId, u) => {

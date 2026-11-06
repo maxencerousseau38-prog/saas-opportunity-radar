@@ -85,7 +85,7 @@ export function enrichmentHandler(deps: EnrichmentDeps) {
           ];
         });
       },
-      step: stepRunner(db, ctx.job),
+      step: stepRunner(db, ctx.job, ctx.signal),
       fetchDocument: async (url) => {
         requests += 1;
         if (requests > maxRequests)

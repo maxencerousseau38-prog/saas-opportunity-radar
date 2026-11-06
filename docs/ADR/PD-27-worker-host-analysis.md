@@ -1,6 +1,6 @@
 # PD-27 — Worker host: analysis and recommendation
 
-- **Status:** PENDING_USER_APPROVAL (recommendation, 6 November 2026)
+- **Status:** ACCEPTED — approved by the product owner on 6 November 2026 (Render Background Worker, Frankfurt)
 - **Decision owner:** product owner
 - **Related:** ADR-001 (PD-02 A, PD-03 A), ADR-004 (PGMQ), PD-24 (residency B),
   Implementation Blueprint §11, §15 "Sprint 7"

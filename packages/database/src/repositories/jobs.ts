@@ -172,6 +172,20 @@ export async function workerRetry(
   );
 }
 
+/** Gives a running job back on a planned shutdown (attempt returned, message visible at once). */
+export async function workerRelease(
+  service: DbClient,
+  args: { jobId: string; workerId: string; reason: string },
+): Promise<void> {
+  check(
+    await service.rpc("sor_worker_release", {
+      p_job_id: args.jobId,
+      p_worker_id: args.workerId,
+      p_reason: args.reason,
+    }),
+  );
+}
+
 export async function workerFinish(
   service: DbClient,
   args: {
