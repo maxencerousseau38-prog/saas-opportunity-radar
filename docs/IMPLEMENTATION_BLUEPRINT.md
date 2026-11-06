@@ -5346,7 +5346,10 @@ production keeps the fake provider.
 
 ## Sprint 6 --- Discovery Engine
 
-Blocked by PD-28 (Discovery search sources after terms review).
+PD-28 approved on 6 November 2026 (`docs/DATA_SOURCES.md`): Hacker News
+official API (metadata only), product CSV seeds, controlled rebound from
+official websites; Product Hunt pending (PD-29); Brave deferred. No source
+is enabled in production during the sprint.
 
 -   M8; agents D1, D2, D3, D7 (D4--D6 exist from Sprint 3); exclusion
     tests at every boundary; AI Discovery UI (run page per PRD §6.4,

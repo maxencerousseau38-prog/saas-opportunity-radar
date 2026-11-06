@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-**Last updated:** 4 November 2026 (product-owner arbitration of PD-01 to PD-23)
+**Last updated:** 6 November 2026 (PD-28 approved, Sprint 6 start); 4 November 2026 (product-owner arbitration of PD-01 to PD-23)
 
 ## Status legend
 
@@ -34,7 +34,7 @@ separate decisions.
 | [ADR-010](ADR-010-permanent-affiliate-partner-exclusion.md) | Permanent Affiliate/Partner exclusion | ACCEPTED (PD-11) |
 | [ADR-011](ADR-011-toolchain-and-ci.md) | Toolchain, versions and CI | ACCEPTED (PD-01) |
 | [ADR-012](ADR-012-sprint-order.md) | Sprint order | ACCEPTED (PD-13) |
-| [ADR-013](ADR-013-source-acquisition-and-compliance.md) | Source acquisition and compliance | ACCEPTED (PD-14); G2 approval and Discovery search sources PENDING (PD-26, PD-28) |
+| [ADR-013](ADR-013-source-acquisition-and-compliance.md) | Source acquisition and compliance | ACCEPTED (PD-14, PD-28); G2 and Product Hunt approval PENDING (PD-26, PD-29) |
 | [ADR-014](ADR-014-workspace-status-model.md) | Workspace opportunity status model | ACCEPTED (PD-04) |
 
 ## Decisions approved by the product owner on 4 November 2026
@@ -86,6 +86,33 @@ market evidence is collected during an analysis until search sources exist
 depth is stored and drives budgets and caps, never the scoring rules. The
 quality of the real agents stays pending PD-24a and the PD-22 thresholds.
 
+## Sprint 6 start (6 November 2026)
+
+The product owner approved **PD-28** after the source analysis of the
+Sprint 6 plan (written review: `docs/DATA_SOURCES.md`):
+
+- **Hacker News, official API only** (`hacker-news.firebaseio.com`), as
+  the first Discovery search source. The Algolia-hosted HN search is not
+  approved. Metadata only (no usernames, no user text).
+- **Product CSV import** (existing) as a discovery seed list.
+- **Rebound from official websites, under control**: pages of catalogued
+  products' own sites (integrations, alternatives, comparisons) give
+  leads; depth 1, allow-listed paths, robots.txt, per-run budgets, and a
+  lead becomes a candidate only from its own official site
+  (`docs/DATA_SOURCES.md`, "Discovery rebound — controls").
+- **Product Hunt:** a permission request is drafted
+  (`docs/sources/product-hunt-permission-request.md`) and **not sent**;
+  approval is PD-29.
+- **Brave Search:** deferred, **no spending**.
+- Network may be opened **only to read official terms pages**, never for
+  API calls. No source is enabled in production.
+
+Slices S6.0 (terms review) and S6.1 (contracts and fit score) are
+authorised. Activating `hacker_news` anywhere still requires reading the
+Y Combinator site terms (blocked by the network policy on 6 November 2026)
+and a product-owner go-ahead. The quality of the real agents (D1, D3)
+stays pending PD-24a and the PD-22 thresholds.
+
 ## Pending decision register
 
 These questions were **not** settled by the 4 November arbitration. Each
@@ -97,7 +124,7 @@ must be approved before the point it blocks.
 | PD-25 | Should low confidence turn a complete score < 50 into VALIDATE FIRST? (sub-question of PD-06, not answered) | No exception | Nothing: until decided, the ACCEPTED rule "score < 50 → REJECT" (PRD §8.8) applies | ADR-005 |
 | PD-26 | Approve G2 as the first review source after its written terms review (access method, licence, cost, storage rights) | Decide on the written review, which is prepared before Sprint 4 | Use of G2 in Sprint 4 (Sprint 4 can run on CSV feedback imports) | ADR-013 |
 | PD-27 | Container host vendor and plan for the worker (PD-03 approved the split, not the vendor) | Choose a host with an EU region next to the Supabase project, persistent processes and health checks | Sprint 7 (deployment) | ADR-001 |
-| PD-28 | Search source(s) for the Discovery Engine (after terms review) | Same method as PD-14: one source after a written terms review | Sprint 6 | ADR-013 |
+| PD-29 | Product Hunt as the second Discovery source | Decide after Product Hunt's written answer to the permission request (draft not sent) and its terms review | Any Product Hunt connector | ADR-013 |
 
 ## What may start now
 

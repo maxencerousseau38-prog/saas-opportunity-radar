@@ -323,7 +323,7 @@ Access pattern: web and worker use the server Supabase client (secret key, serve
 
 - Every connector declares its access method (official API, contract, feed, or explicitly authorised method), terms URL, quotas and capabilities. A configured source is not "integrated" until its connector is developed and tested. Unauthorised scraping is forbidden.
 - Connectors return explicit states: `ok`, `blocked`, `unavailable`, `not_supported`, `rate_limited`, `error`. They never fabricate data and never write to catalog tables.
-- MVP acquisition paths (PRD §18: "Import de données", "Ajout manuel d'un SaaS", "nombre limité de connecteurs fiables"): manual product entry, CSV import of products and of customer feedback (with a per-import rights declaration), and an official-website connector. Third-party sources are added one at a time after a written terms review (**ACCEPTED**, PD-14 A). G2 is the first to study; its approval is **PENDING_USER_APPROVAL (PD-26)**. Discovery search sources: **PENDING_USER_APPROVAL (PD-28)**.
+- MVP acquisition paths (PRD §18: "Import de données", "Ajout manuel d'un SaaS", "nombre limité de connecteurs fiables"): manual product entry, CSV import of products and of customer feedback (with a per-import rights declaration), and an official-website connector. Third-party sources are added one at a time after a written terms review (**ACCEPTED**, PD-14 A). G2 is the first to study; its approval is **PENDING_USER_APPROVAL (PD-26)**. Discovery search sources: **ACCEPTED (PD-28, 6 Nov 2026)** — Hacker News official API, product CSV seeds, controlled rebound from official websites (`docs/DATA_SOURCES.md`); Product Hunt **PENDING_USER_APPROVAL (PD-29)**.
 - **Safe fetcher** (all outbound HTTP to untrusted URLs): `http`/`https` only; DNS resolution with rejection of loopback, private, link-local, CGNAT, multicast, reserved and IPv4-mapped IPv6 ranges; connection pinned to the validated IP (DNS-rebinding defence); every redirect re-validated (max 5); timeout, response-size and content-type limits; no cookies or credentials; per-host rate limiting; robots.txt respected for the official-website connector; a neutral user agent that contains no personal data.
 
 ---
@@ -481,7 +481,7 @@ These items could not be verified in the consolidation session (network policy b
 | ADR-010 | Permanent Affiliate/Partner exclusion | ACCEPTED (PD-11) |
 | ADR-011 | Toolchain, versions and CI | ACCEPTED (PD-01) |
 | ADR-012 | Sprint order | ACCEPTED (PD-13) |
-| ADR-013 | Source acquisition and compliance | ACCEPTED (PD-14); G2 approval and Discovery search sources PENDING (PD-26, PD-28) |
+| ADR-013 | Source acquisition and compliance | ACCEPTED (PD-14, PD-28); G2 and Product Hunt approval PENDING (PD-26, PD-29) |
 | ADR-014 | Workspace opportunity status model | ACCEPTED (PD-04) |
 
 The full register of pending decisions, with recommendations and blocked sprints, is in `docs/ADR/README.md`.

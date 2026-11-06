@@ -1,6 +1,6 @@
 # ADR-013 — Source acquisition and compliance
 
-- **Status:** ACCEPTED (PD-14 approved on 4 November 2026); G2 approval and Discovery search sources PENDING_USER_APPROVAL (PD-26, PD-28)
+- **Status:** ACCEPTED (PD-14 approved on 4 November 2026; PD-28 approved on 6 November 2026); G2 and Product Hunt approval PENDING_USER_APPROVAL (PD-26, PD-29)
 - **Date:** 4 November 2026
 - **Sources:**
   - PRD §6.3 "Gestion des sources": an access method per connector; record what was consulted and what was unavailable; never consider a source integrated before its connector is developed and tested; no unauthorised scraping.
@@ -36,4 +36,12 @@
 ## Still pending
 
 - **PD-26:** approval of G2 after its written terms review (access method, licence, cost, storage rights). The review is prepared before Sprint 4.
-- **PD-28:** the search source(s) for the Discovery Engine, chosen with the same method. Blocks Sprint 6.
+- **PD-29:** Product Hunt as the second Discovery source, after its written answer to the permission request (`docs/sources/product-hunt-permission-request.md`, not sent) and a terms review.
+
+## Approved on 6 November 2026
+
+- **PD-28:** Discovery search sources, after the written review in `docs/DATA_SOURCES.md`:
+  - Hacker News, **official API only** (metadata only; activation still needs the Y Combinator site terms to be read);
+  - the product CSV import as a seed list;
+  - the rebound from catalogued products' official websites, under the controls of `docs/DATA_SOURCES.md`;
+  - Brave Search deferred (no spending); no source enabled in production.
