@@ -442,3 +442,73 @@ export const SEVERITY: Record<string, string> = {
   major: "majeur",
   minor: "mineur",
 };
+
+// ------------------------------------------------------------ AI Discovery (Sprint 6)
+export const DISCOVERY_STAGE: Record<string, string> = {
+  planning: "interprétation de la demande",
+  searching: "recherche dans les sources",
+  extracting: "lecture des sites officiels",
+  resolving_identity: "identification et dédoublonnage",
+  enriching: "enrichissement",
+  verifying: "vérification",
+  classifying_exclusion: "exclusions permanentes",
+  filtering: "filtres",
+  ranking: "classement",
+  persisting: "enregistrement",
+};
+export const DISCOVERY_CHANNEL: Record<string, string> = {
+  search: "Recherche",
+  official_site_rebound: "Rebond depuis les sites officiels",
+  seed_url: "URL fournies",
+};
+export const SOURCE_REPORT_STATUS: Record<string, string> = {
+  consulted: "Consultée",
+  not_enabled: "Non activée",
+  not_supported: "Non prise en charge",
+  unavailable: "Indisponible",
+  rate_limited: "Limite de débit atteinte",
+  error: "Erreur",
+  budget_exhausted: "Budget atteint",
+};
+export const DISCOVERY_LIMITATION: Record<string, string> = {
+  excluded_theme_in_prompt:
+    "La demande vise un thème exclu en permanence (affiliation / partenariat) : il a été ignoré",
+  query_dropped_excluded_theme: "Requête retirée : thème exclu en permanence",
+  category_dropped_excluded: "Catégorie exclue en permanence retirée",
+  source_not_available: "Source non disponible pour cette recherche",
+  source_not_enabled: "Source non activée (revue des conditions en cours)",
+  query_budget_reached: "Nombre maximal de requêtes atteint",
+  inferred_filter_not_supported: "Filtre déduit pas encore disponible, ignoré",
+  lead_budget_reached: "Nombre maximal de pistes atteint",
+  extraction_budget_reached: "Nombre maximal de sites lus atteint",
+  no_rebound_seed: "Aucun SaaS du catalogue pour le rebond dans ces catégories",
+  no_lead: "Aucune piste trouvée",
+  injection_suspected: "Instructions suspectes dans une page (traitées comme des données)",
+};
+export const CANDIDATE_REVIEW: Record<string, string> = {
+  pending: "À examiner",
+  accepted: "Accepté (ajouté à Discover)",
+  rejected: "Écarté",
+  needs_review: "À vérifier",
+};
+export const IDENTITY_DECISION: Record<string, string> = {
+  new: "Nouveau SaaS",
+  matched_existing: "Déjà dans le catalogue",
+  needs_review: "Identité à vérifier",
+};
+export function rejectionLabel(reason: string | null): string | null {
+  if (!reason) return null;
+  if (reason === "permanent_exclusion") return "Exclusion permanente (affiliation / partenariat)";
+  if (reason === "beyond_max_results") return "Au-delà du nombre de résultats demandé";
+  if (reason === "user_rejected") return "Écarté par un membre";
+  return reason
+    .split(",")
+    .map((r) =>
+      r.startsWith("filter_mismatch:")
+        ? `Ne respecte pas le filtre « ${r.slice(16)} »`
+        : r.startsWith("configurable_exclusion:")
+          ? `Exclusion choisie : ${CONFIGURABLE_EXCLUSIONS[r.slice(23)] ?? r.slice(23)}`
+          : r,
+    )
+    .join(" ; ");
+}

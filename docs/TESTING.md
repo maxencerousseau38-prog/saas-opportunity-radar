@@ -125,3 +125,9 @@ again.
   not enabled and never called, excluded candidate rejected, duplicate
   delivery, acceptance, unreachable site → partial, crash recovery without
   repeated model calls, cancellation).
+- E2E: `apps/web/e2e/discovery.e2e.ts` (start a run and follow its progress
+  without any network call — Hacker News reported as not enabled; save the
+  search; labelled demo run: fit score, coverage and evidence confidence
+  shown separately, cited evidence, excluded candidate rejected and never
+  addable, eligible candidate accepted into Discover; viewer read-only;
+  Settings > Sources with storage policy and terms-review state).

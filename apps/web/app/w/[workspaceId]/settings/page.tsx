@@ -1,5 +1,6 @@
 import { catalogRepo, workspaceRepo } from "@sor/database";
 import { SettingsView } from "@/components/workspace/settings-view";
+import { listSources } from "@/lib/services/discovery";
 import { readSettings } from "@/lib/services/workspace";
 import { canAdmin, requireWorkspace } from "@/lib/workspace";
 
@@ -11,7 +12,7 @@ export default async function SettingsPage(props: PageProps<"/w/[workspaceId]/se
   const [members, settings, sources, categories] = await Promise.all([
     workspaceRepo.listMemberDirectory(client, workspaceId),
     readSettings(client, workspaceId),
-    catalogRepo.listSources(client),
+    listSources(),
     catalogRepo.listCategories(client),
   ]);
   return (
@@ -29,7 +30,7 @@ export default async function SettingsPage(props: PageProps<"/w/[workspaceId]/se
       }))}
       preferences={settings.research_preferences}
       invalidSettings={settings.invalid_fields}
-      sources={sources}
+      sources={sources.data}
       categories={categories
         .filter((c) => c.parent_id !== null)
         .map((c) => ({ slug: c.slug, name: c.name }))}

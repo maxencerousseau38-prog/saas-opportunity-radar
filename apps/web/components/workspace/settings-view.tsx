@@ -29,9 +29,19 @@ interface Props {
     last_sync_at: string | null;
     last_error_code: string | null;
     quota_per_day: number | null;
+    storage_policy: string;
+    terms_url: string | null;
+    terms_reviewed_at: string | null;
+    requests_today: number;
   }>;
   categories: Array<{ slug: string; name: string }>;
 }
+
+const STORAGE_LABELS: Record<string, string> = {
+  full: "Contenu complet",
+  metadata_only: "Métadonnées seules",
+  transient: "Aucune (transitoire)",
+};
 
 function Block({ title, children, note }: { title: string; children: ReactNode; note?: string }) {
   return (
@@ -404,7 +414,7 @@ export function SettingsView(p: Props) {
 
       <Block
         title="Sources"
-        note="Une source n’est considérée comme intégrée qu’après le développement et la validation de son connecteur (PRD §13). Intégrées : site officiel (pages publiques, robots.txt respecté), saisie manuelle et imports CSV."
+        note="Une source n’est considérée comme intégrée qu’après le développement et la validation de son connecteur et la revue écrite de ses conditions (PRD §13, docs/DATA_SOURCES.md). Intégrées : site officiel (pages publiques, robots.txt respecté), saisie manuelle et imports CSV. Hacker News (API officielle) est enregistré mais désactivé : sa revue des conditions n’est pas terminée."
       >
         <table className="w-full text-left text-sm">
           <thead className="text-xs text-muted">
@@ -412,6 +422,9 @@ export function SettingsView(p: Props) {
               <th className="py-1">Source</th>
               <th className="py-1">Statut</th>
               <th className="py-1">Fiabilité</th>
+              <th className="py-1">Conservation</th>
+              <th className="py-1">Quota du jour</th>
+              <th className="py-1">Conditions</th>
               <th className="py-1">Dernière synchro</th>
               <th className="py-1">Erreur</th>
             </tr>
@@ -431,6 +444,19 @@ export function SettingsView(p: Props) {
                   </Badge>
                 </td>
                 <td className="py-1.5">Niveau {s.default_reliability_level}</td>
+                <td className="py-1.5">{STORAGE_LABELS[s.storage_policy] ?? s.storage_policy}</td>
+                <td className="py-1.5">
+                  {s.quota_per_day === null
+                    ? `${s.requests_today} requête(s)`
+                    : `${s.requests_today} / ${s.quota_per_day}`}
+                </td>
+                <td className="py-1.5">
+                  {s.terms_reviewed_at
+                    ? `Revue le ${formatDate(s.terms_reviewed_at)}`
+                    : s.terms_url
+                      ? "Revue à terminer"
+                      : "—"}
+                </td>
                 <td className="py-1.5">{formatDate(s.last_sync_at) ?? "—"}</td>
                 <td className="py-1.5">{s.last_error_code ?? "—"}</td>
               </tr>

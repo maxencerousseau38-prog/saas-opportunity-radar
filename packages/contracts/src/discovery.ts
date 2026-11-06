@@ -227,3 +227,14 @@ export const CandidateReviewSchema = z
   })
   .strict();
 export type CandidateReview = z.infer<typeof CandidateReviewSchema>;
+
+/** GET W/discovery-runs (keyset cursor, newest first). */
+export const DiscoveryRunListQuerySchema = z
+  .object({
+    limit: z.coerce.number().int().min(1).max(100).default(30),
+    cursor: z.string().max(1000).optional(),
+  })
+  .strict();
+
+/** POST W/discovery-runs/{id}/save: stores the prompt and filters (PRD §6.4). */
+export const DiscoverySaveSchema = z.object({ name: z.string().trim().min(1).max(120) }).strict();

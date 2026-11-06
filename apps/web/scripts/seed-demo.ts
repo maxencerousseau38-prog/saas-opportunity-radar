@@ -595,6 +595,158 @@ await insert("competitor_links", [
   },
 ]);
 
+// ---------------------------------------------------------------- AI Discovery (Sprint 6)
+// A finished, LABELLED demo discovery run with two candidates on `.test`
+// sites, so the E2E journey can open and review candidates without any
+// network call (a live run needs real official sites). Written directly with
+// the service role, as the worker would through the M8 RPCs.
+{
+  const demoRun = await insertOne("discovery_runs", {
+    workspace_id: workspaceId,
+    created_by: ids.member,
+    title: "Démo — recherche de découverte (données de démonstration)",
+    prompt: "SaaS B2B américains indépendants dans l'analytics marketing (démonstration)",
+    explicit_filters: {},
+    interpreted_filters: { customer_types: { values: ["b2b"], include_unknown: false } },
+    channels: {
+      search: true,
+      official_site_rebound: { enabled: false, seed_product_ids: [] },
+      seed_urls: [],
+    },
+    depth: "standard",
+    max_results: 30,
+    orchestrator_version: "discovery-run.v1",
+    fit_rules_version: "fit-1",
+    status: "completed",
+    leads_found: 2,
+    candidates_found: 2,
+    duplicates_removed: 0,
+    candidates_retained: 1,
+    candidates_rejected: 1,
+    candidates_needs_review: 0,
+    sources_report: [
+      {
+        source_key: "hacker_news",
+        channel: "search",
+        status: "not_enabled",
+        requests: 0,
+        leads: 0,
+        limits_reached: [],
+        errors: [],
+        terms_url: "https://www.ycombinator.com/legal/",
+        storage_policy: "metadata_only",
+      },
+      {
+        source_key: "user_import",
+        channel: "seed_url",
+        status: "consulted",
+        requests: 0,
+        leads: 2,
+        limits_reached: [],
+        errors: [],
+        terms_url: null,
+        storage_policy: "full",
+      },
+    ],
+    limitations: [{ code: "source_not_enabled", detail: "hacker_news" }],
+    terminal_reason: "completed",
+    started_at: new Date(Date.now() - 60_000).toISOString(),
+    completed_at: new Date().toISOString(),
+  });
+  const demoCandidates = [
+    {
+      key: "pixelpulse",
+      name: "Pixelpulse (démo)",
+      tagline: "Analytics marketing pour petites équipes",
+      status: "eligible",
+      review: "pending",
+      fit: 75,
+      coverage: 80,
+      reason: null,
+    },
+    {
+      key: "referly",
+      name: "Referly Partners (démo)",
+      tagline: "Affiliate tracking software",
+      status: "excluded",
+      review: "rejected",
+      fit: null,
+      coverage: null,
+      reason: "permanent_exclusion",
+    },
+  ] as const;
+  for (const c of demoCandidates) {
+    const site = `https://${c.key}.test`;
+    const record = await insertOne("source_records", {
+      source_id: sourceId,
+      canonical_url: site,
+      title: `${c.name} — site officiel`,
+    });
+    const snapshot = await insertOne("source_snapshots", {
+      source_record_id: record.id,
+      content_hash: Array.from(`disc-${c.key}`.padEnd(64, "0"))
+        .map((ch) => ch.charCodeAt(0).toString(16).slice(-1))
+        .join("")
+        .slice(0, 64),
+      fetch_status: "ok",
+      storage_status: "reference_only",
+      extracted_metadata: { demo_fixture: true },
+      extraction_status: "completed",
+    });
+    const product = await insertOne("saas_products", {
+      name: c.name,
+      slug: `${c.key}-demo-candidate`,
+      website_url: site,
+      primary_domain: `${c.key}.test`,
+      tagline: c.tagline,
+      record_status: "candidate",
+      exclusion_status: c.status,
+      discovery_source_id: sourceId,
+    });
+    await insert("entity_identifiers", {
+      product_id: product.id,
+      identifier_type: "canonical_url",
+      value_normalized: site,
+      is_primary: true,
+      source_id: sourceId,
+    });
+    const evidence = await insertOne("evidence_items", {
+      product_id: product.id,
+      source_snapshot_id: snapshot.id,
+      claim_type: "product_exists",
+      claim_text: "Product presented on its official website",
+      claim_value: { name: c.name, official_url: site },
+      evidence_type: "official_statement",
+      fact_status: "confirmed",
+      reliability_level: 1,
+      extraction_method: "llm_extraction",
+    });
+    const candidate = await insertOne("discovery_candidates", {
+      run_id: demoRun.id,
+      product_id: product.id,
+      identity_decision: "new",
+      is_new_to_catalog: true,
+      exclusion_status_at_run: c.status,
+      fit_rules_version: "fit-1",
+      fit_score: c.fit,
+      fit_coverage: c.coverage,
+      confidence_score: 30,
+      recommendation_reason:
+        c.fit === null
+          ? "Non évalué : produit exclu ou en revue."
+          : "Correspondance 75/100 (démonstration).",
+      missing_information: c.fit === null ? [] : ["age"],
+      provenance: [{ source_key: "user_import", channel: "seed_url" }],
+      review_status: c.review,
+      rejection_reason: c.reason,
+    });
+    await insert("discovery_candidate_evidence", {
+      candidate_id: candidate.id,
+      evidence_item_id: evidence.id,
+    });
+  }
+}
+
 process.stdout.write(
   `${JSON.stringify({ seeded: true, workspace_id: workspaceId, products: Object.keys(productIds).length })}\n`,
 );
