@@ -104,3 +104,15 @@ again.
 - E2E: `apps/web/e2e/opportunity-analyses.e2e.ts` (analysis from a SaaS
   profile and from a cluster; separate score elements; cited evidence;
   VALIDATE FIRST on incomplete evidence; export; viewer read-only).
+
+## Sprint 6: Discovery Engine
+
+- Unit: `@sor/contracts` discovery contracts (no exclusion override, no fit
+  score in AI contracts, channels, leads without author or user text) and
+  `@sor/domain` discovery rules (fit score `fit-1`, unknown values,
+  explicit vs inferred vs preferences, configurable exclusions, planner
+  guard, budgets).
+- Database: `supabase/tests/015_discovery.sql` (privileges, RLS, source
+  registry and quotas, Hacker News disabled, request validation, state
+  sync, candidate identity/exclusion/fit rules, official-site evidence,
+  evidence scope, recomputed counts, review, retry, deletion).

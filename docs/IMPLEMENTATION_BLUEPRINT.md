@@ -5377,6 +5377,26 @@ and S6.1 (contracts and deterministic rules) implemented.
         60 leads, 90 official pages, 5 rebound seeds; deep 10 / 1,000 /
         150 / 240 / 15 (3 pages and 20 leads per rebound seed).
 
+**S6.2 (6 November 2026):** migration `20261108090000_discovery.sql` (M8)
+and `supabase/tests/015_discovery.sql`.
+
+-   M8 as specified, plus: `depth`, `max_results`, `channels`, `query_plan`,
+    `stage`, `leads_found`, versions and `terminal_reason` on runs;
+    `provenance`, `fit_rules_version`, reviewer fields on candidates;
+    checks "fit score needs coverage > 0" and "a possible duplicate is
+    never pending or accepted".
+-   `sources.storage_policy`, check "an enabled source has a terms
+    review", `source_usage_daily` + `sor_source_consume` (daily quota);
+    `hacker_news` row planned and disabled.
+-   RPCs: request, stage, plan, candidate upsert, finalize, review,
+    delete, retry (service role only).
+-   **[ASSUMPTION]** a candidate's primary evidence must be an
+    official-website snapshot (a third-party lead is never enough); the
+    database derives the candidate review status (excluded → rejected,
+    exclusion or identity under review → needs review); retry is refused
+    once a candidate has been reviewed (a new run is started instead);
+    deleting a run keeps the catalog products it created.
+
 -   M8; agents D1, D2, D3, D7 (D4--D6 exist from Sprint 3); exclusion
     tests at every boundary; AI Discovery UI (run page per PRD §6.4,
     candidate review).

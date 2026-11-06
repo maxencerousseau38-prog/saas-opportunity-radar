@@ -206,6 +206,37 @@ and end to end by the worker integration tests (`apps/worker/test/integration`).
 - Tests: `supabase/tests/013_opportunity_analyses.sql`,
   `supabase/tests/014_analysis_customer_voice.sql`.
 
+## Sprint 6: discovery (M8)
+
+- `discovery_runs`, `discovery_candidates` and `discovery_candidate_evidence`
+  are readable by members only; browsers write nothing there. Candidate
+  products stay `record_status = 'candidate'` (invisible through catalog
+  RLS) until a member accepts them through the API.
+- Candidate rows: only an eligible candidate carries a fit score or is
+  accepted; a fit score needs a coverage above 0; a possible duplicate
+  (identity `needs_review`) can never be pending or accepted; candidate
+  evidence must belong to the candidate product (scope trigger).
+- `sor_discovery_upsert_candidate` requires an official-website snapshot
+  as the candidate's primary evidence, never attaches a permanently
+  excluded category, and takes the catalog's current exclusion status for
+  an existing product (the worker cannot make an excluded product
+  eligible); an excluded candidate is rejected, a product under review
+  needs review. `sor_review_discovery_candidate` (member+, finished runs)
+  accepts only a pending, eligible candidate with an official URL and
+  evidence, re-checking the current catalog exclusion status; accepting
+  activates the product and is audit-logged.
+- `sources.storage_policy` records what a connector may keep; an enabled
+  source needs a written terms review (`terms_reviewed_at`); Hacker News
+  is registered planned and disabled. `sor_source_consume` refuses a
+  source that is not integrated and enabled and enforces the daily quota
+  (`source_usage_daily`, server-only); `sor_record_snapshot` already
+  refuses non-integrated sources.
+- Every discovery RPC is `security definer`, `search_path = ''` and
+  executable by `service_role` only; requests and reviews check the role
+  (member+), deletion is admin+ and audit-logged; a request cannot carry a
+  permanent-exclusion override. A run follows its job through a trigger.
+- Tests: `supabase/tests/015_discovery.sql`.
+
 ## Running the tests
 
 - **CI** (reference): the `database` job of `.github/workflows/ci.yml` runs
