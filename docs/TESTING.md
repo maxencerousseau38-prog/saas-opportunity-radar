@@ -116,3 +116,12 @@ again.
   registry and quotas, Hacker News disabled, request validation, state
   sync, candidate identity/exclusion/fit rules, official-site evidence,
   evidence scope, recomputed counts, review, retry, deletion).
+- Engine: `@sor/discovery-engine` `runDiscovery` on in-memory ports with
+  the fake provider and synthetic pages (exclusion at every boundary,
+  injection, partial results, identity, rebound controls, resume,
+  cancellation).
+- Integration: `apps/worker/test/integration/discovery.int.test.ts` (seed
+  URLs → candidates with official-site evidence, Hacker News reported as
+  not enabled and never called, excluded candidate rejected, duplicate
+  delivery, acceptance, unreachable site → partial, crash recovery without
+  repeated model calls, cancellation).

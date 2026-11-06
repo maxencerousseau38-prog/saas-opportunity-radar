@@ -6,7 +6,7 @@ import { parseWorkerEnv, type WorkerEnv } from "@sor/contracts/env";
 import { createServiceClient, jobsRepo, type DbClient } from "@sor/database";
 import { OfficialWebsiteConnector, defaultPolicy } from "@sor/data-sources";
 import { AIGateway, FAKE_MODELS, FakeProvider } from "@sor/ai-gateway";
-import { fakeEnrichmentHandlers } from "@sor/discovery-engine";
+import { fakeDiscoveryHandlers, fakeEnrichmentHandlers } from "@sor/discovery-engine";
 import { fakeOpportunityHandlers } from "@sor/opportunity-engine";
 import { fakePainPointHandlers } from "@sor/pain-point-engine";
 import { Worker, type JobHandler, type Log } from "./runtime";
@@ -14,6 +14,7 @@ import { enrichmentHandler } from "./handlers/enrichment";
 import { catalogImportHandler, feedbackImportHandler } from "./handlers/imports";
 import { painPointRunHandler } from "./handlers/pain";
 import { opportunityAnalysisHandler, reportExportHandler } from "./handlers/analysis";
+import { discoveryRunHandler } from "./handlers/discovery";
 
 const jsonLog: Log = (entry) => {
   process.stdout.write(`${JSON.stringify({ ts: new Date().toISOString(), ...entry })}\n`);
@@ -50,18 +51,18 @@ export async function buildWorker(
   const gateway = new AIGateway({
     provider: new FakeProvider({
       ...fakeEnrichmentHandlers,
+      ...fakeDiscoveryHandlers,
       ...fakePainPointHandlers,
       ...fakeOpportunityHandlers,
     }),
     models: FAKE_MODELS,
   });
-  const connector = new OfficialWebsiteConnector({
-    policy: defaultPolicy({
-      maxBytes: values.fetch_max_bytes ?? 5_242_880,
-      timeoutMs: values.fetch_timeout_ms ?? 15_000,
-      maxRedirects: values.fetch_max_redirects ?? 5,
-    }),
+  const fetchPolicy = defaultPolicy({
+    maxBytes: values.fetch_max_bytes ?? 5_242_880,
+    timeoutMs: values.fetch_timeout_ms ?? 15_000,
+    maxRedirects: values.fetch_max_redirects ?? 5,
   });
+  const connector = new OfficialWebsiteConnector({ policy: fetchPolicy });
   const handlers: Record<string, JobHandler> = {
     product_enrichment: enrichmentHandler({ db: client, connector, gateway, limits }),
     catalog_import: catalogImportHandler({ db: client, limits }),
@@ -73,6 +74,14 @@ export async function buildWorker(
     pain_point_run: painPointRunHandler({ db: client, gateway, limits }),
     opportunity_analysis: opportunityAnalysisHandler({ db: client, gateway, limits }),
     report_export: reportExportHandler({ db: client }),
+    // Search sources stay disabled in the registry (PD-28, docs/DATA_SOURCES.md).
+    discovery_run: discoveryRunHandler({
+      db: client,
+      officialSite: connector,
+      gateway,
+      limits,
+      fetchPolicy,
+    }),
   };
   const lease = values.job_lease_seconds ?? 120;
   const worker = new Worker({
@@ -94,6 +103,7 @@ export async function buildWorker(
     jobTimeoutSecondsByKind: {
       pain_point_run: values.pain_max_seconds ?? 1800,
       opportunity_analysis: values.analysis_max_seconds ?? 3600,
+      discovery_run: values.discovery_max_seconds ?? 1800,
     },
     log,
   });
