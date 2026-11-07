@@ -10,14 +10,15 @@ import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { D5_AGENT_KEY, D6_AGENT_KEY } from "@sor/discovery-engine";
 import {
-  ScriptedProvider,
   available,
+  cancelOpenJobs,
   db,
   expectInvariants,
   job,
   makeWorker,
   product,
   requestEnrichment,
+  ScriptedProvider,
   secretKey,
   sleep,
   startSite,
@@ -50,6 +51,7 @@ suite("worker shutdown under load", () => {
     });
   }, 60_000);
   afterAll(async () => {
+    await cancelOpenJobs();
     await site.close();
   });
 

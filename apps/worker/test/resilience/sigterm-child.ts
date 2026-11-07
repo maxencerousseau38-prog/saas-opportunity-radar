@@ -18,6 +18,9 @@ void runProcess(env, undefined, async () => {
     leaseSeconds: 60, // long: the jobs restart elsewhere only because they are released
     heartbeatSeconds: 1,
     modelTimeoutMs: 120_000,
+    // The runtime's own events ("job released on shutdown"…) go to stdout
+    // as JSON lines, like the production process.
+    log: (entry) => process.stdout.write(`${JSON.stringify(entry)}\n`),
   });
   return { worker, config: parseWorkerEnv(env), limits: {}, db: db() };
 });

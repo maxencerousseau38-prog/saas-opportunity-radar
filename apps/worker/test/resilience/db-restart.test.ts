@@ -6,7 +6,16 @@
 import { execFileSync } from "node:child_process";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { D5_AGENT_KEY } from "@sor/discovery-engine";
-import { available, db, expectInvariants, sleep, startSite, workspace, type Site } from "./harness";
+import {
+  available,
+  cancelOpenJobs,
+  db,
+  expectInvariants,
+  sleep,
+  startSite,
+  workspace,
+  type Site,
+} from "./harness";
 import { jobThroughOutage } from "./outage-run";
 
 function dbContainer(): string | null {
@@ -46,6 +55,7 @@ suite("real PostgreSQL restart", () => {
     site = await startSite();
   });
   afterAll(async () => {
+    await cancelOpenJobs();
     await site.close();
   });
 

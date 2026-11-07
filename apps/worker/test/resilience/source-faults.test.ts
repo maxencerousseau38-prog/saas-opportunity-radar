@@ -9,14 +9,15 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { discoveryRepo } from "@sor/database";
 import { D5_AGENT_KEY } from "@sor/discovery-engine";
 import {
-  ScriptedProvider,
   available,
+  cancelOpenJobs,
   db,
   expectInvariants,
   makeWorker,
   product,
   requestDiscovery,
   requestEnrichment,
+  ScriptedProvider,
   startSite,
   waitFor,
   withLimits,
@@ -58,6 +59,7 @@ suite("source faults", () => {
     restore = await withLimits({ job_max_attempts: "3" });
   });
   afterAll(async () => {
+    await cancelOpenJobs();
     await restore();
     await site.close();
   });

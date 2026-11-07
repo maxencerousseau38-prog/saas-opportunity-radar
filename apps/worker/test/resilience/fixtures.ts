@@ -176,12 +176,36 @@ export async function product(port: number): Promise<string> {
   return id;
 }
 
-export function requestEnrichment(
+/** Jobs created by this test file (cancelled by `cancelOpenJobs`). */
+const created: string[] = [];
+
+/**
+ * Cancels the jobs of this file that are not terminal, so that a failed
+ * scenario never leaves work for the workers of the next file.
+ */
+export async function cancelOpenJobs(): Promise<void> {
+  const ids = created.splice(0);
+  if (ids.length === 0) return;
+  await db()
+    .from("job_executions")
+    .update({
+      state: "cancelled",
+      terminal_reason: "cancelled",
+      completed_at: new Date().toISOString(),
+      lease_owner: null,
+      lease_expires_at: null,
+    })
+    .in("id", ids)
+    .not("state", "in", `(${TERMINAL.join(",")})`)
+    .throwOnError();
+}
+
+export async function requestEnrichment(
   ws: { id: string; user: string },
   productId: string,
   key = `res-${randomUUID()}`,
 ) {
-  return jobsRepo.requestJob(db(), {
+  const res = await jobsRepo.requestJob(db(), {
     kind: "product_enrichment",
     workspaceId: ws.id,
     requestedBy: ws.user,
@@ -189,11 +213,13 @@ export function requestEnrichment(
     requestHash: hash(),
     payload: { product_id: productId } as never,
   });
+  created.push(res.jobId);
+  return res;
 }
 
 /** A discovery run on seed URLs only (no search channel, no network). */
-export function requestDiscovery(ws: { id: string; user: string }, seedUrls: string[]) {
-  return discoveryRepo.requestDiscoveryRun(db(), {
+export async function requestDiscovery(ws: { id: string; user: string }, seedUrls: string[]) {
+  const res = await discoveryRepo.requestDiscoveryRun(db(), {
     workspaceId: ws.id,
     userId: ws.user,
     idempotencyKey: `res-${randomUUID()}`,
@@ -208,6 +234,8 @@ export function requestDiscovery(ws: { id: string; user: string }, seedUrls: str
       },
     },
   });
+  created.push(res.jobId);
+  return res;
 }
 
 // ---------------------------------------------------------------- scripted provider
@@ -277,6 +305,8 @@ export interface WorkerSetup {
   /** Client used by the worker and its handlers (default: the healthy one). */
   client?: DbClient;
   concurrency?: number;
+  /** Also receives every worker log entry (the F13 child writes them to stdout). */
+  log?: (entry: Record<string, unknown>) => void;
 }
 
 export function makeWorker(o: WorkerSetup) {
@@ -320,7 +350,10 @@ export function makeWorker(o: WorkerSetup) {
     concurrency: o.concurrency ?? 5,
     jobTimeoutSeconds: 60,
     backoff: { baseSeconds: 1, capSeconds: 1, random: () => 0 },
-    log: (e) => logs.push(e),
+    log: (e) => {
+      logs.push(e);
+      o.log?.(e);
+    },
   });
   return { worker, handlers, logs };
 }

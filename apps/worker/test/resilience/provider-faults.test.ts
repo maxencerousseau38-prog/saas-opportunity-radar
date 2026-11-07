@@ -6,13 +6,14 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { D5_AGENT_KEY, D6_AGENT_KEY } from "@sor/discovery-engine";
 import { monitorOnce } from "../../src/monitor";
 import {
-  ScriptedProvider,
   available,
+  cancelOpenJobs,
   db,
   expectInvariants,
   makeWorker,
   product,
   requestEnrichment,
+  ScriptedProvider,
   startSite,
   waitFor,
   withLimits,
@@ -28,6 +29,7 @@ suite("AI provider faults", () => {
     site = await startSite();
   });
   afterAll(async () => {
+    await cancelOpenJobs();
     await site.close();
   });
 

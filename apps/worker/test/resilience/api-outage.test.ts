@@ -8,6 +8,7 @@ import { D5_AGENT_KEY } from "@sor/discovery-engine";
 import {
   ApiOutage,
   available,
+  cancelOpenJobs,
   dbBehind,
   expectInvariants,
   sleep,
@@ -24,6 +25,7 @@ suite("Supabase API outage", () => {
     site = await startSite();
   });
   afterAll(async () => {
+    await cancelOpenJobs();
     await site.close();
   });
 

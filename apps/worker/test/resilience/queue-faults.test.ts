@@ -10,14 +10,15 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { jobsRepo } from "@sor/database";
 import { D5_AGENT_KEY, D6_AGENT_KEY } from "@sor/discovery-engine";
 import {
-  ScriptedProvider,
   available,
+  cancelOpenJobs,
   db,
   expectInvariants,
   job,
   makeWorker,
   product,
   requestEnrichment,
+  ScriptedProvider,
   sleep,
   startSite,
   waitFor,
@@ -43,6 +44,7 @@ suite("queue and worker faults", () => {
     site = await startSite();
   });
   afterAll(async () => {
+    await cancelOpenJobs();
     await site.close();
   });
 
