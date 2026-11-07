@@ -3,7 +3,7 @@
 // Cluster; score, band, WTP, confidence, coverage and verdict shown
 // separately; cited evidence opened from the score table; incomplete evidence
 // gives VALIDATE FIRST; Markdown export. Viewers cannot start analyses.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { MEMBER, VIEWER, signIn } from "./helpers";
 
 test.describe.configure({ mode: "serial" });

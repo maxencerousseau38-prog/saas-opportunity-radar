@@ -1,15 +1,33 @@
-// Refreshes the Supabase session cookies on every request and sends
-// signed-out visitors to /login (pages only; API routes answer 401).
+// Refreshes the Supabase session cookies on every request, sends signed-out
+// visitors to /login (pages only; API routes answer 401) and sets the
+// per-request Content Security Policy with a nonce (S7.4b, PD-33).
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { CSP_HEADER, buildCsp, newNonce } from "@/lib/security-headers";
 
 const PUBLIC_PATHS = ["/login", "/auth/"];
 
 export async function proxy(request: NextRequest) {
+  const nonce = newNonce();
+  const csp = buildCsp({
+    nonce,
+    dev: process.env.NODE_ENV === "development",
+    https: request.nextUrl.protocol === "https:",
+    reportUri: "/api/csp-report",
+  });
+  // Next.js reads the nonce from the request's CSP header and adds it to its
+  // own scripts; the browser receives the policy on the response.
+  request.headers.set("content-security-policy", csp);
+  request.headers.set("x-nonce", nonce);
+  const secured = (res: NextResponse) => {
+    res.headers.set(CSP_HEADER, csp);
+    return res;
+  };
+
   let response = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return response;
+  if (!url || !key) return secured(response);
 
   const supabase = createServerClient(url, key, {
     cookies: {
@@ -29,9 +47,9 @@ export async function proxy(request: NextRequest) {
     const login = request.nextUrl.clone();
     login.pathname = "/login";
     login.search = "";
-    return NextResponse.redirect(login);
+    return secured(NextResponse.redirect(login));
   }
-  return response;
+  return secured(response);
 }
 
 export const config = {

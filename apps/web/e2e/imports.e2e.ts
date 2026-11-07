@@ -1,6 +1,6 @@
 // Sprint 3 journeys with the worker running: CSV imports processed
 // asynchronously with per-row results, and the enrichment status of a product.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { MEMBER, VIEWER, signIn } from "./helpers";
 
 test.describe.configure({ mode: "serial" });

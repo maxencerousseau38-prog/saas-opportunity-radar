@@ -4,7 +4,7 @@
 // fit score, coverage and evidence confidence separately, open the cited
 // evidence, accept an eligible candidate and see an excluded one rejected.
 // Viewers read runs but cannot start one. Settings show the source registry.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { MEMBER, VIEWER, signIn } from "./helpers";
 
 test.describe.configure({ mode: "serial" });

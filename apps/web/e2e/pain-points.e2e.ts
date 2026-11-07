@@ -2,7 +2,7 @@
 // feedback import → pain point run over two competitors → cluster with
 // separate volume / authors / companies, evidence, correction → generated
 // hypothesis with its own status. Viewers cannot start runs.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { MEMBER, VIEWER, signIn } from "./helpers";
 
 test.describe.configure({ mode: "serial" });

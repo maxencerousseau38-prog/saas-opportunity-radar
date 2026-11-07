@@ -1,7 +1,7 @@
 // Sprint 2 journeys on the demo fixtures (scripts/seed-demo.ts): browse,
 // filter, profile, evidence, collections, favourites, saved searches,
 // comparison, manual add, operator review and viewer restrictions.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { MEMBER, OWNER, VIEWER, signIn, waitForResults } from "./helpers";
 
 test.describe.configure({ mode: "serial" });
