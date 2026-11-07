@@ -220,3 +220,8 @@ S7.4e (operator MFA):
   `e2e/helpers.ts` `totp`, RFC 6238), console and API available after;
   non-operators still get 404. The enrolment key is kept in
   `test-results/.operator-totp-secret` for later sessions of the same run.
+
+Integration files run one after the other (`--no-file-parallelism`, S7.4e):
+they share one queue, and a worker that reads a job kind it has no handler
+for leaves it invisible for its lease (S7.4a behaviour), which made timing
+across files non-deterministic.
