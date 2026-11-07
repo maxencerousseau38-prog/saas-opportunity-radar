@@ -9,7 +9,11 @@ export function PasswordForm() {
   const [error, action, pending] = useActionState(setPassword, null);
   return (
     <form action={action} className="space-y-4">
-      <Field label="Nouveau mot de passe" htmlFor="password" hint="12 caractères minimum.">
+      <Field
+        label="Nouveau mot de passe"
+        htmlFor="password"
+        hint="12 caractères minimum, avec des lettres et des chiffres."
+      >
         <Input
           id="password"
           name="password"

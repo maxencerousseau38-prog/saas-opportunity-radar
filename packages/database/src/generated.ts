@@ -1659,6 +1659,9 @@ isOneToOne: true
 "sor_cluster_correction":
 { Args: { "p_actor": string,"p_cluster_id": string,"p_correction": Json,"p_expected_updated_at": string,"p_request_id": string,"p_stats": Json,"p_target_stats": Json,"p_workspace_id": string }; Returns: Json
                            },
+"sor_consume_rate_limit":
+{ Args: { "p_action": string,"p_subject": string }; Returns: number
+                           },
 "sor_delete_analysis":
 { Args: { "p_actor": string,"p_analysis_id": string,"p_request_id": string,"p_workspace_id": string }; Returns: undefined
                            },

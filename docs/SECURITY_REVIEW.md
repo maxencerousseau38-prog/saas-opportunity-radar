@@ -50,12 +50,12 @@ No critical or high finding.
 |---|---|---|---|---|
 | M1 | Medium | No HTTP security headers (CSP, `frame-ancestors`, `Referrer-Policy`, `Permissions-Policy`) | Static headers (next.config) and per-request CSP with nonce (proxy): Report-Only in S7.4b with no violation over the E2E suite (CI run 66), enforced in S7.4c; reports to `/api/csp-report` | **Fixed (S7.4b–c)** |
 | M2 | Medium | No systematic test of every privilege of the browser roles: a new table could be exposed silently | pgTAP 019 privilege manifest + structural rules | **Fixed (S7.4a)** |
-| M3 | Medium | No rate limit on member invitations (emails), manual catalog additions, correction reports | Extend the S7.2 fixed-window counters | S7.4d |
-| M4 | Medium | Weak local auth policy (6-character passwords, no `secure_password_change`), no MFA, including for the operator | Passwords ≥ 12 with letters and digits; operator MFA AAL2 (PD-30) | S7.4d–e |
+| M3 | Medium | No rate limit on member invitations (emails), manual catalog additions, correction reports | `sor_consume_rate_limit` (fixed windows, `rate_limit_counters`): 20 invitations per workspace, 20 manual additions and 30 correction reports per user, per hour; 429 `RATE_LIMITED` + `Retry-After` | **Fixed (S7.4d)** |
+| M4 | Medium | Weak local auth policy (6-character passwords, no `secure_password_change`), no MFA, including for the operator | Passwords ≥ 12 with letters and digits and secure password change (local config, password form; hosted checklist §5) — S7.4d; operator MFA AAL2 (PD-30) — S7.4e | Passwords **fixed (S7.4d)**; MFA S7.4e |
 | M5 | Medium | No secret scanning, dependency audit or update automation in CI | gitleaks (full history), `pnpm audit --prod --audit-level high`, Dependabot | **Fixed (S7.4a)** |
 | L1 | Low | 13 `private` functions executable by `PUBLIC` (so `anon`), unreachable without schema usage | Revoked; previous access kept for `authenticated` and `service_role` | **Fixed (S7.4a)** |
 | L2 | Low | Migration timestamps ahead of the calendar: a later migration stamped with the real time would sort before applied ones | Names kept; CI enforces strictly increasing, forward-only migrations | **Fixed (S7.4a)** |
-| L3 | Low | Invitation link built from the request origin | Use the configured site URL | S7.4d |
+| L3 | Low | Invitation link built from the request origin | `SITE_URL` (required in staging and production) builds invitation links | **Fixed (S7.4d)** |
 | L4 | Low | An admin can tell whether an email already has an account (`invitation_sent`) | Accepted: admins are trusted, signup is closed; documented | Accepted |
 | L5 | Low | Cursor HMAC key derived from `SUPABASE_SECRET_KEY`: rotating the key invalidates open cursors | Accepted (cursors are short-lived); documented | Accepted |
 
@@ -106,7 +106,9 @@ Not applied: no hosted project exists yet.
 - [ ] Passwords: minimum 12 characters, letters and digits; secure password
       change on; leaked-password protection if the plan offers it.
 - [ ] MFA: TOTP enabled; the operator account enrolled (PD-30).
-- [ ] Redirect URLs: only the production / staging web origins.
+- [ ] Redirect URLs: only the production / staging web origins; `SITE_URL`
+      set to the same origin in Vercel (required at startup in staging and
+      production).
 - [ ] Email: custom SMTP sender, auth email rate limits reviewed.
 - [ ] Secrets: `SUPABASE_SECRET_KEY` and `AUTHOR_HASH_SECRET` only in the
       Render and Vercel dashboards, different per environment.

@@ -8,6 +8,9 @@ export const LIMIT_MESSAGES: Record<LimitKind, string> = {
   daily_jobs: "Quota quotidien de traitements du workspace atteint (remise à zéro à minuit UTC).",
   job_posts: "Trop de demandes de traitement en une heure : réessayez plus tard.",
   workspaces: "Nombre maximal de workspaces atteint.",
+  invitations: "Trop d’invitations envoyées pour ce workspace en une heure : réessayez plus tard.",
+  manual_additions: "Trop d’ajouts manuels au catalogue en une heure : réessayez plus tard.",
+  correction_reports: "Trop de signalements en une heure : réessayez plus tard.",
 };
 
 export interface LimitResponse {

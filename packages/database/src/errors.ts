@@ -30,7 +30,14 @@ const PUBLIC_MESSAGES: Record<DbErrorCode, string> = {
 };
 
 /** Which platform limit refused a request (S7.2); safe to show. */
-export type LimitKind = "concurrent_jobs" | "daily_jobs" | "job_posts" | "workspaces";
+export type LimitKind =
+  | "concurrent_jobs"
+  | "daily_jobs"
+  | "job_posts"
+  | "workspaces"
+  | "invitations"
+  | "manual_additions"
+  | "correction_reports";
 
 export interface LimitInfo {
   limit?: LimitKind;
@@ -56,6 +63,9 @@ const LIMIT_REASONS: Record<string, LimitKind> = {
   "daily jobs": "daily_jobs",
   "job posts": "job_posts",
   workspaces: "workspaces",
+  invitations: "invitations",
+  "manual additions": "manual_additions",
+  "correction reports": "correction_reports",
 };
 
 /** Parses "RATE_LIMITED: job posts retry_after=120" / "LIMIT_EXCEEDED: daily jobs". */

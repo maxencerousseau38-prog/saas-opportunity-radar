@@ -128,3 +128,21 @@ export async function resolveCorrectionReport(
   });
   if (error) throw mapPostgresError(error);
 }
+
+/**
+ * Consumes one unit of an action rate limit (S7.4d); throws DbError
+ * RATE_LIMITED (with the limit kind and retry delay) when the hourly budget
+ * is spent. Subject: the workspace for invitations, the user otherwise.
+ */
+export async function consumeRateLimit(
+  service: DbClient,
+  action: "invitation" | "manual_addition" | "correction_report",
+  subject: string,
+): Promise<number> {
+  const { data, error } = await service.rpc("sor_consume_rate_limit", {
+    p_action: action,
+    p_subject: subject,
+  });
+  if (error) throw mapPostgresError(error);
+  return data;
+}

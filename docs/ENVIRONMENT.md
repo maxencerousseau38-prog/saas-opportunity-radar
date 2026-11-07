@@ -49,6 +49,7 @@ Validated at startup by `@sor/contracts/env`:
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | web | browser |
 | `SUPABASE_SECRET_KEY` | web (server), worker | server only |
 | `SUPABASE_URL` | worker | server |
+| `SITE_URL` | web | server — public origin for emailed links (invitations); required in staging and production (S7.4d) |
 | `WORKER_ID` | worker | server |
 | `AI_PROVIDER` | worker | server — only `fake` until PD-24 chooses a real provider |
 | `AUTHOR_HASH_SECRET` | worker | server only — salt of reviewer-identity hashes (32+ characters) |

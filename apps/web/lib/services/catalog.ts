@@ -502,6 +502,8 @@ export async function manualAdd(
     secondaryTexts: entry.note ? [entry.note] : [],
     featureTexts: [],
   });
+  // Manual additions write the global catalog: hourly limit per user (S7.4d).
+  await serverRepo.consumeRateLimit(getServiceClient(), "manual_addition", userId);
   const result = await serverRepo.manualAddProduct(getServiceClient(), {
     workspaceId,
     requestedBy: userId,

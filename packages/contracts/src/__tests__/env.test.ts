@@ -48,6 +48,23 @@ describe("environment parsing", () => {
     expect(env.APP_ENV).toBe("local");
   });
 
+  it("requires SITE_URL in staging and production only (invitation links, S7.4d)", () => {
+    const base = {
+      NEXT_PUBLIC_SUPABASE_URL: "https://x.supabase.co",
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: KEY,
+      SUPABASE_SECRET_KEY: SECRET,
+    };
+    expect(() => parseWebServerEnv({ ...base, APP_ENV: "production" })).toThrow(/SITE_URL/);
+    expect(
+      parseWebServerEnv({ ...base, APP_ENV: "staging", SITE_URL: "https://staging.example.com" })
+        .SITE_URL,
+    ).toBe("https://staging.example.com");
+    expect(() =>
+      parseWebServerEnv({ ...base, APP_ENV: "production", SITE_URL: "javascript:alert(1)" }),
+    ).toThrow(/SITE_URL/);
+    expect(parseWebServerEnv({ ...base, APP_ENV: "test" }).SITE_URL).toBeUndefined();
+  });
+
   it("refuses to start when a secret is exposed to the browser", () => {
     expect(() =>
       parseWebPublicEnv({

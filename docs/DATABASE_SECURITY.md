@@ -284,6 +284,13 @@ and end to end by the worker integration tests (`apps/worker/test/integration`).
   `authenticated`. **Adding a grant means updating this manifest in the same
   change**, which makes every exposure an explicit review item.
 - Review report: `docs/SECURITY_REVIEW.md`.
+- Action rate limits (S7.4d, migration `20261113090000_action_rate_limits.sql`):
+  `sor_consume_rate_limit(action, subject)` (service role only) counts
+  invitations per workspace and manual catalog additions / correction
+  reports per user in fixed hourly windows (`rate_limit_counters`, limits in
+  `platform_limits`) and raises `RATE_LIMITED: <action> retry_after=<s>`.
+  The API calls it before the action. Tests:
+  `supabase/tests/020_action_rate_limits.sql`.
 
 ## Running the tests
 

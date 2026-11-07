@@ -1,6 +1,7 @@
 import { MemberInviteSchema } from "@sor/contracts";
 import { DbError, serverRepo, workspaceRepo } from "@sor/database";
 import { parseBody, workspaceRoute } from "@/lib/api/http";
+import { siteUrl } from "@/lib/env";
 import { getServiceClient } from "@/lib/supabase/server";
 
 export const GET = workspaceRoute("viewer", async ({ client, workspaceId }) => ({
@@ -24,8 +25,10 @@ export const POST = workspaceRoute("admin", async ({ workspaceId, user, request 
     userId = await add();
   } catch (err) {
     if (!(err instanceof DbError) || err.code !== "NOT_FOUND") throw err;
-    const origin = new URL(request.url).origin;
-    await serverRepo.inviteUserByEmail(service, body.email, `${origin}/auth/confirm`);
+    // Invitations send emails: hourly limit per workspace (S7.4d). The link
+    // points to the configured site, never to the request's Host header.
+    await serverRepo.consumeRateLimit(service, "invitation", workspaceId);
+    await serverRepo.inviteUserByEmail(service, body.email, `${siteUrl(request)}/auth/confirm`);
     invited = true;
     userId = await add();
   }

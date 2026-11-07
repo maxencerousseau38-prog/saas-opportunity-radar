@@ -15,6 +15,21 @@ export const WebPublicEnvSchema = z.object({
 export const WebServerEnvSchema = WebPublicEnvSchema.extend({
   APP_ENV: AppEnvSchema.default("local"),
   SUPABASE_SECRET_KEY: z.string().min(20),
+  /**
+   * Public origin of the web app (e.g. https://radar.example.com), used for
+   * links sent by email (invitations). Required in staging and production so
+   * that a forged Host header can never shape a link (S7.4d); local and test
+   * fall back to the request origin.
+   */
+  SITE_URL: HttpUrlSchema.optional(),
+}).superRefine((env, ctx) => {
+  if ((env.APP_ENV === "staging" || env.APP_ENV === "production") && !env.SITE_URL) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["SITE_URL"],
+      message: "required in staging and production",
+    });
+  }
 });
 
 /** Variables of the persistent worker. */

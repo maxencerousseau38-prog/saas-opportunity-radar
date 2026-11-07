@@ -32,4 +32,23 @@ describe("limitResponse", () => {
     const err = mapPostgresError({ code: "54000", message: "LIMIT_EXCEEDED: something" });
     expect(limitResponse(err)).toEqual({});
   });
+
+  it("explains the S7.4d action limits (invitations, manual additions, reports)", () => {
+    for (const [label, kind] of [
+      ["invitations", "invitations"],
+      ["manual additions", "manual_additions"],
+      ["correction reports", "correction_reports"],
+    ] as const) {
+      const err = mapPostgresError({
+        code: "54000",
+        message: `RATE_LIMITED: ${label} retry_after=60`,
+      });
+      expect(err.code).toBe("RATE_LIMITED");
+      expect(limitResponse(err)).toMatchObject({
+        details: { limit: kind, retry_after_seconds: 60 },
+        retryAfter: 60,
+      });
+      expect(limitResponse(err).message).toMatch(/en une heure/);
+    }
+  });
 });

@@ -5,7 +5,7 @@ import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { DbError, createServiceClient, jobsRepo, type DbClient } from "@sor/database";
+import { DbError, createServiceClient, jobsRepo, serverRepo, type DbClient } from "@sor/database";
 import { OfficialWebsiteConnector, defaultPolicy, isPublicAddress } from "@sor/data-sources";
 import { AIGateway, FAKE_MODELS, FakeProvider } from "@sor/ai-gateway";
 import { D5_AGENT_KEY, D6_AGENT_KEY, fakeEnrichmentHandlers } from "@sor/discovery-engine";
@@ -500,5 +500,20 @@ run("worker on the local Supabase stack", () => {
     const cleared = await monitorOnce(db, () => undefined);
     expect(cleared.alerts.map((a) => a.key)).not.toContain("stuck_jobs");
     expect(cleared.resolved).toContain("stuck_jobs");
+  });
+
+  it("limits invitations per workspace through PostgREST with a retry delay (S7.4d)", async () => {
+    const ws = await workspace();
+    for (let i = 1; i <= 20; i++)
+      expect(await serverRepo.consumeRateLimit(db, "invitation", ws.id)).toBe(i);
+    const refused = await serverRepo
+      .consumeRateLimit(db, "invitation", ws.id)
+      .catch((e: unknown) => e);
+    expect(refused).toBeInstanceOf(DbError);
+    expect((refused as DbError).code).toBe("RATE_LIMITED");
+    expect((refused as DbError).limit).toBe("invitations");
+    expect((refused as DbError).retryAfterSeconds).toBeGreaterThan(0);
+    const other = await workspace();
+    expect(await serverRepo.consumeRateLimit(db, "invitation", other.id)).toBe(1);
   });
 });

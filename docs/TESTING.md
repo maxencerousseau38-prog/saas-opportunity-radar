@@ -203,3 +203,12 @@ S7.4b–c (web hardening):
   `e2e/security.e2e.ts` (headers, nonce, enforced policy blocks an injected
   inline script, report endpoint). Import `test` / `expect` from
   `./fixtures` in new journeys.
+
+S7.4d (rate limits, invitation links, password policy):
+
+- Database: `supabase/tests/020_action_rate_limits.sql`.
+- Unit: `apps/web/test/limits.test.ts` (French messages and `Retry-After`
+  for the new limits), `packages/contracts/src/__tests__/env.test.ts`
+  (`SITE_URL` required in staging and production).
+- Integration: `pipeline.int.test.ts` — the 21st invitation of a workspace
+  in an hour is refused through PostgREST (`RATE_LIMITED`, `invitations`).

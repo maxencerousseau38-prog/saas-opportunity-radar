@@ -5519,8 +5519,11 @@ leaves a job kind it cannot handle to another worker instead of failing it.
 **S7.4b–c:** static security headers, per-request CSP with nonce
 (Report-Only validated by the E2E suite with no violation, then enforced),
 CSP report endpoint, E2E CSP guard, API route guard test with a role
-manifest. Next slices: rate limits, invitation link and password policy
-(S7.4d), operator MFA (S7.4e).
+manifest. **S7.4d:** action rate limits (`sor_consume_rate_limit`:
+invitations per workspace, manual additions and correction reports per
+user), invitation links from `SITE_URL` (required in staging and
+production), passwords ≥ 12 with letters and digits and secure password
+change (PD-31). Next slice: operator MFA AAL2 (S7.4e).
 
 -   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
     (`0.5c-512mb` = former "Starter"); to verify when the service is created.

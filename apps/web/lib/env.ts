@@ -10,3 +10,9 @@ export function getServerEnv(): WebServerEnv {
   cached ??= parseWebServerEnv(process.env);
   return cached;
 }
+
+/** Origin for links sent by email: SITE_URL, else (local / test) the request origin. */
+export function siteUrl(request: Request): string {
+  const configured = getServerEnv().SITE_URL;
+  return (configured ?? new URL(request.url).origin).replace(/\/+$/, "");
+}
