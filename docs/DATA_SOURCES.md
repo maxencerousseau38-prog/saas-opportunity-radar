@@ -232,3 +232,20 @@ owner on 6 November 2026; no account, no key, no call.
 4. The worker then builds the connector for discovery runs; every request
    goes through `sor_source_consume` (daily quota) and the safe fetcher.
 
+## Future bulk catalog sources (PD-34, pending — 7 November 2026)
+
+The product owner wants to keep the way open for two large catalog
+sources: **a Hugging Face dataset (~260K products)** and **Enlisted
+(10K+)**. Nothing is imported or connected. Before any use, a written
+review must establish: the exact dataset or provider and its owner; the
+licence and the rights to store, transform and display the data; update
+cadence and freshness; field coverage and quality on a sample; overlap
+with the catalog and identity matching (canonical URL / domain, never the
+name alone); the permanent exclusion classifier on a sample. An approved
+source would go through the existing import pipeline (rows validated,
+identity resolution, provenance per field, idempotent re-imports), with
+facts marked as declared until verified.
+
+Scale: the S7.5 catalog benchmarks run at 2K, 10K and 50K products; a
+~300K catalog will need a new benchmark before such an import.
+

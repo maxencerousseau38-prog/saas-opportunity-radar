@@ -292,10 +292,41 @@ export async function startStep(
   return row.id;
 }
 
+/** Thrown when a newer attempt owns the job or the step (S7.5a): handled as a lost lease. */
+function takenOver(what: string): DbError {
+  return new DbError("INVALID_STATE", {
+    message: `LEASE_LOST: ${what} taken over by a newer attempt`,
+  });
+}
+
+/**
+ * The job is still running this attempt (S7.5a). A worker that froze past
+ * its lease must not start a step that a newer attempt now owns.
+ */
+export async function assertAttemptCurrent(
+  service: DbClient,
+  jobId: string,
+  attempt: number,
+): Promise<void> {
+  const row = check(
+    await service
+      .from("job_executions")
+      .select("state, attempt_count")
+      .eq("id", jobId)
+      .maybeSingle(),
+  );
+  if (!row || row.state !== "running" || row.attempt_count !== attempt) throw takenOver("job");
+}
+
+/**
+ * Completes a step only while it is running for this attempt (S7.5a): a
+ * stale worker can never overwrite a step completed by a newer attempt.
+ */
 export async function completeStep(
   service: DbClient,
   stepId: string,
   args: {
+    attempt: number;
     output: JsonValue;
     outputHash: string;
     warnings: string[];
@@ -308,7 +339,7 @@ export async function completeStep(
     latencyMs?: number | null;
   },
 ): Promise<void> {
-  check(
+  const rows = check(
     await service
       .from("agent_step_runs")
       .update({
@@ -325,13 +356,19 @@ export async function completeStep(
         latency_ms: args.latencyMs ?? null,
         completed_at: new Date().toISOString(),
       })
-      .eq("id", stepId),
+      .eq("id", stepId)
+      .eq("attempt", args.attempt)
+      .eq("state", "running")
+      .select("id"),
   );
+  if (!rows || rows.length === 0) throw takenOver("step");
 }
 
+/** Marks a step failed only while it is running for this attempt (never a newer attempt's step). */
 export async function failStep(
   service: DbClient,
   stepId: string,
+  attempt: number,
   code: string,
   message: string,
 ): Promise<void> {
@@ -344,7 +381,9 @@ export async function failStep(
         error_message: message.slice(0, 500),
         completed_at: new Date().toISOString(),
       })
-      .eq("id", stepId),
+      .eq("id", stepId)
+      .eq("attempt", attempt)
+      .eq("state", "running"),
   );
 }
 

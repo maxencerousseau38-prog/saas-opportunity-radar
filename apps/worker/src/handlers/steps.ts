@@ -30,6 +30,9 @@ export function stepRunner(
     ) {
       return { output: existing.output_json as T, stepId: existing.id, reused: true };
     }
+    // A worker that froze past its lease stops here instead of taking over a
+    // step that a newer attempt owns (S7.5a, scenario F6).
+    await jobsRepo.assertAttemptCurrent(db, job.id, job.attempt_count);
     const stepId = await jobsRepo.startStep(db, {
       jobId: job.id,
       agentKey: meta.agentKey,
@@ -47,6 +50,7 @@ export function stepRunner(
         });
       }
       await jobsRepo.completeStep(db, stepId, {
+        attempt: job.attempt_count,
         output: res.output as unknown as NonNullable<Json>,
         outputHash: hash(res.output),
         warnings: res.warnings ?? [],
@@ -63,6 +67,7 @@ export function stepRunner(
       await jobsRepo.failStep(
         db,
         stepId,
+        job.attempt_count,
         typeof e.code === "string" ? e.code : "STEP_FAILED",
         typeof e.message === "string" ? e.message : "step failed",
       );

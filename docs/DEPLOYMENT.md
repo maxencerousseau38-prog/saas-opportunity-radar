@@ -38,6 +38,11 @@ SIGTERM shutdown (exit code 0).
   job system recovers the job (lease expiry, crash recovery tested in CI).
 - **Fatal errors** (`uncaughtException`, `unhandledRejection`) are logged
   and exit with code 1.
+- **Frozen worker** (S7.5a): a worker that stalls past its lease (frozen
+  process, long pause) and wakes up after another worker took the job over
+  cannot start a step of the job, nor complete or fail a step, unless the
+  job still runs its own attempt; the write is refused as a lost lease, so
+  the newer attempt's results are never overwritten.
 - **Unknown job kind** (S7.4a): a worker without a handler for a message's
   job kind (e.g. an older version during a rolling deploy) logs
   `no handler for job kind: left for another worker` and leaves the message

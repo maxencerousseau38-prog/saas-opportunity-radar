@@ -5527,8 +5527,19 @@ change (PD-31). **S7.4e:** the operator console and API require an
 MFA-verified session (AAL2, TOTP; PD-30): enrolment and challenge screens,
 `requireOperator` checks verified JWT claims, 403 `mfa_required` on the API.
 All review findings are fixed or accepted (`docs/SECURITY_REVIEW.md`).
-Remaining Sprint 7: load and failure-mode tests; backups and restore drill;
-staging deployment; operational runbooks.
+
+
+**S7.5 (7 November 2026) — failure-mode and load tests:** plan approved
+(reproducible simulations on the local stack; correctness always blocking,
+performance blocking only on major regressions; real PostgreSQL restart;
+catalog benchmarks at 2K / 10K / 50K products; future bulk sources PD-34).
+**S7.5a:** resilience harness and CI job, provider faults (F1–F3), queue
+and worker faults (F6–F8), concurrent requests (F10–F11). Next: database
+outage and restart, source faults, shutdown under load, API isolation
+sweep (S7.5b); load tests and report (S7.5c).
+
+Remaining Sprint 7 after S7.5: backups and restore drill; staging
+deployment; operational runbooks.
 
 -   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
     (`0.5c-512mb` = former "Starter"); to verify when the service is created.

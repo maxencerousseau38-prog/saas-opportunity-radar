@@ -225,3 +225,29 @@ Integration files run one after the other (`--no-file-parallelism`, S7.4e):
 they share one queue, and a worker that reads a job kind it has no handler
 for leaves it invisible for its lease (S7.4a behaviour), which made timing
 across files non-deterministic.
+
+## Sprint 7: failure-mode tests (S7.5a)
+
+CI job "Resilience" (`pnpm --filter @sor/worker test:resilience`) on the
+local Supabase stack, files run one after the other; every scenario is
+blocking. Harness: `apps/worker/test/resilience/harness.ts` (scripted fake
+provider — transient / permanent / slow faults per agent call —, loopback
+fixture site, small fixed leases and backoff, `expectInvariants`: bounded
+attempts, terminal reason, one row per agent step, no duplicated evidence;
+`withLimits` restores the platform limits it changes).
+
+- `provider-faults.test.ts`: F1 transient outage retried with the
+  extraction step reused; F2 lasting outage → dead letter, nothing applied,
+  `dead_letters` and `provider_error_rate:fake` alerts; F3 slow provider cut
+  off by its timeout, recorded, retried.
+- `queue-faults.test.ts`: F6 frozen worker loses its lease, the new
+  owner's result stands (its completed step is neither overwritten nor
+  marked failed), nothing duplicated — this scenario exposed a defect fixed
+  in S7.5a: step writes are now guarded by the attempt (see
+  `docs/DEPLOYMENT.md` §2); F7 lost queue message re-sent
+  by the orphan sweep; F8 malformed message on the real queue (sent with
+  `psql`) archived and audited while the healthy job completes.
+- `concurrency.test.ts`: F10 20 identical concurrent requests → one job,
+  changed payload → conflict; F11 bursts admit exactly the concurrency
+  limit, the daily quota and the hourly per-user limit.
+

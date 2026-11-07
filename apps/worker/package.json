@@ -8,8 +8,9 @@
     "start": "node dist/main.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run --exclude 'test/integration/**'",
+    "test": "vitest run --exclude 'test/integration/**' --exclude 'test/resilience/**'",
     "test:integration": "vitest run --dir test/integration --no-file-parallelism",
+    "test:resilience": "vitest run --dir test/resilience --no-file-parallelism",
     "eval:build": "tsup --config tsup.evals.config.ts",
     "build:container": "tsup --config tsup.container.config.ts"
   },

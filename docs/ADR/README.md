@@ -168,6 +168,22 @@ password policy, operator MFA.
 
 No deployment and no paid service.
 
+## S7.5 failure-mode and load tests (7 November 2026)
+
+Approved by the product owner:
+
+- **Reproducible simulations only**, on the local Supabase stack in CI; no
+  deployment, no spending. Correctness (no lost job, no duplicated step or
+  evidence, isolation, quotas) is **always blocking**; performance
+  thresholds block only **major regressions** (generous limits), measured
+  numbers are kept as CI artifacts.
+- **Real PostgreSQL restart** in CI for the database-outage scenario.
+- **Catalog benchmarks at 2,000, 10,000 and 50,000 products** (synthetic,
+  labelled, test database only).
+- The design must keep the way open for large catalog sources:
+  **Hugging Face (~260K products) and Enlisted (10K+)**, to be integrated
+  only after their licences and data quality are verified (PD-34 below).
+
 ## Pending decision register
 
 These questions were **not** settled by the 4 November arbitration. Each
@@ -179,6 +195,7 @@ must be approved before the point it blocks.
 | PD-25 | Should low confidence turn a complete score < 50 into VALIDATE FIRST? (sub-question of PD-06, not answered) | No exception | Nothing: until decided, the ACCEPTED rule "score < 50 → REJECT" (PRD §8.8) applies | ADR-005 |
 | PD-26 | Approve G2 as the first review source after its written terms review (access method, licence, cost, storage rights) | Decide on the written review, which is prepared before Sprint 4 | Use of G2 in Sprint 4 (Sprint 4 can run on CSV feedback imports) | ADR-013 |
 | PD-29 | Product Hunt as the second Discovery source | Decide after Product Hunt's written answer to the permission request (draft not sent) and its terms review | Any Product Hunt connector | ADR-013 |
+| PD-34 | Bulk catalog sources: a Hugging Face dataset (~260K products) and Enlisted (10K+), named by the product owner on 7 Nov 2026 | Written review first (exact dataset / provider, licence and reuse rights, storage rights, update cadence, field quality on a sample, overlap and identity matching, exclusion classifier on a sample); then an import plan through the existing CSV/import pipeline with identity resolution and provenance | Any import from these sources | ADR-013 |
 
 ## What may start now
 
