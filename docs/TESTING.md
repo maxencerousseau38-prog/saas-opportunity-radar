@@ -193,3 +193,13 @@ S7.4a (security guards):
 - CI job "Security": gitleaks over the whole history (`.gitleaks.toml`),
   migration order against the previous revision, `pnpm audit --prod
   --audit-level high`. Dependabot: `.github/dependabot.yml`.
+
+S7.4b–c (web hardening):
+
+- Unit: `apps/web/test/security-headers.test.ts` (policy, nonce, static
+  headers, CSP report parsing and rate limit), `apps/web/test/api-routes.test.ts`
+  (route guards and role manifest).
+- E2E: `e2e/fixtures.ts` makes every journey fail on a CSP violation;
+  `e2e/security.e2e.ts` (headers, nonce, enforced policy blocks an injected
+  inline script, report endpoint). Import `test` / `expect` from
+  `./fixtures` in new journeys.

@@ -1,7 +1,7 @@
-// Shared Playwright fixtures (S7.4b, PD-33): every journey fails on a
-// Content Security Policy violation. During the Report-Only phase the browser
-// only reports violations (console), so this is what validates the policy
-// before it is enforced (S7.4c).
+// Shared Playwright fixtures (S7.4b–c, PD-33): every journey fails on a
+// Content Security Policy violation (the browser logs blocked resources to
+// the console). This validated the Report-Only phase and now guards the
+// enforced policy against regressions.
 import { expect, test as base } from "@playwright/test";
 
 export const test = base.extend<{ cspGuard: void }>({

@@ -48,7 +48,7 @@ No critical or high finding.
 
 | # | Level | Finding | Fix | Status |
 |---|---|---|---|---|
-| M1 | Medium | No HTTP security headers (CSP, `frame-ancestors`, `Referrer-Policy`, `Permissions-Policy`) | Headers + CSP with nonce, Report-Only first, then enforced (decision 7 Nov 2026) | S7.4b–c |
+| M1 | Medium | No HTTP security headers (CSP, `frame-ancestors`, `Referrer-Policy`, `Permissions-Policy`) | Static headers (next.config) and per-request CSP with nonce (proxy): Report-Only in S7.4b with no violation over the E2E suite (CI run 66), enforced in S7.4c; reports to `/api/csp-report` | **Fixed (S7.4b–c)** |
 | M2 | Medium | No systematic test of every privilege of the browser roles: a new table could be exposed silently | pgTAP 019 privilege manifest + structural rules | **Fixed (S7.4a)** |
 | M3 | Medium | No rate limit on member invitations (emails), manual catalog additions, correction reports | Extend the S7.2 fixed-window counters | S7.4d |
 | M4 | Medium | Weak local auth policy (6-character passwords, no `secure_password_change`), no MFA, including for the operator | Passwords ≥ 12 with letters and digits; operator MFA AAL2 (PD-30) | S7.4d–e |
@@ -76,6 +76,27 @@ No critical or high finding.
   content kept for evaluations.
 - `pnpm audit --prod --audit-level high`; Dependabot weekly (npm, GitHub
   Actions, worker base image), pull requests only.
+
+## 4b. Web hardening (S7.4b–c)
+
+- Static headers on every response: `X-Content-Type-Options: nosniff`,
+  `X-Frame-Options: DENY`, `Referrer-Policy:
+  strict-origin-when-cross-origin`, `Permissions-Policy`,
+  `Cross-Origin-Opener-Policy: same-origin`, HSTS (effective on HTTPS).
+- Content Security Policy, enforced, per request (`proxy.ts`,
+  `lib/security-headers.ts`): scripts only with the request nonce
+  (+ `'strict-dynamic'`), `frame-ancestors 'none'`, `object-src 'none'`,
+  `base-uri` / `form-action` / `connect-src 'self'`, images from `https:`
+  (external product logos), inline styles allowed (React style
+  attributes), `upgrade-insecure-requests` over HTTPS. Violations are
+  reported to `/api/csp-report` (public, bounded, redacted log line,
+  rate-limited).
+- E2E: every journey fails on a CSP violation; `security.e2e.ts` checks
+  the headers, the nonce on every script, a fresh nonce per response and
+  that an injected inline script is blocked.
+- `apps/web/test/api-routes.test.ts`: every API export wrapped, operator
+  routes call `requireOperator`, method → minimum role manifest
+  (`test/api-route-manifest.json`, 95 exports).
 
 ## 5. Hosted configuration checklist (product owner, when the Frankfurt projects are created)
 

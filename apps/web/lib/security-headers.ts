@@ -2,8 +2,9 @@
 // Pure functions: the proxy sets the per-request Content Security Policy with
 // a nonce, next.config sets the static headers.
 //
-// CSP rollout (PD-33, 7 Nov 2026): Report-Only first, validated by the E2E
-// suite (any violation fails it), then enforced (S7.4c).
+// CSP rollout (PD-33, 7 Nov 2026): Report-Only in S7.4b, validated by the
+// E2E suite with no violation (CI run 66), enforced since S7.4c. Violations
+// are still reported to /api/csp-report.
 
 export interface CspOptions {
   nonce: string;
@@ -43,8 +44,8 @@ export function buildCsp(o: CspOptions): string {
   return parts.join("; ");
 }
 
-/** Response header carrying the policy (Report-Only during the rollout). */
-export const CSP_HEADER = "Content-Security-Policy-Report-Only";
+/** Response header carrying the policy: enforced (S7.4c, PD-33). */
+export const CSP_HEADER = "Content-Security-Policy";
 
 /** A fresh nonce per response (128 random bits, base64). */
 export function newNonce(): string {
