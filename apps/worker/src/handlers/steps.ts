@@ -14,7 +14,7 @@ const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(valu
  */
 export function stepRunner(
   db: DbClient,
-  job: { id: string; attempt_count: number },
+  job: { id: string; attempt_count: number; lease_owner: string | null },
   signal?: AbortSignal,
 ) {
   return async function step<T>(
@@ -30,17 +30,18 @@ export function stepRunner(
     ) {
       return { output: existing.output_json as T, stepId: existing.id, reused: true };
     }
-    // A worker that froze past its lease stops here instead of taking over a
-    // step that a newer attempt owns (S7.5a, scenario F6).
-    await jobsRepo.assertAttemptCurrent(db, job.id, job.attempt_count);
+    // Atomic (S7.5b): only the lease owner of this attempt can start the
+    // step, and a row owned by a newer attempt is never reset. A worker that
+    // froze past its lease stops here with LEASE_LOST (scenario F6).
     const stepId = await jobsRepo.startStep(db, {
       jobId: job.id,
+      workerId: job.lease_owner ?? "",
+      attempt: job.attempt_count,
       agentKey: meta.agentKey,
       stepKey: meta.stepKey,
       contractVersion: meta.contractVersion,
       promptVersion: meta.promptVersion,
       inputHash: meta.inputHash,
-      attempt: job.attempt_count,
     });
     try {
       const res = await run(stepId);

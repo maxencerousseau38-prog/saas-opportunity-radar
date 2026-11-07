@@ -1766,6 +1766,9 @@ isOneToOne: true
 "sor_source_consume":
 { Args: { "p_requests": number,"p_source_key": string }; Returns: boolean
                            },
+"sor_step_start":
+{ Args: { "p_agent_key": string,"p_attempt": number,"p_contract_version": string,"p_input_hash": string,"p_job_id": string,"p_prompt_version": string,"p_step_key": string,"p_worker_id": string }; Returns: string
+                           },
 "sor_transfer_ownership":
 { Args: { "p_current_owner": string,"p_new_owner": string,"p_workspace_id": string }; Returns: undefined
                            },

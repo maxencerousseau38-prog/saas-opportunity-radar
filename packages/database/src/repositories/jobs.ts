@@ -254,44 +254,6 @@ export async function getStep(
   );
 }
 
-export async function startStep(
-  service: DbClient,
-  args: {
-    jobId: string;
-    agentKey: string;
-    stepKey: string;
-    contractVersion: string;
-    promptVersion: string | null;
-    inputHash: string;
-    attempt: number;
-  },
-): Promise<string> {
-  const row = check(
-    await service
-      .from("agent_step_runs")
-      .upsert(
-        {
-          job_execution_id: args.jobId,
-          agent_key: args.agentKey,
-          step_key: args.stepKey,
-          contract_version: args.contractVersion,
-          prompt_version: args.promptVersion,
-          input_hash: args.inputHash,
-          state: "running",
-          attempt: args.attempt,
-          started_at: new Date().toISOString(),
-          error_code: null,
-          error_message: null,
-        },
-        { onConflict: "job_execution_id,agent_key,step_key" },
-      )
-      .select("id")
-      .single(),
-  );
-  if (!row) throw new DbError("INTERNAL_ERROR", { step: args.stepKey });
-  return row.id;
-}
-
 /** Thrown when a newer attempt owns the job or the step (S7.5a): handled as a lost lease. */
 function takenOver(what: string): DbError {
   return new DbError("INVALID_STATE", {
@@ -300,22 +262,38 @@ function takenOver(what: string): DbError {
 }
 
 /**
- * The job is still running this attempt (S7.5a). A worker that froze past
- * its lease must not start a step that a newer attempt now owns.
+ * Starts (or restarts) a step atomically (S7.5b): in one transaction with the
+ * job row locked, the step starts only if `workerId` still holds the lease
+ * for `attempt`, and a row owned by a newer attempt is never reset. A worker
+ * that froze past its lease gets LEASE_LOST (handled as a lost lease).
  */
-export async function assertAttemptCurrent(
+export async function startStep(
   service: DbClient,
-  jobId: string,
-  attempt: number,
-): Promise<void> {
-  const row = check(
-    await service
-      .from("job_executions")
-      .select("state, attempt_count")
-      .eq("id", jobId)
-      .maybeSingle(),
+  args: {
+    jobId: string;
+    workerId: string;
+    attempt: number;
+    agentKey: string;
+    stepKey: string;
+    contractVersion: string;
+    promptVersion: string | null;
+    inputHash: string;
+  },
+): Promise<string> {
+  const id = check(
+    await service.rpc("sor_step_start", {
+      p_job_id: args.jobId,
+      p_worker_id: args.workerId,
+      p_attempt: args.attempt,
+      p_agent_key: args.agentKey,
+      p_step_key: args.stepKey,
+      p_contract_version: args.contractVersion,
+      p_prompt_version: args.promptVersion as string,
+      p_input_hash: args.inputHash,
+    }),
   );
-  if (!row || row.state !== "running" || row.attempt_count !== attempt) throw takenOver("job");
+  if (!id) throw new DbError("INTERNAL_ERROR", { step: args.stepKey });
+  return id;
 }
 
 /**

@@ -1,10 +1,11 @@
-// Step ownership guards (S7.5a, scenario F6): a worker that froze past its
-// lease cannot start, complete or fail a step owned by a newer attempt; the
-// refusal is a lost lease, which the worker handles without retry or failure.
+// Step ownership guards (S7.5a, scenario F6; atomic start S7.5b): a worker
+// that froze past its lease cannot start, complete or fail a step owned by a
+// newer attempt; the refusal is a lost lease, which the worker handles
+// without retry or failure. The start itself is checked by pgTAP 021.
 import { describe, expect, it } from "vitest";
 import type { DbClient } from "../clients";
 import { isLeaseLost } from "../errors";
-import { assertAttemptCurrent, completeStep, failStep } from "../repositories/jobs";
+import { completeStep, failStep, startStep } from "../repositories/jobs";
 
 /** Minimal PostgREST builder: records filters, answers with `rows`. */
 function fakeDb(rows: unknown) {
@@ -26,20 +27,60 @@ function fakeDb(rows: unknown) {
 }
 
 describe("step ownership guards", () => {
-  it("lets the current attempt of a running job go on", async () => {
-    const { db } = fakeDb({ state: "running", attempt_count: 2 });
-    await expect(assertAttemptCurrent(db, "job", 2)).resolves.toBeUndefined();
+  it("starts a step through the atomic RPC with the lease owner and attempt", async () => {
+    const calls: Array<[string, unknown]> = [];
+    const db = {
+      rpc: async (fn: string, args: unknown) => {
+        calls.push([fn, args]);
+        return { data: "step-1", error: null };
+      },
+    } as unknown as DbClient;
+    const id = await startStep(db, {
+      jobId: "job",
+      workerId: "w-a",
+      attempt: 2,
+      agentKey: "agent",
+      stepKey: "step",
+      contractVersion: "c1",
+      promptVersion: null,
+      inputHash: "h",
+    });
+    expect(id).toBe("step-1");
+    expect(calls).toEqual([
+      [
+        "sor_step_start",
+        {
+          p_job_id: "job",
+          p_worker_id: "w-a",
+          p_attempt: 2,
+          p_agent_key: "agent",
+          p_step_key: "step",
+          p_contract_version: "c1",
+          p_prompt_version: null,
+          p_input_hash: "h",
+        },
+      ],
+    ]);
   });
 
-  it("stops a stale attempt (newer attempt or finished job) as a lost lease", async () => {
-    for (const row of [
-      { state: "running", attempt_count: 3 },
-      { state: "completed", attempt_count: 2 },
-      null,
-    ]) {
-      const err = await assertAttemptCurrent(fakeDb(row).db, "job", 2).catch((e: unknown) => e);
-      expect(isLeaseLost(err)).toBe(true);
-    }
+  it("maps a refused start (newer attempt) to a lost lease", async () => {
+    const db = {
+      rpc: async () => ({
+        data: null,
+        error: { code: "55000", message: "LEASE_LOST: job taken over by a newer attempt" },
+      }),
+    } as unknown as DbClient;
+    const err = await startStep(db, {
+      jobId: "job",
+      workerId: "w-a",
+      attempt: 1,
+      agentKey: "agent",
+      stepKey: "step",
+      contractVersion: "c1",
+      promptVersion: null,
+      inputHash: "h",
+    }).catch((e: unknown) => e);
+    expect(isLeaseLost(err)).toBe(true);
   });
 
   it("completes a step only while it runs for this attempt", async () => {

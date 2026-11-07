@@ -1,7 +1,10 @@
 // S7.5a — queue and worker faults (F6–F8): a frozen ("zombie") worker loses
 // its lease and cannot overwrite the work of the worker that took over; a
 // lost queue message is re-sent by the orphan sweep; a malformed message on
-// the real queue is archived without stopping the worker.
+// the real queue is archived without stopping the worker. S7.5b (F6b): the
+// step start is atomic, so the stale worker cannot reset a newer attempt's
+// step between its ownership check and its write.
+import { isLeaseLost } from "@sor/database";
 import { execFileSync } from "node:child_process";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { jobsRepo } from "@sor/database";
@@ -93,6 +96,52 @@ suite("queue and worker faults", () => {
     expect(apply).toEqual([{ state: "completed" }]);
     await expectInvariants(jobId, productId);
   }, 60_000);
+
+  it("F6b: a stale worker cannot start or reset a step of the newer attempt (atomic start)", async () => {
+    const ws = await workspace();
+    const productId = await product(site.port);
+    const { jobId } = await requestEnrichment(ws, productId);
+    const step = {
+      jobId,
+      agentKey: "res_probe",
+      stepKey: "probe",
+      contractVersion: "probe-1",
+      promptVersion: null,
+    };
+    expect((await jobsRepo.workerClaim(db(), jobId, "res-stale-a", 1))?.attempt_count).toBe(1);
+    await jobsRepo.startStep(db(), {
+      ...step,
+      workerId: "res-stale-a",
+      attempt: 1,
+      inputHash: "a",
+    });
+    await sleep(1200); // A's lease expires; B recovers the job
+    expect((await jobsRepo.workerClaim(db(), jobId, "res-owner-b", 30))?.attempt_count).toBe(2);
+    const id = await jobsRepo.startStep(db(), {
+      ...step,
+      workerId: "res-owner-b",
+      attempt: 2,
+      inputHash: "b",
+    });
+    const err = await jobsRepo
+      .startStep(db(), { ...step, workerId: "res-stale-a", attempt: 1, inputHash: "a" })
+      .catch((e: unknown) => e);
+    expect(isLeaseLost(err)).toBe(true);
+    const { data: row } = await db()
+      .from("agent_step_runs")
+      .select("id, attempt, state, input_hash")
+      .eq("job_execution_id", jobId)
+      .eq("agent_key", "res_probe")
+      .single();
+    expect(row).toEqual({ id, attempt: 2, state: "running", input_hash: "b" });
+    await jobsRepo.workerFinish(db(), {
+      jobId,
+      workerId: "res-owner-b",
+      state: "cancelled",
+      terminalReason: "cancelled",
+    });
+    await expectInvariants(jobId, productId);
+  }, 30_000);
 
   it("F7: a lost queue message is re-sent by the orphan sweep and the job completes", async () => {
     const ws = await workspace();
