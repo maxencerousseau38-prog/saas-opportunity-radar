@@ -1696,7 +1696,7 @@ isOneToOne: true
 { Args: { "p_note": string,"p_operator": string,"p_report_id": string,"p_status": string }; Returns: undefined
                            },
 "sor_ops_snapshot":
-{ Args: never; Returns: Json
+{ Args: Record<PropertyKey, never>; Returns: Json
                            },
 "sor_ops_sync_alerts":
 { Args: { "p_alerts": Json }; Returns: Json
