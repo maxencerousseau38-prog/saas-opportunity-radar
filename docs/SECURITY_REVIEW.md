@@ -93,7 +93,7 @@ No critical or high finding.
   rate-limited).
 - E2E: every journey fails on a CSP violation; `security.e2e.ts` checks
   the headers, the nonce on every script, a fresh nonce per response and
-  that an injected inline script is blocked.
+  that an injected inline event handler (XSS payload) is blocked.
 - `apps/web/test/api-routes.test.ts`: every API export wrapped, operator
   routes call `requireOperator`, method → minimum role manifest
   (`test/api-route-manifest.json`, 95 exports).

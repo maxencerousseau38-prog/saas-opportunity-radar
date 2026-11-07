@@ -53,7 +53,9 @@ test("the CSP report endpoint accepts reports without a session", async ({ reque
 });
 
 // Deliberate violation: not covered by the fixture that fails on violations.
-unguarded("the enforced policy blocks an injected inline script", async ({ page }) => {
+// 'strict-dynamic' lets already-trusted scripts create scripts; what the
+// policy must stop is injected markup, e.g. an XSS payload's inline handler.
+unguarded("the enforced policy blocks injected inline handlers (XSS payload)", async ({ page }) => {
   const violations: string[] = [];
   page.on("console", (m) => {
     if (/Content Security Policy/i.test(m.text())) violations.push(m.text());
@@ -62,10 +64,10 @@ unguarded("the enforced policy blocks an injected inline script", async ({ page 
   const ran = await page.evaluate(async () => {
     const w = window as unknown as { __cspProbe?: boolean };
     w.__cspProbe = false;
-    const s = document.createElement("script");
-    s.textContent = "window.__cspProbe = true";
-    document.body.appendChild(s);
-    await new Promise((r) => setTimeout(r, 100));
+    const div = document.createElement("div");
+    div.innerHTML = '<img src="data:," onerror="window.__cspProbe = true">';
+    document.body.appendChild(div);
+    await new Promise((r) => setTimeout(r, 200));
     return w.__cspProbe;
   });
   expect(ran).toBe(false);
