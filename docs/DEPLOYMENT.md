@@ -42,7 +42,21 @@ SIGTERM shutdown (exit code 0).
   process, long pause) and wakes up after another worker took the job over
   cannot start a step of the job, nor complete or fail a step, unless the
   job still runs its own attempt; the write is refused as a lost lease, so
-  the newer attempt's results are never overwritten.
+  the newer attempt's results are never overwritten. Since S7.5b a step
+  starts through one atomic RPC (`sor_step_start`: job row locked, lease
+  owner and attempt checked, a newer attempt's step row never reset), which
+  closes the window between the check and the write.
+- **Database or API outage** (S7.5b, scenarios F4 and F5): while Supabase is
+  unreachable or PostgreSQL restarts, each polling cycle fails fast and logs
+  `worker cycle failed`; the loop keeps recording progress, so the watchdog
+  does not restart the process (a restart would not cure an outage). The
+  interrupted job resumes after its lease expires, reusing its completed
+  steps. Nothing to do on the operator side unless the outage lasts.
+- **Source outages** (S7.5b, F9): an official site that answers 5xx, times
+  out or cuts the connection is retried with the job while attempts remain;
+  on the last attempt the failure is recorded with its reason and the job
+  ends `partial` with what was really fetched (enrichment: `pages_failed`;
+  discovery: `lead_unreachable:<domain>:<status>:<reason>` warnings).
 - **Unknown job kind** (S7.4a): a worker without a handler for a message's
   job kind (e.g. an older version during a rolling deploy) logs
   `no handler for job kind: left for another worker` and leaves the message

@@ -115,6 +115,26 @@ No critical or high finding.
 - E2E: the operator journey checks the 403 before MFA, enrols with a TOTP
   computed in the test (RFC 6238), then uses the console and its API.
 
+## 4d. Workspace isolation sweep (S7.5b, scenario F12)
+
+- `apps/web/e2e/workspace-isolation.e2e.ts` (E2E job, runs after every other
+  journey so the demo workspace holds runs, clusters, opportunities,
+  analyses, exports, jobs, collections, saved searches and tags): the owner
+  of another workspace calls **every** export under
+  `/api/v1/workspaces/{workspaceId}/` listed in
+  `apps/web/test/api-route-manifest.json`.
+- (a) With the demo workspace's ID and real resource IDs: 404 on every
+  route and method, no demo identifier in any response body.
+- (b) With their own workspace ID and the demo workspace's resource IDs
+  (classic IDOR): every read is 404; no write succeeds (404, or 400 when the
+  body is rejected first; never 2xx or 5xx). Catalog routes (`/products/…`)
+  are global by design and are covered by (a) only.
+- The demo workspace's rows (collections, items, saved searches, tags,
+  members, clusters, opportunities, runs, analyses, exports, job
+  cancellations, name) are compared before and after the sweep: unchanged.
+- A new workspace route is swept automatically once it is in the manifest
+  (which `apps/web/test/api-routes.test.ts` already requires).
+
 ## 5. Hosted configuration checklist (product owner, when the Frankfurt projects are created)
 
 Not applied: no hosted project exists yet.

@@ -251,3 +251,34 @@ attempts, terminal reason, one row per agent step, no duplicated evidence;
   changed payload → conflict; F11 bursts admit exactly the concurrency
   limit, the daily quota and the hourly per-user limit.
 
+## Sprint 7: failure-mode tests (S7.5b)
+
+Same CI job; the harness is split into `fixtures.ts` (no test-runner
+import, also bundled into the F13 child process) and `harness.ts`
+(invariants). New fault switches: `ApiOutage` / `dbBehind` (service client
+whose `fetch` fails like an unreachable host), fixture-site faults per host
+and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
+
+- `queue-faults.test.ts` F6b: a stale worker cannot start or reset a step
+  of the newer attempt (atomic `sor_step_start`, pgTAP 021).
+- `api-outage.test.ts` F4: the Supabase API is unreachable for 20 s during a
+  job; the running loop survives (`worker cycle failed`, progress kept well
+  under the watchdog threshold), the job resumes with its extraction reused.
+- `db-restart.test.ts` F5: `docker restart` of the local database container
+  during a job, bounded health wait (API and auth), same criteria. Opt-in
+  (`RESILIENCE_DB_RESTART=1`), run as its own CI step after the others.
+- `source-faults.test.ts` F9: HTTP 500 and slow pricing page, cut
+  connection on the home page (enrichment), failing seed sites (discovery):
+  `partial` with the reason after the last attempt, home-page result kept,
+  nothing invented. This scenario exposed a defect fixed in S7.5b (a lasting
+  source failure used to end in dead letter, discarding fetched pages).
+- `sigterm.test.ts` F13: the real process lifecycle (`runProcess`, bundled
+  with `tsup.resilience.config.ts`) receives SIGTERM during two heavy jobs;
+  both are released, exit code 0, and another worker completes them at
+  once, reusing the completed steps.
+- `apps/web/e2e/workspace-isolation.e2e.ts` F12 (E2E job, runs last): the
+  owner of another workspace calls every workspace route of the manifest
+  against the demo workspace with real identifiers (404 everywhere, no W2
+  data), then their own workspace's routes with W2 resource IDs (reads 404,
+  writes never succeed), and W2's data is unchanged.
+
