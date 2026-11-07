@@ -5523,7 +5523,12 @@ manifest. **S7.4d:** action rate limits (`sor_consume_rate_limit`:
 invitations per workspace, manual additions and correction reports per
 user), invitation links from `SITE_URL` (required in staging and
 production), passwords ≥ 12 with letters and digits and secure password
-change (PD-31). Next slice: operator MFA AAL2 (S7.4e).
+change (PD-31). **S7.4e:** the operator console and API require an
+MFA-verified session (AAL2, TOTP; PD-30): enrolment and challenge screens,
+`requireOperator` checks verified JWT claims, 403 `mfa_required` on the API.
+All review findings are fixed or accepted (`docs/SECURITY_REVIEW.md`).
+Remaining Sprint 7: load and failure-mode tests; backups and restore drill;
+staging deployment; operational runbooks.
 
 -   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
     (`0.5c-512mb` = former "Starter"); to verify when the service is created.

@@ -162,6 +162,10 @@ product owner approved:
 - **Secret scanning in CI (approved):** gitleaks over the whole history on
   every push.
 
+Implemented in S7.4a–e (all validated by CI): privilege manifest, CI
+security job, security headers and enforced CSP, action rate limits,
+password policy, operator MFA.
+
 No deployment and no paid service.
 
 ## Pending decision register

@@ -212,3 +212,11 @@ S7.4d (rate limits, invitation links, password policy):
   (`SITE_URL` required in staging and production).
 - Integration: `pipeline.int.test.ts` — the 21st invitation of a workspace
   in an hour is refused through PostgREST (`RATE_LIMITED`, `invitations`).
+
+S7.4e (operator MFA):
+
+- E2E: `catalog.e2e.ts` operator journey — operator API answers 403
+  `mfa_required` before MFA, TOTP enrolment (code computed by
+  `e2e/helpers.ts` `totp`, RFC 6238), console and API available after;
+  non-operators still get 404. The enrolment key is kept in
+  `test-results/.operator-totp-secret` for later sessions of the same run.

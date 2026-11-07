@@ -2,7 +2,7 @@
 // filter, profile, evidence, collections, favourites, saved searches,
 // comparison, manual add, operator review and viewer restrictions.
 import { expect, test } from "./fixtures";
-import { MEMBER, OWNER, VIEWER, signIn, waitForResults } from "./helpers";
+import { MEMBER, OWNER, VIEWER, operatorMfa, signIn, waitForResults } from "./helpers";
 
 test.describe.configure({ mode: "serial" });
 
@@ -207,7 +207,14 @@ test("operator resolves an exclusion review and a correction report", async ({ p
 
   await page.context().clearCookies();
   await signIn(page, OWNER);
-  await page.goto("/operator");
+  // PD-30: without an MFA-verified session the operator API refuses (403) and
+  // the console asks for the authenticator app.
+  const beforeMfa = await page.request.get("/api/v1/operator/health");
+  expect(beforeMfa.status()).toBe(403);
+  expect(((await beforeMfa.json()) as { error: { details: unknown } }).error.details).toEqual({
+    mfa_required: true,
+  });
+  await operatorMfa(page);
   // Platform health (S7.3): snapshot sections and the health API for operators only.
   const health = page.getByRole("region", { name: "Santé de la plateforme" });
   await expect(health.getByRole("heading", { name: "Alertes en cours" })).toBeVisible();

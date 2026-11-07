@@ -5,8 +5,8 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { requireOperator } from "../../../guard";
 
 /** Resolves a needs_review outcome only; R1–R5 exclusions are final (§5.4). */
-export const POST = route<{ productId: string }>(async ({ user, request }, p) => {
-  await requireOperator(user.id);
+export const POST = route<{ productId: string }>(async ({ client, user, request }, p) => {
+  await requireOperator({ client, user });
   const body = await parseBody(request, OperatorExclusionDecisionSchema);
   await serverRepo.decideExclusion(getServiceClient(), {
     operator: user.id,

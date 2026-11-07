@@ -34,3 +34,17 @@ export const getMemberships = cache(async (userId: string) => {
 export const isOperator = cache(async (userId: string) =>
   serverRepo.isPlatformOperator(getServiceClient(), userId),
 );
+
+export type OperatorAccess = "none" | "mfa_required" | "granted";
+
+/**
+ * PD-30 (7 Nov 2026): the operator console and API need an MFA-verified
+ * session (AAL2, TOTP). The assurance level is read from the verified JWT
+ * claims (getClaims verifies the token), never from an unverified cookie.
+ */
+export async function operatorAccess(client: DbClient, userId: string): Promise<OperatorAccess> {
+  if (!(await isOperator(userId))) return "none";
+  const { data, error } = await client.auth.getClaims();
+  if (error || !data || data.claims.sub !== userId) return "mfa_required";
+  return data.claims.aal === "aal2" ? "granted" : "mfa_required";
+}

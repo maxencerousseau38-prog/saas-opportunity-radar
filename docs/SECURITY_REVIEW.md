@@ -51,7 +51,7 @@ No critical or high finding.
 | M1 | Medium | No HTTP security headers (CSP, `frame-ancestors`, `Referrer-Policy`, `Permissions-Policy`) | Static headers (next.config) and per-request CSP with nonce (proxy): Report-Only in S7.4b with no violation over the E2E suite (CI run 66), enforced in S7.4c; reports to `/api/csp-report` | **Fixed (S7.4b–c)** |
 | M2 | Medium | No systematic test of every privilege of the browser roles: a new table could be exposed silently | pgTAP 019 privilege manifest + structural rules | **Fixed (S7.4a)** |
 | M3 | Medium | No rate limit on member invitations (emails), manual catalog additions, correction reports | `sor_consume_rate_limit` (fixed windows, `rate_limit_counters`): 20 invitations per workspace, 20 manual additions and 30 correction reports per user, per hour; 429 `RATE_LIMITED` + `Retry-After` | **Fixed (S7.4d)** |
-| M4 | Medium | Weak local auth policy (6-character passwords, no `secure_password_change`), no MFA, including for the operator | Passwords ≥ 12 with letters and digits and secure password change (local config, password form; hosted checklist §5) — S7.4d; operator MFA AAL2 (PD-30) — S7.4e | Passwords **fixed (S7.4d)**; MFA S7.4e |
+| M4 | Medium | Weak local auth policy (6-character passwords, no `secure_password_change`), no MFA, including for the operator | Passwords ≥ 12 with letters and digits and secure password change (local config, password form; hosted checklist §5) — S7.4d; operator console and API require an MFA-verified session (AAL2, TOTP; PD-30) — S7.4e | **Fixed (S7.4d–e)** |
 | M5 | Medium | No secret scanning, dependency audit or update automation in CI | gitleaks (full history), `pnpm audit --prod --audit-level high`, Dependabot | **Fixed (S7.4a)** |
 | L1 | Low | 13 `private` functions executable by `PUBLIC` (so `anon`), unreachable without schema usage | Revoked; previous access kept for `authenticated` and `service_role` | **Fixed (S7.4a)** |
 | L2 | Low | Migration timestamps ahead of the calendar: a later migration stamped with the real time would sort before applied ones | Names kept; CI enforces strictly increasing, forward-only migrations | **Fixed (S7.4a)** |
@@ -97,6 +97,23 @@ No critical or high finding.
 - `apps/web/test/api-routes.test.ts`: every API export wrapped, operator
   routes call `requireOperator`, method → minimum role manifest
   (`test/api-route-manifest.json`, 95 exports).
+
+## 4c. Operator MFA (S7.4e, PD-30)
+
+- The operator console (`/operator`) and every operator API route require a
+  session verified with a TOTP factor (`aal2`). The assurance level is read
+  from verified JWT claims (`getClaims`), never from an unverified cookie.
+  Non-operators still get 404; an operator at `aal1` gets the MFA screen
+  (console) or 403 with `mfa_required` (API).
+- First visit: enrolment (QR code or key, then a code); later sessions: a
+  6-digit code. Abandoned unverified factors are removed before a new
+  enrolment. TOTP is enabled in `supabase/config.toml` and must be enabled
+  on the hosted projects (§5).
+- Lost authenticator: the product owner removes the factor in the Supabase
+  dashboard (Authentication → Users → the operator → MFA factors), then
+  enrols again at the next visit (`docs/DEPLOYMENT.md`).
+- E2E: the operator journey checks the 403 before MFA, enrols with a TOTP
+  computed in the test (RFC 6238), then uses the console and its API.
 
 ## 5. Hosted configuration checklist (product owner, when the Frankfurt projects are created)
 

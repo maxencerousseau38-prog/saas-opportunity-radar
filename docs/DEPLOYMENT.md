@@ -128,7 +128,15 @@ Cost = `reported_cost_usd` when the provider reports it, otherwise the
 gateway estimate (`provider_usage`). Workspaces see their own AI cost of the
 day in Settings > Quotas.
 
-## 7. Not covered yet (rest of Sprint 7)
+## 7. Operator access (PD-30)
+
+The operator console and API require an MFA-verified session (TOTP). Hosted
+projects: enable TOTP enrolment and verification in Authentication → MFA.
+If the operator loses the authenticator app: in the Supabase dashboard,
+Authentication → Users → the operator → remove the TOTP factor; the next
+visit to `/operator` starts a new enrolment. Never share the enrolment key.
+
+## 8. Not covered yet (rest of Sprint 7)
 
 Web deployment on Vercel (region `fra1`), host-side log alert configuration
 (needs staging), security and RLS review, backups and restore drill, load

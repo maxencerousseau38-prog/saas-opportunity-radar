@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { serverRepo } from "@sor/database";
+import { OperatorMfa } from "@/components/workspace/operator-mfa";
 import { OperatorView } from "@/components/workspace/operator-view";
 import { PlatformHealth } from "@/components/workspace/platform-health";
-import { getMemberships, isOperator, requireUser } from "@/lib/auth";
+import { getMemberships, operatorAccess, requireUser } from "@/lib/auth";
 import { platformHealth } from "@/lib/services/ops";
 import { getServiceClient } from "@/lib/supabase/server";
 
@@ -14,8 +15,20 @@ export const metadata = { title: "Opérateur — SaaS Opportunity Radar" };
  * exclusion reviews and correction reports.
  */
 export default async function OperatorPage() {
-  const { user } = await requireUser();
-  if (!(await isOperator(user.id))) notFound();
+  const { client, user } = await requireUser();
+  const access = await operatorAccess(client, user.id);
+  if (access === "none") notFound();
+  if (access === "mfa_required") {
+    // PD-30: an MFA-verified session (AAL2) is required; nothing is loaded before.
+    const factors = await client.auth.mfa.listFactors();
+    const verified = factors.data?.totp[0]?.id ?? null;
+    return (
+      <main className="mx-auto max-w-md space-y-4 px-4 py-6">
+        <h1 className="text-xl font-semibold">Console opérateur</h1>
+        <OperatorMfa factorId={verified} />
+      </main>
+    );
+  }
   const service = getServiceClient();
   const [reviews, reports, memberships, health] = await Promise.all([
     serverRepo.listExclusionReviews(service),
