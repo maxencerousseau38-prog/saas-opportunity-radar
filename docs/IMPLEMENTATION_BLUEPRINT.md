@@ -5508,6 +5508,16 @@ logs `ops snapshot`, `alert opened`, `alert resolved`; the operator console
 and `GET /api/v1/operator/health` show health and history; alert runbook in
 `docs/DEPLOYMENT.md` §6. No external monitoring service (none approved).
 
+**S7.4 (7 November 2026) — security and RLS review:** read-only audit
+reported in `docs/SECURITY_REVIEW.md` (no critical or high finding; five
+medium, five low). Decisions PD-30 to PD-33 (operator MFA AAL2, passwords ≥
+12, migration order enforced in CI, CSP Report-Only then enforced) and
+secret scanning approved on 7 Nov 2026. **S7.4a:** private-function grants
+migration, pgTAP 019 privilege manifest, CI job "Security" (gitleaks over the
+whole history, migration order, `pnpm audit`), Dependabot. Next slices:
+security headers and CSP (S7.4b–c), rate limits, invitation link and
+password policy (S7.4d), operator MFA (S7.4e).
+
 -   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
     (`0.5c-512mb` = former "Starter"); to verify when the service is created.
 

@@ -183,3 +183,13 @@ S7.3 (monitoring, alerts, cost tracking):
   `GET /api/v1/operator/health` answers (404 for a member); Settings shows
   the workspace AI cost; the CI checks that the worker container logged an
   `ops snapshot` and no `ops monitor failed`.
+
+S7.4a (security guards):
+
+- Database: `supabase/tests/019_privilege_manifest.sql` (structure rules
+  and exact privilege manifest of the browser roles).
+- `scripts/check-migrations.mjs` with `node --test scripts/` (names,
+  unique timestamps, strictly increasing new migrations, forward-only).
+- CI job "Security": gitleaks over the whole history (`.gitleaks.toml`),
+  migration order against the previous revision, `pnpm audit --prod
+  --audit-level high`. Dependabot: `.github/dependabot.yml`.

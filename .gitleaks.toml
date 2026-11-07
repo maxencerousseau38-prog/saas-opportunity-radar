@@ -1,0 +1,34 @@
+# Secret scanning (Sprint 7, S7.4a). Default gitleaks rules, plus the
+# project's own key formats. Allowlisted: obvious test placeholders and
+# third-party public content kept for evaluations (public web pages and
+# vendor documentation, never our credentials).
+title = "SaaS Opportunity Radar"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "supabase-secret-key"
+description = "Supabase secret API key"
+regex = '''sb_secret_[A-Za-z0-9_-]{20,}'''
+keywords = ["sb_secret_"]
+
+[[rules]]
+id = "supabase-legacy-service-role-jwt"
+description = "Supabase legacy JWT (service_role / anon)"
+regex = '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}'''
+keywords = ["eyjhbgcioijiuzi1niisinr5cci6ikpxvcj9"]
+
+[allowlist]
+description = "Test placeholders and third-party public content"
+paths = [
+  '''(^|/)__tests__/''',
+  '''^apps/web/test/''',
+  '''\.test\.(ts|mjs)$''',
+  '''^evals/enrichment/real/snapshots/''',
+  '''^evals/benchmark/vendor-docs/''',
+  '''^pnpm-lock\.yaml$''',
+]
+regexes = [
+  '''0123456789''',
+]

@@ -143,6 +143,27 @@ was spent. The daily job quota per workspace (200) and the alert thresholds
 starting values, not product decisions; per-workspace AI cost caps wait for
 the PD-24 budgets.
 
+## S7.4 security decisions (7 November 2026)
+
+After the read-only security and RLS review (`docs/SECURITY_REVIEW.md`), the
+product owner approved:
+
+- **PD-30 — Operator MFA (approved):** the operator console and the
+  operator API require an MFA-verified session (AAL2, TOTP). Holder: the
+  product owner only (PD-12 A).
+- **PD-31 — Password policy (approved):** at least 12 characters with
+  letters and digits, in every environment.
+- **PD-32 — Migration order (approved):** existing migration names are
+  kept; CI enforces strictly increasing, forward-only migrations (the next
+  timestamp is the later of the current UTC time and the last one plus one
+  day).
+- **PD-33 — Content Security Policy rollout (approved):** Report-Only
+  first, validated by the E2E suite, then enforced.
+- **Secret scanning in CI (approved):** gitleaks over the whole history on
+  every push.
+
+No deployment and no paid service.
+
 ## Pending decision register
 
 These questions were **not** settled by the 4 November arbitration. Each

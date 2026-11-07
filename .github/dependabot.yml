@@ -1,0 +1,22 @@
+# Dependency updates (Sprint 7, S7.4a). Pull requests only; nothing is merged
+# automatically. Minor and patch updates are grouped to limit noise.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+  - package-ecosystem: docker
+    directory: /apps/worker
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2

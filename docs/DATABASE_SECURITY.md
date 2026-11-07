@@ -270,6 +270,21 @@ and end to end by the worker integration tests (`apps/worker/test/integration`).
   `sor_workspace_usage` adds the workspace's own AI cost of the day.
   Tests: `supabase/tests/018_ops_monitoring.sql`.
 
+## Sprint 7: privilege manifest (S7.4a)
+
+- Migration `20261112090000_private_function_grants.sql`: the 13 `private`
+  functions that kept the default `PUBLIC` execute privilege are revoked
+  from `PUBLIC` and `anon`; `authenticated` and `service_role` keep exactly
+  their previous access. Functions created later in `private` are not
+  executable by `PUBLIC` (default privileges).
+- `supabase/tests/019_privilege_manifest.sql` freezes the reviewed state:
+  RLS on every table, no view in `public`, no `FOR ALL` policy, every
+  policy `TO authenticated`, pinned `search_path` everywhere, no privilege
+  for `anon`, and the exact table, column and function privileges of
+  `authenticated`. **Adding a grant means updating this manifest in the same
+  change**, which makes every exposure an explicit review item.
+- Review report: `docs/SECURITY_REVIEW.md`.
+
 ## Running the tests
 
 - **CI** (reference): the `database` job of `.github/workflows/ci.yml` runs
