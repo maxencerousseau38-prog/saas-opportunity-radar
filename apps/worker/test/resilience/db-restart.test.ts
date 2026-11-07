@@ -1,6 +1,7 @@
-// S7.5b — F5: a real PostgreSQL restart (`docker restart` of the local
-// Supabase database container) while the worker runs a job. Same criteria as
-// F4; the interrupted job resumes once its lease expires. Opt-in
+// S7.5b — F5: a real PostgreSQL restart (the local Supabase database
+// container is stopped, left down 5 s, then started) while the worker runs a
+// job. Same criteria as F4; the interrupted job resumes once its lease
+// expires. Opt-in
 // (RESILIENCE_DB_RESTART=1): CI runs it in its own step, after the other
 // scenarios, because it restarts the shared database.
 import { execFile, execFileSync } from "node:child_process";
@@ -65,14 +66,20 @@ suite("real PostgreSQL restart", () => {
     const r = await jobThroughOutage({
       site,
       outage: async () => {
-        // Asynchronous: the worker (same process) keeps running during the restart.
-        await promisify(execFile)("docker", ["restart", container as string]);
+        // Stop, 5 s down, start: a restart alone takes ~1.5 s here and can
+        // fall entirely inside the slow model call, so the worker would never
+        // meet the outage. Asynchronous: the worker (same process) keeps
+        // running throughout.
+        const docker = promisify(execFile);
+        await docker("docker", ["stop", container as string]);
+        await sleep(5_000);
+        await docker("docker", ["start", container as string]);
         recoveryMs = await waitHealthy(120_000);
       },
       maxMs: 90_000,
     });
     process.stdout.write(
-      `F5: stack healthy ${recoveryMs} ms after the database container restarted\n`,
+      `F5: stack healthy ${recoveryMs} ms after the database container started again\n`,
     );
     expect(r.logs.some((l) => l.msg === "worker cycle failed")).toBe(true);
     expect(r.maxIdleMs).toBeLessThan(60_000); // far from the 300 s stall watchdog

@@ -264,8 +264,8 @@ and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
 - `api-outage.test.ts` F4: the Supabase API is unreachable for 20 s during a
   job; the running loop survives (`worker cycle failed`, progress kept well
   under the watchdog threshold), the job resumes with its extraction reused.
-- `db-restart.test.ts` F5: `docker restart` of the local database container
-  during a job, bounded health wait (API and auth), same criteria. Opt-in
+- `db-restart.test.ts` F5: the local database container is stopped, left
+  down 5 s and started again during a job, bounded health wait (API and auth), same criteria. Opt-in
   (`RESILIENCE_DB_RESTART=1`), run as its own CI step after the others.
 - `source-faults.test.ts` F9: HTTP 500 and slow pricing page, cut
   connection on the home page (enrichment), failing seed sites (discovery):
