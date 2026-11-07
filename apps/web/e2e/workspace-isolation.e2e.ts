@@ -122,11 +122,11 @@ test("F12: another workspace's owner gets 404 on every W2 route and cannot reach
     { workspace_id: w2 },
     "report export",
   );
-  const discoveryRun = await first("discovery_runs", "id", { workspace_id: w2 }, "discovery run");
+  // A candidate of any W2 run (not every run has candidates).
   const candidate = await first(
     "discovery_candidates",
-    "id, run_id",
-    { run_id: discoveryRun.id },
+    "id, run_id, discovery_runs!inner(workspace_id)",
+    { "discovery_runs.workspace_id": w2 },
     "discovery candidate",
   );
   const cluster = await first("pain_point_clusters", "id, run_id", { workspace_id: w2 }, "cluster");

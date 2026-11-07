@@ -3,7 +3,8 @@
 // F4; the interrupted job resumes once its lease expires. Opt-in
 // (RESILIENCE_DB_RESTART=1): CI runs it in its own step, after the other
 // scenarios, because it restarts the shared database.
-import { execFileSync } from "node:child_process";
+import { execFile, execFileSync } from "node:child_process";
+import { promisify } from "node:util";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { D5_AGENT_KEY } from "@sor/discovery-engine";
 import {
@@ -64,7 +65,8 @@ suite("real PostgreSQL restart", () => {
     const r = await jobThroughOutage({
       site,
       outage: async () => {
-        execFileSync("docker", ["restart", container as string], { stdio: "ignore" });
+        // Asynchronous: the worker (same process) keeps running during the restart.
+        await promisify(execFile)("docker", ["restart", container as string]);
         recoveryMs = await waitHealthy(120_000);
       },
       maxMs: 90_000,
