@@ -522,7 +522,9 @@ export async function runDiscovery(ports: DiscoveryPorts): Promise<DiscoveryOutc
         async (stepId) => {
           const page = await ports.fetchOfficialPage(lead.lead_url);
           if (page.status !== "ok") {
-            if (page.retryable) {
+            // Retried by the job while attempts remain; on the last attempt the
+            // lead is recorded as unreachable (S7.5b, F9), never substituted.
+            if (page.retryable && !ports.finalAttempt?.()) {
               throw Object.assign(new Error(page.reason), {
                 code: `FETCH_${page.status.toUpperCase()}`,
               });
@@ -576,7 +578,9 @@ export async function runDiscovery(ports: DiscoveryPorts): Promise<DiscoveryOutc
       );
       if ("failure" in step.output) {
         fetchFailures++;
-        warnings.push(`lead_unreachable:${domain}:${step.output.failure.status}`);
+        warnings.push(
+          `lead_unreachable:${domain}:${step.output.failure.status}:${step.output.failure.reason}`,
+        );
         continue;
       }
       const ex = step.output;

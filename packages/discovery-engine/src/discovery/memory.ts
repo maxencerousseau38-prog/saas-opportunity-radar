@@ -84,6 +84,8 @@ export function discoveryMemoryPorts(options: {
   store?: DiscoveryMemoryStore;
   budgetUsd?: number;
   stop?: () => "cancelled" | "budget" | null;
+  /** Last allowed attempt of the job (S7.5b, F9); absent: transient failures are retried. */
+  finalAttempt?: boolean;
   now?: Date;
 }): { ports: DiscoveryPorts; store: DiscoveryMemoryStore } {
   const store = options.store ?? discoveryMemoryStore();
@@ -108,6 +110,9 @@ export function discoveryMemoryPorts(options: {
   };
 
   const ports: DiscoveryPorts = {
+    ...(options.finalAttempt === undefined
+      ? {}
+      : { finalAttempt: () => options.finalAttempt === true }),
     loadRun: async () => options.run,
     sourceStates: async () =>
       options.sources ?? [

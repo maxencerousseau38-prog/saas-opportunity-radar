@@ -1,6 +1,7 @@
 // Persistent worker entry point (Technical Blueprint §8; Implementation
 // Blueprint §11). Consumes `sor_jobs` with leases and heartbeats.
 import { hostname } from "node:os";
+import { basename } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseWorkerEnv, type WorkerEnv } from "@sor/contracts/env";
 import { createServiceClient, jobsRepo, type DbClient } from "@sor/database";
@@ -140,8 +141,13 @@ export function processStats(worker: Worker) {
  * errors exit non-zero so the host restarts the process, and a watchdog
  * exits when the worker stops making progress.
  */
-export async function runProcess(env: Record<string, string | undefined>, log: Log = jsonLog) {
-  const { worker, config, db } = await buildWorker(env, log);
+export async function runProcess(
+  env: Record<string, string | undefined>,
+  log: Log = jsonLog,
+  /** Builds the worker; the SIGTERM resilience test (F13) injects simulated handlers. */
+  build: (env: Record<string, string | undefined>, log: Log) => Promise<WorkerParts> = buildWorker,
+) {
+  const { worker, config, db } = await build(env, log);
   const watchdog = startWatchdog({
     blockedMs: Number(config.WORKER_WATCHDOG_BLOCKED_SECONDS) * 1000,
     stalledMs: Number(config.WORKER_WATCHDOG_STALL_SECONDS) * 1000,
@@ -201,8 +207,13 @@ export async function runProcess(env: Record<string, string | undefined>, log: L
   await worker.run(2000);
 }
 
+// Entry point only when this file is the one Node.js started. A bundle that
+// embeds this module under another name (the F13 test child) is not.
+const entry = process.argv[1];
 const invokedDirectly =
-  process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href;
+  entry !== undefined &&
+  import.meta.url === pathToFileURL(entry).href &&
+  /^main\.[cm]?[jt]s$/.test(basename(entry));
 if (invokedDirectly) {
   runProcess(process.env).catch((error: unknown) => {
     jsonLog({

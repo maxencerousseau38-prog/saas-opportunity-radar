@@ -18,10 +18,20 @@ function assertServerRuntime(): void {
   }
 }
 
-/** Server/worker client (secret key): bypasses RLS. Use only after authorisation. */
-export function createServiceClient(config: { url: string; secretKey: string }): DbClient {
+/**
+ * Server/worker client (secret key): bypasses RLS. Use only after authorisation.
+ * `fetch` replaces the HTTP transport (fault-injection tests, S7.5b F4).
+ */
+export function createServiceClient(config: {
+  url: string;
+  secretKey: string;
+  fetch?: typeof fetch;
+}): DbClient {
   assertServerRuntime();
-  return createClient<Database>(config.url, config.secretKey, { auth: NO_SESSION });
+  return createClient<Database>(config.url, config.secretKey, {
+    auth: NO_SESSION,
+    ...(config.fetch ? { global: { fetch: config.fetch } } : {}),
+  });
 }
 
 /**

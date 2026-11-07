@@ -82,13 +82,17 @@ export async function runEnrichment(ports: EnrichmentPorts): Promise<EnrichmentO
         async () => {
           const doc = await ports.fetchDocument(url);
           if (doc.status !== "ok") {
-            // Transient failures are retried by the job; permanent ones are recorded as such.
-            if (doc.retryable)
+            // Transient failures are retried by the job while attempts remain;
+            // permanent ones, and transient ones on the last attempt, are
+            // recorded as such (partial result, never a substitute).
+            if (doc.retryable && !ports.finalAttempt?.())
               throw Object.assign(new Error(doc.reason), {
                 code: `FETCH_${doc.status.toUpperCase()}`,
               });
             return {
-              output: { failure: { status: doc.status, reason: doc.reason, retryable: false } },
+              output: {
+                failure: { status: doc.status, reason: doc.reason, retryable: doc.retryable },
+              },
             };
           }
           const snapshotId = await ports.recordSnapshot(doc.data);

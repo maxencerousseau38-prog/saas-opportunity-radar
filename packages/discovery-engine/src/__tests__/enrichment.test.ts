@@ -65,6 +65,9 @@ function makePorts(
     crashAfter?: string;
     stop?: () => "cancelled" | "budget" | null;
     unreachable?: boolean;
+    /** URL answering a transient failure (HTTP 500), and whether this is the last attempt. */
+    failing?: string;
+    finalAttempt?: boolean;
   } = {},
 ) {
   const provider = new FakeProvider(options.handlers ?? fakeEnrichmentHandlers);
@@ -97,6 +100,7 @@ function makePorts(
       world.fetches.push(url);
       if (options.unreachable)
         return { status: "unavailable", reason: "http_404", retryable: false };
+      if (options.failing === url) return { status: "error", reason: "http_500", retryable: true };
       return PAGES[url]
         ? { status: "ok", data: doc(url) }
         : { status: "unavailable", reason: "http_404", retryable: false };
@@ -114,6 +118,9 @@ function makePorts(
     remainingAiBudgetUsd: () => 0,
     recordUsage: async (_s, u) => void world.usage.push(u),
     stopReason: options.stop ?? (() => null),
+    ...(options.finalAttempt === undefined
+      ? {}
+      : { finalAttempt: () => options.finalAttempt === true }),
     maxPages: 5,
     maxAgeDays: 365,
     now: () => new Date("2026-11-04T12:00:00Z"),
@@ -287,6 +294,25 @@ describe("product_enrichment pipeline", () => {
     ]);
     expect(provider.calls).toHaveLength(0);
     expect(world.plans).toHaveLength(0);
+  });
+
+  it("a transient page failure retries the job, then is recorded as partial on the last attempt (F9)", async () => {
+    const pricing = "https://metricflow.test/pricing";
+    const world = newWorld();
+    const first = makePorts(world, { failing: pricing, finalAttempt: false });
+    await expect(runEnrichment(first.ports)).rejects.toMatchObject({ code: "FETCH_ERROR" });
+    expect(world.plans).toHaveLength(0);
+
+    // Last attempt: the home page step is reused, the failure is recorded.
+    const last = makePorts(world, { failing: pricing, finalAttempt: true });
+    const outcome = await runEnrichment(last.ports);
+    expect(outcome).toMatchObject({ state: "partial", terminalReason: "partial" });
+    expect(outcome.summary.pages_failed).toEqual([
+      { url: pricing, status: "error", reason: "http_500" },
+    ]);
+    expect(world.fetches.filter((u) => u === "https://metricflow.test/")).toHaveLength(1);
+    const plan = world.plans[0] as EnrichmentPlan;
+    expect(plan.pricing_plans).toEqual([]); // nothing invented for the failed page
   });
 
   it("an affiliate core purpose found during enrichment is re-classified", async () => {

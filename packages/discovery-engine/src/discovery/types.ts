@@ -151,6 +151,12 @@ export interface DiscoveryPorts {
   remainingAiBudgetUsd(): number;
   recordUsage(stepId: string, usage: UsageRecord): Promise<void>;
   stopReason(): "cancelled" | "budget" | null;
+  /**
+   * True on the job's last allowed attempt (S7.5b, F9): an official page that
+   * still fails transiently is then recorded as unreachable (partial run)
+   * instead of retrying the job. Absent: transient failures are retried.
+   */
+  finalAttempt?(): boolean;
   now(): Date;
   signal: AbortSignal;
 }

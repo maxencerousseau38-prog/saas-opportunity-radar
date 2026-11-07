@@ -171,6 +171,7 @@ export function discoveryRunHandler(deps: DiscoveryDeps) {
           outcome: u.outcome,
         });
       },
+      finalAttempt: () => ctx.job.attempt_count >= ctx.job.max_attempts,
       stopReason: () =>
         ctx.cancelRequested() ? "cancelled" : Date.now() > ctx.deadline.getTime() ? "budget" : null,
       now: () => new Date(),

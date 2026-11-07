@@ -177,8 +177,31 @@ describe("runDiscovery — seed URLs", () => {
     });
     const out = await runDiscovery(ports);
     expect(out.state).toBe("partial");
-    expect(out.summary.warnings).toContain("lead_unreachable:down.example:unavailable");
+    expect(out.summary.warnings).toContain("lead_unreachable:down.example:unavailable:http_404");
     expect(store.candidates.size).toBe(1);
+  });
+
+  it("retries a transient site failure, then reports it as partial on the last attempt (F9)", async () => {
+    const make = (finalAttempt: boolean) =>
+      discoveryMemoryPorts({
+        run: run({
+          channels: {
+            search: false,
+            official_site_rebound: { enabled: false, seed_product_ids: [] },
+            seed_urls: ["https://flaky.example", "https://metrify.example"],
+          },
+        }),
+        gateway: gateway(),
+        pages: { ...PAGES, "https://flaky.example": "error" },
+        finalAttempt,
+      });
+    const first = make(false);
+    await expect(runDiscovery(first.ports)).rejects.toMatchObject({ code: "FETCH_ERROR" });
+    const last = make(true);
+    const out = await runDiscovery(last.ports);
+    expect(out.state).toBe("partial");
+    expect(out.summary.warnings).toContain("lead_unreachable:flaky.example:error:http_503");
+    expect(last.store.candidates.size).toBe(1); // only the healthy site; nothing substituted
   });
 
   it("matches an existing catalog product instead of creating a duplicate", async () => {

@@ -174,7 +174,7 @@ jobs:
     name: Resilience (fault injection, local Supabase stack)
     needs: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -200,6 +200,12 @@ jobs:
           } >> "$GITHUB_ENV"
       # Correctness of every scenario is blocking (S7.5, decision 7 Nov 2026).
       - run: pnpm --filter @sor/worker test:resilience
+      # F5 (S7.5b): real restart of the database container, last because it
+      # restarts the shared stack; bounded health wait inside the test.
+      - name: Real PostgreSQL restart during a job (F5)
+        env:
+          RESILIENCE_DB_RESTART: "1"
+        run: pnpm --filter @sor/worker exec vitest run test/resilience/db-restart.test.ts
       - if: always()
         run: supabase stop --no-backup
 

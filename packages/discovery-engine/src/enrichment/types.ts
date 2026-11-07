@@ -83,6 +83,13 @@ export interface EnrichmentPorts {
   recordUsage(stepId: string, usage: UsageRecord): Promise<void>;
   /** Checked between steps (heartbeat-surfaced cancellation, wall-clock budget). */
   stopReason(): "cancelled" | "budget" | null;
+  /**
+   * True on the job's last allowed attempt (S7.5b, F9): a transient source
+   * failure is then recorded (partial result with its reason) instead of
+   * retrying the job, so a lasting site outage never discards the pages
+   * already fetched. Absent: transient failures are always retried.
+   */
+  finalAttempt?(): boolean;
   maxPages: number;
   maxAgeDays: number;
   now(): Date;
