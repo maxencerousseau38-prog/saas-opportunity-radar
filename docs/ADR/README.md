@@ -135,10 +135,13 @@ project is linked to the repository yet (checked 6 Nov 2026).
 
 ## Sprint 7 status (6 November 2026)
 
-S7.1 (worker deployability) is validated by CI; S7.2 (job quotas and rate
-limits) is implemented. Nothing is deployed and nothing was spent. The
-daily job quota per workspace (200) is an [ASSUMPTION] safety default, not
-a product decision; per-workspace AI cost caps wait for the PD-24 budgets.
+S7.1 (worker deployability) and S7.2 (job quotas and rate limits) are
+validated by CI; S7.3 (monitoring, alerts, cost tracking) is implemented
+without any external monitoring service. Nothing is deployed and nothing
+was spent. The daily job quota per workspace (200) and the alert thresholds
+(`ops_*` platform limits, e.g. 5 USD of AI cost per day) are [ASSUMPTION]
+starting values, not product decisions; per-workspace AI cost caps wait for
+the PD-24 budgets.
 
 ## Pending decision register
 

@@ -92,6 +92,7 @@ test("viewers read runs but cannot start one; settings list the source registry 
   const quotas = page.getByRole("table", { name: "Quotas de traitements" });
   await expect(quotas.getByRole("row", { name: /créés aujourd’hui/ })).toContainText("/ 200");
   await expect(quotas.getByRole("row", { name: /Mes demandes/ })).toContainText("0 / 30");
+  await expect(quotas.getByRole("row", { name: /Coût IA aujourd’hui/ })).toContainText("$US");
   const usage = await page.request.get(`/api/v1/workspaces/${ws}/usage`);
   expect(usage.status()).toBe(200);
   const body = (await usage.json()) as { data: { max_concurrent_jobs: number } };

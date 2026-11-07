@@ -91,6 +91,8 @@ export const WorkspaceUsageSchema = z
     my_job_requests_this_hour: z.number().int().nonnegative(),
     max_job_requests_per_hour: z.number().int().positive(),
     hour_resets_at: ISODateTimeSchema,
+    /** AI cost recorded today (UTC) for the workspace (S7.3). */
+    ai_cost_usd_today: z.number().nonnegative(),
   })
   .strict();
 export type WorkspaceUsage = z.infer<typeof WorkspaceUsageSchema>;

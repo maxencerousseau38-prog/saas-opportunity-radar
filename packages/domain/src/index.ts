@@ -8,4 +8,5 @@ export * from "./evidence";
 export * from "./pain-points";
 export * from "./scoring";
 export * from "./discovery";
+export * from "./ops";
 export type * from "./agent";

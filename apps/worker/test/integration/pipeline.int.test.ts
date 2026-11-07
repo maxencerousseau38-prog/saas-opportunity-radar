@@ -13,6 +13,7 @@ import { Worker, type JobHandler } from "../../src/runtime";
 import { enrichmentHandler } from "../../src/handlers/enrichment";
 import { catalogImportHandler, feedbackImportHandler } from "../../src/handlers/imports";
 import { limitsLoader } from "../../src/main";
+import { monitorOnce } from "../../src/monitor";
 
 const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
 const secretKey = process.env.SUPABASE_SECRET_KEY;
@@ -457,5 +458,47 @@ run("worker on the local Supabase stack", () => {
       userId: owner.user,
     })) as { my_job_requests_this_hour: number; max_job_requests_per_hour: number };
     expect(usage).toMatchObject({ my_job_requests_this_hour: 30, max_job_requests_per_hour: 30 });
+  });
+
+  it("detects a stuck job, opens one alert and resolves it once the job is gone (S7.3)", async () => {
+    const ws = await workspace();
+    const id = randomUUID();
+    // A running job whose lease expired an hour ago and that no worker
+    // recovered (no queue message): the monitor must flag it.
+    await db
+      .from("job_executions")
+      .insert({
+        id,
+        job_kind: "catalog_import",
+        workspace_id: ws.id,
+        requested_by: ws.user,
+        idempotency_key: `stuck-${id}`,
+        request_hash: "b".repeat(64),
+        state: "running",
+        attempt_count: 1,
+        lease_owner: "vanished-worker",
+        lease_expires_at: new Date(Date.now() - 3_600_000).toISOString(),
+      })
+      .throwOnError();
+    const logs: Array<Record<string, unknown>> = [];
+    const first = await monitorOnce(db, (e) => logs.push(e));
+    const stuck = first.alerts.find((a) => a.key === "stuck_jobs");
+    expect(stuck?.severity).toBe("critical");
+    expect(stuck?.details.job_ids).toContain(id);
+    expect(logs.find((l) => l.msg === "ops snapshot")).toBeDefined();
+    const { data: open } = await db
+      .from("ops_alerts")
+      .select("alert_key, severity, resolved_at")
+      .eq("alert_key", "stuck_jobs")
+      .is("resolved_at", null);
+    expect(open).toHaveLength(1);
+
+    const again = await monitorOnce(db, () => undefined);
+    expect(again.opened).not.toContain("stuck_jobs");
+
+    await db.from("job_executions").delete().eq("id", id).throwOnError();
+    const cleared = await monitorOnce(db, () => undefined);
+    expect(cleared.alerts.map((a) => a.key)).not.toContain("stuck_jobs");
+    expect(cleared.resolved).toContain("stuck_jobs");
   });
 });

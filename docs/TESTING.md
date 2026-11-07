@@ -163,3 +163,23 @@ S7.2 (job quotas and rate limits):
   an hour is refused through PostgREST with `RATE_LIMITED`, `job_posts`
   and a retry delay; a replay is still answered; usage reports 30/30.
 - E2E: Settings shows the Quotas table to a viewer; `GET W/usage` answers.
+
+S7.3 (monitoring, alerts, cost tracking):
+
+- Database: `supabase/tests/018_ops_monitoring.sql` (privileges; stuck
+  jobs — expired lease past the grace period, due job never picked up —
+  and what is not stuck; queue counts; 24 h outcomes; recent failures;
+  provider calls and errors over 1 h; cost today / per day / per provider,
+  reported cost preferred; alert open → refresh → resolve → new episode;
+  invalid keys and severities refused; workspace AI cost).
+- Unit: `packages/domain/src/__tests__/ops.test.ts` (every alert rule,
+  minimum samples, thresholds at 0, key suffixes),
+  `apps/worker/src/__tests__/monitor.test.ts` (one log per transition,
+  malformed snapshot refused, failed cycle logged, monitor disabled at 0).
+- Integration: `pipeline.int.test.ts` — a running job with an expired lease
+  opens `stuck_jobs` (critical) with its id, is not reopened on the next
+  cycle, and resolves once the job is gone.
+- E2E: the operator console shows the health section and
+  `GET /api/v1/operator/health` answers (404 for a member); Settings shows
+  the workspace AI cost; the CI checks that the worker container logged an
+  `ops snapshot` and no `ops monitor failed`.

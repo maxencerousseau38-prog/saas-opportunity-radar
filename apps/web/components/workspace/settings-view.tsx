@@ -475,6 +475,20 @@ export function SettingsView(p: Props) {
               limit={p.usage.max_job_requests_per_hour}
               note={`Le ${formatDateTime(p.usage.hour_resets_at)}`}
             />
+            <tr className="border-t border-border">
+              <td className="py-1.5">Coût IA aujourd’hui (workspace)</td>
+              <td className="py-1.5">
+                <Badge tone="neutral">
+                  {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "USD" }).format(
+                    p.usage.ai_cost_usd_today,
+                  )}
+                </Badge>
+              </td>
+              <td className="py-1.5 text-xs text-muted">
+                Coût enregistré par la passerelle IA (jour UTC) ; fournisseur simulé tant que PD-24
+                n’est pas tranchée
+              </td>
+            </tr>
           </tbody>
         </table>
       </Block>

@@ -203,10 +203,22 @@ test("operator resolves an exclusion review and a correction report", async ({ p
   // Non-operators get 404 on the console.
   const denied = await page.goto("/operator");
   expect(denied?.status()).toBe(404);
+  expect((await page.request.get("/api/v1/operator/health")).status()).toBe(404);
 
   await page.context().clearCookies();
   await signIn(page, OWNER);
   await page.goto("/operator");
+  // Platform health (S7.3): snapshot sections and the health API for operators only.
+  const health = page.getByRole("region", { name: "Santé de la plateforme" });
+  await expect(health.getByRole("heading", { name: "Alertes en cours" })).toBeVisible();
+  await expect(health.getByText("Coût IA aujourd’hui")).toBeVisible();
+  await expect(health.getByRole("table", { name: "Coût IA par jour" })).toBeVisible();
+  const api = await page.request.get("/api/v1/operator/health");
+  expect(api.status()).toBe(200);
+  const body = (await api.json()) as {
+    data: { snapshot: { thresholds: { queue_wait_alert_seconds: number } } };
+  };
+  expect(body.data.snapshot.thresholds.queue_wait_alert_seconds).toBe(900);
   const review = page.getByTestId("exclusion-review").filter({ hasText: "Partnerly Hub" });
   await review
     .getByLabel("Motif pour Partnerly Hub")

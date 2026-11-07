@@ -989,6 +989,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"ops_alerts": {
+                  Row: {
+                    "alert_key": string,"details": NonNullable<Json>,"id": string,"last_seen_at": string,"message": string,"opened_at": string,"resolved_at": string | null,"severity": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "alert_key": string,"details"?: NonNullable<Json>,"id"?: string,"last_seen_at"?: string,"message": string,"opened_at"?: string,"resolved_at"?: string | null,"severity": string
+                  }
+                  Update: {
+                    "alert_key"?: string,"details"?: NonNullable<Json>,"id"?: string,"last_seen_at"?: string,"message"?: string,"opened_at"?: string,"resolved_at"?: string | null,"severity"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"pain_point_cluster_snapshots": {
                   Row: {
                     "affected_product_count": number,"cluster_id": string,"distinct_author_count": number | null,"distinct_company_count": number | null,"feedback_count": number,"id": string,"observed_at": string,"resolution_breakdown": NonNullable<Json>
@@ -1680,6 +1694,12 @@ isOneToOne: true
                            },
 "sor_operator_resolve_report":
 { Args: { "p_note": string,"p_operator": string,"p_report_id": string,"p_status": string }; Returns: undefined
+                           },
+"sor_ops_snapshot":
+{ Args: never; Returns: Json
+                           },
+"sor_ops_sync_alerts":
+{ Args: { "p_alerts": Json }; Returns: Json
                            },
 "sor_pain_mark_duplicates":
 { Args: { "p_pairs": Json }; Returns: number

@@ -11,6 +11,7 @@ import { fakeOpportunityHandlers } from "@sor/opportunity-engine";
 import { fakePainPointHandlers } from "@sor/pain-point-engine";
 import { Worker, type JobHandler, type Log } from "./runtime";
 import { startWatchdog } from "./watchdog";
+import { startOpsMonitor } from "./monitor";
 import { enrichmentHandler } from "./handlers/enrichment";
 import { catalogImportHandler, feedbackImportHandler } from "./handlers/imports";
 import { painPointRunHandler } from "./handlers/pain";
@@ -35,6 +36,7 @@ export interface WorkerParts {
   worker: Worker;
   config: WorkerEnv;
   limits: Record<string, number>;
+  db: DbClient;
 }
 
 /** Builds the worker from a validated environment. Never logs secret values. */
@@ -115,7 +117,7 @@ export async function buildWorker(
     ai_provider: config.AI_PROVIDER,
     handlers: Object.keys(handlers),
   });
-  return { worker, config, limits: values };
+  return { worker, config, limits: values, db: client };
 }
 
 /** One JSON line of process health (memory is the main sizing input, PD-27). */
@@ -139,7 +141,7 @@ export function processStats(worker: Worker) {
  * exits when the worker stops making progress.
  */
 export async function runProcess(env: Record<string, string | undefined>, log: Log = jsonLog) {
-  const { worker, config } = await buildWorker(env, log);
+  const { worker, config, db } = await buildWorker(env, log);
   const watchdog = startWatchdog({
     blockedMs: Number(config.WORKER_WATCHDOG_BLOCKED_SECONDS) * 1000,
     stalledMs: Number(config.WORKER_WATCHDOG_STALL_SECONDS) * 1000,
@@ -151,6 +153,12 @@ export async function runProcess(env: Record<string, string | undefined>, log: L
     300_000,
   );
   stats.unref();
+  // Platform snapshot and alerts (S7.3); "0" disables it on extra workers.
+  const monitor = startOpsMonitor({
+    db,
+    intervalMs: Number(config.WORKER_MONITOR_INTERVAL_SECONDS) * 1000,
+    log,
+  });
 
   let stopping = false;
   const onSignal = (signal: NodeJS.Signals) => {
@@ -168,6 +176,7 @@ export async function runProcess(env: Record<string, string | undefined>, log: L
       running_jobs: worker.runningJobs(),
       grace_ms: graceMs,
     });
+    monitor.stop();
     void worker.shutdown(graceMs).then(({ released }) => {
       watchdog.stop();
       log({

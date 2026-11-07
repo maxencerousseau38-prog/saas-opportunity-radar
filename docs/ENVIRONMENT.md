@@ -121,7 +121,8 @@ docker build -f apps/worker/Dockerfile -t sor-worker .
 
 Worker lifecycle variables (optional, validated by `@sor/contracts/env`):
 `WORKER_SHUTDOWN_GRACE_SECONDS` (default 40), `WORKER_WATCHDOG_STALL_SECONDS`
-(300), `WORKER_WATCHDOG_BLOCKED_SECONDS` (60).
+(300), `WORKER_WATCHDOG_BLOCKED_SECONDS` (60), `WORKER_MONITOR_INTERVAL_SECONDS`
+(300; platform snapshot and alerts in the logs, `0` disables it — S7.3).
 
 ## Cloud-session constraints
 

@@ -27,6 +27,8 @@ services:
         value: "300"
       - key: WORKER_WATCHDOG_BLOCKED_SECONDS
         value: "60"
+      - key: WORKER_MONITOR_INTERVAL_SECONDS
+        value: "300" # platform snapshot + alerts in the logs (S7.3)
       # Secrets: entered by the product owner in the Render dashboard, never committed.
       - key: SUPABASE_URL
         sync: false

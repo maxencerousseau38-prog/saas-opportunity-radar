@@ -87,8 +87,43 @@ the browser):
 
 Usage is shown in Settings > Quotas and by `GET /api/v1/workspaces/{id}/usage`.
 
-## 6. Not covered yet (rest of Sprint 7)
+## 6. Monitoring and alerts (S7.3)
 
-Web deployment on Vercel (region `fra1`), monitoring and alerts (stale jobs,
-dead letters, provider spend), backups and restore drill, load and
-failure-mode tests, operational runbooks.
+No paid monitoring service is used (none approved). Every
+`WORKER_MONITOR_INTERVAL_SECONDS` (300 s; `0` disables it on extra workers)
+the worker reads `sor_ops_snapshot`, evaluates the alerts with deterministic
+rules (`@sor/domain` `evaluateOpsAlerts`, version `ops-alerts-1`) and records
+their state in `ops_alerts` (one row per episode, opened / refreshed /
+resolved). Logs (JSON, one line each):
+
+- `ops snapshot` every cycle: queued, running, retrying, oldest due wait,
+  stuck jobs, queue backlog, finished / failed / dead-letter /
+  budget-exhausted over 24 h, AI cost today, open alerts;
+- `alert opened` (level `error` for critical, `warn` otherwise) and
+  `alert resolved`, once per transition — match these with a log-based
+  alert on the host (Render log streams / alerts: to configure by the
+  product owner when staging exists, **not done**);
+- `ops monitor failed` if a cycle fails (the worker keeps running).
+
+The operator console (`/operator`, `GET /api/v1/operator/health`) shows the
+live snapshot, the alerts that hold now and the alert history.
+
+| Alert key | Severity | Holds when (thresholds in `platform_limits`) | First response |
+|---|---|---|---|
+| `stuck_jobs` | critical | a running job's lease expired > `ops_stale_lease_grace_seconds` (300 s) ago and no worker took it back | Check that a worker runs and logs `worker stats`; restart it (Render "Restart"); its message reappears and the job resumes from its last completed step |
+| `dead_letters` | critical | ≥ `ops_alert_dead_letters_per_day` (1) dead-letter jobs over 24 h | Read `last_error_code` in the console; fix the cause; the user retries from the UI |
+| `queue_backlog` | warning | a due queued/retrying job waits > `ops_queue_wait_alert_seconds` (900 s) | Worker down or saturated: check logs and `WORKER_CONCURRENCY`; the orphan sweep re-sends lost messages |
+| `job_failure_rate` | warning | failed + dead letter ≥ `ops_alert_failure_rate_pct` (25 %) of ≥ `ops_alert_min_sample` (10) finished jobs over 24 h | Group failures by error code in the console |
+| `budget_exhaustion_rate` | warning | `budget_exhausted` ≥ `ops_alert_budget_exhaustion_rate_pct` (20 %) of finished jobs over 24 h | Budgets too low for the workload (PD-24 budgets) |
+| `provider_error_rate:<provider>` | warning | provider errors ≥ `ops_alert_provider_error_rate_pct` (20 %) of ≥ `ops_alert_min_provider_calls` (20) calls over 1 h | Provider outage or schema drift: check the provider status page; jobs retry with backoff |
+| `ai_cost_per_day` | warning | AI cost today (UTC) ≥ `ops_alert_ai_cost_usd_per_day` (5 USD, [ASSUMPTION] until PD-24) | Check the top workspaces in the console; lower budgets if needed |
+
+Cost = `reported_cost_usd` when the provider reports it, otherwise the
+gateway estimate (`provider_usage`). Workspaces see their own AI cost of the
+day in Settings > Quotas.
+
+## 7. Not covered yet (rest of Sprint 7)
+
+Web deployment on Vercel (region `fra1`), host-side log alert configuration
+(needs staging), security and RLS review, backups and restore drill, load
+and failure-mode tests, remaining operational runbooks.

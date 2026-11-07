@@ -2,20 +2,26 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { serverRepo } from "@sor/database";
 import { OperatorView } from "@/components/workspace/operator-view";
+import { PlatformHealth } from "@/components/workspace/platform-health";
 import { getMemberships, isOperator, requireUser } from "@/lib/auth";
+import { platformHealth } from "@/lib/services/ops";
 import { getServiceClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Opérateur — SaaS Opportunity Radar" };
 
-/** Platform operator console (ADR-007, PD-12 A): exclusion reviews and correction reports. */
+/**
+ * Platform operator console (ADR-007, PD-12 A): platform health (S7.3),
+ * exclusion reviews and correction reports.
+ */
 export default async function OperatorPage() {
   const { user } = await requireUser();
   if (!(await isOperator(user.id))) notFound();
   const service = getServiceClient();
-  const [reviews, reports, memberships] = await Promise.all([
+  const [reviews, reports, memberships, health] = await Promise.all([
     serverRepo.listExclusionReviews(service),
     serverRepo.listCorrectionReports(service, "open"),
     getMemberships(user.id),
+    platformHealth(),
   ]);
   return (
     <main className="mx-auto max-w-5xl space-y-4 px-4 py-6">
@@ -34,6 +40,7 @@ export default async function OperatorPage() {
         Chaque décision est journalisée (audit). Une exclusion issue des règles R1–R5 ne peut pas
         être annulée ici : corrigez les données puis relancez le classifieur.
       </p>
+      <PlatformHealth health={health} />
       <OperatorView
         reviews={reviews.map((r) => ({
           id: r.id,

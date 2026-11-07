@@ -260,6 +260,15 @@ and end to end by the worker integration tests (`apps/worker/test/integration`).
   membership again, returns the workspace's usage and the caller's own
   hourly budget (never another user's).
 - Tests: `supabase/tests/017_job_quotas.sql`.
+- Monitoring (S7.3, migration `20261111090000_ops_monitoring.sql`):
+  `ops_alerts` is server-only (RLS on, no grants, no policies);
+  `sor_ops_snapshot()` and `sor_ops_sync_alerts(jsonb)` are
+  `security definer`, `search_path = ''`, service role only. The snapshot
+  returns counts, job ids, job kinds, error codes, provider names and
+  costs — no payloads, user data or source text. The operator console reads
+  it through the API after the operator check (404 for everyone else).
+  `sor_workspace_usage` adds the workspace's own AI cost of the day.
+  Tests: `supabase/tests/018_ops_monitoring.sql`.
 
 ## Running the tests
 

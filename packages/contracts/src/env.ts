@@ -52,6 +52,14 @@ export const WorkerEnvSchema = z.object({
     .string()
     .regex(/^\d{2,4}$/)
     .default("60"),
+  /**
+   * Platform monitoring cycle (S7.3): snapshot, alert evaluation and alert
+   * state sync, logged as JSON. "0" disables it (e.g. extra workers).
+   */
+  WORKER_MONITOR_INTERVAL_SECONDS: z
+    .string()
+    .regex(/^(0|\d{2,4})$/)
+    .default("300"),
 });
 
 export type WebPublicEnv = z.infer<typeof WebPublicEnvSchema>;

@@ -94,6 +94,9 @@ jobs:
           docker stop -t 60 sor-worker
           code=$(docker inspect -f '{{.State.ExitCode}}' sor-worker)
           docker logs sor-worker 2>&1 | grep -E '"msg":"(shutdown requested|worker stopped)"'
+          # S7.3: the monitoring cycle ran against the real stack, without failing.
+          docker logs sor-worker 2>&1 | grep -m1 '"msg":"ops snapshot"'
+          if docker logs sor-worker 2>&1 | grep '"msg":"ops monitor failed"'; then exit 1; fi
           echo "worker exit code: $code"
           test "$code" = "0"
       - name: Worker log

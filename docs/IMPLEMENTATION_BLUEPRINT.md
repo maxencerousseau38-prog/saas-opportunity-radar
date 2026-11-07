@@ -4654,7 +4654,7 @@ platform operator. `W` = `/workspaces/{workspaceId}`.
 | Method | Path | Role |
 |---|---|---|
 | GET | `W/sources` | V (connector status, last sync, errors, limits, quotas; PRD §14.3) |
-| GET | `W/usage` | V (job usage and quotas of the workspace, the caller's own hourly budget; PRD §14.3; S7.2) |
+| GET | `W/usage` | V (job usage and quotas of the workspace, the caller's own hourly budget; PRD §14.3; S7.2; AI cost of the day, S7.3) |
 | POST | `W/exports` | A (`data_export`, CSV/JSON of workspace data, 202; PRD §14.4) |
 | GET | `W/exports/{jobId}` | A (short-lived signed URL) |
 
@@ -5492,6 +5492,22 @@ idempotent replays are answered without consuming; `sor_workspace_usage`,
 `GET W/usage` and Settings > Quotas show usage (PRD §14.3). pgTAP 017,
 unit, integration and E2E tests.
 
+Validated by CI run 61 (all jobs green).
+
+**S7.3 (7 November 2026) — monitoring, alerts, cost tracking:** migration
+`20261111090000_ops_monitoring.sql` (`sor_ops_snapshot`: queue, stuck jobs
+— lease expired past a grace period and not recovered, due job never
+picked up —, 24 h outcomes, recent failures, provider errors over 1 h, AI
+cost today / 7 days / per provider / per workspace, thresholds from
+`platform_limits`; `ops_alerts` + `sor_ops_sync_alerts` with open /
+refresh / resolve transitions; workspace AI cost of the day). Alert rules
+are deterministic (`@sor/domain` `evaluateOpsAlerts`, `ops-alerts-1`): the
+five alerts of Technical Blueprint §15 plus stuck jobs and failure rate.
+The worker runs a monitoring cycle (`WORKER_MONITOR_INTERVAL_SECONDS`) and
+logs `ops snapshot`, `alert opened`, `alert resolved`; the operator console
+and `GET /api/v1/operator/health` show health and history; alert runbook in
+`docs/DEPLOYMENT.md` §6. No external monitoring service (none approved).
+
 -   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
     (`0.5c-512mb` = former "Starter"); to verify when the service is created.
 
@@ -5499,10 +5515,13 @@ unit, integration and E2E tests.
     not a product limit; to tune on staging. Per-workspace AI cost caps wait
     for the PD-24 budgets (AI cost is 0 with the fake provider).
 
--   Remaining: monitoring, alerts (dead letters, stale leases, budget
-    exhaustion, provider errors, cost per day); security and RLS review;
-    load and failure-mode tests; backups and restore drill; staging
-    deployment; operational runbooks.
+-   **[ASSUMPTION]** Alert thresholds (`ops_*` keys in `platform_limits`,
+    e.g. 5 USD of AI cost per day) are starting values to tune on staging
+    and with the PD-24 budgets. Host-side log alerts (Render) are to be
+    configured by the product owner once staging exists.
+
+-   Remaining: security and RLS review; load and failure-mode tests;
+    backups and restore drill; staging deployment; operational runbooks.
 
 Done when the application handles retries, source/provider outages,
 worker restarts, duplicate requests and workspace isolation predictably.

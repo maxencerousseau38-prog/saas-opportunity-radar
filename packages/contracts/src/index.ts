@@ -10,4 +10,5 @@ export * from "./pain-points";
 export * from "./analysis";
 export * from "./discovery";
 export * from "./agents/opportunity";
+export * from "./ops";
 export * from "./env";
