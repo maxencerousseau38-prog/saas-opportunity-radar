@@ -38,6 +38,12 @@ SIGTERM shutdown (exit code 0).
   job system recovers the job (lease expiry, crash recovery tested in CI).
 - **Fatal errors** (`uncaughtException`, `unhandledRejection`) are logged
   and exit with code 1.
+- **Unknown job kind** (S7.4a): a worker without a handler for a message's
+  job kind (e.g. an older version during a rolling deploy) logs
+  `no handler for job kind: left for another worker` and leaves the message
+  untouched; it is redelivered when its read lease expires. A job is never
+  failed because one worker lacks its handler; if no worker takes it, the
+  `queue_backlog` alert opens.
 - **Logs**: one JSON line per event on stdout, including a `worker stats`
   line every 5 minutes (RSS, heap, running jobs) and at shutdown. Secrets
   are never logged (environment validation reports names only).

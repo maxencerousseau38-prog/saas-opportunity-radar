@@ -20,7 +20,9 @@ regex = '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_
 keywords = ["eyjhbgcioijiuzi1niisinr5cci6ikpxvcj9"]
 
 [allowlist]
-description = "Test placeholders and third-party public content"
+description = "Test placeholders, agent identifiers and third-party public content"
+# Regexes below are matched against the whole line of a finding.
+regexTarget = "line"
 paths = [
   '''(^|/)__tests__/''',
   '''^apps/web/test/''',
@@ -30,5 +32,8 @@ paths = [
   '''^pnpm-lock\.yaml$''',
 ]
 regexes = [
+  # Test placeholder values.
   '''0123456789''',
+  # Agent identifiers such as `export const D6_AGENT_KEY = "D6_verification"`.
+  '''export const [A-Z0-9]+_AGENT_KEY = "[A-Za-z0-9_.-]+"''',
 ]

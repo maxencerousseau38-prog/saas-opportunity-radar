@@ -148,6 +148,19 @@ export class Worker {
       log({ level: "warn", msg: "poison message archived", message_id: message.msg_id });
       return;
     }
+    // A worker without a handler for this kind (e.g. an older version during a
+    // rolling deploy) leaves the message to another worker instead of failing
+    // the job: it becomes visible again when the read lease expires. If no
+    // worker ever takes it, the monitor raises queue_backlog (S7.3).
+    if (!this.options.handlers[envelope.data.kind]) {
+      log({
+        level: "warn",
+        msg: "no handler for job kind: left for another worker",
+        job_kind: envelope.data.kind,
+        message_id: message.msg_id,
+      });
+      return;
+    }
     const job = await jobsRepo.workerClaim(
       db,
       envelope.data.job_execution_id,

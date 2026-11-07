@@ -155,15 +155,14 @@ describe("worker runtime", () => {
     expect(jobs[0]).toMatchObject({ state: "partial", terminal_reason: "budget_exhausted" });
   });
 
-  it("fails a job whose kind has no handler", async () => {
+  it("leaves a job whose kind it cannot handle to another worker (never fails it)", async () => {
     const jobs = [{ ...newJob(), job_kind: "catalog_import" }];
     const f = fakeDb(jobs);
     f.send({ ...envelope, kind: "catalog_import" });
     await worker(f.db, async () => ok).tick();
-    expect(f.calls.find((c) => c.fn === "sor_worker_finish")?.args).toMatchObject({
-      p_state: "failed",
-      p_error_code: "NO_HANDLER",
-    });
+    expect(f.calls.map((c) => c.fn)).not.toContain("sor_worker_claim");
+    expect(f.calls.map((c) => c.fn)).not.toContain("sor_worker_finish");
+    expect(jobs[0]?.state).toBe("queued");
   });
 });
 
