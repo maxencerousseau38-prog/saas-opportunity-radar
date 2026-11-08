@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { getMemberships, getSession } from "@/lib/auth";
 
 export const metadata = {
-  title: "SaaS Opportunity Radar — Aperçu",
-  description: "Aperçu public de SaaS Opportunity Radar.",
+  title: "SaaS Opportunity Radar — Démonstration",
+  description: "Démonstration publique de SaaS Opportunity Radar, accessible sans compte.",
 };
 
 const EXAMPLES = [
@@ -53,17 +53,9 @@ export default async function HomePage() {
           <Link href="/" className="font-semibold tracking-tight">
             SaaS Opportunity Radar
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="hidden rounded-full border border-border px-3 py-1 text-xs text-muted sm:inline">
-              Aperçu public
-            </span>
-            <Link
-              href="/login"
-              className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-surface"
-            >
-              Connexion
-            </Link>
-          </div>
+          <span className="rounded-full border border-border px-3 py-1 text-xs text-muted">
+            Démonstration publique · sans compte
+          </span>
         </div>
       </header>
 
@@ -73,22 +65,22 @@ export default async function HomePage() {
           Repère les SaaS qui méritent vraiment ton attention.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-muted">
-          Explore un aperçu du catalogue, compare les positionnements et consulte les signaux
-          utiles pour étudier des opportunités de marché.
+          Parcours cette démonstration sans créer de compte. Découvre comment les logiciels,
+          leurs positionnements et leurs signaux commerciaux peuvent être présentés.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
             href="#catalogue"
             className="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-fg hover:opacity-90"
           >
-            Explorer l’aperçu
+            Explorer la démonstration
           </a>
-          <Link
-            href="/login"
+          <a
+            href="#fonctionnalites"
             className="rounded-lg border border-border px-5 py-3 text-sm font-semibold hover:bg-surface"
           >
-            Accéder à mon espace
-          </Link>
+            Voir les fonctionnalités
+          </a>
         </div>
       </section>
 
@@ -128,13 +120,13 @@ export default async function HomePage() {
           </div>
 
           <p className="mt-5 text-xs leading-5 text-muted">
-            Ces noms, descriptions et informations sont des exemples fictifs. Cet aperçu est en
-            lecture seule : aucune recherche, sauvegarde ou donnée de compte n’est modifiée.
+            Ces noms, descriptions et informations sont des exemples fictifs. Cette démonstration
+            est en lecture seule : aucune recherche, sauvegarde ou donnée de compte n’est modifiée.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
+      <section id="fonctionnalites" className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
         <div className="grid gap-6 sm:grid-cols-3">
           <div>
             <h3 className="font-semibold">Découvrir</h3>
@@ -160,7 +152,7 @@ export default async function HomePage() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-xs text-muted">
           <span>SaaS Opportunity Radar</span>
-          <span>Mode aperçu public · Accès aux espaces privés toujours protégé</span>
+          <span>Démo publique sans compte · Espaces privés et actions d’écriture protégés</span>
         </div>
       </footer>
     </main>
