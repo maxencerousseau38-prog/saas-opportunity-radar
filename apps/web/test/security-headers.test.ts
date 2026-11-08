@@ -15,6 +15,18 @@ describe("buildCsp", () => {
     expect(csp).not.toContain("upgrade-insecure-requests");
   });
 
+  it("allows browser Auth only to the configured Supabase project origin", () => {
+    const csp = buildCsp({
+      nonce: "n",
+      supabaseOrigin: "https://aowrwljrixpeawjmqgmj.supabase.co",
+    });
+    expect(csp).toContain(
+      "connect-src 'self' https://aowrwljrixpeawjmqgmj.supabase.co",
+    );
+    expect(csp).not.toContain("https://other-project.supabase.co");
+    expect(csp).not.toContain("https://*.supabase.co");
+  });
+
   it("relaxes only what the development server needs, upgrades over HTTPS", () => {
     const dev = buildCsp({ nonce: "n", dev: true });
     expect(dev).toContain("'unsafe-eval'");
