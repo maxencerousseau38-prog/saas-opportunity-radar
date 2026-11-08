@@ -874,3 +874,7 @@ Build SaaS Opportunity Radar as an **evidence-first, auditable research system**
 - The workspace records the user's research and decisions.
 
 No AI agent is the source of truth. The source of truth is the versioned data, the evidence, the deterministic business rules, the permissions, and the audit trail.
+
+## UI and visual implementation
+
+For all UI, styling, layout and component-block work, read DESIGN.md before editing. It defines the monochrome shadcn-inspired design system and the rules for adapting external blocks. Keep the existing Next.js, Tailwind CSS v4, Radix-based UI and Supabase architecture; do not migrate UI primitives just to copy a block.
