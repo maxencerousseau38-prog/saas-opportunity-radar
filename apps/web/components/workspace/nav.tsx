@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 // Main navigation (PRD §2): labels kept in English as in the PRD.
 const ITEMS = [
   { href: "discover", label: "Discover" },
+  { href: "ask-ai", label: "Ask AI" },
   { href: "ai-discovery", label: "AI Discovery" },
   { href: "opportunities", label: "Opportunities" },
   { href: "saved", label: "Saved" },

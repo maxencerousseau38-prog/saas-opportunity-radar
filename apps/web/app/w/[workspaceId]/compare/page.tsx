@@ -11,14 +11,14 @@ import {
   teamLabel,
 } from "@/lib/labels";
 import { compareProducts } from "@/lib/services/catalog";
-import { requireWorkspace } from "@/lib/workspace";
+import { canEdit, requireWorkspace } from "@/lib/workspace";
 
 export const metadata = { title: "Comparer — SaaS Opportunity Radar" };
 
 export default async function ComparePage(props: PageProps<"/w/[workspaceId]/compare">) {
   const { workspaceId } = await props.params;
   const { ids } = await props.searchParams;
-  const { client } = await requireWorkspace(workspaceId);
+  const { client, membership } = await requireWorkspace(workspaceId);
   const parsed = z
     .array(UUIDSchema)
     .min(2)
@@ -81,6 +81,17 @@ export default async function ComparePage(props: PageProps<"/w/[workspaceId]/com
       <p className="text-sm text-muted">
         Tableau déterministe des données du catalogue. « Aucune recensée » ne prouve pas l’absence.
       </p>
+      {data.length > 0 && canEdit(membership.role) ? (
+        <Link
+          className="inline-flex items-center rounded-md border border-border px-3 py-1.5 text-sm hover:bg-surface-2"
+          href={`/w/${workspaceId}/ask-ai?products=${data
+            .slice(0, 5)
+            .map((product) => product.id)
+            .join(",")}`}
+        >
+          Étudier {data.length > 5 ? "les cinq premiers produits" : "la sélection"} avec Ask AI
+        </Link>
+      ) : null}
       {omitted_count > 0 ? (
         <p className="text-sm text-warning">{omitted_count} SaaS non visible(s) omis.</p>
       ) : null}

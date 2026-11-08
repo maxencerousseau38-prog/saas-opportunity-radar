@@ -13,6 +13,7 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
+    "benchmark:catalog": "node scripts/benchmark-catalog.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -23,6 +24,7 @@
     "eslint": "catalog:",
     "globals": "catalog:",
     "prettier": "catalog:",
+    "supabase": "3.0.0",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:"

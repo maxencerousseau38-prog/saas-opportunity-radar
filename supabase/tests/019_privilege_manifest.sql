@@ -63,6 +63,7 @@ select is((select string_agg(t || ':' || p, ' ' order by t) from (
     || 'discovery_runs:SELECT '
     || 'evidence_conflicts:SELECT '
     || 'evidence_items:SELECT '
+    || 'external_research_sessions:SELECT '
     || 'finding_evidence:SELECT '
     || 'fx_rates:SELECT '
     || 'generated_opportunities:SELECT '

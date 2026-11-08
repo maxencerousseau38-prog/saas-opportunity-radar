@@ -109,6 +109,31 @@ export function ProductCardView({
         compact ? "p-3" : "p-4",
       )}
     >
+      <div
+        aria-label={`Aperçu catalogue de ${product.name}`}
+        data-testid="product-visual-preview"
+        className={cn(
+          "flex items-center gap-3 overflow-hidden rounded-md border border-border bg-gradient-to-br from-surface-2 via-surface to-surface-2",
+          compact ? "min-h-24 p-3" : "min-h-32 p-4",
+        )}
+      >
+        <ProductLogo name={product.name} logoUrl={product.logo_url} size={compact ? 48 : 60} />
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] font-semibold tracking-[0.16em] text-muted uppercase">
+            Aperçu du catalogue
+          </p>
+          <p className="mt-1 truncate text-sm font-medium">
+            {product.categories.find((category) => category.is_primary)?.name ??
+              "Catégorie inconnue"}
+          </p>
+          <p className="mt-1 text-xs text-muted">
+            {product.logo_url ? "Logo présent · identité produit recensée" : "Logo non renseigné"}
+          </p>
+        </div>
+        <span className="hidden max-w-28 text-right text-[11px] leading-snug text-muted sm:block">
+          Capture d’interface non disponible
+        </span>
+      </div>
       <div className="flex items-start gap-3">
         <ProductLogo name={product.name} logoUrl={product.logo_url} />
         <div className="min-w-0 flex-1">

@@ -11,6 +11,9 @@ test("browse Discover: only eligible products, three display modes", async ({ pa
   await waitForResults(page);
   await expect(page.getByTestId("result-count")).toHaveText("6 SaaS");
   await expect(page.getByRole("article", { name: "MetricFlow" })).toBeVisible();
+  await expect(
+    page.getByRole("article", { name: "MetricFlow" }).getByTestId("product-visual-preview"),
+  ).toContainText("Capture d’interface non disponible");
   // Permanently excluded and under-review products never appear.
   await expect(page.getByText("AffiliTrack")).toHaveCount(0);
   await expect(page.getByText("Partnerly Hub")).toHaveCount(0);
@@ -21,6 +24,35 @@ test("browse Discover: only eligible products, three display modes", async ({ pa
   await page.getByRole("button", { name: "Liste" }).click();
   await expect(page.getByRole("link", { name: "Mailtide" })).toBeVisible();
   await page.getByRole("button", { name: "Feed" }).click();
+});
+
+test("Ask AI saves an honest external handoff and imports an unverified answer", async ({
+  page,
+}) => {
+  await signIn(page, MEMBER);
+  await waitForResults(page);
+  const card = page.getByRole("article", { name: "Mailtide" });
+  await card.getByRole("button", { name: "Actions pour Mailtide" }).click();
+  await page.getByRole("menuitem", { name: "Ask AI — dossier externe" }).click();
+
+  await expect(page).toHaveURL(/\/ask-ai\?products=/);
+  await expect(page.getByRole("heading", { level: 1, name: "Ask AI" })).toBeVisible();
+  await expect(page.getByText("Mailtide", { exact: true }).first()).toBeVisible();
+  await page.getByLabel("Assistant externe").selectOption("chatgpt");
+  await page.getByLabel("Stratégie de recherche").selectOption("better_alternative");
+  await page.getByRole("button", { name: "Générer et enregistrer le prompt" }).click();
+  await expect(page).toHaveURL(/\/ask-ai\?session=/);
+  await expect(page.getByRole("button", { name: "Copier le prompt" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Ouvrir ChatGPT/ })).toHaveAttribute(
+    "href",
+    "https://chatgpt.com/",
+  );
+  await page
+    .getByLabel("Réponse de l’assistant")
+    .fill("Une hypothèse à vérifier, sans source primaire.");
+  await page.getByRole("button", { name: "Importer et enregistrer la réponse" }).click();
+  await expect(page.getByText("Réponse importée · non vérifiée")).toBeVisible();
+  await expect(page.getByText(/ne met pas à jour le catalogue/)).toBeVisible();
 });
 
 test("combined filters with a count before applying, and chip removal", async ({ page }) => {

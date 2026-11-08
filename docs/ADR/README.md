@@ -36,6 +36,7 @@ separate decisions.
 | [ADR-012](ADR-012-sprint-order.md) | Sprint order | ACCEPTED (PD-13) |
 | [ADR-013](ADR-013-source-acquisition-and-compliance.md) | Source acquisition and compliance | ACCEPTED (PD-14, PD-28); G2 and Product Hunt approval PENDING (PD-26, PD-29) |
 | [ADR-014](ADR-014-workspace-status-model.md) | Workspace opportunity status model | ACCEPTED (PD-04) |
+| [ADR-015](ADR-015-manual-external-ai-research-handoff.md) | Manual external AI research handoff | ACCEPTED (PD-35) |
 
 ## Decisions approved by the product owner on 4 November 2026
 
@@ -167,6 +168,21 @@ security job, security headers and enforced CSP, action rate limits,
 password policy, operator MFA.
 
 No deployment and no paid service.
+
+## Product completion V1 — external AI handoff (8 November 2026)
+
+The product owner authorized a no-API manual research workflow in the
+attached “Master Product Completion V1” instruction. **PD-35** records this
+as a separate path from the internal AI gateway: users choose a destination,
+preview and copy a bounded prompt, open the assistant themselves, and
+optionally import its answer as an unverified workspace note. It does not
+resolve or alter PD-24, call a provider, or turn imported text into evidence.
+The current implementation covers catalog products and product sets only;
+custom strategies and cluster/opportunity context remain outstanding.
+
+| ID | Decision | Option approved | Main consequence | ADR |
+|---|---|---|---|---|
+| PD-35 | Ask AI without an application API key | **Manual handoff** — preview and copy a bounded prompt, open the assistant, paste it manually, and optionally import its response as an unverified workspace note | No provider call; imported content never becomes catalog evidence or engine input | ADR-015 |
 
 ## S7.5 failure-mode and load tests (7 November 2026)
 

@@ -1615,6 +1615,26 @@ isOneToOne: true
                   Relationships: [
                     
                   ]
+                },"external_research_sessions": {
+                  Row: {
+                    "answer_text": string | null,"context_json": NonNullable<Json>,"context_version": string,"created_at": string,"created_by": string,"destination": string,"id": string,"included_sections": string[],"notes": string | null,"prompt_text": string,"prompt_version": string,"status": string,"strategy": string,"subject_snapshot": NonNullable<Json>,"subject_type": string,"updated_at": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "answer_text"?: string | null,"context_json": NonNullable<Json>,"context_version": string,"created_at"?: string,"created_by": string,"destination": string,"id"?: string,"included_sections"?: string[],"notes"?: string | null,"prompt_text": string,"prompt_version": string,"status"?: string,"strategy": string,"subject_snapshot": NonNullable<Json>,"subject_type": string,"updated_at"?: string,"workspace_id": string
+                  }
+                  Update: {
+                    "answer_text"?: string | null,"context_json"?: NonNullable<Json>,"context_version"?: string,"created_at"?: string,"created_by"?: string,"destination"?: string,"id"?: string,"included_sections"?: string[],"notes"?: string | null,"prompt_text"?: string,"prompt_version"?: string,"status"?: string,"strategy"?: string,"subject_snapshot"?: NonNullable<Json>,"subject_type"?: string,"updated_at"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "external_research_sessions_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
