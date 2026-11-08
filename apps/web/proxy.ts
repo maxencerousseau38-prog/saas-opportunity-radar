@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { CSP_HEADER, buildCsp, newNonce } from "@/lib/security-headers";
 
-const PUBLIC_PATHS = ["/login", "/auth/"];
+const PUBLIC_PATHS = ["/login", "/signup", "/auth/"];
 
 export async function proxy(request: NextRequest) {
   const nonce = newNonce();

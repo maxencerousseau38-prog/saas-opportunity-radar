@@ -17,6 +17,38 @@ export function LoginForm() {
   useEffect(() => {
     if (recoveryHandled.current) return;
 
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code");
+
+    // SSR email confirmation commonly returns a PKCE code in the query string.
+    // Exchange it in the browser so @supabase/ssr persists the session cookies.
+    if (code) {
+      recoveryHandled.current = true;
+      url.searchParams.delete("code");
+      window.history.replaceState(null, document.title, url.pathname + url.search + url.hash);
+      setRecovering(true);
+
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+        { auth: { detectSessionInUrl: false } },
+      );
+
+      void supabase.auth.exchangeCodeForSession(code).then(({ error: exchangeError }) => {
+        if (exchangeError) {
+          setRecovering(false);
+          setRecoveryMessage("Ce lien n'est plus valide ou a déjà été utilisé. Demande un nouvel e-mail.");
+          return;
+        }
+        router.replace("/");
+        router.refresh();
+      }).catch(() => {
+        setRecovering(false);
+        setRecoveryMessage("Impossible de vérifier ce lien. Demande un nouvel e-mail.");
+      });
+      return;
+    }
+
     const hash = window.location.hash;
     if (!hash) return;
 
@@ -24,11 +56,12 @@ export function LoginForm() {
     const type = params.get("type");
     const errorCode = params.get("error_code");
     const isPasswordFlow = type === "recovery" || type === "invite";
+    const isSignupFlow = type === "signup";
 
-    // Supabase's default email templates redirect with tokens in the URL
-    // fragment. That fragment is never sent to the server, so establish the
+    // Supabase's default email templates can redirect with tokens in the URL
+    // fragment. The fragment is never sent to the server; establish the
     // session in the browser and let @supabase/ssr persist it in cookies.
-    if (!isPasswordFlow && !errorCode) return;
+    if (!isPasswordFlow && !isSignupFlow && !errorCode) return;
 
     recoveryHandled.current = true;
     const accessToken = params.get("access_token");
@@ -36,16 +69,12 @@ export function LoginForm() {
     const errorDescription = params.get("error_description");
 
     // Remove credentials from the address bar before making any network call.
-    window.history.replaceState(
-      null,
-      document.title,
-      window.location.pathname + window.location.search,
-    );
+    window.history.replaceState(null, document.title, url.pathname + url.search);
 
     if (errorCode) {
       setRecoveryMessage(
         errorCode === "otp_expired"
-          ? "Ce lien a expiré ou a déjà été utilisé. Demande un nouvel e-mail de récupération."
+          ? "Ce lien a expiré ou a déjà été utilisé. Demande un nouvel e-mail."
           : errorDescription ?? "Le lien d'authentification n'est pas valide.",
       );
       return;
@@ -57,7 +86,6 @@ export function LoginForm() {
     }
 
     setRecovering(true);
-
     const supabase = createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -70,17 +98,16 @@ export function LoginForm() {
         if (sessionError) {
           setRecovering(false);
           setRecoveryMessage(
-            "Ce lien n'est plus valide ou a déjà été utilisé. Demande un nouvel e-mail de récupération.",
+            "Ce lien n'est plus valide ou a déjà été utilisé. Demande un nouvel e-mail.",
           );
           return;
         }
-
-        router.replace("/account/password");
+        router.replace(isPasswordFlow ? "/account/password" : "/");
         router.refresh();
       })
       .catch(() => {
         setRecovering(false);
-        setRecoveryMessage("Impossible de vérifier ce lien. Demande un nouvel e-mail de récupération.");
+        setRecoveryMessage("Impossible de vérifier ce lien. Demande un nouvel e-mail.");
       });
   }, [router]);
 
