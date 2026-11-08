@@ -1,6 +1,6 @@
-// Refreshes the Supabase session cookies on every request. The public home
-// page is a read-only preview; workspace pages stay behind authentication
-// (pages only; API routes answer 401) and retain their per-request CSP.
+// Refreshes Supabase session cookies and applies the per-request CSP.
+// Signed-out visitors are sent to the public, read-only preview instead of
+// being stopped by the login screen. Workspace pages and APIs remain protected.
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { CSP_HEADER, buildCsp, newNonce } from "@/lib/security-headers";
@@ -46,10 +46,12 @@ export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isPublic = path === "/" || PUBLIC_PATHS.some((p) => path === p || path.startsWith(p));
   if (!data.user && !isPublic && !path.startsWith("/api/")) {
-    const login = request.nextUrl.clone();
-    login.pathname = "/login";
-    login.search = "";
-    return secured(NextResponse.redirect(login));
+    // Temporary no-login experience: show the public demo instead of a login wall.
+    // The demo is read-only; API routes and workspace data remain authenticated.
+    const preview = request.nextUrl.clone();
+    preview.pathname = "/";
+    preview.search = "";
+    return secured(NextResponse.redirect(preview));
   }
   return secured(response);
 }
