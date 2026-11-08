@@ -9,10 +9,13 @@ const PUBLIC_PATHS = ["/login", "/auth/"];
 
 export async function proxy(request: NextRequest) {
   const nonce = newNonce();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseOrigin = supabaseUrl ? new URL(supabaseUrl).origin : undefined;
   const csp = buildCsp({
     nonce,
     dev: process.env.NODE_ENV === "development",
     https: request.nextUrl.protocol === "https:",
+    supabaseOrigin,
     reportUri: "/api/csp-report",
   });
   // Next.js reads the nonce from the request's CSP header and adds it to its
@@ -25,11 +28,10 @@ export async function proxy(request: NextRequest) {
   };
 
   let response = NextResponse.next({ request });
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return secured(response);
+  if (!supabaseUrl || !key) return secured(response);
 
-  const supabase = createServerClient(url, key, {
+  const supabase = createServerClient(supabaseUrl, key, {
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (list) => {
