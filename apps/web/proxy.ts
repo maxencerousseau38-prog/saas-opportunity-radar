@@ -1,6 +1,6 @@
-// Refreshes the Supabase session cookies on every request, sends signed-out
-// visitors to /login (pages only; API routes answer 401) and sets the
-// per-request Content Security Policy with a nonce (S7.4b, PD-33).
+// Refreshes the Supabase session cookies on every request. The public home
+// page is a read-only preview; workspace pages stay behind authentication
+// (pages only; API routes answer 401) and retain their per-request CSP.
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { CSP_HEADER, buildCsp, newNonce } from "@/lib/security-headers";
@@ -44,7 +44,7 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isPublic = PUBLIC_PATHS.some((p) => path === p || path.startsWith(p));
+  const isPublic = path === "/" || PUBLIC_PATHS.some((p) => path === p || path.startsWith(p));
   if (!data.user && !isPublic && !path.startsWith("/api/")) {
     const login = request.nextUrl.clone();
     login.pathname = "/login";
