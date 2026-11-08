@@ -60,13 +60,15 @@ export default async function HomePage() {
       </header>
 
       <section className="mx-auto max-w-6xl px-5 pb-12 pt-16 sm:pb-16 sm:pt-24">
-        <p className="mb-4 text-sm font-medium text-accent">Recherche SaaS fondée sur les preuves</p>
+        <p className="mb-4 text-sm font-medium text-accent">
+          Recherche SaaS fondée sur les preuves
+        </p>
         <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
           Repère les SaaS qui méritent vraiment ton attention.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-muted">
-          Parcours cette démonstration sans créer de compte. Découvre comment les logiciels,
-          leurs positionnements et leurs signaux commerciaux peuvent être présentés.
+          Parcours cette démonstration sans créer de compte. Découvre comment les logiciels, leurs
+          positionnements et leurs signaux commerciaux peuvent être présentés.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
@@ -89,9 +91,7 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-sm font-medium text-accent">Aperçu du produit</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Discover
-              </h2>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Discover</h2>
               <p className="mt-2 max-w-xl text-sm text-muted">
                 Un exemple de la manière dont les logiciels peuvent être présentés et comparés.
               </p>

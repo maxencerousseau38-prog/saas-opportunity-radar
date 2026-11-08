@@ -20,10 +20,24 @@ const SCALES = [2_000, 10_000, 50_000];
 const CLIENTS = [1, 10];
 const TRANSACTIONS_PER_CLIENT = 100;
 const dockerCandidates = [
-  resolve(homedir(), "AppData", "Local", "Programs", "DockerDesktop", "resources", "bin", "docker.exe"),
-  process.env.ProgramFiles ? resolve(process.env.ProgramFiles, "Docker", "Docker", "resources", "bin", "docker.exe") : null,
+  resolve(
+    homedir(),
+    "AppData",
+    "Local",
+    "Programs",
+    "DockerDesktop",
+    "resources",
+    "bin",
+    "docker.exe",
+  ),
+  process.env.ProgramFiles
+    ? resolve(process.env.ProgramFiles, "Docker", "Docker", "resources", "bin", "docker.exe")
+    : null,
 ].filter(Boolean);
-const DOCKER = process.env.SOR_S75C_DOCKER_BIN || dockerCandidates.find((candidate) => existsSync(candidate)) || "docker";
+const DOCKER =
+  process.env.SOR_S75C_DOCKER_BIN ||
+  dockerCandidates.find((candidate) => existsSync(candidate)) ||
+  "docker";
 const DB_CONTAINER = "supabase_db_saas-opportunity-radar";
 const DB_SOCKET = "/var/run/postgresql";
 const DB_PORT = "5432";
@@ -81,15 +95,23 @@ function generateRows(count) {
 
 function run(command, args, env, { allowAfterInterrupt = false, binary = false } = {}) {
   if (shutdownSignal && !allowAfterInterrupt) {
-    return Promise.reject(new Error(`Interrupted by ${shutdownSignal}; no further benchmark command will start.`));
+    return Promise.reject(
+      new Error(`Interrupted by ${shutdownSignal}; no further benchmark command will start.`),
+    );
   }
   return new Promise((resolvePromise, reject) => {
-    const child = spawn(command, args, { cwd: ROOT, env, windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(command, args, {
+      cwd: ROOT,
+      env,
+      windowsHide: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
     activeChild = child;
-    const isBoundedSqlExec = command === DOCKER
-      && args[0] === "exec"
-      && args.includes("timeout")
-      && (args.includes("psql") || args.includes("pgbench"));
+    const isBoundedSqlExec =
+      command === DOCKER &&
+      args[0] === "exec" &&
+      args.includes("timeout") &&
+      (args.includes("psql") || args.includes("pgbench"));
     activeChildMayFinish = allowAfterInterrupt || isBoundedSqlExec;
     let stdout = "";
     const stdoutChunks = [];
@@ -110,13 +132,24 @@ function run(command, args, env, { allowAfterInterrupt = false, binary = false }
       }
       callback(value);
     };
-    if (binary) child.stdout.on("data", (chunk) => { stdoutChunks.push(Buffer.from(chunk)); });
-    else child.stdout.setEncoding("utf8").on("data", (chunk) => { stdout += chunk; });
-    child.stderr.setEncoding("utf8").on("data", (chunk) => { stderr += chunk; });
+    if (binary)
+      child.stdout.on("data", (chunk) => {
+        stdoutChunks.push(Buffer.from(chunk));
+      });
+    else
+      child.stdout.setEncoding("utf8").on("data", (chunk) => {
+        stdout += chunk;
+      });
+    child.stderr.setEncoding("utf8").on("data", (chunk) => {
+      stderr += chunk;
+    });
     child.on("error", (error) => finish(reject, error));
     child.on("close", (code) => {
       if (timedOut) {
-        finish(reject, new Error(`${command} exceeded the ${COMMAND_TIMEOUT_MS} ms timeout and was terminated.`));
+        finish(
+          reject,
+          new Error(`${command} exceeded the ${COMMAND_TIMEOUT_MS} ms timeout and was terminated.`),
+        );
       } else if (shutdownSignal && !allowAfterInterrupt) {
         finish(reject, new Error(`Interrupted by ${shutdownSignal}; ${command} was terminated.`));
       } else if (code === 0) {
@@ -130,7 +163,9 @@ function run(command, args, env, { allowAfterInterrupt = false, binary = false }
 
 function dockerEnvironment() {
   if (process.env.DOCKER_HOST) {
-    throw new Error("Unset DOCKER_HOST; the active Docker context must resolve to a local Windows named pipe.");
+    throw new Error(
+      "Unset DOCKER_HOST; the active Docker context must resolve to a local Windows named pipe.",
+    );
   }
   return { ...process.env };
 }
@@ -138,15 +173,24 @@ function dockerEnvironment() {
 async function assertLocalDockerContainer(dockerEnv) {
   const context = (await run(DOCKER, ["context", "show"], dockerEnv)).trim();
   if (!context) throw new Error("Docker did not report an active context.");
-  const endpoint = (await run(DOCKER, [
-    "context", "inspect", context,
-    "--format", "{{(index .Endpoints \"docker\").Host}}",
-  ], dockerEnv)).trim();
+  const endpoint = (
+    await run(
+      DOCKER,
+      ["context", "inspect", context, "--format", '{{(index .Endpoints "docker").Host}}'],
+      dockerEnv,
+    )
+  ).trim();
   if (!endpoint.toLowerCase().startsWith("npipe://")) {
-    throw new Error(`Refusing Docker endpoint '${endpoint}'; a local Windows named-pipe context is required.`);
+    throw new Error(
+      `Refusing Docker endpoint '${endpoint}'; a local Windows named-pipe context is required.`,
+    );
   }
 
-  const inspectOutput = await run(DOCKER, ["inspect", "--format", "{{json .}}", DB_CONTAINER], dockerEnv);
+  const inspectOutput = await run(
+    DOCKER,
+    ["inspect", "--format", "{{json .}}", DB_CONTAINER],
+    dockerEnv,
+  );
   let inspection;
   try {
     inspection = JSON.parse(inspectOutput);
@@ -160,11 +204,52 @@ async function assertLocalDockerContainer(dockerEnv) {
 }
 
 function psqlArgs(args) {
-  return ["exec", "--user", "postgres", DB_CONTAINER, "timeout", "-s", "TERM", "-k", "5", String(CONTAINER_TIMEOUT_SECONDS), "psql", "-h", DB_SOCKET, "-p", DB_PORT, "-U", "postgres", "-d", "postgres", ...args];
+  return [
+    "exec",
+    "--user",
+    "postgres",
+    DB_CONTAINER,
+    "timeout",
+    "-s",
+    "TERM",
+    "-k",
+    "5",
+    String(CONTAINER_TIMEOUT_SECONDS),
+    "psql",
+    "-h",
+    DB_SOCKET,
+    "-p",
+    DB_PORT,
+    "-U",
+    "postgres",
+    "-d",
+    "postgres",
+    ...args,
+  ];
 }
 
 function pgbenchArgs(args) {
-  return ["exec", "--user", "postgres", DB_CONTAINER, "timeout", "-s", "TERM", "-k", "5", String(CONTAINER_TIMEOUT_SECONDS), "pgbench", "-h", DB_SOCKET, "-p", DB_PORT, "-U", "postgres", ...args, "postgres"];
+  return [
+    "exec",
+    "--user",
+    "postgres",
+    DB_CONTAINER,
+    "timeout",
+    "-s",
+    "TERM",
+    "-k",
+    "5",
+    String(CONTAINER_TIMEOUT_SECONDS),
+    "pgbench",
+    "-h",
+    DB_SOCKET,
+    "-p",
+    DB_PORT,
+    "-U",
+    "postgres",
+    ...args,
+    "postgres",
+  ];
 }
 
 async function stageSqlFiles(dockerEnv) {
@@ -183,11 +268,19 @@ async function stageSqlFiles(dockerEnv) {
   for (const localPath of SQL_FILES) {
     const name = basename(localPath);
     const remotePath = `${remoteDir}/${name}`;
-    const state = await run(DOCKER, [
-      "exec", DB_CONTAINER, "sh", "-c",
-      'if [ -f "$1" ]; then printf "present\\n"; cat "$1"; else printf "missing\\n"; fi',
-      "sh", remotePath,
-    ], dockerEnv);
+    const state = await run(
+      DOCKER,
+      [
+        "exec",
+        DB_CONTAINER,
+        "sh",
+        "-c",
+        'if [ -f "$1" ]; then printf "present\\n"; cat "$1"; else printf "missing\\n"; fi',
+        "sh",
+        remotePath,
+      ],
+      dockerEnv,
+    );
     const localSqlBytes = readFileSync(localPath);
     const localSql = localSqlBytes.toString("utf8");
     if (state.startsWith("present\n")) {
@@ -199,11 +292,15 @@ async function stageSqlFiles(dockerEnv) {
     } else {
       throw new Error(`Unexpected response while checking staged SQL file '${remotePath}'.`);
     }
-    const transferredSql = await run(DOCKER, ["exec", DB_CONTAINER, "cat", remotePath], dockerEnv, { binary: true });
+    const transferredSql = await run(DOCKER, ["exec", DB_CONTAINER, "cat", remotePath], dockerEnv, {
+      binary: true,
+    });
     const localSha256 = createHash("sha256").update(localSqlBytes).digest("hex");
     const transferredSha256 = createHash("sha256").update(transferredSql).digest("hex");
     if (!transferredSql.equals(localSqlBytes) || transferredSha256 !== localSha256) {
-      throw new Error(`Staged SQL integrity check failed for '${remotePath}': local SHA-256=${localSha256}, container SHA-256=${transferredSha256}.`);
+      throw new Error(
+        `Staged SQL integrity check failed for '${remotePath}': local SHA-256=${localSha256}, container SHA-256=${transferredSha256}.`,
+      );
     }
     remoteFiles.set(localPath, remotePath);
   }
@@ -250,7 +347,7 @@ async function benchmarkNodeGenerator(scale) {
     median_elapsed_ms: Number(medianMs.toFixed(2)),
     min_elapsed_ms: Number(sorted[0].toFixed(2)),
     max_elapsed_ms: Number(sorted.at(-1).toFixed(2)),
-    rows_per_second_at_median: Math.round(scale * 1000 / medianMs),
+    rows_per_second_at_median: Math.round((scale * 1000) / medianMs),
   };
   return result;
 }
@@ -270,12 +367,18 @@ async function benchmarkSupabaseApi(scale, baseUrl, publishableKey, jwtSecret, c
   };
   const fetchOne = async () => {
     const start = performance.now();
-    const response = await fetch(url, { headers, signal: AbortSignal.any([AbortSignal.timeout(10_000), shutdownController.signal]) });
+    const response = await fetch(url, {
+      headers,
+      signal: AbortSignal.any([AbortSignal.timeout(10_000), shutdownController.signal]),
+    });
     const text = await response.text();
-    if (!response.ok) throw new Error(`Supabase REST returned ${response.status}: ${text.slice(0, 300)}`);
+    if (!response.ok)
+      throw new Error(`Supabase REST returned ${response.status}: ${text.slice(0, 300)}`);
     const rows = JSON.parse(text);
     if (!Array.isArray(rows) || rows.length !== Math.min(30, scale)) {
-      throw new Error(`Supabase REST returned ${Array.isArray(rows) ? rows.length : "non-array"} rows; expected ${Math.min(30, scale)}.`);
+      throw new Error(
+        `Supabase REST returned ${Array.isArray(rows) ? rows.length : "non-array"} rows; expected ${Math.min(30, scale)}.`,
+      );
     }
     return performance.now() - start;
   };
@@ -286,7 +389,7 @@ async function benchmarkSupabaseApi(scale, baseUrl, publishableKey, jwtSecret, c
   const runStart = performance.now();
   for (let done = 0; done < target; done += concurrency) {
     const count = Math.min(concurrency, target - done);
-    samples.push(...await Promise.all(Array.from({ length: count }, fetchOne)));
+    samples.push(...(await Promise.all(Array.from({ length: count }, fetchOne))));
   }
   const elapsedMs = performance.now() - runStart;
   return {
@@ -294,7 +397,7 @@ async function benchmarkSupabaseApi(scale, baseUrl, publishableKey, jwtSecret, c
     concurrency,
     ...summarize(samples),
     elapsed_ms: Number(elapsedMs.toFixed(2)),
-    requests_per_second: Number((target * 1000 / elapsedMs).toFixed(2)),
+    requests_per_second: Number(((target * 1000) / elapsedMs).toFixed(2)),
   };
 }
 
@@ -313,9 +416,11 @@ async function verifySupabaseCount(scale, baseUrl, publishableKey, jwtSecret) {
     signal: AbortSignal.any([AbortSignal.timeout(10_000), shutdownController.signal]),
   });
   const body = await response.text();
-  if (!response.ok) throw new Error(`Supabase REST preflight returned ${response.status}: ${body.slice(0, 300)}`);
+  if (!response.ok)
+    throw new Error(`Supabase REST preflight returned ${response.status}: ${body.slice(0, 300)}`);
   const total = Number(response.headers.get("content-range")?.split("/")[1]);
-  if (total !== scale) throw new Error(`Supabase REST exposed ${total} fixture rows; expected ${scale}.`);
+  if (total !== scale)
+    throw new Error(`Supabase REST exposed ${total} fixture rows; expected ${scale}.`);
   return total;
 }
 
@@ -345,20 +450,28 @@ async function main() {
   const nodeOnly = process.argv.includes("--node-only");
   const requiredNode = readFileSync(resolve(ROOT, ".nvmrc"), "utf8").trim();
   if (process.versions.node !== requiredNode) {
-    throw new Error(`Use Node ${requiredNode} from .nvmrc for reproducible measurements; found ${process.version}.`);
+    throw new Error(
+      `Use Node ${requiredNode} from .nvmrc for reproducible measurements; found ${process.version}.`,
+    );
   }
   const nodeResults = [];
   for (const scale of SCALES) nodeResults.push(await benchmarkNodeGenerator(scale));
   throwIfInterrupted();
   if (nodeOnly) {
-    process.stdout.write(`${JSON.stringify({
-      node: process.version,
-      platform: process.platform,
-      arch: process.arch,
-      cpu_count: cpus().length,
-      system_memory_bytes: totalmem(),
-      node_generator: nodeResults,
-    }, null, 2)}\n`);
+    process.stdout.write(
+      `${JSON.stringify(
+        {
+          node: process.version,
+          platform: process.platform,
+          arch: process.arch,
+          cpu_count: cpus().length,
+          system_memory_bytes: totalmem(),
+          node_generator: nodeResults,
+        },
+        null,
+        2,
+      )}\n`,
+    );
     return;
   }
 
@@ -379,29 +492,55 @@ async function main() {
   const runApi = Boolean(apiUrl && publishableKey && jwtSecret);
   if (apiUrl) {
     const parsedApiUrl = new URL(apiUrl);
-    if (parsedApiUrl.protocol !== "http:" || !loopbackHostname(parsedApiUrl.hostname) || parsedApiUrl.port !== "54321") {
+    if (
+      parsedApiUrl.protocol !== "http:" ||
+      !loopbackHostname(parsedApiUrl.hostname) ||
+      parsedApiUrl.port !== "54321"
+    ) {
       throw new Error("Refusing SUPABASE_URL outside local HTTP at port 54321.");
     }
   }
   if (Boolean(apiUrl || publishableKey || jwtSecret) && !runApi) {
-    throw new Error("For the Supabase REST benchmark, provide SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY and SUPABASE_JWT_SECRET together.");
+    throw new Error(
+      "For the Supabase REST benchmark, provide SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY and SUPABASE_JWT_SECRET together.",
+    );
   }
   if (!runApi && !process.argv.includes("--postgres-only")) {
-    throw new Error("The full run requires local Supabase API credentials; use --postgres-only to explicitly skip PostgREST.");
+    throw new Error(
+      "The full run requires local Supabase API credentials; use --postgres-only to explicitly skip PostgREST.",
+    );
   }
 
   const psqlVersion = await run(DOCKER, psqlArgs(["--version"]), dockerEnv);
   const pgbenchVersion = await run(DOCKER, pgbenchArgs(["--version"]), dockerEnv);
   if (!/\b17\.\d+/.test(psqlVersion) || !/\b17\.\d+/.test(pgbenchVersion)) {
-    throw new Error(`PostgreSQL 17 client tools are required; psql=${psqlVersion.trim()}, pgbench=${pgbenchVersion.trim()}.`);
+    throw new Error(
+      `PostgreSQL 17 client tools are required; psql=${psqlVersion.trim()}, pgbench=${pgbenchVersion.trim()}.`,
+    );
   }
-  const serverVersion = await run(DOCKER, psqlArgs(["-X", "-qAt", "-c", "select current_setting('server_version') || '|' || current_setting('server_version_num')"]), dockerEnv);
+  const serverVersion = await run(
+    DOCKER,
+    psqlArgs([
+      "-X",
+      "-qAt",
+      "-c",
+      "select current_setting('server_version') || '|' || current_setting('server_version_num')",
+    ]),
+    dockerEnv,
+  );
   const [serverVersionText, serverVersionNum] = serverVersion.trim().split("|");
   if (!/^17\.\d+/.test(serverVersionText) || !/^17\d{4}$/.test(serverVersionNum)) {
-    throw new Error(`PostgreSQL 17 server required; server_version=${serverVersionText}, server_version_num=${serverVersionNum}.`);
+    throw new Error(
+      `PostgreSQL 17 server required; server_version=${serverVersionText}, server_version_num=${serverVersionNum}.`,
+    );
   }
   const clean = async ({ allowAfterInterrupt = false } = {}) => {
-    const output = await run(DOCKER, psqlArgs(["-X", "-qAt", "-v", "ON_ERROR_STOP=1", "-f", stagedSql.files.get(CLEANUP_SQL)]), dockerEnv, { allowAfterInterrupt });
+    const output = await run(
+      DOCKER,
+      psqlArgs(["-X", "-qAt", "-v", "ON_ERROR_STOP=1", "-f", stagedSql.files.get(CLEANUP_SQL)]),
+      dockerEnv,
+      { allowAfterInterrupt },
+    );
     const lines = output.trim().split(/\r?\n/);
     if (lines.length !== 3 || !/^\d+$/.test(lines[0]) || !/^\d+$/.test(lines[1])) {
       throw new Error(`Could not verify local fixture cleanup: ${output}`);
@@ -412,13 +551,32 @@ async function main() {
     if (remaining.length !== 2 || remaining.some((value) => !Number.isInteger(value))) {
       throw new Error(`Could not verify local fixture cleanup: ${output}`);
     }
-    if (remaining[0] !== 0 || remaining[1] !== 0) throw new Error("Benchmark fixture rows remain after cleanup.");
-    return { deleted_products: deletedProducts, deleted_companies: deletedCompanies, remaining_products: remaining[0], remaining_companies: remaining[1] };
+    if (remaining[0] !== 0 || remaining[1] !== 0)
+      throw new Error("Benchmark fixture rows remain after cleanup.");
+    return {
+      deleted_products: deletedProducts,
+      deleted_companies: deletedCompanies,
+      remaining_products: remaining[0],
+      remaining_companies: remaining[1],
+    };
   };
   const outsidePrefixFingerprint = async ({ allowAfterInterrupt = false } = {}) => {
-    const output = await run(DOCKER, psqlArgs(["-X", "-qAt", "-v", "ON_ERROR_STOP=1", "-f", stagedSql.files.get(BOUNDARY_SQL)]), dockerEnv, { allowAfterInterrupt });
-    const lines = output.trim().split(/\r?\n/).map((line) => line.split("|"));
-    if (lines.length !== 2 || lines.some((line) => line.length !== 2 || !/^\d+$/.test(line[0]) || !/^[a-f0-9]{32}$/.test(line[1]))) {
+    const output = await run(
+      DOCKER,
+      psqlArgs(["-X", "-qAt", "-v", "ON_ERROR_STOP=1", "-f", stagedSql.files.get(BOUNDARY_SQL)]),
+      dockerEnv,
+      { allowAfterInterrupt },
+    );
+    const lines = output
+      .trim()
+      .split(/\r?\n/)
+      .map((line) => line.split("|"));
+    if (
+      lines.length !== 2 ||
+      lines.some(
+        (line) => line.length !== 2 || !/^\d+$/.test(line[0]) || !/^[a-f0-9]{32}$/.test(line[1]),
+      )
+    ) {
       throw new Error(`Could not verify non-fixture row counts: ${output}`);
     }
     return lines.map(([count, hash]) => [Number(count), hash]);
@@ -426,13 +584,25 @@ async function main() {
 
   const baselineOutsidePrefix = await outsidePrefixFingerprint();
   const initialCleanup = await clean(); // Also remove an interrupted run's reserved fixture namespace.
-  const outsideImmediatelyAfterInitialCleanup = await outsidePrefixFingerprint({ allowAfterInterrupt: true });
-  if (JSON.stringify(outsideImmediatelyAfterInitialCleanup) !== JSON.stringify(baselineOutsidePrefix)) {
-    throw new Error(`Initial cleanup changed rows outside the fixture prefixes: before=${JSON.stringify(baselineOutsidePrefix)}; after=${JSON.stringify(outsideImmediatelyAfterInitialCleanup)}`);
+  const outsideImmediatelyAfterInitialCleanup = await outsidePrefixFingerprint({
+    allowAfterInterrupt: true,
+  });
+  if (
+    JSON.stringify(outsideImmediatelyAfterInitialCleanup) !== JSON.stringify(baselineOutsidePrefix)
+  ) {
+    throw new Error(
+      `Initial cleanup changed rows outside the fixture prefixes: before=${JSON.stringify(baselineOutsidePrefix)}; after=${JSON.stringify(outsideImmediatelyAfterInitialCleanup)}`,
+    );
   }
   cleanupResults.push({ phase: "initial", ...initialCleanup });
-  isolationChecks.push({ phase: "initial_cleanup", outside_prefix_row_fingerprints_unchanged: true });
-  if (shutdownSignal) throw new Error(`Interrupted by ${shutdownSignal}; benchmark aborted after initial cleanup verification.`);
+  isolationChecks.push({
+    phase: "initial_cleanup",
+    outside_prefix_row_fingerprints_unchanged: true,
+  });
+  if (shutdownSignal)
+    throw new Error(
+      `Interrupted by ${shutdownSignal}; benchmark aborted after initial cleanup verification.`,
+    );
 
   for (const scale of SCALES) {
     let seedAttempted = false;
@@ -440,28 +610,82 @@ async function main() {
     try {
       const seedStart = performance.now();
       seedAttempted = true;
-      await run(DOCKER, psqlArgs(["-X", "-v", "ON_ERROR_STOP=1", "-v", `scale=${scale}`, "-f", stagedSql.files.get(SEED_SQL)]), dockerEnv);
+      await run(
+        DOCKER,
+        psqlArgs([
+          "-X",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          `scale=${scale}`,
+          "-f",
+          stagedSql.files.get(SEED_SQL),
+        ]),
+        dockerEnv,
+      );
       const seedMs = performance.now() - seedStart;
       seedResults.push({ scale, elapsed_ms: Number(seedMs.toFixed(2)) });
 
-      const inspectOutput = await run(DOCKER, psqlArgs(["-X", "-qAt", "-v", "ON_ERROR_STOP=1", "-v", `scale=${scale}`, "-f", stagedSql.files.get(INSPECT_SQL)]), dockerEnv);
-      const [rowCount, uniqueSlugCount, fullHash, firstTwoThousandHash] = inspectOutput.trim().split("|");
-      if (Number(rowCount) !== scale || Number(uniqueSlugCount) !== scale || !fullHash || !firstTwoThousandHash) {
+      const inspectOutput = await run(
+        DOCKER,
+        psqlArgs([
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          `scale=${scale}`,
+          "-f",
+          stagedSql.files.get(INSPECT_SQL),
+        ]),
+        dockerEnv,
+      );
+      const [rowCount, uniqueSlugCount, fullHash, firstTwoThousandHash] = inspectOutput
+        .trim()
+        .split("|");
+      if (
+        Number(rowCount) !== scale ||
+        Number(uniqueSlugCount) !== scale ||
+        !fullHash ||
+        !firstTwoThousandHash
+      ) {
         throw new Error(`Fixture count/hash verification failed at ${scale}: ${inspectOutput}`);
       }
       if (scale === 2_000) reproducibilityHash = firstTwoThousandHash;
       else if (firstTwoThousandHash !== reproducibilityHash) {
         throw new Error(`The first 2K fixture checksum changed at scale ${scale}.`);
       }
-      fixtureChecks.push({ scale, rows: Number(rowCount), unique_slugs: Number(uniqueSlugCount), content_checksum: fullHash, first_2k_checksum: firstTwoThousandHash });
+      fixtureChecks.push({
+        scale,
+        rows: Number(rowCount),
+        unique_slugs: Number(uniqueSlugCount),
+        content_checksum: fullHash,
+        first_2k_checksum: firstTwoThousandHash,
+      });
 
       for (const clients of CLIENTS) {
-        for (const [query, sql] of [["page", READ_SQL], ["count", COUNT_SQL]]) {
-          const output = await run(DOCKER, pgbenchArgs([
-            "-n", "-M", "simple", "-f", stagedSql.files.get(sql),
-            "-c", String(clients), "-j", String(Math.min(clients, 4)),
-            "-t", String(TRANSACTIONS_PER_CLIENT), "-r",
-          ]), dockerEnv);
+        for (const [query, sql] of [
+          ["page", READ_SQL],
+          ["count", COUNT_SQL],
+        ]) {
+          const output = await run(
+            DOCKER,
+            pgbenchArgs([
+              "-n",
+              "-M",
+              "simple",
+              "-f",
+              stagedSql.files.get(sql),
+              "-c",
+              String(clients),
+              "-j",
+              String(Math.min(clients, 4)),
+              "-t",
+              String(TRANSACTIONS_PER_CLIENT),
+              "-r",
+            ]),
+            dockerEnv,
+          );
           pgResults.push(parsePgbench(output, scale, clients, query));
         }
       }
@@ -469,7 +693,9 @@ async function main() {
         const exposedRows = await verifySupabaseCount(scale, apiUrl, publishableKey, jwtSecret);
         apiCountChecks.push({ scale, exposed_rows: exposedRows });
         for (const concurrency of CLIENTS) {
-          apiResults.push(await benchmarkSupabaseApi(scale, apiUrl, publishableKey, jwtSecret, concurrency));
+          apiResults.push(
+            await benchmarkSupabaseApi(scale, apiUrl, publishableKey, jwtSecret, concurrency),
+          );
         }
       }
     } catch (error) {
@@ -477,14 +703,21 @@ async function main() {
     } finally {
       if (seedAttempted) {
         try {
-          cleanupResults.push({ scale, ...await clean({ allowAfterInterrupt: true }) });
+          cleanupResults.push({ scale, ...(await clean({ allowAfterInterrupt: true })) });
           const outsideAfter = await outsidePrefixFingerprint({ allowAfterInterrupt: true });
           if (JSON.stringify(outsideAfter) !== JSON.stringify(baselineOutsidePrefix)) {
-            throw new Error(`Non-fixture row fingerprints changed: before=${JSON.stringify(baselineOutsidePrefix)}; after=${JSON.stringify(outsideAfter)}`);
+            throw new Error(
+              `Non-fixture row fingerprints changed: before=${JSON.stringify(baselineOutsidePrefix)}; after=${JSON.stringify(outsideAfter)}`,
+            );
           }
           isolationChecks.push({ scale, outside_prefix_row_fingerprints_unchanged: true });
         } catch (error) {
-          runError = runError ? new AggregateError([runError, error], "Benchmark failed and fixture cleanup/isolation verification also failed.") : error;
+          runError = runError
+            ? new AggregateError(
+                [runError, error],
+                "Benchmark failed and fixture cleanup/isolation verification also failed.",
+              )
+            : error;
         }
       }
     }
@@ -493,38 +726,44 @@ async function main() {
   }
 
   throwIfInterrupted();
-  process.stdout.write(`${JSON.stringify({
-    generated_at: new Date().toISOString(),
-    node: process.version,
-    platform: process.platform,
-    arch: process.arch,
-    cpu_count: cpus().length,
-    system_memory_bytes: totalmem(),
-    scales: SCALES,
-    synthetic_prefix: PREFIX,
-    database: {
-      docker_context: dockerTarget.context,
-      docker_endpoint: dockerTarget.endpoint,
-      container: DB_CONTAINER,
-      image: dockerTarget.image,
-      server_version: serverVersionText,
-      psql_version: psqlVersion.trim(),
-      pgbench_version: pgbenchVersion.trim(),
-      connection: `unix socket ${DB_SOCKET}:${DB_PORT}, database postgres, role postgres`,
-      staged_sql_bundle_sha256: stagedSql.bundle_sha256,
-    },
-    verification: {
-      fixture_counts_and_uniqueness: fixtureChecks,
-      first_2k_content_checksum_stable_across_scales: true,
-      postgrest_visible_row_counts: apiCountChecks,
-      cleanup: cleanupResults,
-      non_fixture_counts_unchanged: isolationChecks,
-    },
-    seed_and_analyze: seedResults,
-    node_generator: nodeResults,
-    postgresql_pgbench: pgResults,
-    supabase_postgrest: runApi ? apiResults : "explicitly skipped with --postgres-only",
-  }, null, 2)}\n`);
+  process.stdout.write(
+    `${JSON.stringify(
+      {
+        generated_at: new Date().toISOString(),
+        node: process.version,
+        platform: process.platform,
+        arch: process.arch,
+        cpu_count: cpus().length,
+        system_memory_bytes: totalmem(),
+        scales: SCALES,
+        synthetic_prefix: PREFIX,
+        database: {
+          docker_context: dockerTarget.context,
+          docker_endpoint: dockerTarget.endpoint,
+          container: DB_CONTAINER,
+          image: dockerTarget.image,
+          server_version: serverVersionText,
+          psql_version: psqlVersion.trim(),
+          pgbench_version: pgbenchVersion.trim(),
+          connection: `unix socket ${DB_SOCKET}:${DB_PORT}, database postgres, role postgres`,
+          staged_sql_bundle_sha256: stagedSql.bundle_sha256,
+        },
+        verification: {
+          fixture_counts_and_uniqueness: fixtureChecks,
+          first_2k_content_checksum_stable_across_scales: true,
+          postgrest_visible_row_counts: apiCountChecks,
+          cleanup: cleanupResults,
+          non_fixture_counts_unchanged: isolationChecks,
+        },
+        seed_and_analyze: seedResults,
+        node_generator: nodeResults,
+        postgresql_pgbench: pgResults,
+        supabase_postgrest: runApi ? apiResults : "explicitly skipped with --postgres-only",
+      },
+      null,
+      2,
+    )}\n`,
+  );
 }
 
 main().catch((error) => {

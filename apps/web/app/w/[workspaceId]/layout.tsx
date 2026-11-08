@@ -17,7 +17,10 @@ export default async function WorkspaceLayout(props: LayoutProps<"/w/[workspaceI
     <div className="min-h-screen bg-bg">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border bg-surface lg:flex">
         <div className="flex h-16 items-center border-b border-border px-5">
-          <Link href={"/w/" + workspaceId + "/discover"} className="flex min-w-0 items-center gap-3">
+          <Link
+            href={"/w/" + workspaceId + "/discover"}
+            className="flex min-w-0 items-center gap-3"
+          >
             <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-fg">
               <Radar aria-hidden="true" className="size-5" />
             </span>
@@ -81,13 +84,14 @@ export default async function WorkspaceLayout(props: LayoutProps<"/w/[workspaceI
                 className="w-[min(11rem,38vw)] lg:hidden"
               />
               {operator ? (
-                <Link href="/operator" className="hidden text-sm text-muted transition-colors hover:text-fg sm:inline">
+                <Link
+                  href="/operator"
+                  className="hidden text-sm text-muted transition-colors hover:text-fg sm:inline"
+                >
                   Opérateur
                 </Link>
               ) : null}
-              <span className="hidden text-xs text-muted sm:inline">
-                {ROLE[membership.role]}
-              </span>
+              <span className="hidden text-xs text-muted sm:inline">{ROLE[membership.role]}</span>
               <form action={signOut}>
                 <button
                   type="submit"

@@ -18,16 +18,16 @@ This file is the visual source of truth for UI work. It describes the direction 
 
 The application exposes these Tailwind v4 tokens through apps/web/app/globals.css:
 
-| Token | Purpose |
-| --- | --- |
-| bg-bg | Main page background |
-| bg-surface | Sidebar, cards and raised surfaces |
-| bg-surface-2 | Inputs, selected items and secondary surfaces |
-| border-border | Subtle neutral separators |
-| text-fg | Main text |
-| text-muted | Secondary text |
-| bg-accent text-accent-fg | High-contrast primary action / brand mark |
-| text-success, text-warning, text-danger | Semantic status only |
+| Token                                   | Purpose                                       |
+| --------------------------------------- | --------------------------------------------- |
+| bg-bg                                   | Main page background                          |
+| bg-surface                              | Sidebar, cards and raised surfaces            |
+| bg-surface-2                            | Inputs, selected items and secondary surfaces |
+| border-border                           | Subtle neutral separators                     |
+| text-fg                                 | Main text                                     |
+| text-muted                              | Secondary text                                |
+| bg-accent text-accent-fg                | High-contrast primary action / brand mark     |
+| text-success, text-warning, text-danger | Semantic status only                          |
 
 The palette follows the neutral dark scale used by the reference template: near-black canvas, charcoal surfaces, soft-white foreground and low-contrast borders. Do not add a blue, purple or gradient brand accent.
 

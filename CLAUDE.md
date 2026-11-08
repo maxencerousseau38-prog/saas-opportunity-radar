@@ -878,3 +878,11 @@ No AI agent is the source of truth. The source of truth is the versioned data, t
 ## UI and visual implementation
 
 For all UI, styling, layout and component-block work, read DESIGN.md before editing. It defines the monochrome shadcn-inspired design system and the rules for adapting external blocks. Keep the existing Next.js, Tailwind CSS v4, Radix-based UI and Supabase architecture; do not migrate UI primitives just to copy a block.
+
+
+## 18. Repo-local agent instructions and skills
+
+- `AGENTS.md` is the cross-agent entry point for Codex and other coding agents. It complements this file; it does not replace the detailed SOR rules here.
+- Project-specific Skills live in `.agents/skills/<skill-name>/SKILL.md`. Read the matching Skill before substantial work on features, database/security, evidence/source research, AI evaluation, or release verification.
+- Skills supplement the PRD, accepted ADRs, technical and implementation blueprints, and security/source/deployment documents. They never authorize a pending decision, remote mutation, paid operation, source activation, or production release.
+- Keep this routing section and the root `AGENTS.md` aligned when adding, renaming, or removing project Skills.

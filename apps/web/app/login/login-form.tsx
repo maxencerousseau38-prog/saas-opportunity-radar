@@ -34,18 +34,23 @@ export function LoginForm() {
         { auth: { detectSessionInUrl: false } },
       );
 
-      void supabase.auth.exchangeCodeForSession(code).then(({ error: exchangeError }) => {
-        if (exchangeError) {
+      void supabase.auth
+        .exchangeCodeForSession(code)
+        .then(({ error: exchangeError }) => {
+          if (exchangeError) {
+            setRecovering(false);
+            setRecoveryMessage(
+              "Ce lien n'est plus valide ou a déjà été utilisé. Demande un nouvel e-mail.",
+            );
+            return;
+          }
+          router.replace("/");
+          router.refresh();
+        })
+        .catch(() => {
           setRecovering(false);
-          setRecoveryMessage("Ce lien n'est plus valide ou a déjà été utilisé. Demande un nouvel e-mail.");
-          return;
-        }
-        router.replace("/");
-        router.refresh();
-      }).catch(() => {
-        setRecovering(false);
-        setRecoveryMessage("Impossible de vérifier ce lien. Demande un nouvel e-mail.");
-      });
+          setRecoveryMessage("Impossible de vérifier ce lien. Demande un nouvel e-mail.");
+        });
       return;
     }
 
@@ -75,13 +80,15 @@ export function LoginForm() {
       setRecoveryMessage(
         errorCode === "otp_expired"
           ? "Ce lien a expiré ou a déjà été utilisé. Demande un nouvel e-mail."
-          : errorDescription ?? "Le lien d'authentification n'est pas valide.",
+          : (errorDescription ?? "Le lien d'authentification n'est pas valide."),
       );
       return;
     }
 
     if (!accessToken || !refreshToken) {
-      setRecoveryMessage("Le lien ne contient pas les informations nécessaires. Demande un nouvel e-mail.");
+      setRecoveryMessage(
+        "Le lien ne contient pas les informations nécessaires. Demande un nouvel e-mail.",
+      );
       return;
     }
 

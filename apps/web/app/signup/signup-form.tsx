@@ -21,11 +21,14 @@ export function SignupForm() {
       <section className="space-y-3" aria-live="polite">
         <h2 className="text-base font-semibold">Vérifie ta boîte e-mail</h2>
         <p className="text-sm text-muted">
-          Si cette adresse peut être utilisée, un e-mail de confirmation vient d’être envoyé.
-          Clique sur son lien pour activer ton compte, puis tu pourras créer ton premier espace
-          de travail. Pense aussi à vérifier les courriers indésirables.
+          Si cette adresse peut être utilisée, un e-mail de confirmation vient d’être envoyé. Clique
+          sur son lien pour activer ton compte, puis tu pourras créer ton premier espace de travail.
+          Pense aussi à vérifier les courriers indésirables.
         </p>
-        <Link href="/login" className="inline-block text-sm font-medium underline underline-offset-4">
+        <Link
+          href="/login"
+          className="inline-block text-sm font-medium underline underline-offset-4"
+        >
           Retour à la connexion
         </Link>
       </section>
@@ -42,10 +45,26 @@ export function SignupForm() {
         htmlFor="password"
         hint="12 caractères minimum, avec au moins une lettre et un chiffre."
       >
-        <Input id="password" name="password" type="password" autoComplete="new-password" required minLength={12} maxLength={200} />
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          required
+          minLength={12}
+          maxLength={200}
+        />
       </Field>
       <Field label="Confirmer le mot de passe" htmlFor="confirm">
-        <Input id="confirm" name="confirm" type="password" autoComplete="new-password" required minLength={12} maxLength={200} />
+        <Input
+          id="confirm"
+          name="confirm"
+          type="password"
+          autoComplete="new-password"
+          required
+          minLength={12}
+          maxLength={200}
+        />
       </Field>
       {state?.error ? <ErrorNote>{state.error}</ErrorNote> : null}
       <Button type="submit" variant="primary" className="w-full" disabled={pending}>

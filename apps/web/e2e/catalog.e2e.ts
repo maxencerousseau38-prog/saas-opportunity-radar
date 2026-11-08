@@ -133,7 +133,9 @@ test("profile: sourced values, pricing, evidence and competitors", async ({ page
   await expect(competitors.getByRole("link", { name: "LeadNest" })).toBeVisible();
 });
 
-test("Ask AI builds a product dossier with selectable destination and context", async ({ page }) => {
+test("Ask AI builds a product dossier with selectable destination and context", async ({
+  page,
+}) => {
   const ws = await signIn(page, MEMBER);
   await page.goto(`/w/${ws}/saas/metricflow`);
   await page.getByRole("link", { name: "Ask AI" }).click();

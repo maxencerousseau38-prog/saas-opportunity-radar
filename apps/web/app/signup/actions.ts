@@ -9,7 +9,12 @@ interface SignUpState {
   error: string | null;
 }
 
-const Password = z.string().min(12).max(200).regex(/\p{L}/u).regex(/\p{Nd}/u);
+const Password = z
+  .string()
+  .min(12)
+  .max(200)
+  .regex(/\p{L}/u)
+  .regex(/\p{Nd}/u);
 
 const Credentials = z.object({
   email: z.string().trim().email().max(320),
@@ -17,10 +22,7 @@ const Credentials = z.object({
   confirm: z.string().min(1).max(200),
 });
 
-export async function signUp(
-  _previous: SignUpState | null,
-  form: FormData,
-): Promise<SignUpState> {
+export async function signUp(_previous: SignUpState | null, form: FormData): Promise<SignUpState> {
   const parsed = Credentials.safeParse({
     email: form.get("email"),
     password: form.get("password"),
@@ -30,7 +32,8 @@ export async function signUp(
   if (!parsed.success) {
     return {
       success: false,
-      error: "Vérifie ton adresse e-mail et ton mot de passe (12 caractères minimum, avec lettres et chiffres).",
+      error:
+        "Vérifie ton adresse e-mail et ton mot de passe (12 caractères minimum, avec lettres et chiffres).",
     };
   }
   if (parsed.data.password !== parsed.data.confirm) {

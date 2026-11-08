@@ -20,9 +20,7 @@ describe("buildCsp", () => {
       nonce: "n",
       supabaseOrigin: "https://aowrwljrixpeawjmqgmj.supabase.co",
     });
-    expect(csp).toContain(
-      "connect-src 'self' https://aowrwljrixpeawjmqgmj.supabase.co",
-    );
+    expect(csp).toContain("connect-src 'self' https://aowrwljrixpeawjmqgmj.supabase.co");
     expect(csp).not.toContain("https://other-project.supabase.co");
     expect(csp).not.toContain("https://*.supabase.co");
   });
