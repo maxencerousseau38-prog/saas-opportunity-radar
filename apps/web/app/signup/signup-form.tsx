@@ -4,7 +4,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { ErrorNote } from "@/components/ui/states";
-import { signUp, type SignUpState } from "./actions";
+import { signUp } from "./actions";
+
+interface SignUpState {
+  success: boolean;
+  error: string | null;
+}
 
 const initialState: SignUpState | null = null;
 
