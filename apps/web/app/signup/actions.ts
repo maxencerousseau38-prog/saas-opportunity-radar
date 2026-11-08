@@ -4,12 +4,12 @@ import { z } from "zod";
 import { createUserServerClient } from "@/lib/supabase/server";
 import { getServerEnv } from "@/lib/env";
 
-const Password = z.string().min(12).max(200).regex(/\\p{L}/u).regex(/\\p{Nd}/u);
-
-export interface SignUpState {
+interface SignUpState {
   success: boolean;
   error: string | null;
 }
+
+const Password = z.string().min(12).max(200).regex(/\p{L}/u).regex(/\p{Nd}/u);
 
 const Credentials = z.object({
   email: z.string().trim().email().max(320),
