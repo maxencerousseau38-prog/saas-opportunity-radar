@@ -2,12 +2,14 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Dialog as D } from "radix-ui";
 import { X } from "lucide-react";
-import type { CatalogFilters } from "@sor/contracts";
+import { CatalogFiltersSchema, type CatalogFilters } from "@sor/contracts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/field";
 import { api } from "@/lib/client-api";
 import {
   AGE_BUCKETS,
+  ACQUISITION_CHANNEL,
+  ACQUISITION_CHANNEL_STATUS,
   BILLING_MODEL,
   COMMERCIAL_VALIDATION,
   COMPANY_PROFILE,
@@ -119,6 +121,11 @@ export function FilterPanel({
   const bm = draft.billing_models ?? { values: [], include_unknown: false };
   const price = draft.price_bands ?? { values: [], include_unknown: false };
   const cp = draft.company_profile ?? { values: [], include_unknown: false };
+  const channels = draft.acquisition_channels ?? {
+    values: [],
+    statuses: [],
+    include_unknown: false,
+  };
   const cats = draft.categories?.slugs ?? [];
   const parents = categories.filter((c) => c.parent_id === null);
   const set = (patch: Partial<CatalogFilters>) => setDraft((d) => ({ ...d, ...patch }));
@@ -406,6 +413,52 @@ export function FilterPanel({
                 onChange={(on) => set({ company_profile: { ...cp, include_unknown: on } })}
               />
             </Group>
+            <Group letter="K" title="Acquisition Channels observés">
+              <p className="text-xs text-muted">
+                Canaux utilisés par ce SaaS pour acquérir ses clients. Ils sont distincts des
+                sources qui alimentent le catalogue et des recommandations Go-to-Market.
+              </p>
+              {Object.entries(ACQUISITION_CHANNEL).map(([key, label]) => (
+                <Check
+                  key={key}
+                  label={label}
+                  checked={channels.values.includes(key as never)}
+                  onChange={(on) =>
+                    set({
+                      acquisition_channels: {
+                        ...channels,
+                        values: toggle(channels.values, key as never, on),
+                      },
+                    })
+                  }
+                />
+              ))}
+              <div className="mt-2 border-t border-border pt-2">
+                <p className="mb-1 text-xs font-medium">Niveau de preuve</p>
+                {(["confirmed", "declared", "estimated"] as const).map((status) => (
+                  <Check
+                    key={status}
+                    label={ACQUISITION_CHANNEL_STATUS[status] ?? status}
+                    checked={channels.statuses.includes(status)}
+                    onChange={(on) =>
+                      set({
+                        acquisition_channels: {
+                          ...channels,
+                          statuses: toggle(channels.statuses, status, on),
+                        },
+                      })
+                    }
+                  />
+                ))}
+              </div>
+              <Check
+                label="Inclure les SaaS sans canal documenté"
+                checked={channels.include_unknown}
+                onChange={(on) =>
+                  set({ acquisition_channels: { ...channels, include_unknown: on } })
+                }
+              />
+            </Group>
             <Group letter="O" title="Exclusions configurables">
               {Object.entries(CONFIGURABLE_EXCLUSIONS).map(([v, label]) => (
                 <Check
@@ -439,11 +492,7 @@ export function FilterPanel({
             </p>
           </div>
           <div className="flex items-center gap-2 border-t border-border p-4">
-            <Button
-              onClick={() => setDraft({ configurable_exclusions: [], include_hidden: false })}
-            >
-              Réinitialiser
-            </Button>
+            <Button onClick={() => setDraft(CatalogFiltersSchema.parse({}))}>Réinitialiser</Button>
             <Button
               variant="primary"
               className="ml-auto"

@@ -567,7 +567,12 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
           </ul>
         ) : (
           <EmptyState title="Aucun avis client collecté">
-            Les connecteurs d’avis et l’import de retours clients arrivent aux Sprints 3 et 4.
+            Aucun retour client n’est enregistré pour ce produit. Les imports CSV de retours sont
+            disponibles dans{" "}
+            <Link className="underline" href={`/w/${workspaceId}/settings`}>
+              Paramètres
+            </Link>
+            ; aucun connecteur d’avis externe n’est actuellement activé.
           </EmptyState>
         )}
       </Section>

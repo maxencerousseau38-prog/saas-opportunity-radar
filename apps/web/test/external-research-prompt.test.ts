@@ -103,7 +103,7 @@ describe("external research prompt", () => {
       context: selectExternalResearchContext(context, ["features"]),
     });
     expect(prompt).toContain("Cette application ne contrôle ni le modèle ni la session externe");
-    expect(prompt).toContain("recommande de ne pas construire");
+    expect(prompt).toContain("recommander de ne pas construire");
     expect(prompt).toMatch(/unknown/i);
     expect(prompt).toContain("Mailtide");
     expect(prompt).toContain("https://mailtide.example");

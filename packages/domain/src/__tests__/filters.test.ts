@@ -61,6 +61,21 @@ describe("buildCatalogPlan", () => {
     expect(p.text).toBe("crm");
     expect(p.billing_models?.values).toEqual(["per_user"]);
   });
+
+  it("keeps observed acquisition channels and proof statuses in the search plan", () => {
+    expect(
+      plan({
+        acquisition_channels: {
+          values: ["x", "seo", "x"],
+          statuses: ["confirmed", "declared", "confirmed"],
+        },
+      }).acquisition_channels,
+    ).toEqual({
+      values: ["x", "seo"],
+      statuses: ["confirmed", "declared"],
+      include_unknown: false,
+    });
+  });
 });
 
 describe("assertSupportedQuery", () => {

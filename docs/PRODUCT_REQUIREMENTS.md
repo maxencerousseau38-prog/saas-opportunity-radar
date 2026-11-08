@@ -1,9 +1,10 @@
 # SAAS OPPORTUNITY RADAR
 
-**Cahier des charges fonctionnel — Version 1.1**
+**Cahier des charges fonctionnel — Version 1.2**
 
 Date : 3 novembre 2026
 Statut : Spécifications fonctionnelles de référence
+Révision 1.2 (8 novembre 2026) : ajout de Discover V2, des exigences de Landing Page Heroes authentiques, des Acquisition Channels sourcés par SaaS et de la cible de catalogue mondial 10 000–50 000 produits. Les exigences précédentes sont conservées.
 Révision 1.1.1 (4 novembre 2026) : correction du formatage Markdown et de la numérotation du §16 ; alignement de la formulation du §1.3 sur les exclusions permanentes déjà décidées (§4.2.O, §21) ; renvoi vers la spécification technique (§22) ; numérotation du moteur au §7.1 alignée sur §15 et §21 (Opportunity Engine = moteur IA 3). Aucune exigence fonctionnelle n'a été ajoutée, retirée ou modifiée.
 Nom du produit : SaaS Opportunity Radar (provisoire)
 Objectif : Découverte, enrichissement, analyse et identification d’opportunités SaaS.
@@ -2440,6 +2441,76 @@ Il doit également pouvoir suivre un second parcours :
 12. Déterminer si l'opportunité mérite une validation commerciale.
 
 ---
+
+# 24. EXTENSION V1.2 — DISCOVER V2, ACQUISITION CHANNELS ET ÉCHELLE DU CATALOGUE
+
+Cette extension complète les exigences précédentes sans les supprimer ni les remplacer. En cas de divergence fonctionnelle, le présent PRD demeure la référence conformément à ADR-000.
+
+## 24.1. Catalogue mondial et authenticité des données
+
+- Objectif à terme : un catalogue de 10 000 à 50 000 SaaS réels, issus de sources autorisées et documentées.
+- Le catalogue est mondial et ne comporte aucune restriction globale B2B, B2C, mixte ou sectorielle. Les préférences de recherche peuvent classer ou filtrer les résultats, sans rendre les autres catégories globalement inadmissibles.
+- Les données synthétiques et fixtures de test doivent être identifiées comme telles et ne doivent jamais être présentées comme de vrais SaaS ni intégrées au catalogue réel sans marquage explicite.
+- Chaque donnée factuelle conserve provenance, date et statut de vérification; une information inconnue reste inconnue.
+- L’objectif de volume ne constitue ni une autorisation d’acquisition ni un engagement de couverture. Chaque source demeure soumise aux licences, conditions d’accès, droits de stockage, qualité, déduplication et exclusions permanentes existantes (§13, §21).
+
+## 24.2. Discover V2 et références visuelles
+
+- Maintenir Feed, Grid et List, la navigation continue, la recherche et les filtres avancés définis plus haut.
+- Faire de Discover une expérience de découverte visuelle premium et responsive. Les inspirations d’expérience incluent FindASaaS; elles ne constituent pas une autorisation de copier son interface, ses textes ou ses actifs.
+- Les cartes SaaS doivent afficher un véritable Landing Page Hero ou une capture authentique de l’interface lorsque l’actif est disponible, attribuable à une source légitime et utilisable selon ses conditions.
+- Chaque actif doit conserver URL/source, date d’observation, type d’actif, droits ou base d’utilisation connue et statut de confiance. Ne jamais fabriquer une capture, assimiler une illustration à l’interface réelle ni laisser croire qu’un aperçu absent existe.
+- En l’absence d’actif autorisé, conserver un fallback honnête fondé sur l’identité visuelle, la description réelle et le lien officiel.
+- Toute acquisition ou capture doit réutiliser les contrôles de sécurité réseau existants (SSRF, redirections, limites, robots/conditions applicables). Aucun accès à des pages privées, cookies, sessions ou zones authentifiées.
+
+## 24.3. Acquisition Channels par SaaS
+
+Les Acquisition Channels décrivent les canaux qu’un SaaS du catalogue utilise réellement pour acquérir ses propres clients. Exemples non exhaustifs : X, Reddit, SEO, LinkedIn, Product Hunt, communautés, partenariats ou publicité.
+
+Pour chaque produit, permettre de stocker :
+
+- un canal principal et zéro ou plusieurs canaux secondaires;
+- le canal et sa catégorie (organique, communautaire, contenu/recherche, social, partenariat, paid, autre, inconnu);
+- les preuves associées : source, URL, date de collecte/observation, extrait ou résumé autorisé;
+- le statut factuel : `confirmed`, `declared`, `estimated` ou `unknown`;
+- le niveau de confiance distinct du statut, avec justification et méthode d’inférence lorsqu’il s’agit d’une estimation.
+
+Règles :
+
+- `confirmed` requiert une preuve directe et vérifiable;
+- `declared` signifie que l’information est rapportée par l’entreprise ou un représentant identifiable, sans vérification indépendante équivalente;
+- `estimated` est une inférence, doit être explicitement signalée et citer ses indices;
+- `unknown` signifie qu’aucune conclusion fiable n’est disponible; ne pas afficher une liste vide comme preuve d’absence de canal.
+
+Les utilisateurs peuvent filtrer le catalogue par Acquisition Channel et combiner ce filtre aux autres filtres selon la sémantique AND/OR existante. Les résultats doivent préserver statuts et inconnus.
+
+Ne pas confondre :
+
+1. **Acquisition Channels** : canaux d’acquisition observés ou déclarés pour un SaaS catalogue;
+2. **Discovery Sources** : sources et connecteurs utilisés par SaaS Opportunity Radar pour découvrir/enrichir des SaaS ou collecter des preuves;
+3. **Go-to-Market recommendations** : hypothèses de canaux recommandés pour lancer une nouvelle opportunité. Elles restent dans le rapport d’opportunité, sont prospectives et ne mettent pas à jour les canaux observés du SaaS catalogue.
+
+Une plateforme comme X, Reddit ou Product Hunt peut appartenir à plusieurs de ces notions, mais chaque enregistrement doit expliciter son rôle, son sujet, sa source et son statut. L’apparition d’un canal dans le catalogue n’autorise pas à collecter automatiquement des données depuis cette plateforme.
+
+## 24.4. Critères d’acceptation V1.2
+
+- Un produit peut avoir zéro, un ou plusieurs Acquisition Channels, avec un principal distinct des secondaires.
+- Chaque canal visible expose source consultable, date, statut et niveau de confiance; un canal sans preuve suffisante ne peut pas être présenté comme confirmé.
+- Les valeurs `declared`, `estimated` et `unknown` sont visuellement distinguables de `confirmed` et restent filtrables sans transformer les inconnues en faits négatifs.
+- Les filtres Acquisition Channels se combinent avec les filtres catalogue, les recherches sauvegardées et les tris sans perdre le statut/provenance.
+- Le rapport Go-to-Market d’une opportunité reste séparé des Acquisition Channels de tout SaaS catalogue et ne les modifie pas.
+- Les cartes Discover affichent un Hero/capture seulement si source et statut sont présents; sinon le fallback honnête est utilisé. Chaque aperçu ouvre le site officiel du produit.
+- Feed, Grid et List conservent les mêmes actions, filtres et états; navigation clavier, mobile et accessibilité sont couverts.
+- Les fixtures synthétiques sont signalées et exclues des chiffres de catalogue réel et indicateurs de couverture.
+- Les imports et connecteurs refusent les données hors droits ou hors périmètre; aucune nouvelle source n’est activée sans revue/approbation requise.
+
+## 24.5. Décisions encore nécessaires
+
+- Modèle de taxonomie des Acquisition Channels, granularité, regroupement des variantes et définition opérationnelle de « principal ».
+- Méthodes et seuils par lesquels une preuve devient `confirmed`; échelle/calibration de confiance et règles de fraîcheur.
+- Priorité de collecte par canal, fournisseurs autorisés, licences, droits de stockage/illustration et budget. X, Reddit, LinkedIn et Product Hunt ne sont pas autorisés par le seul fait d’être cités ici.
+- Format exact des Heroes (image originale officielle, capture réelle, vidéo, dimensions), politique hotlink/cache/stockage, revalidation et suppression à la demande.
+- Ordre des lots et seuils qualité/dédoublonnage pour atteindre 10k–50k, sans inclure les fixtures ni présumer une source non approuvée.
 
 # CONCLUSION
 

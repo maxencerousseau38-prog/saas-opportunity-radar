@@ -41,6 +41,27 @@ describe("CatalogQuerySchema", () => {
     const f = CatalogFiltersSchema.parse({ hq_countries: { values: ["us", "Fr"] } });
     expect(f.hq_countries?.values).toEqual(["US", "FR"]);
   });
+
+  it("accepts sourced acquisition channel filters and unknowns explicitly", () => {
+    const f = CatalogFiltersSchema.parse({
+      acquisition_channels: {
+        values: ["x", "seo"],
+        statuses: ["confirmed", "declared"],
+        include_unknown: true,
+      },
+    });
+    expect(f.acquisition_channels).toEqual({
+      values: ["x", "seo"],
+      statuses: ["confirmed", "declared"],
+      include_unknown: true,
+    });
+    expect(() =>
+      CatalogFiltersSchema.parse({ acquisition_channels: { values: ["Product Hunt"] } }),
+    ).toThrow();
+    expect(() =>
+      CatalogFiltersSchema.parse({ acquisition_channels: { values: ["unknown"] } }),
+    ).toThrow();
+  });
 });
 
 describe("workspace schemas", () => {
@@ -62,9 +83,19 @@ describe("workspace schemas", () => {
   });
 
   it("saved searches carry a full filter object", () => {
-    const s = SavedSearchSchema.parse({ name: "US indie" });
+    const s = SavedSearchSchema.parse({
+      name: "US indie",
+      filters: {
+        acquisition_channels: {
+          values: ["product_hunt", "x"],
+          statuses: ["confirmed"],
+          include_unknown: true,
+        },
+      },
+    });
     expect(s.kind).toBe("catalog");
     expect(s.filters.include_hidden).toBe(false);
+    expect(s.filters.acquisition_channels?.values).toEqual(["product_hunt", "x"]);
   });
 
   it("rejects an empty product-state patch", () => {

@@ -104,6 +104,13 @@ test("profile: sourced values, pricing, evidence and competitors", async ({ page
   await waitForResults(page);
   await page.getByRole("link", { name: "MetricFlow" }).first().click();
   await expect(page.getByRole("heading", { level: 1, name: "MetricFlow" })).toBeVisible();
+
+  const analyze = page.getByRole("button", { name: "Analyze Opportunity" });
+  await expect(analyze).toBeEnabled();
+  await analyze.click();
+  await expect(page.getByRole("dialog", { name: "Analyse d’opportunité" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Lancer l’analyse" })).toBeEnabled();
+  await page.keyboard.press("Escape");
   await expect(page.getByText("Clients payants vérifiés")).toBeVisible();
 
   const commercial = page.locator("#commercial");
@@ -124,6 +131,23 @@ test("profile: sourced values, pricing, evidence and competitors", async ({ page
   await expect(competitors.getByText("AffiliTrack")).toHaveCount(0);
   await competitors.getByRole("button", { name: "Français" }).click();
   await expect(competitors.getByRole("link", { name: "LeadNest" })).toBeVisible();
+});
+
+test("Ask AI builds a product dossier with selectable destination and context", async ({ page }) => {
+  const ws = await signIn(page, MEMBER);
+  await page.goto(`/w/${ws}/saas/metricflow`);
+  await page.getByRole("link", { name: "Ask AI" }).click();
+
+  await expect(page.getByRole("heading", { level: 1, name: "Ask AI" })).toBeVisible();
+  await expect(page.getByText("MetricFlow · 1 SaaS")).toBeVisible();
+  await page.getByLabel("Assistant externe").selectOption("chatgpt");
+  await page.getByLabel("Stratégie de recherche").selectOption("red_team");
+
+  const feedback = page.getByRole("checkbox", { name: "Avis clients disponibles" });
+  await expect(feedback).toBeChecked();
+  await feedback.uncheck();
+  await page.getByText("Prévisualiser les données et les sources transmises").click();
+  await expect(page.locator("details pre")).toContainText("MetricFlow");
 });
 
 test("favourite, collection with a note, saved search and duplicate", async ({ page }) => {

@@ -1644,7 +1644,19 @@ isOneToOne: false
             "catalog_count":
 { Args: { "p_plan": Json,"p_workspace_id": string }; Returns: number
                            },
+"catalog_count_v2":
+{ Args: { "p_plan": Json,"p_workspace_id": string }; Returns: number
+                           },
+"catalog_discover_metadata":
+{ Args: { "p_product_ids": string[] }; Returns: { "acquisition_channels": Json,"product_id": string,"visual_asset": Json
+            }[]
+                           },
 "catalog_search":
+{ Args: { "p_after_id"?: string,"p_after_value"?: number,"p_limit"?: number,"p_plan": Json,"p_seed"?: number,"p_sort"?: string,"p_workspace_id": string }; Returns: {
+              "billing_models": (Database["public"]['Enums']["billing_model"])[],"categories": Json,"country_code": string,"customer_type": Database["public"]['Enums']["customer_type"],"employee_max": number,"employee_min": number,"id": string,"in_collection": boolean,"is_favorite": boolean,"is_hidden": boolean,"last_viewed_at": string,"logo_url": string,"name": string,"pricing_status": Database["public"]['Enums']["pricing_status"],"short_description": string,"slug": string,"sort_value": string,"start_year": number,"tagline": string,"website_url": string,"workspace_status": Database["public"]['Enums']["opportunity_status"]
+            }[]
+                           },
+"catalog_search_v2":
 { Args: { "p_after_id"?: string,"p_after_value"?: number,"p_limit"?: number,"p_plan": Json,"p_seed"?: number,"p_sort"?: string,"p_workspace_id": string }; Returns: {
               "billing_models": (Database["public"]['Enums']["billing_model"])[],"categories": Json,"country_code": string,"customer_type": Database["public"]['Enums']["customer_type"],"employee_max": number,"employee_min": number,"id": string,"in_collection": boolean,"is_favorite": boolean,"is_hidden": boolean,"last_viewed_at": string,"logo_url": string,"name": string,"pricing_status": Database["public"]['Enums']["pricing_status"],"short_description": string,"slug": string,"sort_value": string,"start_year": number,"tagline": string,"website_url": string,"workspace_status": Database["public"]['Enums']["opportunity_status"]
             }[]

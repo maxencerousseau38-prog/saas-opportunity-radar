@@ -288,6 +288,7 @@ export function DiscoverView(props: DiscoverProps) {
                   <th className="px-3 py-2">Équipe</th>
                   <th className="px-3 py-2">Année</th>
                   <th className="px-3 py-2">Tarification</th>
+                  <th className="px-3 py-2">Acquisition documentée</th>
                   <th className="px-3 py-2">
                     <span className="sr-only">Actions</span>
                   </th>

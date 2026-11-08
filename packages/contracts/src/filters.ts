@@ -86,6 +86,12 @@ export const ComplaintCategorySchema = z.enum([
   "customization",
   "complexity",
 ]);
+/** Normalized extensible key for a catalog SaaS's observed acquisition channel. */
+export const AcquisitionChannelSchema = z
+  .string()
+  .regex(/^[a-z][a-z0-9_]{0,59}$/)
+  .refine((value) => value !== "unknown", "Use include_unknown for missing channel data");
+export const AcquisitionChannelStatusSchema = z.enum(["confirmed", "declared", "estimated"]);
 // PRD §4.2.O configurable exclusions.
 export const ConfigurableExclusionSchema = z.enum([
   "b2c_only",
@@ -173,6 +179,14 @@ export const CatalogFiltersSchema = z
       .strict()
       .optional(),
     complaints: z.array(ComplaintCategorySchema).max(10).optional(),
+    acquisition_channels: z
+      .object({
+        values: z.array(AcquisitionChannelSchema).max(12).default([]),
+        statuses: z.array(AcquisitionChannelStatusSchema).max(3).default([]),
+        include_unknown: UnknownToggle,
+      })
+      .strict()
+      .optional(),
     configurable_exclusions: z.array(ConfigurableExclusionSchema).max(7).default([]),
     include_hidden: z.boolean().default(false),
   })

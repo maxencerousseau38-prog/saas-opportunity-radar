@@ -21,7 +21,7 @@ insert into public.external_research_sessions
   (id, workspace_id, created_by, subject_type, subject_snapshot, destination, strategy,
    included_sections, context_version, context_json, prompt_version, prompt_text)
 values
-  (tests.id('r1'), tests.id('b1'), tests.id('a3'), 'product',
+  (tests.id('e001'), tests.id('b1'), tests.id('a3'), 'product',
    jsonb_build_object('product_ids', jsonb_build_array(tests.id('d1')), 'label', 'Product One'),
    'claude', 'better_alternative', array['features'], 'sor-context.v1',
    jsonb_build_object('evidence_index', jsonb_build_array()), 'sor-prompt.v1', 'Research prompt');

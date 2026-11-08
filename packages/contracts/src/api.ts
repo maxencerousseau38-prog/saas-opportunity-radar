@@ -56,6 +56,32 @@ export const CategoryRefSchema = z
   .object({ slug: z.string(), name: z.string(), is_primary: z.boolean() })
   .strict();
 
+export const ProductAcquisitionChannelSchema = z
+  .object({
+    channel_key: z.string(),
+    channel_category: z.string(),
+    role: z.enum(["primary", "secondary"]),
+    status: FactStatusSchema,
+    confidence: z.number().min(0).max(100).nullable(),
+    observed_at: ISODateTimeSchema,
+    source_url: z.string().url(),
+    source_name: z.string().nullable(),
+    evidence_id: UUIDSchema,
+  })
+  .strict();
+
+export const ProductVisualAssetSchema = z
+  .object({
+    asset_type: z.enum(["official_hero", "product_screenshot", "official_illustration"]),
+    url: z.string().regex(/^\/(?!\/)/),
+    alt_text: z.string().min(1).max(500),
+    source_url: z.string().url(),
+    observed_at: ISODateTimeSchema,
+    rights_basis: z.string().min(1),
+    confidence: z.number().min(0).max(100).nullable(),
+  })
+  .strict();
+
 export const ProductCardSchema = z
   .object({
     id: UUIDSchema,
@@ -73,6 +99,8 @@ export const ProductCardSchema = z
     employee_max: z.number().int().nullable(),
     start_year: z.number().int().nullable(),
     categories: z.array(CategoryRefSchema),
+    acquisition_channels: z.array(ProductAcquisitionChannelSchema),
+    visual_asset: ProductVisualAssetSchema.nullable(),
     workspace: z
       .object({
         is_favorite: z.boolean(),

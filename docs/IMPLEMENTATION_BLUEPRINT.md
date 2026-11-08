@@ -5545,14 +5545,19 @@ PostgREST catalog load benchmarks and record their results (S7.5c).
 **Sprint 7 status (7 November 2026):** S7.1--S7.4 are recorded as
 implemented and validated by CI in the project status documents. S7.5a is
 recorded as CI-validated. S7.5b is implemented, including its resilience
-scenarios and API-isolation sweep; the latest HEAD [CI run 42387823113](https://github.com/maxencerousseau38-prog/saas-opportunity-radar/actions/runs/42387823113)
-is green.
+scenarios and API-isolation sweep. The recorded successful [CI run
+42387823113](https://github.com/maxencerousseau38-prog/saas-opportunity-radar/actions/runs/42387823113)
+is for `cb45f8724a2b6911550b50b622bc8a5b48b679dc`. The current repository
+HEAD is `a80aec42395aca07ddb4666bcb5a890a9e9f9fae`; a read-only GitHub check
+lookup returned no statuses or workflow runs for that SHA, so its CI state
+is not verified.
 **S7.5c benchmark harness is implemented** in `scripts/benchmark-catalog.mjs`
 with SQL seed/read/cleanup and verification scripts and `docs/S7.5C_BENCHMARK.md`.
 Node 26.13.0 generation/serialization measurements were reproduced twice with
 matching output hashes. PostgreSQL and PostgREST measurements and live cleanup
-checks remain unverified because this environment has no local Supabase/Docker
-stack or PostgreSQL client tools. S7.5c is not validated yet. After S7.5c, the
+checks remain unverified: the current Windows Docker client cannot reach the
+Docker Engine named pipe, Supabase CLI is not on PATH, and no application
+`.env.local` is present. S7.5c is not validated yet. After S7.5c, the
 remaining work is the backup/restore drill, staging deployment, and operational
 runbooks.
 
@@ -5826,11 +5831,79 @@ See [ADR-015](ADR/ADR-015-manual-external-ai-research-handoff.md).
 | Discover visual | Product cards display the catalogued logo when present, primary category, and an explicit “Capture d’interface non disponible” fallback. No interface screenshot was fabricated. | The catalog has no approved product screenshot source or screenshot field; authentic product UI imagery remains unavailable. |
 | Ask AI handoff | A workspace page supports a product or a set of up to five catalog products, six fixed strategies, four official assistant destinations, a preview of the bounded catalog context, optional features/pricing/feedback/competitor sections, copy-and-open handoff, and manual answer import as an unverified workspace note. | No assistant API call, account-session automation, custom strategy builder, cluster/opportunity subject context, reusable strategy library, or true cross-product pain-cluster computation. The cross-competitor prompt can only reason over the selected catalog snapshots and bounded feedback samples. |
 | Workspace security | Read access is workspace-scoped by RLS. Server routes authorize workspace membership before service-role writes; session edits/deletion are limited to the creator or workspace owner/admin. Imported text is not catalog evidence and does not update internal engines. | Migration and pgTAP tests have been authored but not applied or run. Security behavior is not runtime-validated. |
-| Validation | Contract, prompt, E2E, and database tests have been authored. | Node 26.13.0 matches `.nvmrc`. Migration-order check passes (18 migrations); targeted ESLint and Prettier checks pass; `pnpm --filter @sor/web lint` exits 0 with a Next Pages-directory warning. Repo-wide `pnpm format:check` fails on 443 files. Typecheck stops because `next` is absent; unit tests stop because `vitest` is absent; Playwright is absent, so E2E was not run. The migration and pgTAP tests were not applied or run. |
+| Validation | Contract and prompt unit tests, Ask AI context/selection E2E coverage, and the external-research pgTAP file are present. The profile journey now checks that the real internal analysis dialog opens. | On Node 26.13.0 with dependencies present: `pnpm typecheck`, `pnpm test` (434 tests), `pnpm lint`, and `pnpm build` pass; build required the webpack backend and elevated filesystem access after Windows returned `EPERM`. Lint reports the existing Next Pages-directory warning. `pnpm format:check` fails on 442 files; unrelated files were not reformatted. `node scripts/check-migrations.mjs HEAD` passes for 18 migrations. Playwright E2E and pgTAP were not run: Docker Engine is unreachable, Supabase CLI is absent from PATH, and no local web environment file is present. A GitHub lookup found no CI statuses/runs for current HEAD `a80aec42395aca07ddb4666bcb5a890a9e9f9fae`; the previous successful run is on `cb45f8724a2b6911550b50b622bc8a5b48b679dc`. |
 
-The slice is therefore **implemented in source but not validated**. The
+The slice is therefore **implemented in source and unit/build validated, but
+not yet runtime validated against Supabase or through Playwright**. The
 existing internal engines, scoring rules, and product requirements remain
-unchanged. Before treating this slice as usable, use the repository's
-supported Node version and already-provisioned workspace dependencies, then
-run the documented quality gates and apply/test the migration against an
-isolated local database.
+unchanged. A local Supabase-backed E2E and pgTAP run is still required before
+claiming the complete handoff flow or RLS behavior operational.
+
+## Appendix D — PRD V1.2 / Discover V2 blueprint
+
+This appendix is a proposal, not implementation evidence. It preserves the existing monorepo, Supabase/RLS, provenance, safe-fetch and exclusion architecture. No migration or source activation is authorized by this plan.
+
+### Data model
+
+- `product_visual_assets`: product, asset type (`official_hero`, `product_screenshot`, `official_illustration`), source URL, first-party delivery path, alt text, observed date, content hash, rights status, verification status, confidence, primary flag and audit timestamps. Logos continue to use the existing product identity field. Select only eligible, rights-cleared assets; retain history and a removal path. Browser cards must never hotlink an external image; until an authorized first-party delivery path exists, use the honest fallback. No unqualified `hero_url` or fabricated screenshot.
+- `product_acquisition_channels`: product, normalized channel key, primary/secondary role, status (`confirmed`, `declared`, `estimated`, `unknown`), confidence, method, observed interval, linked source/evidence, summary and review timestamps. Reuse source snapshots/evidence for URL, date, reliability and rights rather than storing untraceable claims in JSON.
+- Keep Discovery Sources in the existing source registry. Keep prospective Go-to-Market recommendations in opportunity reports; never write those recommendations into a SaaS’s observed channel records.
+- Any schema change requires a forward-only migration, exact grants, RLS, server authorization, pgTAP and generated types. No migration is created by this plan.
+
+### Components and mechanisms
+
+- Reuse the shared Discover card across Feed/Grid/List. Add a source-aware Hero resolver, verified/rights-cleared display gate, accessible alt text, responsive crop, loading/error fallback and official-site link.
+- Add channel evidence review and CSV import through existing job/import patterns; each row returns a provenance-aware status. Add channel filters to the existing filter contract and saved-search serialization, preserving AND/OR and unknown semantics.
+- Resolve sources through a written review for provider, access, terms, licence, commercial use, storage, quotas, cost, field quality, update cadence, deduplication and takedown. X, Reddit, LinkedIn and Product Hunt examples do not approve connectors.
+- Visual fetch/capture must use existing SSRF/redirect/size controls and applicable robots/terms. No authentication, cookies, private pages or unrestricted crawling.
+- `confirmed` requires direct verifiable evidence; `declared` is attributable but not independently verified; `estimated` is explicitly inferential with method and evidence; `unknown` is not evidence of absence. Confidence stays separate from status and cannot silently promote a claim.
+
+### Acceptance criteria
+
+1. A SaaS can have zero or more channels, at most one primary, with secondary channels independently sourced.
+2. Every visible channel shows source, observation date, status and confidence; estimated/declared/unknown never render as confirmed.
+3. Channel filters compose with existing filters and persist in saved searches, including unknown handling.
+4. Go-to-Market hypotheses remain distinct and do not modify catalog facts.
+5. A Hero/capture renders only with eligible rights and provenance; otherwise the honest fallback appears. All views retain matching actions and product state.
+6. Keyboard, screen reader, responsive layout, reduced motion, image stability and bounded image payloads are checked.
+7. Synthetic fixtures are labelled and excluded from real catalogue totals/KPIs.
+8. Unit/contract, pgTAP, E2E and per-source fixture tests cover status, provenance, RLS, filter round-trips, asset fallbacks and connector failure states. Mocked HTTP alone does not validate production use.
+
+### Open decisions
+
+- Approve channel taxonomy, primary-channel rule, confidence scale/calibration and freshness window.
+- Approve asset types, rights/storage basis, hotlink versus cache/proxy, retention, attribution and screenshot method.
+- Decide acceptable inference methods and review/status transitions without losing history.
+- Resolve Discovery-source approvals independently (including PD-26, PD-29, PD-34 and HN terms); channel names alone grant no permission.
+- Define staged 10k then 50k ingestion quality, deduplication, exclusion and coverage gates. This is a target, not a guarantee or licence to import bulk data.
+
+### Prioritized Discover V2 plan
+
+**D0 — Product/source decisions:** approve taxonomy, statuses, asset rights/method, quality measures and synthetic-data marking. No connector activation.
+
+**D1 — Provenance contracts:** define DTOs, schemas, migration/RLS/grants and tests for both relations; preserve source-history semantics.
+
+**D2 — Authentic visual assets:** implement resolver, rights/status gate, responsive display, fallback and removal handling; use only authorized assets.
+
+**D3 — Acquisition Channels MVP:** reviewed manual/CSV input, primary/secondary channels, sourced statuses, filters and saved-search round-trip.
+
+**D4 — Discover V2 UX:** refine shared cards, Feed/Grid/List, advanced navigation/filters, responsive and accessibility states; run acceptance E2E with labelled fixtures on an isolated local stack.
+
+**D5 — Scale and source expansion:** ingest reviewed real data incrementally, audit identity/exclusions, benchmark 10k then 50k in an approved isolated environment and publish measured results only.
+
+No deployment, spend, pending-source activation or remote database change is included. Begin coding only after approval of this plan and its open decisions.
+
+### D0–D5 execution status — 8 November 2026
+
+Implementation was authorized by the product owner on 8 November 2026. This status supersedes the final sentence above for this execution only; it does not approve any connector, source terms, asset rights, collection or deployment.
+
+| Step | Actual status | Evidence / remaining gate |
+|---|---|---|
+| D0 — Product/source decisions | Partially resolved for implementation | The filter presents the PRD examples; stored channel keys are normalized but extensible, so this does not freeze the taxonomy. Category mapping, primary-channel rule, confidence calibration, freshness, inference methodology, asset rights/storage, and each connector remain decisions or approvals. |
+| D1 — Provenance contracts | Implemented in source; not database-validated | Contracts, search-plan semantics, two catalog relations, evidence-scope triggers, RLS, grants, pgTAP coverage and versioned search/count RPCs were added. The local Supabase runtime was unavailable, so no migration or pgTAP test has been applied/executed. |
+| D2 — Authentic visual assets | Resolver and display gate implemented; sourcing incomplete | Cards render only primary assets marked current, rights-approved, verified and evidence-linked. No capture, import, storage pipeline, takedown workflow or authorized asset has been verified. Honest fallback remains active. |
+| D3 — Acquisition Channels MVP | Filter/display implemented; authoring/import incomplete | Search and count support channel/status filters and explicit unknown inclusion. Cards show primary/secondary, evidence status, source, observation date and confidence. No review UI, manual/CSV authoring flow or real channel records were added. |
+| D4 — Discover V2 UX | Partially implemented; not E2E-validated | Existing Feed/Grid/List, saved searches and progressive pagination were retained; evidence-aware cards and channel filters were added with reusable UI components. Responsive/accessibility acceptance and browser flows still require a local Supabase stack. |
+| D5 — Scale/source expansion | Not started | No data was collected and no 10k/50k scale test was run. Source review and isolated-environment approval remain required. |
+
+The new migration is named `20261115090001_discover_v2_assets_and_acquisition_channels.sql` so it sorts after the repository's existing `20261115090000` migration and passes the forward-only migration guard. Supabase CLI generated the initial file at the current machine date (8 November); it is intentionally ordered by repository migration sequence, not represented as an executed or applied migration.

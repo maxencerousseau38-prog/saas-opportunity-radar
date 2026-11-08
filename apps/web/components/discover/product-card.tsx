@@ -1,10 +1,18 @@
 "use client";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, ImageOff } from "lucide-react";
 import type { ProductCard } from "@sor/contracts";
 import { Badge } from "@/components/ui/badge";
 import { Unknown } from "@/components/ui/states";
-import { CUSTOMER_TYPE, PRICING_STATUS, countryName, isDemoUrl, teamLabel } from "@/lib/labels";
+import {
+  ACQUISITION_CHANNEL,
+  ACQUISITION_CHANNEL_STATUS,
+  CUSTOMER_TYPE,
+  PRICING_STATUS,
+  countryName,
+  isDemoUrl,
+  teamLabel,
+} from "@/lib/labels";
 import { cn } from "@/lib/utils";
 import { ProductActions, type ActionProps } from "./product-actions";
 
@@ -101,6 +109,13 @@ export function ProductCardView({
   ...actions
 }: ActionProps & { product: ProductCard; compact: boolean }) {
   const href = `/w/${actions.workspaceId}/saas/${product.slug}`;
+  const asset = product.visual_asset;
+  const channelStatusTone = {
+    confirmed: "success",
+    declared: "accent",
+    estimated: "warning",
+    unknown: "neutral",
+  } as const;
   return (
     <article
       aria-label={product.name}
@@ -110,29 +125,64 @@ export function ProductCardView({
       )}
     >
       <div
-        aria-label={`Aperçu catalogue de ${product.name}`}
+        aria-label={
+          asset ? `Aperçu authentique de ${product.name}` : `Identité catalogue de ${product.name}`
+        }
         data-testid="product-visual-preview"
         className={cn(
-          "flex items-center gap-3 overflow-hidden rounded-md border border-border bg-gradient-to-br from-surface-2 via-surface to-surface-2",
+          "relative overflow-hidden rounded-md border border-border bg-gradient-to-br from-surface-2 via-surface to-surface-2",
+          asset ? "aspect-[16/7]" : "flex items-center gap-3",
           compact ? "min-h-24 p-3" : "min-h-32 p-4",
         )}
       >
-        <ProductLogo name={product.name} logoUrl={product.logo_url} size={compact ? 48 : 60} />
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-semibold tracking-[0.16em] text-muted uppercase">
-            Aperçu du catalogue
-          </p>
-          <p className="mt-1 truncate text-sm font-medium">
-            {product.categories.find((category) => category.is_primary)?.name ??
-              "Catégorie inconnue"}
-          </p>
-          <p className="mt-1 text-xs text-muted">
-            {product.logo_url ? "Logo présent · identité produit recensée" : "Logo non renseigné"}
-          </p>
-        </div>
-        <span className="hidden max-w-28 text-right text-[11px] leading-snug text-muted sm:block">
-          Capture d’interface non disponible
-        </span>
+        {asset ? (
+          <>
+            {/* Only authorized, evidence-linked catalog assets reach this DTO. */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- source-approved external product asset */}
+            <img
+              src={asset.url}
+              alt={asset.alt_text}
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8 text-white">
+              <span className="text-xs font-medium">
+                {asset.asset_type === "product_screenshot"
+                  ? "Capture authentique du produit"
+                  : asset.asset_type === "official_hero"
+                    ? "Visuel officiel"
+                    : "Illustration officielle"}
+              </span>
+              <a
+                href={asset.source_url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="inline-flex items-center gap-1 text-xs underline"
+              >
+                Source <ExternalLink size={12} />
+              </a>
+            </div>
+          </>
+        ) : (
+          <>
+            <ProductLogo name={product.name} logoUrl={product.logo_url} size={compact ? 48 : 60} />
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-semibold tracking-[0.16em] text-muted uppercase">
+                Aperçu du catalogue
+              </p>
+              <p className="mt-1 truncate text-sm font-medium">
+                {product.categories.find((category) => category.is_primary)?.name ??
+                  "Catégorie inconnue"}
+              </p>
+              <p className="mt-1 flex items-center gap-1 text-xs text-muted">
+                <ImageOff size={12} aria-hidden /> Aperçu authentique non disponible · Capture
+                d’interface non disponible
+              </p>
+            </div>
+          </>
+        )}
       </div>
       <div className="flex items-start gap-3">
         <ProductLogo name={product.name} logoUrl={product.logo_url} />
@@ -156,6 +206,39 @@ export function ProductCardView({
         ))}
         <StatusBadges product={product} />
       </div>
+      {product.acquisition_channels.length ? (
+        <div
+          className="flex flex-wrap items-center gap-1.5"
+          aria-label="Acquisition Channels documentés"
+        >
+          <span className="text-[11px] font-medium text-muted">Acquisition</span>
+          {product.acquisition_channels.slice(0, 3).map((channel) => (
+            <a
+              key={`${channel.channel_key}:${channel.evidence_id}`}
+              href={channel.source_url}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              title={`${channel.role === "primary" ? "Principal" : "Secondaire"} · ${channel.source_name ?? "Source"} · ${new Date(channel.observed_at).toLocaleDateString("fr-FR")} · confiance ${channel.confidence ?? "inconnue"}%`}
+              className="inline-flex min-w-28 flex-col items-start rounded border border-border px-1.5 py-1 text-[11px] hover:bg-surface-2"
+            >
+              <span className="flex items-center gap-1">
+                {channel.role === "primary" ? "★ " : ""}
+                {ACQUISITION_CHANNEL[channel.channel_key] ?? channel.channel_key}
+                <Badge tone={channelStatusTone[channel.status]}>
+                  {ACQUISITION_CHANNEL_STATUS[channel.status]}
+                </Badge>
+              </span>
+              <span className="text-[10px] text-muted">
+                {channel.source_name ?? "Source"} ·{" "}
+                {new Date(channel.observed_at).toLocaleDateString("fr-FR")} · confiance{" "}
+                {channel.confidence ?? "inconnue"}%
+              </span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p className="text-xs text-muted">Acquisition Channels inconnus / non documentés</p>
+      )}
       <div className="mt-auto flex items-end justify-between gap-2">
         <Facts product={product} />
         {product.website_url ? (
@@ -203,6 +286,43 @@ export function ProductListRow({ product, ...actions }: ActionProps & { product:
           <Unknown />
         ) : (
           PRICING_STATUS[product.pricing_status]
+        )}
+      </td>
+      <td className="min-w-52 px-3 py-2">
+        {product.acquisition_channels.length ? (
+          <ul className="space-y-1">
+            {product.acquisition_channels.map((channel) => (
+              <li key={`${channel.channel_key}:${channel.evidence_id}`}>
+                <a
+                  href={channel.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="inline-flex items-center gap-1 hover:underline"
+                >
+                  {channel.role === "primary" ? "★ " : ""}
+                  {ACQUISITION_CHANNEL[channel.channel_key] ?? channel.channel_key}
+                  <Badge
+                    tone={
+                      channel.status === "confirmed"
+                        ? "success"
+                        : channel.status === "estimated"
+                          ? "warning"
+                          : "accent"
+                    }
+                  >
+                    {ACQUISITION_CHANNEL_STATUS[channel.status] ?? channel.status}
+                  </Badge>
+                </a>
+                <span className="block text-[10px] text-muted">
+                  {channel.source_name ?? "Source"} ·{" "}
+                  {new Date(channel.observed_at).toLocaleDateString("fr-FR")} · confiance{" "}
+                  {channel.confidence ?? "inconnue"}%
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span className="text-muted">Non documentée</span>
         )}
       </td>
       <td className="px-3 py-2">

@@ -10,8 +10,8 @@ Implementation Blueprint §14.
 | Unit | Vitest 5 | `packages/*/src/**/__tests__/*.test.ts`, `apps/worker/src/__tests__` | Active |
 | Contract conventions | Vitest | `packages/contracts/src/__tests__/zod-conventions.test.ts` | Active (pins Zod 4 behaviours, §4.0) |
 | Unit (web) | Vitest 5 | `apps/web/test/*.test.ts` | Active (cursor signing, filter chips, labels) |
-| End-to-end | Playwright 1.64 | `apps/web/e2e/*.e2e.ts` | Active: Sprint 2 journeys on the local Supabase stack with labelled demo fixtures |
-| Database (RLS, grants, triggers, RPCs) | pgTAP via `supabase test db` | `supabase/tests/*.sql` | Active: 12 files (see `docs/DATABASE_SECURITY.md`) |
+| End-to-end | Playwright 1.64 | `apps/web/e2e/*.e2e.ts` | Journeys S2–S7.5b on the local Supabase stack with labelled demo fixtures; not freshly run in this environment |
+| Database (RLS, grants, triggers, RPCs) | pgTAP via `supabase test db` | `supabase/tests/*.sql` | 22 pgTAP test files (`001`–`022`; `000_setup.sql` excluded; see `docs/DATABASE_SECURITY.md`) |
 | Integration (jobs, worker) | Vitest + local Supabase stack + fake provider + loopback fixture site | `apps/worker/test/integration/*.int.test.ts` (CI job `worker-integration`) | Active (Sprint 3) |
 | AI evaluation | fixtures + metrics | `evals/` and `packages/discovery-engine/src/evals` | Active for D5/D6 (fake-provider baseline; real baseline after PD-24) |
 
@@ -281,4 +281,16 @@ and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
   against the demo workspace with real identifiers (404 everywhere, no W2
   data), then their own workspace's routes with W2 resource IDs (reads 404,
   writes never succeed), and W2's data is unchanged.
+
+## Ask AI manual handoff (PD-35)
+
+- Unit: contract and prompt tests cover destination/strategy schemas, bounded
+  context selection, provenance and no-fabrication instructions.
+- E2E: the catalog journey opens the internal analysis dialog and exercises
+  the Ask AI product context preview, assistant/strategy selection and
+  optional feedback exclusion. It does not yet cover saving/importing a
+  research session or workspace isolation for the new table.
+- Database: `supabase/tests/022_external_ai_research.sql` covers grants,
+  workspace read isolation and the session status/answer check. It has not
+  been applied or run in the current local environment.
 

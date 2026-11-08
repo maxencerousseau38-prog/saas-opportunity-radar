@@ -5,6 +5,8 @@ import "server-only";
 import { randomInt } from "node:crypto";
 import {
   CatalogFiltersSchema,
+  ProductAcquisitionChannelSchema,
+  ProductVisualAssetSchema,
   type CatalogFilters,
   type CatalogPage,
   type CatalogQuery,
@@ -43,8 +45,9 @@ function planFor(filters: CatalogFilters) {
 }
 
 type SearchRow = catalogRepo.CatalogSearchRow;
+type DiscoverMetadataRow = Awaited<ReturnType<typeof catalogRepo.discoverMetadata>>[number];
 
-function toCard(row: SearchRow): ProductCard {
+function toCard(row: SearchRow, metadata?: DiscoverMetadataRow): ProductCard {
   const categories = Array.isArray(row.categories)
     ? (row.categories as unknown as CategoryRef[])
     : [];
@@ -64,6 +67,10 @@ function toCard(row: SearchRow): ProductCard {
     employee_max: row.employee_max ?? null,
     start_year: row.start_year ?? null,
     categories,
+    acquisition_channels: ProductAcquisitionChannelSchema.array().parse(
+      metadata?.acquisition_channels ?? [],
+    ),
+    visual_asset: ProductVisualAssetSchema.nullable().parse(metadata?.visual_asset ?? null),
     workspace: {
       is_favorite: row.is_favorite ?? false,
       is_hidden: row.is_hidden ?? false,
@@ -108,7 +115,15 @@ export async function searchProducts(
     rows.length > query.limit && last
       ? encodeCursor({ v: String(last.sort_value), id: last.id, sort: query.sort, seed, q })
       : null;
-  return { data: page.map(toCard), next_cursor };
+  const metadata = await catalogRepo.discoverMetadata(
+    client,
+    page.map((row) => row.id),
+  );
+  const metadataByProduct = new Map(metadata.map((row) => [row.product_id, row]));
+  return {
+    data: page.map((row) => toCard(row, metadataByProduct.get(row.id))),
+    next_cursor,
+  };
 }
 
 export async function countProducts(
