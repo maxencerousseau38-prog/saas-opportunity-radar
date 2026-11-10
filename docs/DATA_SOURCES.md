@@ -128,6 +128,24 @@ blocks them): `docs/sources/terms/` (`index.json` lists URL, date, status).
   traction or willingness to pay. They stay `declared` until an official
   source confirms them.
 
+### First collection results (10 November 2026, CI)
+
+| Snapshot | Listings | Created and visible | Hidden by the permanent exclusion | Matched an existing product | Sent to review | Write errors |
+|---|---|---|---|---|---|---|
+| Wikidata | 2,577 | 2,320 | 5 | 36 | 216 (shared host 100, same domain other URL 111, similar name 5) | 0 |
+| Uneed | 6,582 | 6,197 | 23 | 18 | 344 (shared host 190, same domain other URL 134, similar name 20) | 0 |
+
+Uneed listings are launches of February 2024 to November 2026; Wikidata
+covers all years. About a quarter of the created products have no category
+(the source states none the deterministic mapping recognises): they stay
+uncategorised, never guessed. Matches between the two sources (same
+canonical URL) keep both sources as evidence on one product.
+
+After a bulk load the ingester refreshes the planner statistics
+(`sor_catalog_refresh_statistics`): without it, Discover's first search
+took 24.7 s at ~8,500 products in CI and hit the browser role's 8 s
+statement timeout; with it, 0.7 s on a local PostgreSQL.
+
 ## `manual_entry` and `user_import` (existing)
 
 - Data supplied by the product owner. Imported products and feedback are
