@@ -1,0 +1,147 @@
+https://www.uneed.best/mcp
+2026-11-10T18:00:09.234Z
+
+Launchpad
+Community
+Pricing
+Black Friday
+Products
+More
+Plug Uneed into your AI agent
+Query 10,000+ community-ranked products from Claude, Cursor, ChatGPT or any MCP-compatible agent. Search, alternatives, rankings and deals: free, read-only, no signup.
+New · MCP Server
+Add the Uneed remote MCP server to your favorite client and start querying the directory in under 30 seconds.
+https://mcp.uneed.best/mcp Copy
+Free · No auth required · Read-only · Official
+Connect your client
+Pick your tool and paste the endpoint. No API key, no account.
+Claude.ai Claude Code Cursor VS Code ChatGPT REST
+Open Settings → Connectors .
+Click Add custom connector .
+Paste the endpoint below (no authentication needed) and save.
+https://mcp.uneed.best/mcp Copy
+Works in the Claude apps on desktop and mobile.
+Try asking
+Once connected, prompt your agent like this. Click a card to copy it.
+“What are the best alternatives to Notion?” “What launched on Uneed this week in AI?” “Find me an email marketing tool with an active deal” “What were the top products on Uneed last month?” “Compare the top 3 screen recording tools on Uneed” “Which micro SaaS are for sale under $10k with revenue?”
+Available tools
+Tool Description
+search_products Typo-tolerant full-text search across the directory
+get_product Full product profile: tags, deals, community stats
+get_alternatives Alternatives scored by tag overlap, with the why
+get_reviews Published community reviews with ratings
+get_trending Daily / weekly / monthly / yearly community rankings
+get_recent_launches Latest launches, filterable by category or tag
+list_deals Active promo codes and maker deals
+list_products_for_sale SaaS and side projects listed for acquisition, with price and revenue
+list_categories All categories with product counts
+get_launch_stats Monthly submitted, declined and launched counts (open data, CC BY 4.0)
+Open data: monthly launch statistics
+How many products are submitted, declined and launched on Uneed every month. Free to reuse with credit.
+One JSON document, one row per month, with the definitions and the license included in every answer. Also available to agents as the get_launch_stats tool.
+curl "https://mcp.uneed.best/v1/stats/launches" Copy
+Field Meaning Since
+month Calendar month (YYYY-MM). 2024-02
+launched Products launched on Uneed in the month and still published, by launch date. 2024-02
+submitted New products submitted to the waiting line in the month. A product sent back to the line is not counted again. 2026-08
+declined Submissions declined by moderation in the month, on the date of the decision. 2026-08
+complete False for the current month, whose counts are still growing.
+estimated True for the months before the submission ledger started (5 November 2026).
+Good to know
+Months are calendar months in America/Los_Angeles, the timezone of Uneed launch days. The current month answers complete: false .
+A month's launches are not a subset of that month's submissions: most products launch weeks or months after they are submitted, so the gap between the two is mostly the waiting line.
+Declines are counted on the day of the decision, so a cleanup of older submissions lands in the month it happens.
+Months before 5 November 2026 answer estimated: true : submissions are reconstructed and may run slightly high, and declines for August and September 2026 are a lower bound.
+Refreshed hourly.
+License: CC BY 4.0 . Credit it as “Source: Uneed, uneed.best”.
+Why we built this
+For agents
+Clean, structured, rate-limited access to our data: the legitimate alternative to scraping.
+For users
+Product discovery where you already work: your AI assistant.
+For makers
+Your product becomes visible to AI agents the moment it launches on Uneed.
+Submit your product
+Frequently asked questions
+Is it really free?
+Do I need an API key?
+Can agents write to Uneed?
+How fresh is the data?
+What data is exposed?
+I'm building something on this, can I get higher limits?
+Ready in 30 seconds
+Paste this endpoint into your MCP client and go.
+https://mcp.uneed.best/mcp Copy
+Prefer REST? See the OpenAPI spec .
+Uneed is a social launchpad for tech products. Get guaranteed homepage visibility, powerful SEO juice with a 75 DR backlink, and feedback from a community that actually cares
+Made in EU 🇪🇺
+Categories
+Development products
+Design products
+Marketing products
+Business products
+Personal life products
+Products For Sale
+Alternatives
+Product Hunt alternatives
+Supabase alternatives
+Stripe alternatives
+Vercel alternatives
+Nuxt alternatives
+Ahrefs alternatives
+Semrush alternatives
+Zapier alternatives
+Mailchimp alternatives
+Flippa alternatives
+All our alternatives
+Buying guides
+Best tags
+AI Products
+Analytics Tools
+SEO Tools
+Productivity
+Open Source
+All tags
+Uneed
+How it works
+Features
+Launch Guide
+Our blog
+The Build Brief
+Advertise on Uneed
+Pricing
+Pro perks
+Add your product
+MCP for AI agents
+Affiliate programs to promote
+Become an affiliate
+FAQs
+Contact
+Changelog
+Community Leaderboard
+Free tools
+Product Launch Checklist
+Fake Notification Generator
+Startup Name Generator
+Fake Analytics Generator
+Reaction Time Test
+YouTube Playlist Length Calculator
+Twitter (X) Carousel Maker
+NPS Calculator
+SaaS Valuation Calculator
+Domain Rating Checker
+All free tools
+Best products
+Best AI products
+Best Analytics tools
+Best SEO tools
+Best Productivity tools
+Ask AI about Uneed
+Ask ChatGPT
+Ask Claude
+Ask Perplexity
+Ask Grok
+© 2019-2026 Uneed™. All Rights Reserved. Privacy Policy - Terms of Use
+We use cookies
+Essential and analytics cookies keep Uneed running and help us understand usage, and a referral cookie credits the partner who sent you. Marketing cookies are optional. Privacy policy
+Reject Accept

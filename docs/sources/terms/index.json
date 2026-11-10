@@ -13,7 +13,7 @@
   {
     "vendor": "producthunt",
     "url": "https://www.producthunt.com/legal/terms-of-service",
-    "retrieved_at": "2026-11-10T17:50:49.373Z",
+    "retrieved_at": "2026-11-10T18:00:08.321Z",
     "status": "blocked",
     "reason": "http_403"
   },
@@ -75,7 +75,7 @@
   {
     "vendor": "uneed",
     "url": "https://www.uneed.best/terms",
-    "retrieved_at": "2026-11-10T17:50:49.596Z",
+    "retrieved_at": "2026-11-10T18:00:08.423Z",
     "status": "unavailable",
     "reason": "http_404"
   },
@@ -221,5 +221,27 @@
     "text_chars": 579903,
     "html_bytes": 785381,
     "file": "uneed--www-uneed-best-llms-txt.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/mcp",
+    "final_url": "https://www.uneed.best/mcp",
+    "retrieved_at": "2026-11-10T18:00:09.234Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 5678,
+    "html_bytes": 139100,
+    "file": "uneed--www-uneed-best-mcp.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://mcp.uneed.best/openapi.json",
+    "final_url": "https://mcp.uneed.best/openapi.json",
+    "retrieved_at": "2026-11-10T18:00:09.919Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 12649,
+    "html_bytes": 26397,
+    "file": "uneed--mcp-uneed-best-openapi-json.txt"
   }
 ]
