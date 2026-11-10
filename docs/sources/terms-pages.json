@@ -92,6 +92,14 @@
     {
       "vendor": "uneed",
       "url": "https://mcp.uneed.best/openapi.json"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://mcp.uneed.best/v1/trending?period=weekly&date=2026-11-02&limit=3"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://mcp.uneed.best/v1/launches?limit=2"
     }
   ]
 }
