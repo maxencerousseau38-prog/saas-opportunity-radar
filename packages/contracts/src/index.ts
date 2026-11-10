@@ -12,4 +12,5 @@ export * from "./discovery";
 export * from "./agents/opportunity";
 export * from "./ops";
 export * from "./external-research";
+export * from "./listings";
 export * from "./env";

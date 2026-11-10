@@ -14,3 +14,6 @@ packages/database/src/generated.ts
 evals/enrichment/real/snapshots/
 evals/benchmark/vendor-docs/
 dist-evals/
+dist-catalog/
+# Collected catalog snapshots (machine-written)
+data/catalog/

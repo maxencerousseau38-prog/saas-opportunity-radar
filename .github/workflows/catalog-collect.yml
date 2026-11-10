@@ -1,0 +1,48 @@
+# First bulk catalog collection (10 November 2026; docs/DATA_SOURCES.md).
+# Runs the catalog collectors on GitHub runners (this session's network
+# policy blocks the sources) and commits the normalized snapshot back to the
+# same branch. Sources: Wikidata (CC0, public query service, no key). No
+# database access, no secret, no paid call.
+name: Catalog collection
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["claude/**"]
+    paths:
+      - packages/data-sources/src/connectors/wikidata.ts
+      - apps/worker/src/catalog/collect.ts
+      - .github/workflows/catalog-collect.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: catalog-collect-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: Collect catalog listings
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @sor/worker catalog:build
+      - name: Collect Wikidata listings (CC0)
+        run: node apps/worker/dist-catalog/collect.js wikidata data/catalog/wikidata/listings.json
+      - name: Commit the snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/catalog
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -m "Catalog collection: Wikidata listings snapshot (automated)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

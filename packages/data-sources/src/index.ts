@@ -7,6 +7,7 @@ export * from "./html";
 export * from "./connectors/official-website";
 export * from "./connectors/hacker-news";
 export * from "./connectors/simulated-search";
+export * from "./connectors/wikidata";
 export * from "./rebound";
 export * from "./registry";
 export * from "./import/csv";

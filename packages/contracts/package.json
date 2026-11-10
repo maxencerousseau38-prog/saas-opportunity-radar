@@ -17,7 +17,8 @@
     "./pain-points": "./src/pain-points.ts",
     "./analysis": "./src/analysis.ts",
     "./agents/opportunity": "./src/agents/opportunity.ts",
-    "./discovery": "./src/discovery.ts"
+    "./discovery": "./src/discovery.ts",
+    "./listings": "./src/listings.ts"
   },
   "scripts": {
     "lint": "eslint .",
