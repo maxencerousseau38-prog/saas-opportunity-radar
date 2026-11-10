@@ -27,6 +27,8 @@ export const CatalogListingSchema = z
     country_code: CountryCodeSchema.nullable(),
     /** Developer / company name, when the source states it. */
     company_name: z.string().trim().min(1).max(200).nullable(),
+    /** Identifier of the developer / company at the source (deduplicates companies). */
+    company_external_id: z.string().min(1).max(200).nullable(),
     /** Source-side classes, genres or topics (labels), used for categorisation. */
     source_categories: z.array(z.string().trim().min(1).max(200)).max(30),
     /** Licence under which the source publishes the data (e.g. CC0-1.0). */

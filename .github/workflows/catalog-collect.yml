@@ -11,6 +11,7 @@ on:
     branches: ["claude/**"]
     paths:
       - packages/data-sources/src/connectors/wikidata.ts
+      - packages/contracts/src/listings.ts
       - apps/worker/src/catalog/collect.ts
       - .github/workflows/catalog-collect.yml
 
