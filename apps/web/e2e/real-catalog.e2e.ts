@@ -31,8 +31,29 @@ test("Discover scrolls through real SaaS collected from Wikidata, with their sou
     .eq("record_status", "active")
     .eq("exclusion_status", "eligible");
   expect(count ?? 0).toBeGreaterThan(500); // a real, non-trivial library
+  const { count: fromUneed } = await admin
+    .from("saas_products")
+    .select("id, sources!inner(source_key)", { count: "exact", head: true })
+    .eq("sources.source_key", "uneed")
+    .eq("record_status", "active")
+    .eq("exclusion_status", "eligible");
+  process.stdout.write(
+    `real catalog: ${count} visible products from Wikidata, ${fromUneed} from Uneed\n`,
+  );
 
+  const started = Date.now();
   await signIn(page, VIEWER);
+  // Measured, not hidden: with ~8,500 real products the first search + count
+  // take about 1.5 s on a laptop and longer on a busy CI runner.
+  await expect(page.getByTestId("result-count")).not.toHaveText("…", { timeout: 30_000 });
+  const firstLoadMs = Date.now() - started;
+  test
+    .info()
+    .annotations.push({
+      type: "first Discover load (ms, sign-in included)",
+      description: String(firstLoadMs),
+    });
+  process.stdout.write(`real catalog: first Discover load ${firstLoadMs} ms (sign-in included)\n`);
   await waitForResults(page);
   const total = Number(
     ((await page.getByTestId("result-count").textContent()) ?? "").replace(/\D/g, ""),
@@ -45,7 +66,7 @@ test("Discover scrolls through real SaaS collected from Wikidata, with their sou
   const firstPage = await cards.count();
   await cards.last().scrollIntoViewIfNeeded();
   await page.mouse.wheel(0, 20_000);
-  await expect.poll(async () => cards.count(), { timeout: 20_000 }).toBeGreaterThan(firstPage);
+  await expect.poll(async () => cards.count(), { timeout: 30_000 }).toBeGreaterThan(firstPage);
 
   // A real product found by name, with its Wikidata provenance on the profile.
   const { data: product } = await admin
@@ -59,7 +80,9 @@ test("Discover scrolls through real SaaS collected from Wikidata, with their sou
     .limit(1)
     .single();
   await page.getByLabel("Rechercher un SaaS").fill(product!.name);
-  await expect(page.getByRole("article", { name: product!.name }).first()).toBeVisible();
+  await expect(page.getByRole("article", { name: product!.name }).first()).toBeVisible({
+    timeout: 30_000,
+  });
   await page.getByRole("link", { name: product!.name }).first().click();
   await expect(page.getByRole("heading", { level: 1, name: product!.name })).toBeVisible();
   const sources = page.locator("#sources");
