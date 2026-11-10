@@ -84,6 +84,14 @@
     {
       "vendor": "uneed",
       "url": "https://www.uneed.best/llms.txt"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://www.uneed.best/mcp"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://mcp.uneed.best/openapi.json"
     }
   ]
 }
