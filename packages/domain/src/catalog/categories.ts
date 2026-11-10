@@ -223,6 +223,13 @@ const RULES: CategoryRule[] = [
       /\b(travel|hotel|hospitality|restaurant|flight|tourism|ride-?hailing|food delivery)\b/i,
   },
   { slug: "vertical-software-real-estate", pattern: /\b(real estate|property management)\b/i },
+  // Generic one-word categories of launch directories (e.g. Uneed), last resort.
+  { slug: "automation-ai-ai-productivity", pattern: /\b(ai|gpt|llm)\b/i },
+  { slug: "marketing-growth-campaign-management", pattern: /\bmarketing\b/i },
+  { slug: "sales-crm-sales-automation", pattern: /\bsales\b/i },
+  { slug: "business-operations-finance-operations", pattern: /\b(finance|fintech|payments?)\b/i },
+  { slug: "design-creative-graphic-design", pattern: /\bdesign\b/i },
+  { slug: "productivity-note-taking", pattern: /\b(productivity|personal life)\b/i },
   // Developer Tools (kept after the business categories: lower priority, PRD §4.2.E)
   {
     slug: "developer-tools-monitoring",
@@ -235,7 +242,7 @@ const RULES: CategoryRule[] = [
   {
     slug: "developer-tools-developer-productivity",
     pattern:
-      /\b(version control|continuous integration|continuous delivery|integrated development environment|ide|code review|source code|repository hosting|software development|devops|low-code|no-code|forge|(html|text|code|rich-text) editor|web framework|software framework|javascript library|software testing|testing tools?|api testing|build automation|compiler)\b/i,
+      /\b(developer tools?|development|version control|continuous integration|continuous delivery|integrated development environment|ide|code review|source code|repository hosting|software development|devops|low-code|no-code|forge|(html|text|code|rich-text) editor|web framework|software framework|javascript library|software testing|testing tools?|api testing|build automation|compiler)\b/i,
   },
   {
     slug: "developer-tools-infrastructure",

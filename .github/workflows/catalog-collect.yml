@@ -1,7 +1,8 @@
 # First bulk catalog collection (10 November 2026; docs/DATA_SOURCES.md).
 # Runs the catalog collectors on GitHub runners (this session's network
 # policy blocks the sources) and commits the normalized snapshot back to the
-# same branch. Sources: Wikidata (CC0, public query service, no key). No
+# same branch. Sources: Wikidata (CC0, public query service, no key) and
+# Uneed (official read-only API, no key). No
 # database access, no secret, no paid call.
 name: Catalog collection
 
@@ -11,6 +12,7 @@ on:
     branches: ["claude/**"]
     paths:
       - packages/data-sources/src/connectors/wikidata.ts
+      - packages/data-sources/src/connectors/uneed.ts
       - packages/contracts/src/listings.ts
       - apps/worker/src/catalog/collect.ts
       - .github/workflows/catalog-collect.yml
@@ -38,12 +40,17 @@ jobs:
       - run: pnpm --filter @sor/worker catalog:build
       - name: Collect Wikidata listings (CC0)
         run: node apps/worker/dist-catalog/collect.js wikidata data/catalog/wikidata/listings.json
+      # Uneed's free, read-only API (no key; per-IP rate limits): a failure
+      # here must not discard the Wikidata snapshot.
+      - name: Collect Uneed listings (official read API)
+        continue-on-error: true
+        run: node apps/worker/dist-catalog/collect.js uneed data/catalog/uneed/listings.json
       - name: Commit the snapshot
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/catalog
           if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
-          git commit -m "Catalog collection: Wikidata listings snapshot (automated)"
+          git commit -m "Catalog collection: listings snapshots (automated)"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"

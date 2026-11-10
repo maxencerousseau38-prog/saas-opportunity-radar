@@ -220,8 +220,13 @@ review: `docs/DATA_SOURCES.md`, official pages frozen in `docs/sources/terms`):
   disabled. Its API terms allow only non-commercial use and require a token
   the product owner creates; enabling it is a product-owner action (token
   as a repository secret, then a migration). PD-29 remains for commercial use.
+- **Uneed** (official free read-only API, "the legitimate alternative to
+  scraping") is the second catalog source, integrated and enabled
+  (migration `20261117090001_uneed_source`), metadata only with
+  attribution; no data licence is stated, so it is disabled at once if Uneed
+  objects.
 - **Microlaunch, BetaList, Y Combinator directory**: not retained (their
-  terms prohibit copying). **Uneed**, **SaaSHub**: to review / later.
+  terms prohibit copying). **SaaSHub**: later (account key, CC BY-SA).
 - **Taxonomy**: six top-level categories added (Communication &
   Collaboration, Productivity, Design & Creative, HR & Recruiting, Education
   & Learning, Security & IT) under PRD §4.2.E ("Pouvoir créer de nouvelles

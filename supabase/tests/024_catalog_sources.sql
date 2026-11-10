@@ -14,6 +14,9 @@ select ok(has_function_privilege('service_role', 'public.sor_ingest_catalog_list
 select is((select integration_status::text || '/' || is_enabled || '/' || (terms_reviewed_at is not null)
              from public.sources where source_key = 'wikidata'),
   'integrated/true/true', 'Wikidata is integrated, enabled and terms-reviewed');
+select is((select integration_status::text || '/' || is_enabled || '/' || storage_policy::text
+             from public.sources where source_key = 'uneed'),
+  'integrated/true/metadata_only', 'Uneed is integrated through its official API, metadata only');
 select is((select integration_status::text || '/' || is_enabled from public.sources where source_key = 'product_hunt'),
   'planned/false', 'Product Hunt is registered but not enabled');
 select is((select count(*)::int from public.categories where parent_id is null and is_user_visible), 14,

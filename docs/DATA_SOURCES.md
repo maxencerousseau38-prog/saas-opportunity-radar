@@ -27,6 +27,7 @@ Sprint 6** (product-owner instruction, 6 November 2026).
 | `brave_search` | Web search leads | API key, metered billing | Paid | — | Transient only | **Deferred** by the product owner (no spending) |
 | `wikidata` | **Catalog (bulk)** | Public SPARQL query service, no key | 0 | 3 (community-declared) | Full (CC0) | **Integrated and enabled (10 Nov 2026)**: first bulk catalog source (migration `20261116090001_catalog_sources`) |
 | `product_hunt` (catalog) | Catalog (fresh launches) | API v2, OAuth token | 0 | 3 | Metadata only | **Registered `planned`, disabled**: non-commercial use only; needs a token created by the product owner |
+| `uneed` | **Catalog (recent launches)** | Official read-only API, no key | 0 | 3 (maker-declared) | Metadata only | **Integrated and enabled (10 Nov 2026)** (migration `20261117090001_uneed_source`) |
 
 Sources of PRD §13.1 not retained for discovery: see "Not retained".
 
@@ -72,7 +73,27 @@ blocks them): `docs/sources/terms/` (`index.json` lists URL, date, status).
 | **Microlaunch** | No API or feed found | "Permission is granted to temporarily download one copy of the materials on our Website for personal, non-commercial transitory viewing only … you may not: modify or copy the materials". | **Not retained** (copying prohibited; scraping would be unauthorized). |
 | **BetaList** | No API or feed found | Same licence wording: "personal, non-commercial transitory viewing only … you may not: modify or copy the materials". | **Not retained.** |
 | **Y Combinator company directory** (and the `yc-oss` mirror built from its search index) | No official API | The Terms of Use above prohibit copying and scraping the Site Content. | **Not retained.** |
-| **Uneed** | No API found on the home page | Terms are at `/terms-of-use` (the snapshot read `/terms`: HTTP 404); `robots.txt` allows listing pages. | **To review** (terms page to snapshot next). |
+| **Uneed** | Official read-only REST API and MCP server, no key | OpenAPI "Uneed read API" 1.1.0: "Read-only API over uneed.best product data … No authentication in v1; per-IP rate limits apply." uneed.best/mcp: "Query 10,000+ community-ranked products … free, read-only, no signup"; "Clean, structured, rate-limited access to our data: the legitimate alternative to scraping." Terms of use (`/terms-of-use`) forbid "automated use of the system, such as using scripts to send comments or messages" and bots that manipulate votes or rankings; "The Platform and its original content … are owned by Uneed". No licence is stated for product data (the monthly launch statistics are CC BY 4.0). | **Retained — second connector, integrated and enabled (10 Nov 2026)**: freshest source of indie SaaS launches; metadata only with attribution (see controls below). |
+
+### `uneed` — controls
+
+- Collector: `packages/data-sources/src/connectors/uneed.ts`, same
+  *Catalog collection* workflow, output `data/catalog/uneed/listings.json`.
+- The API has no pagination: the collector reads the latest launches of
+  each category (`/v1/launches`, 50 per category) and the monthly and weekly
+  community rankings since February 2024 (`/v1/trending`, 50 per period),
+  one request at a time with a 1.2 s pause, at most 400 requests, and stops
+  at the first HTTP 429 (never a retry loop). Descriptive User-Agent with the
+  repository URL.
+- Kept: name, the product's own website (referral parameters removed; a
+  uneed.best URL is never taken as the product site), short description,
+  category and tags, launch year, the Uneed page as source link. Not kept:
+  logo, images, reviews, ratings, votes, social profiles, deals, for-sale
+  data, maker identity.
+- Attribution: every listing carries "Source: Uneed, uneed.best" in its
+  licence field and its evidence links to the Uneed page. If Uneed objects
+  or states a different licence, the source is disabled by a migration and
+  its rows can be traced through their evidence.
 
 ### `wikidata` — controls
 

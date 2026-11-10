@@ -9,6 +9,7 @@ export * from "./connectors/hacker-news";
 export * from "./connectors/simulated-search";
 export * from "./connectors/wikidata";
 export * from "./connectors/product-hunt";
+export * from "./connectors/uneed";
 export * from "./rebound";
 export * from "./registry";
 export * from "./import/csv";

@@ -81,6 +81,7 @@ async function snapshot(ws: string): Promise<string> {
     rows("collection_items", "id, notes", { workspace_id: ws }),
     rows("saved_searches", "id, name, updated_at, is_pinned", { workspace_id: ws }),
     rows("tags", "id, name, color", { workspace_id: ws }),
+    rows("external_research_sessions", "id, status", { workspace_id: ws }),
     rows("tag_assignments", "id", { workspace_id: ws }),
     rows("workspace_members", "user_id, role", { workspace_id: ws }),
     rows("pain_point_clusters", "id, name, review_status", { workspace_id: ws }),
@@ -145,6 +146,12 @@ test("F12: another workspace's owner gets 404 on every W2 route and cannot reach
     expect(error).toBeNull();
   }
   const tag = await first("tags", "id", { workspace_id: w2 }, "tag");
+  const research = await first(
+    "external_research_sessions",
+    "id",
+    { workspace_id: w2 },
+    "Ask AI research session",
+  );
   const search = await first("saved_searches", "id", { workspace_id: w2 }, "saved search");
   const productRow = await first(
     "saas_products",
@@ -167,6 +174,7 @@ test("F12: another workspace's owner gets 404 on every W2 route and cannot reach
     userId: demoOwner!.id,
     searchId: search.id as string,
     tagId: tag.id as string,
+    sessionId: research.id as string,
     productId: productRow.id as string,
     section: "pricing",
   };

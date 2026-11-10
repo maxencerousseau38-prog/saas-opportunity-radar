@@ -23,7 +23,7 @@ pnpm test:e2e
 ### Real SaaS catalog in Discover (local stack)
 
 The library is fed by collected catalog sources (`docs/DATA_SOURCES.md`).
-The Wikidata snapshot (`data/catalog/wikidata/listings.json`, CC0) is
+The snapshots (`data/catalog/<source>/listings.json`: Wikidata, CC0; Uneed, official read API) are
 refreshed by the _Catalog collection_ workflow. To load it into the local
 stack:
 

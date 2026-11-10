@@ -117,10 +117,10 @@ jobs:
       # First bulk collection (10 Nov 2026): the real Wikidata snapshot is
       # ingested after the main suite (its journeys count the labelled demo
       # products), then Discover is checked on real data.
-      - name: Ingest the collected catalog (real Wikidata listings)
+      - name: Ingest the collected catalog (real Wikidata and Uneed listings)
         run: |
           pnpm --filter @sor/worker catalog:build
-          node apps/worker/dist-catalog/ingest.js data/catalog/wikidata/listings.json | tee "$RUNNER_TEMP/ingest.json"
+          node apps/worker/dist-catalog/ingest.js data/catalog/*/listings.json | tee "$RUNNER_TEMP/ingest.json"
           { echo '## Catalog ingestion'; echo '```json'; cat "$RUNNER_TEMP/ingest.json"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Discover on the real catalog
         run: REAL_CATALOG=1 pnpm --filter @sor/web exec playwright test e2e/real-catalog.e2e.ts
