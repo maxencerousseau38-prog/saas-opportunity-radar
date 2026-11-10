@@ -31,13 +31,17 @@ describe("Uneed connector", () => {
     expect(productsOf({ results: [{ rank: 1, votes: 9, product: product(2) }] })[0]?.name).toBe(
       "Synthetic Tool 2",
     );
+    // Real /v1/trending envelope (docs/sources/terms sample): {period, date, ranking: [...]}.
+    expect(
+      productsOf({ period: "weekly", date: "2026-11-02", ranking: [{ rank: 1, ...product(4) }] }),
+    ).toHaveLength(1);
     expect(productsOf({ nothing: true })).toEqual([]);
   });
 
   it("keeps metadata only and the product's own website, without referral parameters", () => {
     expect(toUneedListing(product(1), AT)).toEqual({
       source_key: "uneed",
-      external_id: "1",
+      external_id: "synthetic-1",
       source_url: "https://www.uneed.best/tool/synthetic-1",
       name: "Synthetic Tool 1",
       description: "synthetic description (test data)",
@@ -77,7 +81,7 @@ describe("Uneed connector", () => {
         throw new Error("uneed_http_429");
       },
     });
-    expect(snapshot.listings.map((l) => l.external_id)).toEqual(["1", "2"]);
+    expect(snapshot.listings.map((l) => l.external_id)).toEqual(["synthetic-1", "synthetic-2"]);
     expect(snapshot.listings[1]?.source_categories).toEqual([
       "Marketing",
       "Email",

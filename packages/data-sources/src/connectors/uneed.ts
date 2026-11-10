@@ -46,7 +46,7 @@ interface UneedProduct {
 export function productsOf(json: unknown): UneedProduct[] {
   const list = Array.isArray(json)
     ? json
-    : ["products", "results", "data", "items", "launches", "rankings", "alternatives"]
+    : ["products", "results", "data", "items", "launches", "ranking", "rankings", "alternatives"]
         .map((k) => (json as Record<string, unknown> | null)?.[k])
         .find(Array.isArray);
   return (list ?? []).flatMap((entry) => {
@@ -93,7 +93,8 @@ function website(value: string | null | undefined): string | null {
 
 export function toUneedListing(p: UneedProduct, retrievedAt: string): CatalogListing | null {
   const site = website(p.url);
-  const id = p.id !== undefined && p.id !== null ? String(p.id) : p.slug;
+  // The slug is the identifier both endpoints return (rankings carry no id).
+  const id = p.slug ?? (p.id !== undefined && p.id !== null ? String(p.id) : undefined);
   if (!site || !id || !p.name) return null;
   const sourceUrl = p.uneed_url ?? (p.slug ? `https://www.uneed.best/tool/${p.slug}` : null);
   const year = Number((p.launch_date ?? "").slice(0, 4));
