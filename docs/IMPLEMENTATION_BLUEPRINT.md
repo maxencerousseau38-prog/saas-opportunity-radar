@@ -5561,6 +5561,17 @@ Docker Engine named pipe, Supabase CLI is not on PATH, and no application
 remaining work is the backup/restore drill, staging deployment, and operational
 runbooks.
 
+**First bulk catalog collection (10 November 2026, product-owner
+instruction; PRD §24.1, PRODUCT_VISION §6).** Catalog sources reviewed on
+their official pages (`docs/DATA_SOURCES.md`); Wikidata (CC0) is the first
+integrated catalog source: listing contract `catalog-listing-1`, collector
+and *Catalog collection* workflow, ingester and RPC
+`sor_ingest_catalog_listing` (migration `20261116090001_catalog_sources`,
+pgTAP 024, integration tests), deterministic category mapping `catmap-1`
+and seven new top-level categories; the E2E job loads the real snapshot and
+checks Discover on it. Product Hunt prepared and disabled (non-commercial
+API, token needed). S7.5b CI was green on `cb45f87` (run 77).
+
 -   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
     (`0.5c-512mb` = former "Starter"); to verify when the service is created.
 
