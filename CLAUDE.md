@@ -874,3 +874,24 @@ Build SaaS Opportunity Radar as an **evidence-first, auditable research system**
 - The workspace records the user's research and decisions.
 
 No AI agent is the source of truth. The source of truth is the versioned data, the evidence, the deterministic business rules, the permissions, and the audit trail.
+
+
+---
+
+## 19. Product vision — mandatory alignment
+
+Before making product or implementation decisions, read **`docs/PRODUCT_VISION.md`** in full. It records the product owner's explicit definition of SOR and is the canonical reference for the product's purpose, the central Discover experience, the four AI missions, and the current execution priority.
+
+The following hierarchy is non-negotiable:
+
+1. **Discover / Feed is the heart of the product.** The user discovers SaaS through an immersive, continuously scrollable feed with compact cards, progressive loading, Feed/Grid/List modes, categories, search, filters, sorting, favorites, collections, hiding, and detailed profiles. Do not reduce SOR to a static directory or database interface.
+2. **The SaaS library is the fuel.** It continuously collects real SaaS from multiple relevant sources, across many categories; normalizes and deduplicates them; retains source provenance and dates; and makes them available in Discover.
+3. **AI is the intelligence.** It has four connected missions: (a) AI Discovery — find, verify, classify, and enrich real SaaS; (b) Customer Voice — extract and understand user complaints and unmet needs; (c) Cross-Competitor Pain Intelligence — cluster similar problems across competing products into evidence-linked Pain Point Clusters; and (d) Opportunity Analyzer — assess whether a product or shared problem supports building a better commercial alternative, with evidence, counterarguments, confidence, WTP, deterministic score, and verdict.
+
+### Current execution priority
+
+Do not attempt to build every AI capability or deeply analyze every imported product before the core experience works. First deliver a real, multi-category SaaS library and a usable Discover feed, backed by a small number of source connectors that have actually been verified and tested. Then add deeper AI capabilities incrementally. The user wants concrete execution, not endless planning, redesign, speculative architecture, or unnecessary feature expansion.
+
+Do not treat AI-generated ideas as source products. SOR discovers and analyzes existing SaaS and uses evidence from their customers and markets to identify potential opportunities. Never invent products, reviews, customers, prices, metrics, sources, or evidence.
+
+If another section of this file or an old implementation plan suggests a sequence that conflicts with this explicit current priority, preserve the technical safeguards and existing work, but follow the product priority in `docs/PRODUCT_VISION.md`. Do not silently reinterpret the product as a generic SaaS catalogue.
