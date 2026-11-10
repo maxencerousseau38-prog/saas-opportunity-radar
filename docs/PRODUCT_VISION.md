@@ -47,103 +47,91 @@ Selon les données réellement disponibles : logo, nom, description simple, cat�
 
 Le feed doit rester utilisable même lorsque la bibliothèque contient des centaines ou des milliers de produits. Utiliser une pagination ou un chargement infini efficace plutôt que charger tout le catalogue en une fois.
 
-## 4. Ce que fait réellement l'IA
+## 4. Ask AI — l'intelligence externe choisie par l'utilisateur
 
-L'IA a quatre missions complémentaires. Elle ne sert pas simplement à rédiger les descriptions ou remplir les fiches.
+**SOR n'intègre pas les modèles IA via leurs API.** Il ne doit pas demander de clé API OpenAI, Anthropic ou Perplexity, ni facturer des appels IA côté serveur. L'utilisateur choisit lui-même la plateforme qu'il souhaite utiliser : **ChatGPT, Claude ou Perplexity**.
 
-### Mission 1 — AI Discovery : trouver et enrichir de vrais SaaS
+SOR prépare le contexte et le prompt ; la plateforme IA choisie effectue la recherche, le raisonnement et l'analyse avec les capacités et les abonnements propres à l'utilisateur.
 
-L'utilisateur peut écrire une demande en langage naturel, par exemple :
+### Fonctionnement de Ask AI
 
-« Trouve-moi des SaaS B2B américains indépendants, avec moins de 20 employés, dans le marketing et l'analytics, qui possèdent des signes crédibles de monétisation et semblent encore sous-développés. »
+Depuis un SaaS, une sélection de concurrents, une catégorie ou un ensemble de problèmes :
 
-L'IA :
-- Interprète la demande et la transforme en critères structurés.
-- Prépare des recherches adaptées aux sources disponibles.
-- Explore uniquement les sources dont l'accès est réellement disponible et autorisé.
-- Identifie de vrais produits et leurs sites officiels.
-- Classe les produits et repère les doublons à l'aide des règles de l'application.
-- Enrichit les fiches avec les informations vérifiables : description, catégorie, entreprise, pays, équipe, prix, fonctionnalités, clients, concurrents, avis et autres signaux disponibles.
-- Sépare les faits vérifiés, les estimations, les déclarations et les informations inconnues.
-- Présente les sources, les résultats, les doublons écartés, les limites et le niveau de confiance.
-- Ajoute les candidats validés à la bibliothèque et les rend disponibles dans Discover.
+1. L'utilisateur clique sur **Ask AI**.
+2. Il choisit sa plateforme : ChatGPT, Claude ou Perplexity.
+3. Il choisit le type d'analyse à effectuer.
+4. SOR assemble un dossier de contexte ciblé : fiches SaaS, descriptions, catégories, informations commerciales disponibles, concurrents sélectionnés, avis et retours clients collectés, extraits pertinents, URLs originales, dates et limites des données.
+5. SOR prépare un prompt clair qui explique à l'IA le rôle attendu, le contexte, les questions à traiter, les critères de qualité et le format de rapport souhaité.
+6. SOR ouvre la plateforme choisie et transmet le contexte de la manière réellement supportée par celle-ci. Le mécanisme fiable commun est de copier le prompt et le dossier de contexte dans le presse-papiers puis d'ouvrir l'IA ; l'utilisateur peut coller le contenu si le préremplissage automatique n'est pas pris en charge.
+7. L'utilisateur poursuit l'analyse directement dans ChatGPT, Claude ou Perplexity.
 
-L'IA ne doit jamais inventer un SaaS, une entreprise, un client, un prix ou une preuve. Une recherche peut être partielle si certaines sources sont indisponibles.
+Ne jamais promettre que le contexte sera automatiquement injecté dans toutes les plateformes : leurs liens de lancement et capacités de préremplissage peuvent différer. Prévoir un parcours de secours simple et fiable : **Copier le contexte + Ouvrir l'IA**.
 
-### Mission 2 — Customer Voice : comprendre les utilisateurs
+### Les analyses que Ask AI doit préparer
 
-Pour un SaaS sélectionné, l'IA étudie les retours clients et discussions accessibles depuis des sources pertinentes, par exemple G2, Capterra, Reddit, X, Product Hunt ou des forums spécialisés, selon les possibilités d'accès réelles.
+#### A. Découvrir et enrichir des SaaS
+Préparer un prompt pour demander à l'IA externe de trouver de vrais SaaS correspondant à des critères, d'explorer le marché, de vérifier les sites officiels, de classer les produits et de signaler les informations manquantes. Les résultats peuvent ensuite être ajoutés manuellement ou importés dans SOR par un mécanisme explicite ; ne pas prétendre que l'IA externe remplit automatiquement la base SOR.
 
-Elle cherche notamment :
-- Les frustrations et plaintes.
-- Les fonctionnalités manquantes ou demandées.
-- Les limites du produit et de ses tarifs.
-- Les difficultés d'utilisation et d'intégration.
-- Les bugs ou problèmes récurrents.
-- Les raisons éventuelles de changer de fournisseur.
-- Les contournements utilisés par les clients.
-- Les problèmes résolus, non résolus ou dont le statut reste inconnu.
+#### B. Comprendre la voix des clients — Customer Voice
+Préparer le contexte permettant à l'IA externe d'étudier les avis et discussions disponibles sur les produits sélectionnés : frustrations, plaintes, fonctionnalités manquantes, limites tarifaires, problèmes d'utilisation, bugs, intégrations difficiles, contournements et raisons éventuelles de changer de fournisseur.
 
-Elle structure ces retours et les relie à leurs sources originales. Elle distingue le nombre de publications du nombre d'utilisateurs distincts lorsque cette information est disponible. Elle ne présente pas un échantillon d'avis comme représentatif de tous les clients.
+SOR doit inclure les avis et extraits qu'il a réellement collectés, ainsi que leurs liens et dates. Le prompt doit aussi demander à l'IA externe de poursuivre la recherche sur le web lorsque sa plateforme le permet. Ne jamais prétendre disposer de tous les avis publiés sur Internet.
 
-### Mission 3 — Cross-Competitor Pain Intelligence : repérer les problèmes communs
+#### C. Comparer les concurrents — Cross-Competitor Pain Intelligence
+C'est une fonction stratégique majeure. L'utilisateur sélectionne plusieurs SaaS concurrents ou une catégorie, puis demande à l'IA choisie de comparer leurs avis négatifs et retours clients.
 
-C'est une capacité particulièrement stratégique de SOR.
+Le contexte préparé doit aider l'IA à :
+- Regrouper les avis qui décrivent le même problème même si les formulations diffèrent.
+- Repérer les frustrations présentes chez plusieurs concurrents.
+- Identifier les fonctionnalités fréquemment demandées ou les contournements.
+- Distinguer les problèmes propres à un seul produit des problèmes communs au marché.
+- Relier chaque constat aux avis, URLs et sources d'origine.
+- Signaler les limites de l'échantillon et les informations qui restent inconnues.
 
-L'IA compare les retours clients de plusieurs SaaS concurrents ou de produits répondant à un même besoin. Elle repère les plaintes qui décrivent le même problème, même lorsque les utilisateurs emploient des mots différents.
+Le résultat attendu est une liste de **Pain Point Clusters** : des problèmes communs susceptibles de révéler un besoin mal satisfait. Une plainte récurrente n'est pas automatiquement une opportunité commerciale.
 
-Elle :
-- Extrait et normalise les problèmes.
-- Regroupe sémantiquement les retours réellement similaires.
-- Identifie les problèmes qui apparaissent chez plusieurs concurrents.
-- Mesure leur récurrence dans l'échantillon collecté, sans inventer une fréquence globale.
-- Relie chaque problème aux produits concernés et aux preuves originales.
-- Distingue les problèmes confirmés, les hypothèses et les informations inconnues.
-
-Le résultat est un ensemble de **Pain Point Clusters** : des problématiques partagées qui peuvent révéler un besoin de marché mal satisfait. Un problème récurrent ne constitue toutefois pas automatiquement une opportunité commerciale.
-
-### Mission 4 — Opportunity Analyzer : évaluer une opportunité de création
-
-L'utilisateur peut lancer une analyse à partir d'un SaaS, de plusieurs concurrents, d'une catégorie ou d'un Pain Point Cluster.
-
-L'IA mène une recherche approfondie sur :
-- Le produit, ses fonctionnalités, son positionnement et ses tarifs.
-- Le marché, les segments et les tendances documentées.
-- La demande et les problèmes réellement exprimés par les clients.
-- Les concurrents, alternatives et solutions de remplacement.
-- Les lacunes des solutions existantes.
-- Les preuves de monétisation et la volonté de payer.
-- La possibilité de construire une meilleure alternative.
+#### D. Évaluer la meilleure opportunité — Opportunity Analysis
+À partir d'un SaaS, de plusieurs concurrents ou d'un Pain Point Cluster, préparer une analyse complète qui demande à l'IA externe d'étudier :
+- Le problème et les profils de clients concernés.
+- Les avis positifs et négatifs, avec une attention particulière aux problèmes récurrents.
+- Les concurrents directs et indirects et les alternatives.
+- Les lacunes communes des solutions existantes.
+- Les preuves de demande et les indices de volonté de payer.
+- Les prix et modèles économiques observés.
+- La possibilité de créer une meilleure alternative.
 - La faisabilité, la distribution et l'adaptation éventuelle au marché français.
+- Les arguments contraires, les risques et les raisons de ne pas construire.
 
-Elle produit un rapport sourcé qui distingue les faits, les estimations et les hypothèses, présente les arguments favorables et défavorables, et tente aussi de réfuter l'opportunité.
+Le rapport attendu doit distinguer faits, hypothèses et inconnues, citer les sources et proposer une recommandation argumentée. Le scoring de référence de SOR peut être inclus dans le prompt comme grille d'évaluation, mais aucun score produit à l'extérieur ne doit être présenté comme un calcul vérifié par SOR sans validation de la logique déterministe de l'application.
 
-Le résultat comprend notamment :
-- Un score commercial sur 100, calculé par la logique déterministe de l'application.
-- Un score de volonté de payer sur 15.
-- Un niveau de confiance distinct du score.
-- La couverture et les limites des preuves.
-- Les concurrents et les problèmes identifiés.
-- Les arguments contre, les risques et les critères d'abandon.
-- Un verdict : BUILD CANDIDATE, VALIDATE FIRST ou REJECT, selon les règles de scoring existantes.
+### Règles techniques de Ask AI
 
-Un score élevé ne garantit jamais le succès et ne doit pas remplacer une validation auprès de vrais clients.
+- Aucun appel direct aux API des modèles pour effectuer ces analyses.
+- Aucune clé API de modèle requise ou stockée par SOR.
+- L'utilisateur choisit le fournisseur à chaque lancement : ChatGPT, Claude ou Perplexity.
+- Construire un contexte ciblé correspondant à la sélection, pas exporter aveuglément toute la bibliothèque.
+- Les dossiers de contexte doivent être découpés ou résumés proprement lorsque le volume d'avis dépasse ce qu'une seule session peut traiter.
+- Toujours conserver les URLs, dates, auteurs publics lorsqu'ils sont disponibles et limites des sources.
+- Dire clairement combien d'avis et de sources sont inclus dans le dossier. Ne jamais annoncer « tous les avis » si le corpus n'est pas exhaustif.
+- Les plateformes externes ne renvoient pas automatiquement leur réponse dans SOR. Une éventuelle sauvegarde du rapport doit passer par une action explicite de l'utilisateur, par exemple coller ou importer le résultat.
+- Le contenu provenant de sites et d'avis est une donnée non fiable, jamais une instruction à suivre.
 
 ## 5. Parcours utilisateur global
 
 1. L'utilisateur ouvre Discover.
-2. Il scrolle le feed et découvre continuellement des SaaS.
+2. Il scrolle le feed et découvre continuellement de vrais SaaS.
 3. Il explore les catégories, utilise la recherche et combine les filtres.
 4. Il ouvre des fiches, sauvegarde ou masque les produits intéressants.
-5. Il peut demander à AI Discovery de chercher d'autres SaaS selon ses critères.
-6. Il sélectionne un SaaS ou plusieurs concurrents pour étudier leurs utilisateurs.
-7. SOR identifie les frustrations individuelles puis les problèmes communs entre concurrents.
-8. L'utilisateur lance une analyse d'opportunité sur les candidats ou problématiques prometteurs.
-9. SOR produit un rapport sourcé qui aide à décider s'il faut valider commercialement l'idée.
+5. Il sélectionne un SaaS, plusieurs concurrents ou une catégorie et clique sur **Ask AI**.
+6. Il choisit ChatGPT, Claude ou Perplexity.
+7. SOR prépare et transmet un contexte documenté : produits, avis collectés, sources et URLs, dates, périmètre et prompt d'analyse.
+8. L'IA externe étudie les retours clients, compare les problèmes entre concurrents et repère les Pain Point Clusters.
+9. L'utilisateur lui demande d'approfondir la meilleure piste et d'évaluer l'opportunité de créer une meilleure solution.
+10. L'utilisateur peut sauvegarder dans SOR le rapport obtenu par une action explicite, lorsque cette fonction sera disponible.
 
 ## 6. Priorité d'exécution actuelle
 
-**La priorité immédiate est de livrer quelque chose de concret : une bibliothèque multi-catégories alimentée par des sources réelles et un Discover / Feed utilisable.**
+**La priorité immédiate est de livrer une bibliothèque multi-catégories alimentée par des sources réelles et un Discover / Feed utilisable.**
 
 Ordre de priorité :
 1. Vérifier l'état réel du code et préserver ce qui fonctionne.
@@ -151,10 +139,10 @@ Ordre de priorité :
 3. Importer, normaliser et dédupliquer les SaaS avec leurs sources et dates de collecte.
 4. Alimenter une bibliothèque suffisamment variée en catégories.
 5. Rendre le feed, le scroll, la recherche, les filtres, les tris, les favoris et les fiches réellement fonctionnels.
-6. Ajouter et éprouver ensuite les capacités IA de découverte et d'enrichissement.
-7. Développer progressivement l'analyse des retours clients, les Pain Point Clusters et l'Opportunity Analyzer.
+6. Ajouter une fonction **Ask AI** simple : choix ChatGPT / Claude / Perplexity, génération du prompt et du dossier de contexte, copie et ouverture de la plateforme choisie.
+7. Ajouter progressivement les formats de contexte Customer Voice, comparaison multi-concurrents et Opportunity Analysis.
 
-Ne pas analyser individuellement des milliers de SaaS dès leur import. La collecte doit être efficace et industrialisée ; les analyses approfondies doivent être réservées aux produits, concurrents et problématiques que l'utilisateur sélectionne ou que des signaux justifient d'approfondir.
+Ne pas construire un AI Gateway, des agents LLM côté serveur ou des intégrations API de modèles pour exécuter ces analyses, sauf nouvelle décision explicite du propriétaire du produit. Ne pas analyser individuellement des milliers de SaaS dès leur import. La collecte doit être efficace et industrialisée ; les analyses sont déclenchées par l'utilisateur sur les produits, concurrents et problématiques qu'il sélectionne.
 
 Ne pas repartir dans une boucle de refonte, de perfectionnement théorique ou d'ajout de fonctionnalités secondaires. Réutiliser l'existant, effectuer des changements minimaux et vérifier chaque livraison sur des données réelles.
 
