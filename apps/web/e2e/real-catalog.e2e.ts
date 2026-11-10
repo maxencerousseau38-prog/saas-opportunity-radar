@@ -47,12 +47,10 @@ test("Discover scrolls through real SaaS collected from Wikidata, with their sou
   // take about 1.5 s on a laptop and longer on a busy CI runner.
   await expect(page.getByTestId("result-count")).not.toHaveText("…", { timeout: 30_000 });
   const firstLoadMs = Date.now() - started;
-  test
-    .info()
-    .annotations.push({
-      type: "first Discover load (ms, sign-in included)",
-      description: String(firstLoadMs),
-    });
+  test.info().annotations.push({
+    type: "first Discover load (ms, sign-in included)",
+    description: String(firstLoadMs),
+  });
   process.stdout.write(`real catalog: first Discover load ${firstLoadMs} ms (sign-in included)\n`);
   await waitForResults(page);
   const total = Number(
