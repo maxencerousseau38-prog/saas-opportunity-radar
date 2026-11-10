@@ -10,6 +10,9 @@ select ok(not has_function_privilege('authenticated', 'public.sor_ingest_catalog
   'browsers cannot write the catalog through the ingestion RPC');
 select ok(has_function_privilege('service_role', 'public.sor_ingest_catalog_listing(jsonb,jsonb,jsonb)', 'EXECUTE'),
   'the server can ingest listings');
+select ok(not has_function_privilege('authenticated', 'public.sor_catalog_refresh_statistics()', 'EXECUTE')
+          and has_function_privilege('service_role', 'public.sor_catalog_refresh_statistics()', 'EXECUTE'),
+  'only the server refreshes the catalog statistics');
 
 select is((select integration_status::text || '/' || is_enabled || '/' || (terms_reviewed_at is not null)
              from public.sources where source_key = 'wikidata'),

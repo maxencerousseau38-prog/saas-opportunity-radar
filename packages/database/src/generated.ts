@@ -1741,6 +1741,9 @@ isOneToOne: true
 "sor_cancel_job":
 { Args: { "p_actor": string,"p_job_id": string,"p_workspace_id": string }; Returns: Database["public"]['Enums']["job_state"]
                            },
+"sor_catalog_refresh_statistics":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
 "sor_cluster_correction":
 { Args: { "p_actor": string,"p_cluster_id": string,"p_correction": Json,"p_expected_updated_at": string,"p_request_id": string,"p_stats": Json,"p_target_stats": Json,"p_workspace_id": string }; Returns: Json
                            },

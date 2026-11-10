@@ -7,7 +7,7 @@
 // Prints a JSON summary; exits 1 when a listing could not be written.
 import { readFile } from "node:fs/promises";
 import { CatalogSnapshotSchema } from "@sor/contracts";
-import { createServiceClient } from "@sor/database";
+import { createServiceClient, pipelineRepo } from "@sor/database";
 import { ingestListings } from "./ingest";
 
 const files = process.argv.slice(2);
@@ -38,4 +38,10 @@ for (const file of files) {
     `${JSON.stringify({ file, duration_ms: Date.now() - started, ...summary }, null, 2)}\n`,
   );
 }
+// A bulk load leaves the planner with the statistics of a much smaller
+// catalog until autovacuum runs: Discover then times out (measured 24.7 s at
+// ~8,500 products). Refresh them now.
+const analyzed = Date.now();
+await pipelineRepo.refreshCatalogStatistics(db);
+process.stderr.write(`catalog statistics refreshed in ${Date.now() - analyzed} ms\n`);
 process.exit(failed > 0 ? 1 : 0);

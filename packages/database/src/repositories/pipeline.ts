@@ -115,6 +115,11 @@ export async function ingestCatalogListing(
   };
 }
 
+/** Refreshes planner statistics of the catalog tables after a bulk load. */
+export async function refreshCatalogStatistics(service: DbClient): Promise<void> {
+  check(await service.rpc("sor_catalog_refresh_statistics"));
+}
+
 export async function importFeedbackRow(
   service: DbClient,
   args: { jobId: string; productId: string; row: JsonValue },
