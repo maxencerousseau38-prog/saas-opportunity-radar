@@ -88,7 +88,18 @@ select is((select count(distinct company_id)::int from public.saas_products wher
              ((select (v ->> 'product_id')::uuid from r where k = 'first'), (select (v ->> 'product_id')::uuid from r where k = 'sibling'))), 1,
   'companies are deduplicated by their source id, not by name');
 select is((select count(*)::int from public.companies where name = 'Example Labs'), 1, 'one company row');
+select is((select string_agg(value_normalized, ',') from public.entity_identifiers
+            where company_id = (select company_id from public.saas_products
+                                 where id = (select (v ->> 'product_id')::uuid from r where k = 'first'))),
+  'company:Q900', 'company identifiers are kept apart from product identifiers');
 select tests.as_service_role();
+
+-- An item that is both a listed product and the developer of another product.
+insert into r values ('dev_is_product', public.sor_ingest_catalog_listing(
+  tests.listing('Q900', 'https://example-labs.test', 'Example Labs Platform', 'online collaboration platform', 'Example Labs', 'Q901'),
+  '{"outcome":"new","rule":"no_match"}', '{"status":"eligible","rule_set_version":"excl-1"}'));
+select is((select v ->> 'status' from r where k = 'dev_is_product'), 'created',
+  'a product whose id is also a developer id is created');
 
 -- Matched existing product: evidence added, unknown fields filled, known ones kept.
 insert into r values ('match', public.sor_ingest_catalog_listing(

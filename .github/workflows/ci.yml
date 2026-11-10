@@ -119,6 +119,7 @@ jobs:
       # products), then Discover is checked on real data.
       - name: Ingest the collected catalog (real Wikidata and Uneed listings)
         run: |
+          set -o pipefail
           pnpm --filter @sor/worker catalog:build
           node apps/worker/dist-catalog/ingest.js data/catalog/*/listings.json | tee "$RUNNER_TEMP/ingest.json"
           { echo '## Catalog ingestion'; echo '```json'; cat "$RUNNER_TEMP/ingest.json"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
