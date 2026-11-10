@@ -68,7 +68,7 @@
   {
     "vendor": "openai",
     "url": "https://openai.com/api/pricing/",
-    "retrieved_at": "2026-11-05T10:20:59.375Z",
+    "retrieved_at": "2026-11-10T17:21:09.948Z",
     "status": "blocked",
     "reason": "http_403"
   },
@@ -152,7 +152,7 @@
   {
     "vendor": "openai",
     "url": "https://help.openai.com/en/articles/10503543-data-residency-for-the-openai-api",
-    "retrieved_at": "2026-11-05T10:20:59.450Z",
+    "retrieved_at": "2026-11-10T17:21:10.055Z",
     "status": "blocked",
     "reason": "http_403"
   },

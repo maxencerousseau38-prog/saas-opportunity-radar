@@ -1,0 +1,16 @@
+https://www.ycombinator.com/robots.txt
+2026-11-10T17:21:13.610Z
+
+User-Agent: *
+Disallow: /verify/*
+Disallow: /library?categories=*&*
+Allow: /library?categories=*
+Disallow: /library?*
+Disallow: /companies?*
+Allow: /
+User-Agent: facebookexternalhit
+Allow: /verify/*
+User-Agent: Twitterbot
+Allow: /verify/*
+User-Agent: LinkedInBot
+Allow: /verify/*

@@ -1,0 +1,149 @@
+https://api.producthunt.com/v2/docs
+2026-11-10T17:21:10.307Z
+
+Product Hunt
+API dashboard
+Welcome to the API
+OAuth User Authentication
+oauth#authorize - Ask for access grant code on behalf of the user
+oauth#token - Use the access grant code you received through the redirect to request an access token
+oauth#test - Add the access_token as header to any request
+unauthorized_oauth: oauth#test - Invalid access_tokens will lead to error messages
+OAuth Client Only Authentication
+oauth#token - Ask for client level token
+oauth#test - Use the client level token for read api access
+unauthorized_oauth: oauth#test - Invalid access to user-level content with just an client level token will lead to errors
+GraphQL
+API Reference
+API Explorer
+Rate Limits
+Headers
+Welcome to the Product Hunt API 2.0
+The goal of this API is to provide access to Product Hunt data via a simple
+GraphQL interface.
+If you have any ideas for improvements or just wanna chat about queries or mutations
+let us know on GitHub. Remember to add v2 label to the issue.
+Not familiar with GraphQL?
+Here are some resources that can help you get started with GraphQL.
+GraphQL home page.
+How To GraphQL - a free and open-source tutorial to learn all around GraphQL to go from zero to production.
+Privileges
+There are 3 types of scopes that an application can request on behalf of the user:
+Public : Access public information on Product Hunt.
+Private : Access Product Hunt on behalf of the authenticated user. For e.g application will be able to read goals of the user.
+Write : Take actions on Product Hunt on behalf of the user. For e.g application will be able to mark user's goals as complete/incomplete.
+For example, if you are building an application in which you need to know if a user has followed a topic, or commented on a post, you would need to request `public private` scope.
+By default all apps are read-only i.e they have `public` scope.
+As part of API 2.0 we have decided to give partial write access to third party applications depending on the use-case. If your application needs it
+feel free to get in touch with us at hello@producthunt.com . Remember you would also need to request `public private write` scope
+for write functions to work.
+The Product Hunt API must not be used for commercial purposes. If you would like to use it for
+your business, please contact us at hello@producthunt.com .
+Accessing Endpoints
+The API is reachable at https://api.producthunt.com/v2/api/graphql
+Currently the API is only accessible with a provided access_token .
+We reserve the right to rate-limit any application if we feel you are not following fair-use .
+If you require faster access without rate limit please contact us.
+Get started: Getting an OAuth2 token
+Get a token on behalf of a user:
+Follow the steps in OAuth User Authentication oauth#authorize to receive an access_grant
+Use the access_grant in oauth#token
+Add the Authorization http header with the token to all requests. E.g Authorization: Bearer {token}
+Test this and troubleshoot according to the examples in oauth#test
+Get a token without user context. (eg before a user logs in)
+Follow the steps explained in OAuth Client Only Authentication oauth#token
+Please remember that this tokens limit you to public endpoints that don't require user context.
+Public clients (PKCE)
+Native, desktop, mobile, and single-page applications cannot store a client secret securely,
+because the secret is distributed in code that is accessible to the end user. Such applications
+are public clients . In place of a secret, they protect the authorization code
+flow using PKCE (Proof Key for Code Exchange,
+RFC 7636 ). Register
+the application as a Public client in the
+API dashboard ; public clients
+are issued no client_secret .
+Code verifier
+Before initiating the flow, generate a code_verifier : a high-entropy cryptographic
+random string between 43 and 128 characters in length, composed of the characters
+A–Z , a–z , 0–9 , and the punctuation
+- , . , _ , and ~ . Retain this value for the
+duration of the flow; it is not transmitted in the authorization request.
+Code challenge
+Derive the code_challenge by hashing the verifier with SHA-256 and Base64-URL-encoding
+the result without padding, and set code_challenge_method to S256 . Product Hunt
+accepts the S256 method only; requests using plain are rejected.
+code_challenge = BASE64URL-ENCODE( SHA-256( ASCII( code_verifier ) ) )
+Request user authorization
+Direct the user to the authorization endpoint,
+https://api.producthunt.com/v2/oauth/authorize , with the following query
+parameters:
+Parameter Relevance Value
+client_id Required The application's API key.
+response_type Required code
+redirect_uri Required Must exactly match a URI registered for the application.
+scope Optional Space-separated list of scopes, for example public private .
+state Recommended An opaque value used to maintain state between the request and callback, and to mitigate CSRF. It is returned unchanged.
+code_challenge Required The challenge derived above.
+code_challenge_method Required S256
+When the user approves the request, they are redirected to redirect_uri with an
+authorization code and the state value. Confirm that the returned
+state matches the value that was sent.
+Request an access token
+Exchange the authorization code at the token endpoint,
+https://api.producthunt.com/v2/oauth/token , with
+Content-Type: application/x-www-form-urlencoded . The code_verifier is supplied
+in place of the client_secret . The server recomputes the challenge from the verifier
+and rejects the request unless it matches the code_challenge sent during authorization.
+Parameter Relevance Value
+grant_type Required authorization_code
+client_id Required The application's API key.
+code Required The authorization code returned in the previous step.
+redirect_uri Required Must match the value used in the authorization request.
+code_verifier Required The verifier generated at the start of the flow.
+curl -X POST https://api.producthunt.com/v2/oauth/token \
+-d grant_type=authorization_code \
+-d client_id=CLIENT_ID \
+-d code=AUTHORIZATION_CODE \
+-d redirect_uri=REDIRECT_URI \
+-d code_verifier=CODE_VERIFIER
+A successful response returns an access_token . Include it in the
+Authorization: Bearer {token} header on requests to
+https://api.producthunt.com/v2/api/graphql .
+Errors
+An authorization request from a public client that omits code_challenge is rejected
+with error=invalid_request (“Code challenge is required.”).
+A token request with a missing or incorrect code_verifier is rejected with
+error=invalid_grant . Authorization codes are single-use and short-lived.
+Public clients are not permitted to use the client credentials grant and receive
+error=unauthorized_client .
+Confidential (server-side) clients are unaffected: they continue to authenticate with their
+client_secret . PKCE is optional but supported for confidential clients as well.
+But… i just wanted to run a simple script?
+The oauth2 flow is a bit of a overkill if you just want to run a few scripts
+We provide a developer_token (does not expire, linked to your account) in the
+API dashboard
+May I use the API for my business?
+By default the Product Hunt API must not be used for commercial purposes.
+If you would like to use it for your business, please contact us at
+hello@producthunt.com .
+Done building? Get featured!
+We’re excited to see what all you creative folks build and happy to feature your product on the site.
+Contact us at hello@producthunt.com with its name,
+a couple sentence description, and link to the project.
+Do I have to attribute Product Hunt?
+We kindly ask that you include attribution in your project, linking back to
+Product Hunt .
+We’d also appreciate those that include a Product Hunt logo (it’s helpful for us!).
+You can download the goodies here .
+Are there any other ways to do Product Hunt Integrations?
+Yes! There is quite a bunch of third party APIs. Blazin' fast fulltext search,
+SDKs with callbacks for real-time like interaction, web-hooks, etc etc.
+Go here for the full list .
+Btw there is also a lot of Open Source software out there.
+Take a look .
+Maybe there is something you can reuse.
+But…?
+If you have any more questions, feedback, ideas or problems don’t hesitate to contact us!
+Also, let us know what you’re working on! Drop us a line at
+hello@producthunt.com .
+Happy Hacking!
