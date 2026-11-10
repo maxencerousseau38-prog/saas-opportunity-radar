@@ -141,10 +141,16 @@ covers all years. About a quarter of the created products have no category
 uncategorised, never guessed. Matches between the two sources (same
 canonical URL) keep both sources as evidence on one product.
 
-After a bulk load the ingester refreshes the planner statistics
-(`sor_catalog_refresh_statistics`): without it, Discover's first search
-took 24.7 s at ~8,500 products in CI and hit the browser role's 8 s
-statement timeout; with it, 0.7 s on a local PostgreSQL.
+Discover at this scale: the first load made the catalog search and count
+take ~18–25 s as a viewer in CI, past the browser role's 8 s statement
+timeout. Cause (EXPLAIN ANALYZE): the catalog filter function joined
+companies with a nested loop that ran the companies RLS helper once per
+product and company pair (5.4 million calls for ~8,600 products and ~630
+companies). Migration `20261120090001_catalog_filtered_company_lookup.sql`
+looks the company up once per product by primary key (same semantics):
+17.9 s → 0.9 s locally on the real snapshots. The ingester also refreshes the
+planner statistics after a bulk load (`sor_catalog_refresh_statistics`); that
+alone did not fix the timeout.
 
 ## `manual_entry` and `user_import` (existing)
 
