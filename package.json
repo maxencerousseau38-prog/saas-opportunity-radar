@@ -15,7 +15,8 @@
     "test:e2e": "turbo run test:e2e",
     "benchmark:catalog": "node scripts/benchmark-catalog.mjs",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "catalog:ingest": "pnpm --filter @sor/worker catalog:build && pnpm --filter @sor/worker catalog:ingest ../../data/catalog/wikidata/listings.json"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",

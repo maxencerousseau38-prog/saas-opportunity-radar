@@ -1,24 +1,89 @@
 {
   "purpose": "Official terms, API documentation and robots.txt pages of candidate catalog sources (first bulk collection, 10 Nov 2026). Snapshotted by the eval-snapshot workflow because this session's network policy blocks them; read before any connector is enabled (ADR-013, docs/DATA_SOURCES.md).",
   "pages": [
-    { "vendor": "producthunt", "url": "https://api.producthunt.com/v2/docs" },
-    { "vendor": "producthunt", "url": "https://www.producthunt.com/legal/terms-of-service" },
-    { "vendor": "producthunt", "url": "https://www.producthunt.com/robots.txt" },
-    { "vendor": "microlaunch", "url": "https://microlaunch.net/" },
-    { "vendor": "microlaunch", "url": "https://microlaunch.net/terms" },
-    { "vendor": "microlaunch", "url": "https://microlaunch.net/robots.txt" },
-    { "vendor": "uneed", "url": "https://www.uneed.best/" },
-    { "vendor": "uneed", "url": "https://www.uneed.best/terms" },
-    { "vendor": "uneed", "url": "https://www.uneed.best/robots.txt" },
-    { "vendor": "betalist", "url": "https://betalist.com/terms" },
-    { "vendor": "betalist", "url": "https://betalist.com/robots.txt" },
-    { "vendor": "ycombinator", "url": "https://www.ycombinator.com/legal/" },
-    { "vendor": "ycombinator", "url": "https://www.ycombinator.com/robots.txt" },
-    { "vendor": "ycombinator", "url": "https://news.ycombinator.com/robots.txt" },
-    { "vendor": "wikidata", "url": "https://www.wikidata.org/wiki/Wikidata:Licensing" },
-    { "vendor": "wikidata", "url": "https://meta.wikimedia.org/wiki/User-Agent_policy" },
-    { "vendor": "wikidata", "url": "https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual" },
-    { "vendor": "saashub", "url": "https://www.saashub.com/site/api" },
-    { "vendor": "saashub", "url": "https://www.saashub.com/site/terms" }
+    {
+      "vendor": "producthunt",
+      "url": "https://api.producthunt.com/v2/docs"
+    },
+    {
+      "vendor": "producthunt",
+      "url": "https://www.producthunt.com/legal/terms-of-service"
+    },
+    {
+      "vendor": "producthunt",
+      "url": "https://www.producthunt.com/robots.txt"
+    },
+    {
+      "vendor": "microlaunch",
+      "url": "https://microlaunch.net/"
+    },
+    {
+      "vendor": "microlaunch",
+      "url": "https://microlaunch.net/terms"
+    },
+    {
+      "vendor": "microlaunch",
+      "url": "https://microlaunch.net/robots.txt"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://www.uneed.best/"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://www.uneed.best/terms"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://www.uneed.best/robots.txt"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://www.uneed.best/terms-of-use"
+    },
+    {
+      "vendor": "betalist",
+      "url": "https://betalist.com/terms"
+    },
+    {
+      "vendor": "betalist",
+      "url": "https://betalist.com/robots.txt"
+    },
+    {
+      "vendor": "ycombinator",
+      "url": "https://www.ycombinator.com/legal/"
+    },
+    {
+      "vendor": "ycombinator",
+      "url": "https://www.ycombinator.com/robots.txt"
+    },
+    {
+      "vendor": "ycombinator",
+      "url": "https://news.ycombinator.com/robots.txt"
+    },
+    {
+      "vendor": "wikidata",
+      "url": "https://www.wikidata.org/wiki/Wikidata:Licensing"
+    },
+    {
+      "vendor": "wikidata",
+      "url": "https://meta.wikimedia.org/wiki/User-Agent_policy"
+    },
+    {
+      "vendor": "wikidata",
+      "url": "https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual"
+    },
+    {
+      "vendor": "saashub",
+      "url": "https://www.saashub.com/site/api"
+    },
+    {
+      "vendor": "saashub",
+      "url": "https://www.saashub.com/site/terms"
+    },
+    {
+      "vendor": "uneed",
+      "url": "https://www.uneed.best/llms.txt"
+    }
   ]
 }

@@ -162,7 +162,9 @@ function websiteOf(value: string | undefined): string | null {
   try {
     const url = new URL(value.trim());
     if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    // An official site needs no query: tracking parameters and share tokens are dropped.
     url.hash = "";
+    url.search = "";
     return url.toString();
   } catch {
     return null;

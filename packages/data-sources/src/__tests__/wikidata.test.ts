@@ -76,6 +76,14 @@ describe("Wikidata connector", () => {
     ]);
   });
 
+  it("drops query strings and fragments from the official website", () => {
+    const { listings } = parseWikidataResults(
+      results(row({ website: uri("https://app.example/view?r=abc123&utm_source=x#top") })),
+      AT,
+    );
+    expect(listings[0]?.website_url).toBe("https://app.example/view");
+  });
+
   it("keeps unknown facts unknown and falls back to the developer's country", () => {
     const { listings } = parseWikidataResults(
       results(
