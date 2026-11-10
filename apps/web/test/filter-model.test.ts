@@ -24,6 +24,23 @@ describe("active filter chips", () => {
     expect(after.hq_countries).toEqual(f.hq_countries);
     expect(after.configurable_exclusions).toEqual(["b2c_only"]);
   });
+
+  it("keeps acquisition channels and evidence-status chips independently removable", () => {
+    const f = parse({
+      acquisition_channels: {
+        values: ["x", "seo"],
+        statuses: ["confirmed"],
+        include_unknown: true,
+      },
+      customer_types: { values: ["b2b"] },
+    });
+    const chips = activeChips(f, (s) => s);
+    expect(chips.map((chip) => chip.key)).toContain("acq:x");
+    expect(chips.map((chip) => chip.key)).toContain("acq-status:confirmed");
+    const withoutX = chips.find((chip) => chip.key === "acq:x")!.remove(f);
+    expect(withoutX.acquisition_channels?.values).toEqual(["seo"]);
+    expect(withoutX.customer_types).toEqual(f.customer_types);
+  });
 });
 
 describe("research preferences as filters", () => {

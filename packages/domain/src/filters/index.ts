@@ -30,6 +30,11 @@ export interface CatalogPlan {
   price?: { ranges: PlanRange[]; free: boolean; custom: boolean; include_unknown: boolean };
   commercial_validation?: string[];
   company_profile?: ValuesGroup<string>;
+  acquisition_channels?: {
+    values: string[];
+    statuses: string[];
+    include_unknown: boolean;
+  };
   configurable_exclusions: string[];
   include_hidden: boolean;
   current_year: number;
@@ -110,6 +115,17 @@ export function buildCatalogPlan(
   plan.hq_countries = valuesGroup(filters.hq_countries);
   plan.billing_models = valuesGroup(filters.billing_models);
   plan.company_profile = valuesGroup(filters.company_profile);
+
+  if (filters.acquisition_channels) {
+    const { values, statuses, include_unknown } = filters.acquisition_channels;
+    if (values.length || statuses.length || include_unknown) {
+      plan.acquisition_channels = {
+        values: [...new Set(values)],
+        statuses: [...new Set(statuses)],
+        include_unknown,
+      };
+    }
+  }
 
   if (filters.team_size) {
     const ranges = filters.team_size.presets.map((p) => TEAM_PRESETS[p] as PlanRange);

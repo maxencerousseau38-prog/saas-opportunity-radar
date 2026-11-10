@@ -1,6 +1,16 @@
 "use client";
 import { useState } from "react";
-import { BarChart3, EyeOff, Eye, Flag, FolderPlus, MoreHorizontal, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  BarChart3,
+  EyeOff,
+  Eye,
+  Flag,
+  FolderPlus,
+  MessageSquareText,
+  MoreHorizontal,
+  Star,
+} from "lucide-react";
 import type { ProductCard } from "@sor/contracts";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
@@ -19,6 +29,7 @@ export interface ActionProps {
 }
 
 export function ProductActions({ product, ...p }: ActionProps & { product: ProductCard }) {
+  const router = useRouter();
   const [reportOpen, setReportOpen] = useState(false);
   const [collectionOpen, setCollectionOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -92,8 +103,17 @@ export function ProductActions({ product, ...p }: ActionProps & { product: Produ
         <MenuItem disabled={!p.canEdit} onSelect={() => setReportOpen(true)}>
           <Flag size={14} /> Signaler une erreur…
         </MenuItem>
-        <MenuItem disabled>
-          <BarChart3 size={14} /> Analyser avec l’IA (Sprint 5)
+        <MenuItem
+          disabled={!p.canEdit}
+          onSelect={() => router.push(`/w/${p.workspaceId}/ask-ai?products=${product.id}`)}
+        >
+          <MessageSquareText size={14} /> Ask AI — dossier externe
+        </MenuItem>
+        <MenuItem
+          disabled={!p.canEdit}
+          onSelect={() => router.push(`/w/${p.workspaceId}/saas/${product.slug}#internal-analysis`)}
+        >
+          <BarChart3 size={14} /> Ouvrir l’analyse interne
         </MenuItem>
       </Menu>
       {notice ? (

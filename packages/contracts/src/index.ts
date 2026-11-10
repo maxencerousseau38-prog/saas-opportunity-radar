@@ -11,4 +11,5 @@ export * from "./analysis";
 export * from "./discovery";
 export * from "./agents/opportunity";
 export * from "./ops";
+export * from "./external-research";
 export * from "./env";

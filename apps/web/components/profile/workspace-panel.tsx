@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BarChart3, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, Select, Textarea } from "@/components/ui/field";
 import { ErrorNote } from "@/components/ui/states";
@@ -84,13 +84,7 @@ export function WorkspacePanel(props: {
           <Star size={14} className={state.is_favorite ? "fill-warning text-warning" : ""} />
           {state.is_favorite ? "Favori" : "Ajouter aux favoris"}
         </Button>
-        <Button disabled title="Disponible avec le moteur d’analyse (Sprint 5)">
-          <BarChart3 size={14} /> Analyser avec l’IA
-        </Button>
       </div>
-      <p className="text-xs text-muted">
-        L’analyse IA (score, confiance, verdict) arrive au Sprint 5.
-      </p>
       <Field label="Statut" htmlFor="ws-status">
         <Select
           id="ws-status"

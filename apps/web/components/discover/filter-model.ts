@@ -3,6 +3,8 @@
 import type { CatalogFilters, ResearchPreferences } from "@sor/contracts";
 import {
   AGE_BUCKETS,
+  ACQUISITION_CHANNEL,
+  ACQUISITION_CHANNEL_STATUS,
   BILLING_MODEL,
   COMMERCIAL_VALIDATION,
   COMPANY_PROFILE,
@@ -172,6 +174,41 @@ export function activeChips(f: CatalogFilters, categoryName: (slug: string) => s
     unknownChip("cp", "Profil", (x) => ({
       ...x,
       company_profile: x.company_profile && { ...x.company_profile, include_unknown: false },
+    }));
+
+  f.acquisition_channels?.values.forEach((v) =>
+    chips.push({
+      key: `acq:${v}`,
+      label: `Acquisition · ${ACQUISITION_CHANNEL[v] ?? v}`,
+      remove: (x) => ({
+        ...x,
+        acquisition_channels: x.acquisition_channels && {
+          ...x.acquisition_channels,
+          values: without(x.acquisition_channels.values, v),
+        },
+      }),
+    }),
+  );
+  f.acquisition_channels?.statuses.forEach((v) =>
+    chips.push({
+      key: `acq-status:${v}`,
+      label: `Canal · ${ACQUISITION_CHANNEL_STATUS[v] ?? v}`,
+      remove: (x) => ({
+        ...x,
+        acquisition_channels: x.acquisition_channels && {
+          ...x.acquisition_channels,
+          statuses: without(x.acquisition_channels.statuses, v),
+        },
+      }),
+    }),
+  );
+  if (f.acquisition_channels?.include_unknown)
+    unknownChip("acq", "Acquisition Channels", (x) => ({
+      ...x,
+      acquisition_channels: x.acquisition_channels && {
+        ...x.acquisition_channels,
+        include_unknown: false,
+      },
     }));
 
   f.configurable_exclusions.forEach((v) =>

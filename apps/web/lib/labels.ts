@@ -38,12 +38,12 @@ export const SORTS: Array<{ value: string; label: string; disabled?: string }> =
   {
     value: "least_analyzed",
     label: "Les moins analysés",
-    disabled: "Disponible avec les analyses (Sprint 5)",
+    disabled: "Tri non disponible actuellement",
   },
   {
     value: "ai_potential",
     label: "Potentiel IA",
-    disabled: "Disponible avec les analyses (Sprint 5)",
+    disabled: "Tri non disponible actuellement",
   },
 ];
 
@@ -83,6 +83,26 @@ export const COMPANY_PROFILE: Record<string, string> = {
   bootstrapped: "Autofinancée",
   subsidiary_or_group: "Filiale ou groupe",
   unknown: "Profil inconnu",
+};
+export const ACQUISITION_CHANNEL: Record<string, string> = {
+  x: "X",
+  reddit: "Reddit",
+  seo: "SEO",
+  linkedin: "LinkedIn",
+  product_hunt: "Product Hunt",
+  community: "Communautés",
+  content: "Contenu",
+  partnerships: "Partenariats",
+  paid_advertising: "Publicité payante",
+  referral: "Recommandation",
+  direct: "Accès direct",
+  other: "Autre canal",
+};
+export const ACQUISITION_CHANNEL_STATUS: Record<string, string> = {
+  confirmed: "Confirmé",
+  declared: "Déclaré",
+  estimated: "Estimé",
+  unknown: "Inconnu",
 };
 export const CONFIGURABLE_EXCLUSIONS: Record<string, string> = {
   b2c_only: "SaaS uniquement B2C",

@@ -1,6 +1,6 @@
 # Deployment — worker on Render (PD-27)
 
-**Status (6 November 2026):** prepared, **not deployed**. No Render service,
+**Status (7 November 2026):** prepared, **not deployed**. No Render service,
 no Supabase project and no paid resource exists or was created. Every step
 marked **[product owner]** creates or changes a paid resource and needs the
 product owner's explicit approval.
@@ -155,8 +155,25 @@ If the operator loses the authenticator app: in the Supabase dashboard,
 Authentication → Users → the operator → remove the TOTP factor; the next
 visit to `/operator` starts a new enrolment. Never share the enrolment key.
 
-## 8. Not covered yet (rest of Sprint 7)
+## 8. Remaining work in Sprint 7
 
-Web deployment on Vercel (region `fra1`), host-side log alert configuration
-(needs staging), security and RLS review, backups and restore drill, load
-and failure-mode tests, remaining operational runbooks.
+Status as of 7 November 2026, based on the repository's sprint notes:
+
+- **S7.1--S7.4:** implementation and CI validation are recorded in
+  `CLAUDE.md`, `docs/IMPLEMENTATION_BLUEPRINT.md` and
+  `docs/SECURITY_REVIEW.md`. Hosted security settings are still a checklist;
+  no hosted project exists in this repository's deployment setup.
+- **S7.5a:** resilience scenarios F1--F3, F6--F8 and F10--F11 are recorded
+  as CI-validated.
+- **S7.5b:** scenarios F4--F5, F9 and F12--F13 and the atomic agent-step
+  guard are implemented, with tests wired into CI. Do not call this slice
+  validated until a green CI run for the current revision is confirmed.
+- **S7.5c:** catalog load tests at 2K, 10K and 50K products and the results
+  report have not started.
+- **After S7.5c:** backup and restore drill, staging deployment, host-side
+  log alert configuration (requires staging), and remaining operational
+  runbooks.
+
+The security/RLS review and failure-mode work are not listed as outstanding:
+the review is S7.4, and the implemented failure-mode scenarios are S7.5a--b.
+No current CI run was checked while updating this runbook.

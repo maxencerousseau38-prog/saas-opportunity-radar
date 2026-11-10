@@ -12,6 +12,8 @@ export interface CspOptions {
   dev?: boolean;
   /** Served over HTTPS: upgrade any stray http subresource. */
   https?: boolean;
+  /** Exact Supabase project origin, allowed for browser Auth recovery. */
+  supabaseOrigin?: string;
   /** Where browsers send violation reports. */
   reportUri?: string;
 }
@@ -29,8 +31,11 @@ export function buildCsp(o: CspOptions): string {
     // Product logos are external public images (no credentials, no referrer).
     ["img-src", ["'self'", "data:", "blob:", "https:"]],
     ["font-src", ["'self'", "data:"]],
-    // The browser only talks to this origin (Supabase is called server-side).
-    ["connect-src", ["'self'", ...(o.dev ? ["ws:"] : [])]],
+    // Browser Auth calls are limited to this app and its configured Supabase project.
+    [
+      "connect-src",
+      ["'self'", ...(o.supabaseOrigin ? [o.supabaseOrigin] : []), ...(o.dev ? ["ws:"] : [])],
+    ],
     ["object-src", ["'none'"]],
     ["base-uri", ["'self'"]],
     ["form-action", ["'self'"]],
@@ -47,7 +52,7 @@ export function buildCsp(o: CspOptions): string {
 /** Response header carrying the policy: enforced (S7.4c, PD-33). */
 export const CSP_HEADER = "Content-Security-Policy";
 
-/** A fresh nonce per response (128 random bits, base64). */
+/** A fresh 128-bit nonce per response (base64). */
 export function newNonce(): string {
   const bytes = new Uint8Array(16);
   crypto.getRandomValues(bytes);

@@ -21,7 +21,7 @@ export async function searchCatalog(
   client: DbClient,
   p: CatalogSearchParams,
 ): Promise<CatalogSearchRow[]> {
-  const { data, error } = await client.rpc("catalog_search", {
+  const { data, error } = await client.rpc("catalog_search_v2", {
     p_workspace_id: p.workspaceId,
     p_plan: p.plan,
     p_sort: p.sort,
@@ -40,12 +40,21 @@ export async function countCatalog(
   workspaceId: string,
   plan: Json,
 ): Promise<number> {
-  const { data, error } = await client.rpc("catalog_count", {
+  const { data, error } = await client.rpc("catalog_count_v2", {
     p_workspace_id: workspaceId,
     p_plan: plan,
   });
   if (error) throw mapPostgresError(error);
   return Number(data ?? 0);
+}
+
+export async function discoverMetadata(client: DbClient, productIds: string[]) {
+  if (productIds.length === 0) return [];
+  const { data, error } = await client.rpc("catalog_discover_metadata", {
+    p_product_ids: productIds,
+  });
+  if (error) throw mapPostgresError(error);
+  return data ?? [];
 }
 
 export async function listCategories(client: DbClient) {

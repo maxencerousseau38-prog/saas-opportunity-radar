@@ -677,6 +677,26 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"external_research_sessions": {
+                  Row: {
+                    "answer_text": string | null,"context_json": NonNullable<Json>,"context_version": string,"created_at": string,"created_by": string,"destination": string,"id": string,"included_sections": (string)[],"notes": string | null,"prompt_text": string,"prompt_version": string,"status": string,"strategy": string,"subject_snapshot": NonNullable<Json>,"subject_type": string,"updated_at": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "answer_text"?: string | null,"context_json": NonNullable<Json>,"context_version": string,"created_at"?: string,"created_by": string,"destination": string,"id"?: string,"included_sections"?: (string)[],"notes"?: string | null,"prompt_text": string,"prompt_version": string,"status"?: string,"strategy": string,"subject_snapshot": NonNullable<Json>,"subject_type": string,"updated_at"?: string,"workspace_id": string
+                  }
+                  Update: {
+                    "answer_text"?: string | null,"context_json"?: NonNullable<Json>,"context_version"?: string,"created_at"?: string,"created_by"?: string,"destination"?: string,"id"?: string,"included_sections"?: (string)[],"notes"?: string | null,"prompt_text"?: string,"prompt_version"?: string,"status"?: string,"strategy"?: string,"subject_snapshot"?: NonNullable<Json>,"subject_type"?: string,"updated_at"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "external_research_sessions_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"feedback_problem_embeddings": {
                   Row: {
                     "created_at": string,"dimensions": number,"embedding": string,"embedding_model": string,"problem_id": string
@@ -1181,6 +1201,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"product_acquisition_channels": {
+                  Row: {
+                    "channel_category": string,"channel_key": string,"confidence": number | null,"created_at": string,"evidence_id": string | null,"fact_status": Database["public"]['Enums']["fact_status"],"id": string,"inference_rationale": string | null,"is_current": boolean,"method": string,"observed_at": string,"product_id": string,"role": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "channel_category": string,"channel_key": string,"confidence"?: number | null,"created_at"?: string,"evidence_id"?: string | null,"fact_status": Database["public"]['Enums']["fact_status"],"id"?: string,"inference_rationale"?: string | null,"is_current"?: boolean,"method": string,"observed_at"?: string,"product_id": string,"role": string
+                  }
+                  Update: {
+                    "channel_category"?: string,"channel_key"?: string,"confidence"?: number | null,"created_at"?: string,"evidence_id"?: string | null,"fact_status"?: Database["public"]['Enums']["fact_status"],"id"?: string,"inference_rationale"?: string | null,"is_current"?: boolean,"method"?: string,"observed_at"?: string,"product_id"?: string,"role"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "product_acquisition_channels_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "product_acquisition_channels_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"product_categories": {
                   Row: {
                     "category_id": string,"confidence": number | null,"is_primary": boolean,"product_id": string
@@ -1273,6 +1319,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     },{
       foreignKeyName: "product_integrations_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"product_visual_assets": {
+                  Row: {
+                    "alt_text": string,"asset_type": string,"confidence": number | null,"content_hash": string,"created_at": string,"delivery_path": string | null,"evidence_id": string,"id": string,"is_current": boolean,"is_primary": boolean,"observed_at": string,"product_id": string,"rights_basis": string,"rights_status": string,"source_url": string,"verification_status": Database["public"]['Enums']["verification_status"]
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "alt_text": string,"asset_type": string,"confidence"?: number | null,"content_hash": string,"created_at"?: string,"delivery_path"?: string | null,"evidence_id": string,"id"?: string,"is_current"?: boolean,"is_primary"?: boolean,"observed_at"?: string,"product_id": string,"rights_basis": string,"rights_status": string,"source_url": string,"verification_status"?: Database["public"]['Enums']["verification_status"]
+                  }
+                  Update: {
+                    "alt_text"?: string,"asset_type"?: string,"confidence"?: number | null,"content_hash"?: string,"created_at"?: string,"delivery_path"?: string | null,"evidence_id"?: string,"id"?: string,"is_current"?: boolean,"is_primary"?: boolean,"observed_at"?: string,"product_id"?: string,"rights_basis"?: string,"rights_status"?: string,"source_url"?: string,"verification_status"?: Database["public"]['Enums']["verification_status"]
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "product_visual_assets_evidence_id_fkey"
+      columns: ["evidence_id"]
+isOneToOne: false
+      referencedRelation: "evidence_items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "product_visual_assets_product_id_fkey"
       columns: ["product_id"]
 isOneToOne: false
       referencedRelation: "saas_products"
@@ -1624,7 +1696,20 @@ isOneToOne: true
             "catalog_count":
 { Args: { "p_plan": Json,"p_workspace_id": string }; Returns: number
                            },
+"catalog_count_v2":
+{ Args: { "p_plan": Json,"p_workspace_id": string }; Returns: number
+                           },
+"catalog_discover_metadata":
+{ Args: { "p_product_ids": (string)[] }; Returns: {
+              "acquisition_channels": Json,"product_id": string,"visual_asset": Json
+            }[]
+                           },
 "catalog_search":
+{ Args: { "p_after_id"?: string,"p_after_value"?: number,"p_limit"?: number,"p_plan": Json,"p_seed"?: number,"p_sort"?: string,"p_workspace_id": string }; Returns: {
+              "billing_models": (Database["public"]['Enums']["billing_model"])[],"categories": Json,"country_code": string,"customer_type": Database["public"]['Enums']["customer_type"],"employee_max": number,"employee_min": number,"id": string,"in_collection": boolean,"is_favorite": boolean,"is_hidden": boolean,"last_viewed_at": string,"logo_url": string,"name": string,"pricing_status": Database["public"]['Enums']["pricing_status"],"short_description": string,"slug": string,"sort_value": string,"start_year": number,"tagline": string,"website_url": string,"workspace_status": Database["public"]['Enums']["opportunity_status"]
+            }[]
+                           },
+"catalog_search_v2":
 { Args: { "p_after_id"?: string,"p_after_value"?: number,"p_limit"?: number,"p_plan": Json,"p_seed"?: number,"p_sort"?: string,"p_workspace_id": string }; Returns: {
               "billing_models": (Database["public"]['Enums']["billing_model"])[],"categories": Json,"country_code": string,"customer_type": Database["public"]['Enums']["customer_type"],"employee_max": number,"employee_min": number,"id": string,"in_collection": boolean,"is_favorite": boolean,"is_hidden": boolean,"last_viewed_at": string,"logo_url": string,"name": string,"pricing_status": Database["public"]['Enums']["pricing_status"],"short_description": string,"slug": string,"sort_value": string,"start_year": number,"tagline": string,"website_url": string,"workspace_status": Database["public"]['Enums']["opportunity_status"]
             }[]

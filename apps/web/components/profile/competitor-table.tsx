@@ -140,7 +140,7 @@ export function CompetitorTable({
           Comparer la sélection ({selected.length + 1})
         </Link>
         <span className="text-xs text-muted">
-          La comparaison par l’IA arrive avec le moteur d’analyse (Sprint 5).
+          La comparaison assistée par l’IA n’est pas disponible dans cette version.
         </span>
       </div>
     </div>

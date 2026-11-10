@@ -5539,10 +5539,27 @@ agent-step start (`sor_step_start`, closes the S7.5a window), API outage
 (F4), real PostgreSQL restart (F5), source faults (F9, with the fix: a
 transient source failure on the last attempt gives `partial` instead of a
 dead letter), SIGTERM under load in a real process (F13), API isolation
-sweep over every workspace route (F12). Next: load tests and report (S7.5c).
+sweep over every workspace route (F12). Next: execute the PostgreSQL and
+PostgREST catalog load benchmarks and record their results (S7.5c).
 
-Remaining Sprint 7 after S7.5: backups and restore drill; staging
-deployment; operational runbooks.
+**Sprint 7 status (7 November 2026):** S7.1--S7.4 are recorded as
+implemented and validated by CI in the project status documents. S7.5a is
+recorded as CI-validated. S7.5b is implemented, including its resilience
+scenarios and API-isolation sweep. The recorded successful [CI run
+42387823113](https://github.com/maxencerousseau38-prog/saas-opportunity-radar/actions/runs/42387823113)
+is for `cb45f8724a2b6911550b50b622bc8a5b48b679dc`. The current repository
+HEAD is `a80aec42395aca07ddb4666bcb5a890a9e9f9fae`; a read-only GitHub check
+lookup returned no statuses or workflow runs for that SHA, so its CI state
+is not verified.
+**S7.5c benchmark harness is implemented** in `scripts/benchmark-catalog.mjs`
+with SQL seed/read/cleanup and verification scripts and `docs/S7.5C_BENCHMARK.md`.
+Node 26.13.0 generation/serialization measurements were reproduced twice with
+matching output hashes. PostgreSQL and PostgREST measurements and live cleanup
+checks remain unverified: the current Windows Docker client cannot reach the
+Docker Engine named pipe, Supabase CLI is not on PATH, and no application
+`.env.local` is present. S7.5c is not validated yet. After S7.5c, the
+remaining work is the backup/restore drill, staging deployment, and operational
+runbooks.
 
 -   **[ASSUMPTION]** Render plan IDs follow the Blueprint reference
     (`0.5c-512mb` = former "Starter"); to verify when the service is created.
@@ -5556,8 +5573,12 @@ deployment; operational runbooks.
     and with the PD-24 budgets. Host-side log alerts (Render) are to be
     configured by the product owner once staging exists.
 
--   Remaining: security and RLS review; load and failure-mode tests;
-    backups and restore drill; staging deployment; operational runbooks.
+-   **Current remaining work:** execute and record PostgreSQL/Supabase S7.5c
+    benchmarks and live cleanup/isolation checks on the local PostgreSQL 17
+    stack; backup and restore drill; staging deployment; operational runbooks. Security and
+    RLS review is covered by S7.4. Failure-mode scenarios F1--F13 are covered
+    by S7.5a--S7.5b; S7.5b's current-revision CI result still needs
+    confirmation.
 
 Done when the application handles retries, source/provider outages,
 worker restarts, duplicate requests and workspace isolation predictably.
@@ -5742,45 +5763,147 @@ that was unreachable.
 | E1 | No Docker daemon / Supabase CLI in the cloud session | Verified | DB tests in CI or locally | TB §14, PD-01 |
 | D1--D11 | Audit decisions | --- | ADR-000 to ADR-014; register | `docs/ADR/README.md` |
 
-# Appendix B --- PRD coverage (nothing dropped)
+# Appendix B --- PRD traceability and delivery status
 
-| PRD section | Feature | Phase | Sprint | Specified in |
-|---|---|---|---|---|
-| §2 | Seven spaces and navigation | MVP | S2, S4--S6 | TB §13; PD-19 for cluster/comparator placement |
-| §3.2 | Card content (logo … site) | MVP | S2 | §10 catalog DTOs |
-| §3.3 | Feed, Grid, List | Feed + grid MVP (PRD §18); List also built in S2 (PRD §3.3, low cost) | S2 | §15 S2 |
-| §3.4 | Card actions incl. hide, report, analyse | MVP | S2 (analyse S5) | M3, §10 |
-| §3.5 | Ten sort orders, pagination without duplicates | MVP | S2 | §4.3, §10 |
-| §4.1 | Text search; semantic search | MVP text; Phase 2 semantic | S2; Phase 2 | §4.3; §15 |
-| §4.2 A--O | Filter catalogue | MVP subset PD-16; rest Phase 2 | S2+ | §4.3 |
-| §4.3 | AND/OR, unknown handling, count, saved/duplicated searches | MVP | S2 | §4.3, §10 |
-| §5.2--5.6 | Profile header, general, product, commercial, traction | MVP | S2--S3 | M2, §6.6 |
-| §5.7 | Product analysis (strengths/weaknesses) | MVP | S5 | §8.2 |
-| §5.8 | Reviews and structured problems | MVP | S3--S4 | M2, M6, §7 |
-| §5.9 | Competitors, alternatives, table, AI comparison | MVP table; AI comparison Phase 2 | S2, S5; Phase 2 | M2, §8.5, §8.11 |
-| §5.10 | Sources and reliability per field | MVP | S2--S3 | M2 provenance |
-| §6.1--6.4 | AI Discovery engine and run page | MVP | S6 | §6 |
-| §6.5 | Recurring searches | Phase 2 | --- | §6.9 |
-| §7.1--7.3 A--C, E--I | Opportunity analysis phases | MVP | S5 | §8 |
-| §7.2 | Analysis from category, competitor set, cluster, cross-cutting problem | MVP | S5 | M7, §8.1 |
-| §7.3 D | Cross-Competitor Pain Intelligence | MVP | S4 | §7 |
-| §8 | Scoring, thresholds, confidence, transversal scoring | MVP | S5 | §9 |
-| §9 | Report format | MVP (exportable) | S5 | §8.10, PD-18 |
-| §10 | Favourites, collections, notes, tags, history, scores, statuses, comparison | MVP | S2, S5 | M3, §10 |
-| §10.3 | Statuses for SaaS and for generated opportunities | MVP | S2, S4 | M3, M6, PD-04 |
-| §11 | Comparator for SaaS and for generated opportunities (simple; AI) | MVP simple (products S2, opportunities S5); Phase 2 AI for both | S2, S5; Phase 2 | §10, §8.11 |
-| §12.1--12.13 | Data model | MVP | S1--S5 | §2.3 mapping |
-| §12.14 | Validation experiments | Phase 3 (tracking) | Phase 3 | M9 |
-| §13.1--13.2 | Sources and reliability hierarchy | MVP (limited connectors) | S3+ | M2, §5.1, ADR-013 |
-| §13.3 | Differentiated refresh, cluster history | Phase 2 (refresh); MVP (cluster snapshots) | S4; Phase 2 | §13, M6 |
-| §14.1--14.2 | Research and AI preferences | MVP | S2 (S4 for AI) | M3, §4.5 |
-| §14.3 | Source status and quotas | MVP | S3 | M2 `sources`, §10 |
-| §14.4 | Export, delete searches/analyses, CSV/JSON | MVP | S2, S5, S7 | §10 |
-| §15 | Three separated engines, shared components, provider-neutral AI | MVP | S3--S6 | TB §4, §9 |
-| §16 | Security, reliability and quality requirements 1--21 | MVP | all | §0 rules, M2, §5.4, §7.4, §9 |
-| §17 | Design principles (dark mode first, premium, responsive) | MVP | S2+ | TB §13 |
-| §19 | Acceptance criteria | MVP | S2--S6 | §6.9, §7.5, §14 |
-| §20 | Performance indicators | MVP (views) | S7 | §13 |
-| §21 | Locked decisions | --- | --- | ADR-000 to ADR-014 |
-| §22 | Envisaged stack ("à confirmer") | --- | --- | TB, ADR-001, ADR-011 |
-| §23 | Two end-to-end journeys | MVP | S2--S6 | §14 E2E |
+`docs/PRODUCT_REQUIREMENTS.md` remains the functional source of truth (ADR-000).
+The phase and sprint columns below describe planned scope; they do not imply
+that a feature is implemented or validated. “Validation recorded” refers to
+test/CI evidence documented in this repository and was not re-run while making
+this documentation correction. Simulated-provider or synthetic-fixture tests
+do not satisfy a real-use acceptance gate.
+
+Status terms: **Implemented** means the corresponding code path is present;
+**Partial** means only the listed subset is present; **Specified only** means a
+requirement is specified but no implementation was found; **Not implemented**
+means it is planned for a later phase. “Not validated for real use” is kept
+separate from implementation and fixture-test status.
+
+| PRD section | Requirement | Phase / sprint | Specified in | Repository implementation status | Validation status recorded in repository |
+|---|---|---|---|---|---|
+| §2 | Seven spaces and navigation | MVP | TB §13; PD-19 for cluster/comparator placement | Implemented across S2 and S4--S6 | E2E journeys recorded; no fresh run in this audit |
+| §3.2 | Card content (logo … site) | MVP | §10 catalog DTOs | Implemented per S2 status | Catalog E2E recorded; no fresh run |
+| §3.3 | Feed, Grid, List | Feed + Grid MVP; List specified by §3.3 and built in S2 | §15 S2 | Implemented | Catalog E2E recorded; no fresh run |
+| §3.4 | Card actions incl. hide, report, analyse | MVP; analysis added S5 | M3, §10 | Implemented | Catalog/analysis E2E recorded; no fresh run |
+| §3.5 | Ten sort orders and pagination without duplicates | MVP | §§4.3, 10 | **Partial:** `least_analyzed` and `ai_potential` are rejected by the API; the other sort keys are supported | Pagination/search tests recorded; the two missing sorts are not validated. PRD requirement remains open, not reclassified to a later phase |
+| §4.1 | Text search; semantic search | Text MVP; semantic Phase 2 | §4.3; §15 | Text search implemented; catalog semantic search not implemented | French text-search tests recorded; semantic search not validated/implemented |
+| §4.2 A--O | Filter catalogue | MVP subset per PD-16; remaining groups/subfilters Phase 2 per accepted scope | §4.3; PD-16 in ADR register | **Partial:** MVP groups implemented; unsupported groups and subfilters are rejected rather than ignored | Unit/database filter tests recorded; Phase 2 filters not implemented |
+| §4.3 | AND/OR, unknown handling, count, saved/duplicated searches | MVP | §§4.3, 10 | Implemented for supported filters | Unit/database/E2E coverage recorded; no fresh run |
+| §5.2--5.6 | Profile header, general, product, commercial and traction data | MVP | M2, §6.6 | Profile and evidence model implemented; coverage depends on manual/imported/site data | Fixture/E2E coverage recorded; completeness of a real catalogue not validated |
+| §5.7 | Product analysis (strengths/weaknesses) | MVP | §8.2 | Implemented with simulated provider | Fixture/evaluation tests recorded; real-agent quality gate not met (PD-24a, PD-22) |
+| §5.8 | Reviews and structured problems | MVP | M2, M6, §7 | CSV feedback and problem pipeline implemented; no review-source connector is active | Synthetic/CSV integration tests recorded; authorized external feedback collection not validated |
+| §5.9 | Competitors, alternatives, table and AI comparison | MVP table; AI comparison Phase 2 | M2, §§8.5, 8.11 | Comparison table implemented; AI comparison deferred to Phase 2 | Table journey recorded; AI comparison not implemented/validated |
+| §5.10 | Sources and reliability per field | MVP | M2 provenance | Evidence/provenance implemented; connectors remain limited | Database and connector fixture tests recorded; production source use not validated |
+| §6.1--6.4 | AI Discovery engine and run page | MVP | §6 | Implemented with simulated provider, seed URLs/CSV and controlled official-site rebound; Hacker News remains disabled | Synthetic/fixture tests recorded; real-use gate not met (PD-24a, PD-22, source activation) |
+| §6.5 | Recurring searches | Phase 2 | §6.9 | Not implemented | Not applicable to current MVP; no validation recorded |
+| §7.1--7.3 A--C, E--I | Opportunity analysis phases | MVP | §8 | Implemented with simulated provider; analysis does not collect new market evidence | Fixture/integration/E2E tests recorded; real-agent and real-market research gates not met |
+| §7.2 | Analysis from category, competitor set, cluster or cross-cutting problem | MVP | M7, §8.1 | Analysis subjects implemented | Synthetic/integration coverage recorded; real-use quality not validated |
+| §7.3 D | Cross-Competitor Pain Intelligence | MVP | §7 | Engine implemented for available/imported feedback | Synthetic/CSV tests recorded; external-source coverage and real clustering quality not validated |
+| §8 | Scoring, thresholds, confidence and transversal scoring | MVP | §9; ADR-005 | Deterministic score, coverage and verdict rules implemented | Unit/database tests recorded for rule invariants; model-assessment quality not validated with a real provider |
+| §9 | Report format | MVP, exportable | §8.10; PD-18 | Report implemented; JSON/Markdown report exports available | Fake-provider fixtures and export journeys recorded; real content quality not validated |
+| §10, §10.3 | Favourites, collections, notes, tags, history, scores and statuses | MVP | M3, M6, §10; ADR-014 | Implemented for products and generated opportunities as specified | Database/E2E coverage recorded; no fresh run |
+| §11 | Comparator for SaaS and generated opportunities (simple; AI) | Simple comparator MVP; AI comparison Phase 2 | §10, §8.11 | Simple comparator implemented; AI comparison deferred. Generated-opportunity comparison is not established as a validated AI capability | Product comparison journey recorded; AI comparison not implemented/validated |
+| §12.1--12.13 | Data model | MVP | §2.3 mapping | Core schema implemented across migrations M1--M8 | pgTAP/database tests recorded; no fresh run |
+| §12.14 | Validation experiments | Phase 3 | M9 | Not implemented | Not applicable to current phase |
+| §13.1--13.2 | Sources and reliability hierarchy | MVP with limited connectors | M2, §5.1, ADR-013 | Policy and source registry implemented; approved connectors remain limited and none is enabled in production per source status docs | Connector/database fixture tests recorded; production acquisition not validated |
+| §13.3 | Differentiated refresh and cluster history | Refresh Phase 2; cluster snapshots MVP | §13, M6 | Cluster snapshots/history implemented; scheduled product refresh not implemented | Cluster-history tests recorded; refresh not validated/implemented |
+| §14.1--14.2 | Research and AI preferences | MVP | M3, §4.5 | Settings/contracts implemented; real provider/model choices remain pending PD-24 | Settings E2E recorded; real model controls cannot be validated before PD-24 |
+| §14.3 | Source status and quotas | MVP | M2 `sources`, §10 | Implemented; source registry and quota display exist | Database/E2E coverage recorded; hosted source activation not validated |
+| §14.4 | Export data; delete searches/analyses; CSV/JSON | MVP | §10 API (`POST W/exports`, `data_export`) | **Partial:** saved-search/analysis deletion and report JSON/Markdown export exist; workspace-wide CSV/JSON data export is specified but no implementation was found | Deletion/report-export tests recorded; workspace data export not implemented or validated |
+| §15 | Three separated engines, shared components and provider-neutral AI | MVP | TB §§4, 9 | Engine packages and gateway implemented; worker currently uses the fake provider | Unit/integration tests recorded; real-provider operation not validated |
+| §16 | Security, reliability and quality requirements 1--21 | MVP | §0, M2, §§5.4, 7.4, 9 | Many controls implemented; hosted configuration remains pending | S7.4 CI validation is recorded; hosted controls and deployment remain unvalidated |
+| §17 | Design principles (dark mode first, premium, responsive) | MVP | TB §13 | UI implemented | E2E journeys recorded; no fresh run in this audit |
+| §19 | Product acceptance criteria | MVP | §§6.9, 7.5, 14 | Test suites and acceptance rules are specified | Synthetic/fake-provider tests exist; real-source and real-agent acceptance gates for S3--S6 remain unmet |
+| §20 | Product performance indicators | MVP | §13 | **Specified only:** Blueprint describes SQL views, but no corresponding view or complete KPI implementation was found in migrations/code. S7.3 operational monitoring is a separate capability | Product indicators are not verified; catalog load benchmarks are pending S7.5c and do not validate these KPIs |
+| §21 | Locked product decisions | Reference | ADR-000 to ADR-014; ADR register | Decisions are registered; PD-11 documents the interpretation of the PRD’s commission wording | Decision status is documented; no new decision is made by this mapping |
+| §22 | Envisaged stack (“à confirmer”) | Architecture | TB; ADR-001, ADR-011 | Stack selected and represented in code/configuration | CI and local database evidence are recorded; hosted deployment not validated |
+| §23 | Two end-to-end journeys | MVP | §14 E2E | Demo journeys implemented across S2--S6 | E2E coverage uses labelled fixtures/simulated providers; complete real-use journey not validated |
+
+## Appendix C — Master Product Completion V1 implementation slice (8 November 2026)
+
+This supplement records the product-owner instruction in the attached
+“Master Product Completion V1” brief. It does not amend or duplicate the
+functional reference in `docs/PRODUCT_REQUIREMENTS.md` and does not change
+the provider-neutral internal AI gateway or its pending PD-24 decisions.
+See [ADR-015](ADR/ADR-015-manual-external-ai-research-handoff.md).
+
+| Area | Implemented in this slice | Not implemented or not validated |
+|---|---|---|
+| Discover visual | Product cards display the catalogued logo when present, primary category, and an explicit “Capture d’interface non disponible” fallback. No interface screenshot was fabricated. | The catalog has no approved product screenshot source or screenshot field; authentic product UI imagery remains unavailable. |
+| Ask AI handoff | A workspace page supports a product or a set of up to five catalog products, six fixed strategies, four official assistant destinations, a preview of the bounded catalog context, optional features/pricing/feedback/competitor sections, copy-and-open handoff, and manual answer import as an unverified workspace note. | No assistant API call, account-session automation, custom strategy builder, cluster/opportunity subject context, reusable strategy library, or true cross-product pain-cluster computation. The cross-competitor prompt can only reason over the selected catalog snapshots and bounded feedback samples. |
+| Workspace security | Read access is workspace-scoped by RLS. Server routes authorize workspace membership before service-role writes; session edits/deletion are limited to the creator or workspace owner/admin. Imported text is not catalog evidence and does not update internal engines. | Migration and pgTAP tests have been authored but not applied or run. Security behavior is not runtime-validated. |
+| Validation | Contract and prompt unit tests, Ask AI context/selection E2E coverage, and the external-research pgTAP file are present. The profile journey now checks that the real internal analysis dialog opens. | On Node 26.13.0 with dependencies present: `pnpm typecheck`, `pnpm test` (434 tests), `pnpm lint`, and `pnpm build` pass; build required the webpack backend and elevated filesystem access after Windows returned `EPERM`. Lint reports the existing Next Pages-directory warning. `pnpm format:check` fails on 442 files; unrelated files were not reformatted. `node scripts/check-migrations.mjs HEAD` passes for 18 migrations. Playwright E2E and pgTAP were not run: Docker Engine is unreachable, Supabase CLI is absent from PATH, and no local web environment file is present. A GitHub lookup found no CI statuses/runs for current HEAD `a80aec42395aca07ddb4666bcb5a890a9e9f9fae`; the previous successful run is on `cb45f8724a2b6911550b50b622bc8a5b48b679dc`. |
+
+The slice is therefore **implemented in source and unit/build validated, but
+not yet runtime validated against Supabase or through Playwright**. The
+existing internal engines, scoring rules, and product requirements remain
+unchanged. A local Supabase-backed E2E and pgTAP run is still required before
+claiming the complete handoff flow or RLS behavior operational.
+
+## Appendix D — PRD V1.2 / Discover V2 blueprint
+
+This appendix is a proposal, not implementation evidence. It preserves the existing monorepo, Supabase/RLS, provenance, safe-fetch and exclusion architecture. No migration or source activation is authorized by this plan.
+
+### Data model
+
+- `product_visual_assets`: product, asset type (`official_hero`, `product_screenshot`, `official_illustration`), source URL, first-party delivery path, alt text, observed date, content hash, rights status, verification status, confidence, primary flag and audit timestamps. Logos continue to use the existing product identity field. Select only eligible, rights-cleared assets; retain history and a removal path. Browser cards must never hotlink an external image; until an authorized first-party delivery path exists, use the honest fallback. No unqualified `hero_url` or fabricated screenshot.
+- `product_acquisition_channels`: product, normalized channel key, primary/secondary role, status (`confirmed`, `declared`, `estimated`, `unknown`), confidence, method, observed interval, linked source/evidence, summary and review timestamps. Reuse source snapshots/evidence for URL, date, reliability and rights rather than storing untraceable claims in JSON.
+- Keep Discovery Sources in the existing source registry. Keep prospective Go-to-Market recommendations in opportunity reports; never write those recommendations into a SaaS’s observed channel records.
+- Any schema change requires a forward-only migration, exact grants, RLS, server authorization, pgTAP and generated types. No migration is created by this plan.
+
+### Components and mechanisms
+
+- Reuse the shared Discover card across Feed/Grid/List. Add a source-aware Hero resolver, verified/rights-cleared display gate, accessible alt text, responsive crop, loading/error fallback and official-site link.
+- Add channel evidence review and CSV import through existing job/import patterns; each row returns a provenance-aware status. Add channel filters to the existing filter contract and saved-search serialization, preserving AND/OR and unknown semantics.
+- Resolve sources through a written review for provider, access, terms, licence, commercial use, storage, quotas, cost, field quality, update cadence, deduplication and takedown. X, Reddit, LinkedIn and Product Hunt examples do not approve connectors.
+- Visual fetch/capture must use existing SSRF/redirect/size controls and applicable robots/terms. No authentication, cookies, private pages or unrestricted crawling.
+- `confirmed` requires direct verifiable evidence; `declared` is attributable but not independently verified; `estimated` is explicitly inferential with method and evidence; `unknown` is not evidence of absence. Confidence stays separate from status and cannot silently promote a claim.
+
+### Acceptance criteria
+
+1. A SaaS can have zero or more channels, at most one primary, with secondary channels independently sourced.
+2. Every visible channel shows source, observation date, status and confidence; estimated/declared/unknown never render as confirmed.
+3. Channel filters compose with existing filters and persist in saved searches, including unknown handling.
+4. Go-to-Market hypotheses remain distinct and do not modify catalog facts.
+5. A Hero/capture renders only with eligible rights and provenance; otherwise the honest fallback appears. All views retain matching actions and product state.
+6. Keyboard, screen reader, responsive layout, reduced motion, image stability and bounded image payloads are checked.
+7. Synthetic fixtures are labelled and excluded from real catalogue totals/KPIs.
+8. Unit/contract, pgTAP, E2E and per-source fixture tests cover status, provenance, RLS, filter round-trips, asset fallbacks and connector failure states. Mocked HTTP alone does not validate production use.
+
+### Open decisions
+
+- Approve channel taxonomy, primary-channel rule, confidence scale/calibration and freshness window.
+- Approve asset types, rights/storage basis, hotlink versus cache/proxy, retention, attribution and screenshot method.
+- Decide acceptable inference methods and review/status transitions without losing history.
+- Resolve Discovery-source approvals independently (including PD-26, PD-29, PD-34 and HN terms); channel names alone grant no permission.
+- Define staged 10k then 50k ingestion quality, deduplication, exclusion and coverage gates. This is a target, not a guarantee or licence to import bulk data.
+
+### Prioritized Discover V2 plan
+
+**D0 — Product/source decisions:** approve taxonomy, statuses, asset rights/method, quality measures and synthetic-data marking. No connector activation.
+
+**D1 — Provenance contracts:** define DTOs, schemas, migration/RLS/grants and tests for both relations; preserve source-history semantics.
+
+**D2 — Authentic visual assets:** implement resolver, rights/status gate, responsive display, fallback and removal handling; use only authorized assets.
+
+**D3 — Acquisition Channels MVP:** reviewed manual/CSV input, primary/secondary channels, sourced statuses, filters and saved-search round-trip.
+
+**D4 — Discover V2 UX:** refine shared cards, Feed/Grid/List, advanced navigation/filters, responsive and accessibility states; run acceptance E2E with labelled fixtures on an isolated local stack.
+
+**D5 — Scale and source expansion:** ingest reviewed real data incrementally, audit identity/exclusions, benchmark 10k then 50k in an approved isolated environment and publish measured results only.
+
+No deployment, spend, pending-source activation or remote database change is included. Begin coding only after approval of this plan and its open decisions.
+
+### D0–D5 execution status — 8 November 2026
+
+Implementation was authorized by the product owner on 8 November 2026. This status supersedes the final sentence above for this execution only; it does not approve any connector, source terms, asset rights, collection or deployment.
+
+| Step | Actual status | Evidence / remaining gate |
+|---|---|---|
+| D0 — Product/source decisions | Partially resolved for implementation | The filter presents the PRD examples; stored channel keys are normalized but extensible, so this does not freeze the taxonomy. Category mapping, primary-channel rule, confidence calibration, freshness, inference methodology, asset rights/storage, and each connector remain decisions or approvals. |
+| D1 — Provenance contracts | Implemented in source; not database-validated | Contracts, search-plan semantics, two catalog relations, evidence-scope triggers, RLS, grants, pgTAP coverage and versioned search/count RPCs were added. The local Supabase runtime was unavailable, so no migration or pgTAP test has been applied/executed. |
+| D2 — Authentic visual assets | Resolver and display gate implemented; sourcing incomplete | Cards render only primary assets marked current, rights-approved, verified and evidence-linked. No capture, import, storage pipeline, takedown workflow or authorized asset has been verified. Honest fallback remains active. |
+| D3 — Acquisition Channels MVP | Filter/display implemented; authoring/import incomplete | Search and count support channel/status filters and explicit unknown inclusion. Cards show primary/secondary, evidence status, source, observation date and confidence. No review UI, manual/CSV authoring flow or real channel records were added. |
+| D4 — Discover V2 UX | Partially implemented; not E2E-validated | Existing Feed/Grid/List, saved searches and progressive pagination were retained; evidence-aware cards and channel filters were added with reusable UI components. Responsive/accessibility acceptance and browser flows still require a local Supabase stack. |
+| D5 — Scale/source expansion | Not started | No data was collected and no 10k/50k scale test was run. Source review and isolated-environment approval remain required. |
+
+The new migration is named `20261115090001_discover_v2_assets_and_acquisition_channels.sql` so it sorts after the repository's existing `20261115090000` migration and passes the forward-only migration guard. Supabase CLI generated the initial file at the current machine date (8 November); it is intentionally ordered by repository migration sequence, not represented as an executed or applied migration.

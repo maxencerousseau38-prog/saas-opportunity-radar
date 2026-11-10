@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, MessageSquareText } from "lucide-react";
 import { catalogRepo, pipelineRepo, workspaceRepo } from "@sor/database";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState, Unknown } from "@/components/ui/states";
@@ -157,15 +157,25 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
               <dd className="inline">{PRICING_STATUS[product.pricing_status]}</dd>
             </div>
           </dl>
-          {canEdit(membership.role) ? (
-            <div className="pt-2">
-              <AnalyzeButton
-                workspaceId={workspaceId}
-                subject={{ type: "product", product_id: product.id }}
-                defaults={defaults}
-              />
-            </div>
-          ) : null}
+          <div className="flex flex-wrap items-center gap-2 pt-2">
+            {canEdit(membership.role) ? (
+              <>
+                <Link
+                  href={`/w/${workspaceId}/ask-ai?products=${product.id}`}
+                  className="inline-flex h-9 items-center gap-2 rounded-md border border-border px-3 text-sm hover:bg-surface-2"
+                >
+                  <MessageSquareText size={15} /> Ask AI
+                </Link>
+                <div id="internal-analysis">
+                  <AnalyzeButton
+                    workspaceId={workspaceId}
+                    subject={{ type: "product", product_id: product.id }}
+                    defaults={defaults}
+                  />
+                </div>
+              </>
+            ) : null}
+          </div>
         </div>
         <WorkspacePanel
           workspaceId={workspaceId}
@@ -557,7 +567,12 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
           </ul>
         ) : (
           <EmptyState title="Aucun avis client collecté">
-            Les connecteurs d’avis et l’import de retours clients arrivent aux Sprints 3 et 4.
+            Aucun retour client n’est enregistré pour ce produit. Les imports CSV de retours sont
+            disponibles dans{" "}
+            <Link className="underline" href={`/w/${workspaceId}/settings`}>
+              Paramètres
+            </Link>
+            ; aucun connecteur d’avis externe n’est actuellement activé.
           </EmptyState>
         )}
       </Section>
