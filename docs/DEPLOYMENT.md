@@ -182,15 +182,14 @@ No current CI run was checked while updating this runbook.
 
 - **Collection** runs on GitHub runners: the *Catalog collection* workflow
   (`.github/workflows/catalog-collect.yml`, manual or on connector changes)
-  writes `data/catalog/wikidata/listings.json` and commits it. No database
+  writes `data/catalog/<source>/listings.json` (Wikidata, Uneed) and commits them. No database
   access, no secret.
 - **Local stack** (development, CI): after `supabase start` (migrations
   applied) and, if wanted, `pnpm --filter @sor/web seed:demo`:
 
   ```bash
-  pnpm --filter @sor/worker catalog:build
   SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SECRET_KEY=<local secret key> \
-    pnpm --filter @sor/worker catalog:ingest ../../data/catalog/wikidata/listings.json
+    pnpm catalog:ingest
   ```
 
   The command prints a JSON summary (created, hidden by exclusion, matched,

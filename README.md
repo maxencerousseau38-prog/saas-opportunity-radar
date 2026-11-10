@@ -24,7 +24,7 @@ pnpm test:e2e
 
 The library is fed by collected catalog sources (`docs/DATA_SOURCES.md`).
 The snapshots (`data/catalog/<source>/listings.json`: Wikidata, CC0; Uneed, official read API) are
-refreshed by the _Catalog collection_ workflow. To load it into the local
+refreshed by the _Catalog collection_ workflow. To load them into the local
 stack:
 
 ```bash
