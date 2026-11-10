@@ -51,7 +51,10 @@ test("Ask AI saves an honest external handoff and imports an unverified answer",
     .getByLabel("Réponse de l’assistant")
     .fill("Une hypothèse à vérifier, sans source primaire.");
   await page.getByRole("button", { name: "Importer et enregistrer la réponse" }).click();
-  await expect(page.getByText("Réponse importée · non vérifiée")).toBeVisible();
+  // The label also appears in the session history: check the status message.
+  await expect(
+    page.getByRole("status").filter({ hasText: "Réponse importée · non vérifiée" }),
+  ).toBeVisible();
   await expect(page.getByText(/ne met pas à jour le catalogue/)).toBeVisible();
 });
 

@@ -1,13 +1,22 @@
 import { expect, test } from "./fixtures";
 
-test("signed-out visitors are sent to the French login page", async ({ page }) => {
+test("signed-out visitors see the public read-only demo; workspaces stay protected", async ({
+  page,
+}) => {
+  // Since 8 Nov 2026 the signed-out home page is the labelled public demo.
   await page.goto("/");
-  await expect(page).toHaveURL(/\/login$/);
+  await expect(page).toHaveURL(/\/$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+  await expect(page.getByText("Démonstration publique · sans compte")).toBeVisible();
+  // A workspace page without a session leads back to the public demo.
+  await page.goto("/w/00000000-0000-4000-8000-000000000000/discover");
+  await expect(page).toHaveURL(/\/$/);
+  // The French login page offers account creation.
+  await page.goto("/login");
   await expect(
     page.getByRole("heading", { level: 1, name: "SaaS Opportunity Radar" }),
   ).toBeVisible();
-  await expect(page.getByText("l’inscription publique est désactivée")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Créer un compte" })).toBeVisible();
 });
 
 test("the API answers 401 without a session", async ({ request }) => {
