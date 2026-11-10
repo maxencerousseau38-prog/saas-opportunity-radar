@@ -1,0 +1,4285 @@
+{
+ "contract_version": "catalog-listing-1",
+ "source_key": "uneed",
+ "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+ "retrieved_at": "2026-11-10T18:09:06.618Z",
+ "queries": [
+  {
+   "key": "categories",
+   "status": "ok",
+   "rows": 5
+  },
+  {
+   "key": "launches_by_category",
+   "status": "ok",
+   "rows": 300
+  },
+  {
+   "key": "monthly_rankings",
+   "status": "ok",
+   "rows": 0
+  },
+  {
+   "key": "weekly_rankings",
+   "status": "ok",
+   "rows": 0
+  },
+  {
+   "key": "requests",
+   "status": "ok",
+   "rows": 186
+  }
+ ],
+ "listings": [
+  {
+   "source_key": "uneed",
+   "external_id": "2027-new-year-ai",
+   "source_url": "https://www.uneed.best/tool/2027-new-year-ai",
+   "name": "2027 New Year AI",
+   "description": "Turn a photo into festive New Year TikTok & Reels clips instantly",
+   "website_url": "https://www.2027newyearai.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "actonce-spend-gateway",
+   "source_url": "https://www.uneed.best/tool/actonce-spend-gateway",
+   "name": "ActOnce Spend Gateway",
+   "description": "Policy-driven spending controls for AI agents",
+   "website_url": "https://spend.actonceapi.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "adspy-sh",
+   "source_url": "https://www.uneed.best/tool/adspy-sh",
+   "name": "Adspy.sh",
+   "description": "MCP server for researching brand ads across Meta, Google, TikTok, YouTube and",
+   "website_url": "https://adspy.sh/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "aeo-action",
+   "source_url": "https://www.uneed.best/tool/aeo-action",
+   "name": "AEO Action",
+   "description": "See where AI ignores your business. Get the work done to change that.",
+   "website_url": "https://www.aeoaction.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "aftercut",
+   "source_url": "https://www.uneed.best/tool/aftercut",
+   "name": "AfterCut - Professional Screen Recording",
+   "description": "Great products don't sell themselves. Great demos do.",
+   "website_url": "https://aftercut.studio/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ai-customer-growth-toolbox",
+   "source_url": "https://www.uneed.best/tool/ai-customer-growth-toolbox",
+   "name": "AI Customer Growth Toolbox",
+   "description": "The B2B outreach system for exporters: lists to replies",
+   "website_url": "https://prospectcraft.gumroad.com/l/exportjump-toolbox",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ai-flip-room",
+   "source_url": "https://www.uneed.best/tool/ai-flip-room",
+   "name": "AI Flip Room",
+   "description": "AI virtual staging for real estate — the room keeps its real geometry",
+   "website_url": "https://aifliproom.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ai-image-editor-image-to-image-ai",
+   "source_url": "https://www.uneed.best/tool/ai-image-editor-image-to-image-ai",
+   "name": "AI Image Editor",
+   "description": "Transform, edit and enhance photos with text prompts",
+   "website_url": "https://ai-image-editor.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ai-imagetoimage",
+   "source_url": "https://www.uneed.best/tool/ai-imagetoimage",
+   "name": "AI Image to Image",
+   "description": "AI tool to transform images based on text descriptions",
+   "website_url": "https://ai-image-to-image.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ai-object-remover-1",
+   "source_url": "https://www.uneed.best/tool/ai-object-remover-1",
+   "name": "AI Object Remover",
+   "description": "Remove unwanted objects, people & text from photos instantly",
+   "website_url": "https://aiobjectremover.net/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ai-rap-video-cc",
+   "source_url": "https://www.uneed.best/tool/ai-rap-video-cc",
+   "name": "AI Rap Video.cc",
+   "description": "Create solo or duo AI rap videos from photos",
+   "website_url": "https://airapvideo.cc/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "amani",
+   "source_url": "https://www.uneed.best/tool/amani",
+   "name": "AMANI",
+   "description": "Your smart document briefcase",
+   "website_url": "https://amani.amavya.cloud/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "amling",
+   "source_url": "https://www.uneed.best/tool/amling",
+   "name": "AMLING",
+   "description": "Your schedule, your classes, your work life - organized",
+   "website_url": "https://amling.amavya.cloud/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "anymetrics",
+   "source_url": "https://www.uneed.best/tool/anymetrics",
+   "name": "AnyMetrics - API to Widget",
+   "description": "Turn any API into an iOS widget — a number, a status, or a picture.",
+   "website_url": "https://github.com/hudishkin/AnyMetrics",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "apogee-ads",
+   "source_url": "https://www.uneed.best/tool/apogee-ads",
+   "name": "Apogee Ads",
+   "description": "MCP server to launch & manage ads in bulk on Meta, TikTok, Snap, Google & more",
+   "website_url": "https://apogee.ad/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "applore",
+   "source_url": "https://www.uneed.best/tool/applore",
+   "name": "APPLORE",
+   "description": "Find app icon ideas, then make your own with AI",
+   "website_url": "https://applore.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "arvx-relationship-reading",
+   "source_url": "https://www.uneed.best/tool/arvx-relationship-reading",
+   "name": "ARVX Relationship Reading",
+   "description": "ARVX™ models both people in a relationship and recalculates its health score.",
+   "website_url": "https://developer.arvx.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "asin",
+   "source_url": "https://www.uneed.best/tool/asin",
+   "name": "Asin",
+   "description": "Track Amazon prices, drops and history with alerts",
+   "website_url": "https://www.asin.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "astra3d",
+   "source_url": "https://www.uneed.best/tool/astra3d",
+   "name": "Astra3D",
+   "description": "Turn any phone capture into walkable immersive 3D experiences.",
+   "website_url": "https://astra3d.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "athena-os-app",
+   "source_url": "https://www.uneed.best/tool/athena-os-app",
+   "name": "Athena",
+   "description": "Know what matters now. Make better decisions about where your attention goes.",
+   "website_url": "https://athenaos.net/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "avastudio",
+   "source_url": "https://www.uneed.best/tool/avastudio",
+   "name": "Avastudio for Agents",
+   "description": "Let your AI agent grow your brand on TikTok",
+   "website_url": "https://avastudio.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "b2bprospects-io",
+   "source_url": "https://www.uneed.best/tool/b2bprospects-io",
+   "name": "b2bprospectsio",
+   "description": "Extract and export B2B prospect data with Chrome extension",
+   "website_url": "https://b2bprospects.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "bank-of-todays",
+   "source_url": "https://www.uneed.best/tool/bank-of-todays",
+   "name": "Bank of Todays",
+   "description": "The World's First Bank for Life Wealth.",
+   "website_url": "https://dreamstinct.com/bank-of-todays/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "bankpilot-eu",
+   "source_url": "https://www.uneed.best/tool/bankpilot-eu",
+   "name": "Bankpilot",
+   "description": "Connect your bank to ChatGPT. Monitor payments. Master your finances.",
+   "website_url": "https://www.bankpilot.eu/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "banproof-ai",
+   "source_url": "https://www.uneed.best/tool/banproof-ai",
+   "name": "BanProof AI",
+   "description": "Compliance automation for TikTok Shop and Amazon affiliates",
+   "website_url": "https://banproof.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "blasa",
+   "source_url": "https://www.uneed.best/tool/blasa",
+   "name": "blasa",
+   "description": "Build a free multilingual website from your Google Maps reviews",
+   "website_url": "https://blasa.shop/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "blockposter-ai",
+   "source_url": "https://www.uneed.best/tool/blockposter-ai",
+   "name": "BlockPoster ai",
+   "description": "Free block poster maker, Bigger imagination.",
+   "website_url": "https://blockposter.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "borehole",
+   "source_url": "https://www.uneed.best/tool/borehole",
+   "name": "Borehole",
+   "description": "Technical due diligence, read from the repository itself",
+   "website_url": "https://borehole.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "bragly",
+   "source_url": "https://www.uneed.best/tool/bragly",
+   "name": "Bragly",
+   "description": "Auto import reviews from multiple platforms and show on website",
+   "website_url": "https://bragly.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "brickvalue",
+   "source_url": "https://www.uneed.best/tool/brickvalue",
+   "name": "Brickvalue",
+   "description": "Point your camera at any LEGO and instantly know market value in USD.",
+   "website_url": "https://brickvalue.live/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "bugcapturer",
+   "source_url": "https://www.uneed.best/tool/bugcapturer",
+   "name": "BugCapturer",
+   "description": "Chrome extension for screenshots, recordings, and error capture",
+   "website_url": "https://www.bugcapturer.com/en/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "burner-mail",
+   "source_url": "https://www.uneed.best/tool/burner-mail",
+   "name": "Burner Mail",
+   "description": "Disposable email addresses to protect your privacy",
+   "website_url": "https://burnermail.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "butterspace",
+   "source_url": "https://www.uneed.best/tool/butterspace",
+   "name": "Butterspace",
+   "description": "Simple recipe management, prep, and cost control for busy kitchen teams",
+   "website_url": "http://butter.space/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "byourb",
+   "source_url": "https://www.uneed.best/tool/byourb",
+   "name": "ByourB",
+   "description": "Own your career story. Track wins, feedback and progress with AI.",
+   "website_url": "https://www.byourb.co.uk/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "cachingout",
+   "source_url": "https://www.uneed.best/tool/cachingout",
+   "name": "CachingOut",
+   "description": "WordPress caching plugin for fast, optimized site performance",
+   "website_url": "https://cachingout.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "caesura",
+   "source_url": "https://www.uneed.best/tool/caesura",
+   "name": "Caesura",
+   "description": "Take research-backed breaks to hydrate, stretch, move, and rest your eyes",
+   "website_url": "https://caesura.rest/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "captapi",
+   "source_url": "https://www.uneed.best/tool/captapi",
+   "name": "Captapi",
+   "description": "One API + MCP server for public social media data",
+   "website_url": "https://captapi.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "cards-ai",
+   "source_url": "https://www.uneed.best/tool/cards-ai",
+   "name": "Cards AI",
+   "description": "Scan sports cards & TCGs for instant AI grading and real market values",
+   "website_url": "https://www.cardsaiapp.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "caretta-ai-assistant",
+   "source_url": "https://www.uneed.best/tool/caretta-ai-assistant",
+   "name": "Caretta AI Assistant",
+   "description": "AI customer rep trained on your website content, providing 24/7 support and",
+   "website_url": "https://caretta.cloud/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "certificatesmaker",
+   "source_url": "https://www.uneed.best/tool/certificatesmaker",
+   "name": "CertificatesMaker",
+   "description": "Create professional certificates and awards instantly",
+   "website_url": "https://certificatesmaker.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "chalkedin",
+   "source_url": "https://www.uneed.best/tool/chalkedin",
+   "name": "Chalkedin",
+   "description": "One-tap scheduling: propose times, clients confirm or reschedule.",
+   "website_url": "https://chalkedin.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "chatfuel-sdk",
+   "source_url": "https://www.uneed.best/tool/chatfuel-sdk",
+   "name": "Chatfuel SDK",
+   "description": "Your own white-label social media automation for Instagram, WhatsApp, Facebook",
+   "website_url": "https://sdk.chatfuel.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "chatgpt-bulk-delete",
+   "source_url": "https://www.uneed.best/tool/chatgpt-bulk-delete",
+   "name": "ChatGPT Bulk Delete",
+   "description": "ChatGPT Bulk DeleteWithout the one-by-one work.",
+   "website_url": "https://chatgptbulkdelete.net/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "chatgpt-plus",
+   "source_url": "https://www.uneed.best/tool/chatgpt-plus",
+   "name": "chatgpt-plus",
+   "description": "提供 ChatGPT充值服务｜帮没有美金卡的用户开通 ChatGPT Plus 和 Pro 会员。支付宝付款1-3 分钟到账。正规渠道充值有质保开发票",
+   "website_url": "https://www.chong-zhen.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "cleanair-quit-smoking-app",
+   "source_url": "https://www.uneed.best/tool/cleanair-quit-smoking-app",
+   "name": "CleanAir - Quit smoking app",
+   "description": "Free app to quit smoking with tracking and support",
+   "website_url": "https://cleanairquit.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "closingdealz-io",
+   "source_url": "https://www.uneed.best/tool/closingdealz-io",
+   "name": "ClosingDealz",
+   "description": "AI chatbot that captures leads and books meetings automatically",
+   "website_url": "https://closingdealz.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "cloudgpu",
+   "source_url": "https://www.uneed.best/tool/cloudgpu",
+   "name": "CloudGPU",
+   "description": "Rent a GPU by the minute, or let your AI agent rent one",
+   "website_url": "https://cloudgpu.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "co-founder-ai",
+   "source_url": "https://www.uneed.best/tool/co-founder-ai",
+   "name": "Co-Founder AI",
+   "description": "AI agents for research, planning, marketing, design & business execution",
+   "website_url": "https://www.get-cofounder.tech/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "coachforge-ai",
+   "source_url": "https://www.uneed.best/tool/coachforge-ai",
+   "name": "CoachForge AI",
+   "description": "Your specialized AI coach in 3 steps",
+   "website_url": "https://coachforgeia.amavya.cloud/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "college-essay-grader",
+   "source_url": "https://www.uneed.best/tool/college-essay-grader",
+   "name": "College Essay Grader",
+   "description": "AI-powered college essay grading with detailed feedback",
+   "website_url": "https://collegeessaygrader.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "corenna",
+   "source_url": "https://www.uneed.best/tool/corenna",
+   "name": "Corenna",
+   "description": "Autonomous Zero-Clone Android & iOS builds from repo's using GitHub's security",
+   "website_url": "https://corenna.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "costcodle",
+   "source_url": "https://www.uneed.best/tool/costcodle",
+   "name": "Costcodle",
+   "description": "Daily Costco price guessing game with six attempts",
+   "website_url": "https://costcodle.org/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "cozy-check-ins",
+   "source_url": "https://www.uneed.best/tool/cozy-check-ins",
+   "name": "Cozy Check-ins",
+   "description": "One tap a day so your family knows your parent is okay.",
+   "website_url": "https://cozycheckins.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "craft-apps",
+   "source_url": "https://www.uneed.best/tool/craft-apps",
+   "name": "Craft Apps",
+   "description": "Free browser-based creative tools for design, photo, PDF, video and audio",
+   "website_url": "https://craftapps.me/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "createmycoin",
+   "source_url": "https://www.uneed.best/tool/createmycoin",
+   "name": "CreateMyCoin",
+   "description": "Create and launch Solana SPL tokens in 60 seconds, no code required.",
+   "website_url": "https://createmycoin.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "crossbar",
+   "source_url": "https://www.uneed.best/tool/crossbar",
+   "name": "Crossbar",
+   "description": "Trade exposure. Skip the ad budget.",
+   "website_url": "https://crossbar.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "crownai",
+   "source_url": "https://www.uneed.best/tool/crownai",
+   "name": "CrownAI",
+   "description": "AI decision support for NLH, PLO and MTT poker with GTO and opponent profiling",
+   "website_url": "https://crownaipoker.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "cryptale",
+   "source_url": "https://www.uneed.best/tool/cryptale",
+   "name": "Cryptale",
+   "description": "Hide secret messages in AI-generated stories",
+   "website_url": "https://cryptale.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "customiq",
+   "source_url": "https://www.uneed.best/tool/customiq",
+   "name": "CustomIQ",
+   "description": "Creates all your marketing content. For SMBs and agencies",
+   "website_url": "https://www.customiq.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "deal-ai",
+   "source_url": "https://www.uneed.best/tool/deal-ai",
+   "name": "Deal.ai",
+   "description": "AI agents find absurd deals and verify prices across thousands of stores",
+   "website_url": "https://deal.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "des-security",
+   "source_url": "https://www.uneed.best/tool/des-security",
+   "name": "DesSecurity",
+   "description": "Dependency intelligence, CVE blast radius and risk analysis from code URLs",
+   "website_url": "https://des-security.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "dgenix",
+   "source_url": "https://www.uneed.best/tool/dgenix",
+   "name": "dGENIX",
+   "description": "AI assistant with 55+ skills for marketing, SEO, GEO, content, and growth",
+   "website_url": "https://dgenix.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "dialogmaker",
+   "source_url": "https://www.uneed.best/tool/dialogmaker",
+   "name": "DialogMaker",
+   "description": "Turn website visitors into follow-up-ready contacts instantly",
+   "website_url": "https://dialogmaker.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "docstudiopdf",
+   "source_url": "https://www.uneed.best/tool/docstudiopdf",
+   "name": "DocStudioPDF",
+   "description": "Free, privacy-first PDF tools that run entirely in your browser.",
+   "website_url": "https://docstudiopdf.online/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "dokima",
+   "source_url": "https://www.uneed.best/tool/dokima",
+   "name": "Dokima",
+   "description": "Always-on security review and vulnerability scanning for your codebase",
+   "website_url": "https://dokima.net/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "doremi",
+   "source_url": "https://www.uneed.best/tool/doremi",
+   "name": "Doremi",
+   "description": "AI music generator that turns text into editable full songs.",
+   "website_url": "https://www.doremi.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "drip-drop",
+   "source_url": "https://www.uneed.best/tool/drip-drop",
+   "name": "Drip Drop",
+   "description": "Build automated SMS & email campaigns in minutes — no code required.",
+   "website_url": "https://dripdrop.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "dsign-so",
+   "source_url": "https://www.uneed.best/tool/dsign-so",
+   "name": "dsign.so",
+   "description": "Type your post. Every template fills in your brand.",
+   "website_url": "https://dsign.so/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "emails-for-supabase",
+   "source_url": "https://www.uneed.best/tool/emails-for-supabase",
+   "name": "Emails for Supabase",
+   "description": "Branded auth email templates for Supabase with GoTrue tags",
+   "website_url": "https://emailsforsupabase.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "eskimoz",
+   "source_url": "https://www.uneed.best/tool/eskimoz",
+   "name": "Eskimoz",
+   "description": "Global Digital Marketing Agency",
+   "website_url": "https://www.eskimoz.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "everalice-ai",
+   "source_url": "https://www.uneed.best/tool/everalice-ai",
+   "name": "EverAlice AI",
+   "description": "AI tool to generate product assets, mockups, and copy in seconds",
+   "website_url": "https://everalice.studio/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ezmaker-ai-background-remover",
+   "source_url": "https://www.uneed.best/tool/ezmaker-ai-background-remover",
+   "name": "EzMaker AI Background Remover",
+   "description": "Remove backgrounds with AI. Get transparent PNGs without signing up.",
+   "website_url": "https://ezmaker.ai/ai-background-remover/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "fabricate",
+   "source_url": "https://www.uneed.best/tool/fabricate",
+   "name": "Fabricate",
+   "description": "Describe an app. Get it built, hosted and running.",
+   "website_url": "https://fabricate.build/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "factostack",
+   "source_url": "https://www.uneed.best/tool/factostack",
+   "name": "Factostack",
+   "description": "All-in-one management of quotes, orders, inventory & GST for MSMEs in India",
+   "website_url": "https://factostack.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "famtick",
+   "source_url": "https://www.uneed.best/tool/famtick",
+   "name": "Famtick",
+   "description": "Family organizer with shared calendars, shopping lists and tasks.",
+   "website_url": "https://famtick.com/home",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "fartlek-interval-trainer",
+   "source_url": "https://www.uneed.best/tool/fartlek-interval-trainer",
+   "name": "Fartlek Interval Trainer",
+   "description": "The interval auto-detect app. Built by runners, for runners.",
+   "website_url": "https://www.wimbledonappcompany.co.uk/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "fastread",
+   "source_url": "https://www.uneed.best/tool/fastread",
+   "name": "FastRead",
+   "description": "Bionic reading technology to boost speed and comprehension",
+   "website_url": "https://fastread.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "faylee",
+   "source_url": "https://www.uneed.best/tool/faylee",
+   "name": "Faylee",
+   "description": "Bug reports with video, console and network, ready for your coding agent",
+   "website_url": "https://faylee.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "firelog",
+   "source_url": "https://www.uneed.best/tool/firelog",
+   "name": "Firelog",
+   "description": "Manage Firebase and Firestore from your mobile device",
+   "website_url": "https://firebasemobileapp.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "firstusers-club",
+   "source_url": "https://www.uneed.best/tool/firstusers-club",
+   "name": "FirstUsers.club",
+   "description": "Your first 25 users, from builders like you.",
+   "website_url": "https://firstusers.club/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "fitintel",
+   "source_url": "https://www.uneed.best/tool/fitintel",
+   "name": "FitIntel",
+   "description": "Track weight, calories, and steps with weekly adaptive calorie targets",
+   "website_url": "https://fitintelapp.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "fitn3s",
+   "source_url": "https://www.uneed.best/tool/fitn3s",
+   "name": "fitn3s",
+   "description": "15-minute bodyweight workouts that adapt as you get stronger",
+   "website_url": "https://fitn3s.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "flova-ai",
+   "source_url": "https://www.uneed.best/tool/flova-ai",
+   "name": "Flova AI",
+   "description": "Smarter. More Adaptive. Bring Ideas to Life.",
+   "website_url": "https://www.flova.ai/en/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "flux-3",
+   "source_url": "https://www.uneed.best/tool/flux-3",
+   "name": "Flux 3",
+   "description": "Flux 3— Multimodal AI by Black Forest Labs|Real World Models",
+   "website_url": "https://flux3.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "football-formation-builder",
+   "source_url": "https://www.uneed.best/tool/football-formation-builder",
+   "name": "Football Formation Builder",
+   "description": "Create and visualize football lineups and dream teams instantly",
+   "website_url": "https://toolsyte.com/tools/sports/football-formation-builder/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "foreman",
+   "source_url": "https://www.uneed.best/tool/foreman",
+   "name": "Foreman",
+   "description": "Open-source app to run coding agents in parallel, locally or in cloud sandboxes",
+   "website_url": "https://github.com/elite-build/foreman",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "fotoreto",
+   "source_url": "https://www.uneed.best/tool/fotoreto",
+   "name": "Fotoreto",
+   "description": "Batch photo editor in your browser, no per-photo fees",
+   "website_url": "https://fotoreto.com/en/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "free-wine-menu-maker",
+   "source_url": "https://www.uneed.best/tool/free-wine-menu-maker",
+   "name": "Free Wine Menu Maker",
+   "description": "Create professional wine menus instantly with an easy-to-use maker",
+   "website_url": "https://happychef.cloud/en/wine-menu-creator.html",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "genderflip",
+   "source_url": "https://www.uneed.best/tool/genderflip",
+   "name": "GenderFlip",
+   "description": "Free AI gender swap — see your opposite-gender self in seconds",
+   "website_url": "https://genderflip.org/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "genjutsu-ai",
+   "source_url": "https://www.uneed.best/tool/genjutsu-ai",
+   "name": "genjutsu ai",
+   "description": "AI video generator: transform photos into videos using templates and motion",
+   "website_url": "https://genjutsuai.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "get-mcp-ads",
+   "source_url": "https://www.uneed.best/tool/get-mcp-ads",
+   "name": "Get MCP Ads",
+   "description": "Manage your ads from Claude or ChatGPT.",
+   "website_url": "https://www.getmcpads.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "gifnobg",
+   "source_url": "https://www.uneed.best/tool/gifnobg",
+   "name": "GifNoBg",
+   "description": "AI-powered background removal for videos, GIFs, and stickers",
+   "website_url": "https://gifnobg.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "grandjob-io",
+   "source_url": "https://www.uneed.best/tool/grandjob-io",
+   "name": "GrandJob.io",
+   "description": "Job hunting shouldn't feel like a 2nd job.",
+   "website_url": "https://www.grandjob.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "growganic",
+   "source_url": "https://www.uneed.best/tool/growganic",
+   "name": "GrowGanic",
+   "description": "Autonomous SEO engine. Add a domain, it does the rest.",
+   "website_url": "https://growganic.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "headache-and-migraine-diary",
+   "source_url": "https://www.uneed.best/tool/headache-and-migraine-diary",
+   "name": "Headache and Migraine Diary",
+   "description": "Track headaches and migraines, find your triggers",
+   "website_url": "https://www.headachetracker.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "header-override-modify-http-headers-and-cookies",
+   "source_url": "https://www.uneed.best/tool/header-override-modify-http-headers-and-cookies",
+   "name": "Header Override - Modify HTTP Headers and Cookies",
+   "description": "Browser extension to modify HTTP headers, cookies for API debugging",
+   "website_url": "https://headeroverride.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "heardly",
+   "source_url": "https://www.uneed.best/tool/heardly",
+   "name": "Heardly",
+   "description": "Find warm leads on social media posts already asking for what you sell.",
+   "website_url": "https://heardly.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "hellochusquis",
+   "source_url": "https://www.uneed.best/tool/hellochusquis",
+   "name": "HelloChusquis",
+   "description": "Local-first lightweight AI agent for terminal, browser, and system tasks.",
+   "website_url": "https://aminoy77.github.io/HelloChusquis/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "heymoa",
+   "source_url": "https://www.uneed.best/tool/heymoa",
+   "name": "HeyMoa",
+   "description": "Free AI meeting notes: decisions and tasks as a graph, each linked to its source",
+   "website_url": "https://heymoa.app/en",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "highseat",
+   "source_url": "https://www.uneed.best/tool/highseat",
+   "name": "Highseat",
+   "description": "Cookieless web analytics with revenue on every breakdown, net of refunds",
+   "website_url": "https://highseat.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "hivelighter-for-sales",
+   "source_url": "https://www.uneed.best/tool/hivelighter-for-sales",
+   "name": "Hivelighter for Sales",
+   "description": "Real, original-source insights about your clients and industry, not AI summaries",
+   "website_url": "https://hivelighter.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "hmdia-login-and-registration",
+   "source_url": "https://www.uneed.best/tool/hmdia-login-and-registration",
+   "name": "HMDIA Login and Registration",
+   "description": "Customize WordPress login pages with 2FA, passkeys, and spam protection",
+   "website_url": "https://hmdia.com/wp-login-registration/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "hoa-eagle",
+   "source_url": "https://www.uneed.best/tool/hoa-eagle",
+   "name": "HOA Eagle",
+   "description": "Free HOA law reference for all 56 US jurisdictions",
+   "website_url": "https://hoaeagle.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "hodeishield",
+   "source_url": "https://www.uneed.best/tool/hodeishield",
+   "name": "HodeiShield",
+   "description": "Compliance you can prove. Risk you can see. Suppliers you can trust.",
+   "website_url": "https://hodeishield.com/en",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "homestead",
+   "source_url": "https://www.uneed.best/tool/homestead",
+   "name": "Homestead",
+   "description": "Find homes in England by budget, commute, and location priorities",
+   "website_url": "https://yourhomestead.co.uk/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "how-it-spread",
+   "source_url": "https://www.uneed.best/tool/how-it-spread",
+   "name": "How It Spread",
+   "description": "See how anything went viral, from the first post",
+   "website_url": "https://howitspread.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "huelift",
+   "source_url": "https://www.uneed.best/tool/huelift",
+   "name": "Huelift",
+   "description": "AI photo editor: enhance, remove backgrounds/watermarks, apply styles",
+   "website_url": "https://www.huelift.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "humanio-ai-text-humanizer",
+   "source_url": "https://www.uneed.best/tool/humanio-ai-text-humanizer",
+   "name": "Humanio AI Text Humanizer",
+   "description": "Turn the AI-generated text into natural, human-sounding writing",
+   "website_url": "https://humanio.me/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "insect-sound-identifier",
+   "source_url": "https://www.uneed.best/tool/insect-sound-identifier",
+   "name": "Insect Sound Identifier",
+   "description": "Identify insect species by recording or uploading their sounds",
+   "website_url": "https://insectsoundid.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ip-proxy",
+   "source_url": "https://www.uneed.best/tool/ip-proxy",
+   "name": "IP Proxy",
+   "description": "Rotating and static residential proxies in 190+ locations, pay-as-you-go.",
+   "website_url": "https://ipproxy.co/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ipand",
+   "source_url": "https://www.uneed.best/tool/ipand",
+   "name": "iPand",
+   "description": "Know if ChatGPT, Gemini and Google AI recommend your brand, and what to fix",
+   "website_url": "https://ipand.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "janus-gate-ai",
+   "source_url": "https://www.uneed.best/tool/janus-gate-ai",
+   "name": "Janus Gate AI",
+   "description": "Auto-test landing page variants and optimize with AI",
+   "website_url": "https://janus-gate-ai.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "kasspian",
+   "source_url": "https://www.uneed.best/tool/kasspian",
+   "name": "Kasspian",
+   "description": "Finds who is asking for what you sell, checks the room first",
+   "website_url": "https://kasspian.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "kepler-studio",
+   "source_url": "https://www.uneed.best/tool/kepler-studio",
+   "name": "Kepler Studio",
+   "description": "Free online video editor with AI in the timeline",
+   "website_url": "https://keplerapp.cc/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "klibon",
+   "source_url": "https://www.uneed.best/tool/klibon",
+   "name": "Klibon",
+   "description": "Affiliate tracking for SaaS, by Uneed.",
+   "website_url": "https://klibon.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "koloqr",
+   "source_url": "https://www.uneed.best/tool/koloqr",
+   "name": "KoloQR",
+   "description": "Create and customize QR codes with logos, colors, and shapes",
+   "website_url": "https://koloqr.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "lacuna",
+   "source_url": "https://www.uneed.best/tool/lacuna",
+   "name": "Lacuna",
+   "description": "AI Song Generator: turn lyrics or text into full songs with vocals. Free to try.",
+   "website_url": "https://www.lacuna.fm/ai-song-generator",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "launchglint",
+   "source_url": "https://www.uneed.best/tool/launchglint",
+   "name": "LaunchGlint",
+   "description": "Scan AI apps for exposed secrets and security blockers before launch",
+   "website_url": "https://launchglint.web.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "leadpocket",
+   "source_url": "https://www.uneed.best/tool/leadpocket",
+   "name": "Leadpocket",
+   "description": "QR code lead capture with AI-powered follow-ups",
+   "website_url": "https://leadpocket.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "linkbunny",
+   "source_url": "https://www.uneed.best/tool/linkbunny",
+   "name": "LinkBunny",
+   "description": "Your coding agents exchange nofollow backlinks for more AI-citations",
+   "website_url": "https://getlinkbunny.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "linkedinembed",
+   "source_url": "https://www.uneed.best/tool/linkedinembed",
+   "name": "LinkedInEmbed",
+   "description": "Embed LinkedIn feeds and profiles on your website",
+   "website_url": "https://linkedinembed.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "linkedmash",
+   "source_url": "https://www.uneed.best/tool/linkedmash",
+   "name": "LinkedMash",
+   "description": "Search, export, and reuse everything you save on LinkedIn",
+   "website_url": "https://www.linkedmash.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "livelingo",
+   "source_url": "https://www.uneed.best/tool/livelingo",
+   "name": "LiveLingo",
+   "description": "Real-time AI voice translation for calls & meetings in 35 languages",
+   "website_url": "https://www.livelingo.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "luciq",
+   "source_url": "https://www.uneed.best/tool/luciq",
+   "name": "Luciq",
+   "description": "AI-powered mobile app observability platform",
+   "website_url": "https://www.luciq.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "lunira",
+   "source_url": "https://www.uneed.best/tool/lunira",
+   "name": "Lunira",
+   "description": "Start communicating before mastering the language.",
+   "website_url": "https://lunira.io/tester_lunira.php",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "lyriccreator-ai",
+   "source_url": "https://www.uneed.best/tool/lyriccreator-ai",
+   "name": "Lyriccreator AI",
+   "description": "AI-powered lyrics, with structure.",
+   "website_url": "https://lyriccreatorai.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "madebyhumans",
+   "source_url": "https://www.uneed.best/tool/madebyhumans",
+   "name": "MadeByHumans",
+   "description": "Blogging platform with paste caps to make writing fun again",
+   "website_url": "https://madebyhumans.diy/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "mador",
+   "source_url": "https://www.uneed.best/tool/mador",
+   "name": "Mador",
+   "description": "Find out if ChatGPT and other AI assistants name your business, then get named",
+   "website_url": "https://mador.ai/en",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "maintra",
+   "source_url": "https://www.uneed.best/tool/maintra",
+   "name": "Maintra",
+   "description": "AI-powered vehicle maintenance tracking and personalized plans",
+   "website_url": "https://maintra.me/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "marsell",
+   "source_url": "https://www.uneed.best/tool/marsell",
+   "name": "Marsell",
+   "description": "Content, marketing and sales on autopilot",
+   "website_url": "https://getmarsell.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "mediaofficers-link-vault",
+   "source_url": "https://www.uneed.best/tool/mediaofficers-link-vault",
+   "name": "MediaOfficers Link Vault",
+   "description": "Curated backlink database for SEO agencies and freelancers",
+   "website_url": "https://tool.mediaofficers.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "merge-jpg-org",
+   "source_url": "https://www.uneed.best/tool/merge-jpg-org",
+   "name": "Merge JPG",
+   "description": "Merge and arrange JPG images in your browser, then download",
+   "website_url": "https://merge-jpg.org/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "mindfulflow-journal",
+   "source_url": "https://www.uneed.best/tool/mindfulflow-journal",
+   "name": "Mindfulflow Journal",
+   "description": "AI-assisted journaling app: Four morning & night questions, six minutes daily",
+   "website_url": "https://mindfulflowjournal.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "moflow",
+   "source_url": "https://www.uneed.best/tool/moflow",
+   "name": "Moflow",
+   "description": "Net worth tracker: all your assets in one place",
+   "website_url": "https://moflow.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "moltgate",
+   "source_url": "https://www.uneed.best/tool/moltgate",
+   "name": "Moltgate",
+   "description": "Turn AI agent ideas into paid offers. Learn what sells, automate what repeats.",
+   "website_url": "https://moltgate.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "mozonic-studio",
+   "source_url": "https://www.uneed.best/tool/mozonic-studio",
+   "name": "Mozonic Studio",
+   "description": "Free Mac DAW that measures your session, then suggests fixes you preview",
+   "website_url": "https://mozonic.com/studio",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "mvflow",
+   "source_url": "https://www.uneed.best/tool/mvflow",
+   "name": "MVFlow",
+   "description": "AI-powered music video generator with storyboards and photo-to-video",
+   "website_url": "https://mvflow.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "my-event-bingo",
+   "source_url": "https://www.uneed.best/tool/my-event-bingo",
+   "name": "My Event Bingo",
+   "description": "Turn your talking points into live bingo, plus polls people actually answer",
+   "website_url": "https://myeventbingo.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "myzucoins",
+   "source_url": "https://www.uneed.best/tool/myzucoins",
+   "name": "MyZucoins",
+   "description": "Tools and services for Zucoin's Splitchain layer 1 network",
+   "website_url": "https://myzucoins.org/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "nano-ai-maker",
+   "source_url": "https://www.uneed.best/tool/nano-ai-maker",
+   "name": "Nano AI Maker",
+   "description": "AI Image and Video Workspace for Publish-Ready Visuals",
+   "website_url": "https://nanoaimaker.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "negotiaelle",
+   "source_url": "https://www.uneed.best/tool/negotiaelle",
+   "name": "Negotiaelle",
+   "description": "Practice your next raise out loud: the AI voice coach for salary negotiation.",
+   "website_url": "https://negotiaelle.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "neuralverge",
+   "source_url": "https://www.uneed.best/tool/neuralverge",
+   "name": "NeuralVerge",
+   "description": "API & MCP server for real-world data across 300+ sources",
+   "website_url": "https://neuralverge.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "nevaplan",
+   "source_url": "https://www.uneed.best/tool/nevaplan",
+   "name": "NevaPlan",
+   "description": "Budget, wedding, goals, habits, projects & trips — one app, own it for life",
+   "website_url": "https://nevaplan.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "nexus-tax-visibility",
+   "source_url": "https://www.uneed.best/tool/nexus-tax-visibility",
+   "name": "Nexus",
+   "description": "Monitor VAT and economic nexus thresholds for your Stripe sales",
+   "website_url": "https://oh.gg/nexus",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "nodeterm",
+   "source_url": "https://www.uneed.best/tool/nodeterm",
+   "name": "Nodeterm",
+   "description": "Node-based terminal manager for macOS and Linux with AI agents",
+   "website_url": "https://nodeterm.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "nurse-note-ai",
+   "source_url": "https://www.uneed.best/tool/nurse-note-ai",
+   "name": "Nurse Note AI",
+   "description": "Turn rough nursing notes into clear, professional documentation with AI.",
+   "website_url": "https://apps.apple.com/us/app/nurse-note-ai/id6801503620",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "oera",
+   "source_url": "https://www.uneed.best/tool/oera",
+   "name": "Oera",
+   "description": "A minimalist Pomodoro timer with a pixel art wizard companion",
+   "website_url": "https://oera.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "onenest",
+   "source_url": "https://www.uneed.best/tool/onenest",
+   "name": "OneNest",
+   "description": "The modern parenting app.",
+   "website_url": "https://www.onenestapp.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "oneup-today",
+   "source_url": "https://www.uneed.best/tool/oneup-today",
+   "name": "OneUp Today",
+   "description": "Find high-intent SaaS leads on Reddit and DM them with AI",
+   "website_url": "https://oneup.today/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "orbit",
+   "source_url": "https://www.uneed.best/tool/orbit",
+   "name": "Orbit",
+   "description": "Your local project workspace for developers on macOS",
+   "website_url": "https://orbitdesktop.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "oreo-doodle-icons",
+   "source_url": "https://www.uneed.best/tool/oreo-doodle-icons",
+   "name": "Oreo Doodle Icons",
+   "description": "Hand-drawn SVG icons that draw themselves in and wiggle",
+   "website_url": "https://doodle.oreoui.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "oylo",
+   "source_url": "https://www.uneed.best/tool/oylo",
+   "name": "Oylo",
+   "description": "Live AI video transformation for stages and live events",
+   "website_url": "https://oylo.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "pampyme",
+   "source_url": "https://www.uneed.best/tool/pampyme",
+   "name": "PampyMe",
+   "description": "Book self-care services, compare prices and read reviews",
+   "website_url": "https://pampyme.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "panel-and-ink",
+   "source_url": "https://www.uneed.best/tool/panel-and-ink",
+   "name": "Panel and Ink",
+   "description": "Turn one idea into a comic series, no drawing needed",
+   "website_url": "https://panelandink.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "panelalpha-engine",
+   "source_url": "https://www.uneed.best/tool/panelalpha-engine",
+   "name": "PanelAlpha Engine",
+   "description": "The easiest way to self-host any project on your own VPS - Free and open source",
+   "website_url": "https://engine.panelalpha.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "panicslides",
+   "source_url": "https://www.uneed.best/tool/panicslides",
+   "name": "panicslides",
+   "description": "Create and publish fast, fun, interactive web presentations instantly",
+   "website_url": "https://panicslides.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "pdf-net-mcp",
+   "source_url": "https://www.uneed.best/tool/pdf-net-mcp",
+   "name": "pdf.net MCP",
+   "description": "Connect ChatGPT and Claude to automate PDF workflows with AI",
+   "website_url": "https://pdf.net/mcp-server",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "pendingdelete-net",
+   "source_url": "https://www.uneed.best/tool/pendingdelete-net",
+   "name": "Pending Delete",
+   "description": "Free expiring domain lists with registry-confirmed drops",
+   "website_url": "https://pendingdelete.net/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "pentestr",
+   "source_url": "https://www.uneed.best/tool/pentestr",
+   "name": "Pentestr",
+   "description": "Find web app vulnerabilities in minutes with automated security scanning",
+   "website_url": "https://pentestr.up.railway.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "pepiko",
+   "source_url": "https://www.uneed.best/tool/pepiko",
+   "name": "Pepiko",
+   "description": "Safety APIs for child-first AI products.",
+   "website_url": "https://pepiko.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "phototocartoon-ai-cartoon-generator",
+   "source_url": "https://www.uneed.best/tool/phototocartoon-ai-cartoon-generator",
+   "name": "PhotoToCartoon",
+   "description": "AI cartoon generator for photos, in 57 styles",
+   "website_url": "https://www.phototocartoon.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "pixel-dojo",
+   "source_url": "https://www.uneed.best/tool/pixel-dojo",
+   "name": "Pixel Dojo",
+   "description": "The Number One AI Image and AI Video Generator",
+   "website_url": "https://pixeldojo.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "placereveal",
+   "source_url": "https://www.uneed.best/tool/placereveal",
+   "name": "PlaceReveal",
+   "description": "AI tool for interior design, exterior updates, and virtual staging",
+   "website_url": "https://placereveal.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "planart",
+   "source_url": "https://www.uneed.best/tool/planart",
+   "name": "PlanArt",
+   "description": "AI-powered floor plan generator for homes and renovations",
+   "website_url": "https://floorplanai.art/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "plantpal",
+   "source_url": "https://www.uneed.best/tool/plantpal",
+   "name": "PlantPal",
+   "description": "Happy plants start here",
+   "website_url": "https://plantpal.net/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "plimo",
+   "source_url": "https://www.uneed.best/tool/plimo",
+   "name": "Plimo",
+   "description": "AI-powered image and video creation with templates",
+   "website_url": "https://plimo.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "popcraft-ai",
+   "source_url": "https://www.uneed.best/tool/popcraft-ai",
+   "name": "Popcraft AI",
+   "description": "AI studio for videos, images, audio, and avatars",
+   "website_url": "https://popcraft.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "posticle",
+   "source_url": "https://www.uneed.best/tool/posticle",
+   "name": "Posticle",
+   "description": "Turn niche industry news into on-brand social posts in under a minute",
+   "website_url": "https://posticle.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "preferly",
+   "source_url": "https://www.uneed.best/tool/preferly",
+   "name": "Preferly",
+   "description": "What 10 AI models tell customers about your business",
+   "website_url": "https://www.preferly.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "prelulu",
+   "source_url": "https://www.uneed.best/tool/prelulu",
+   "name": "Prelulu",
+   "description": "AI video chat with customizable avatars for roleplay and companionship",
+   "website_url": "https://prelulu.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "print-resize",
+   "source_url": "https://www.uneed.best/tool/print-resize",
+   "name": "Print Resize",
+   "description": "Convert images to print-ready files at your desired size",
+   "website_url": "https://printresize.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "promptwise",
+   "source_url": "https://www.uneed.best/tool/promptwise",
+   "name": "PromptWise",
+   "description": "Seedance, Kling, Nano Banana and 40+ AI models in one studio",
+   "website_url": "https://promptwise.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "quietrecap",
+   "source_url": "https://www.uneed.best/tool/quietrecap",
+   "name": "QuietRecap",
+   "description": "Turn meeting audio into timecoded transcripts, summaries, and action items.",
+   "website_url": "https://quietrecap.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "quietwatch",
+   "source_url": "https://www.uneed.best/tool/quietwatch",
+   "name": "QuietWatch",
+   "description": "Know when a client site quietly drops out of Google or AI search",
+   "website_url": "https://quietwatch.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "quorum",
+   "source_url": "https://www.uneed.best/tool/quorum",
+   "name": "Quorum",
+   "description": "One chatbot gives you an answer.A quorum gives you a verdict.",
+   "website_url": "https://www.quorumsays.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "quotchi",
+   "source_url": "https://www.uneed.best/tool/quotchi",
+   "name": "Quotchi",
+   "description": "Monitor Claude and Codex API usage from your Mac menu bar",
+   "website_url": "https://quotchi.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "rankcow",
+   "source_url": "https://www.uneed.best/tool/rankcow",
+   "name": "Rankcow",
+   "description": "Get Customers From Reddit and rank on Google & AI search. Zero Ban Risk",
+   "website_url": "https://rankcow.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "rankhound",
+   "source_url": "https://www.uneed.best/tool/rankhound",
+   "name": "RankHound",
+   "description": "SEO automation that finds keywords, writes content, and publishes articles",
+   "website_url": "https://rankhound.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "rapid-form",
+   "source_url": "https://www.uneed.best/tool/rapid-form",
+   "name": "RapidForm",
+   "description": "Describe a form, get it in 60 seconds, embed it anywhere.",
+   "website_url": "https://rapidform.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "rawa",
+   "source_url": "https://www.uneed.best/tool/rawa",
+   "name": "Rawa",
+   "description": "AI-powered marketing platform that learns and optimizes across campaigns",
+   "website_url": "https://www.rawa.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "receep",
+   "source_url": "https://www.uneed.best/tool/receep",
+   "name": "Receep",
+   "description": "The smartest way to manage digital receipts and payment proof for freelancers.",
+   "website_url": "https://receep.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "recommd",
+   "source_url": "https://www.uneed.best/tool/recommd",
+   "name": "Recommd",
+   "description": "See if ChatGPT, Perplexity & Google AI recommend your business — or a rival",
+   "website_url": "https://recommd.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "repairius",
+   "source_url": "https://www.uneed.best/tool/repairius",
+   "name": "Repairius",
+   "description": "Find repair shops, get bids, and manage jobs in one platform",
+   "website_url": "https://repairius.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "rey",
+   "source_url": "https://www.uneed.best/tool/rey",
+   "name": "rey",
+   "description": "AI Employee for Creator Marketing",
+   "website_url": "https://meetrey.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "ripple",
+   "source_url": "https://www.uneed.best/tool/ripple",
+   "name": "Ripple",
+   "description": "Desktop app for API design, testing, and automation with AI co-pilot",
+   "website_url": "https://rippleai.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "roast",
+   "source_url": "https://www.uneed.best/tool/roast",
+   "name": "ROAST",
+   "description": "AI feedback tool that roasts your landing page for conversion, copy & design",
+   "website_url": "https://roastl.pages.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "robodebut",
+   "source_url": "https://www.uneed.best/tool/robodebut",
+   "name": "RoboDebut",
+   "description": "A website directory your coding agent can submit to, free",
+   "website_url": "https://robodebut.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "saaveme",
+   "source_url": "https://www.uneed.best/tool/saaveme",
+   "name": "SaaveMe",
+   "description": "Save anything. Let AI organize everything",
+   "website_url": "https://saaveme.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "scenemixer",
+   "source_url": "https://www.uneed.best/tool/scenemixer",
+   "name": "SceneMixer",
+   "description": "AI movie maker and short drama generator: turn scripts and novels into series",
+   "website_url": "https://scenemixer.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "scenetra",
+   "source_url": "https://www.uneed.best/tool/scenetra",
+   "name": "Scenetra",
+   "description": "AI image & video studio, always at the lowest price with 0% markup",
+   "website_url": "https://scenetra.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "schedulin",
+   "source_url": "https://www.uneed.best/tool/schedulin",
+   "name": "Schedulin",
+   "description": "Calm, affordable social media scheduler for TikTok, Instagram, X & 20+ networks",
+   "website_url": "https://www.schedulin.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "screencursor",
+   "source_url": "https://www.uneed.best/tool/screencursor",
+   "name": "ScreenCursor",
+   "description": "Screen recorder with auto zoom effects!",
+   "website_url": "https://screencursor.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "screenmake",
+   "source_url": "https://www.uneed.best/tool/screenmake",
+   "name": "ScreenMake",
+   "description": "Gorgeous App Store screenshots before your coffee gets cold",
+   "website_url": "https://screenmake.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "seclai",
+   "source_url": "https://www.uneed.best/tool/seclai",
+   "name": "Seclai",
+   "description": "Production infrastructure for LLM calls",
+   "website_url": "https://seclai.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "seedance2-5-ai",
+   "source_url": "https://www.uneed.best/tool/seedance2-5-ai",
+   "name": "Seedance 2.5",
+   "description": "Multimodal AI for cinematic video creation with precise control",
+   "website_url": "https://seedance25.tv/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "sept-academy",
+   "source_url": "https://www.uneed.best/tool/sept-academy",
+   "name": "SEPT Academy",
+   "description": "From beginner to autonomous with AI coding agents",
+   "website_url": "https://academy.amavya.cloud/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "sermon-mates",
+   "source_url": "https://www.uneed.best/tool/sermon-mates",
+   "name": "Sermon mates",
+   "description": "Complete workspace for sermon prep, study, writing & delivery",
+   "website_url": "https://sermonmates.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "serpkin",
+   "source_url": "https://www.uneed.best/tool/serpkin",
+   "name": "Serpkin",
+   "description": "SEO for coding agents like Claude Code and Cursor",
+   "website_url": "https://serpkin.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "sickle",
+   "source_url": "https://www.uneed.best/tool/sickle",
+   "name": "Sickle",
+   "description": "Every mailbox you own, in one Mac app and your AI agent",
+   "website_url": "https://sickle.app/mcp",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "signupvet",
+   "source_url": "https://www.uneed.best/tool/signupvet",
+   "name": "SignupVet",
+   "description": "Keep free credits and trials for real users, not bots",
+   "website_url": "https://www.signupvet.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "skim",
+   "source_url": "https://www.uneed.best/tool/skim",
+   "name": "Skim",
+   "description": "About to sign something? See the 5 clauses that could cost you",
+   "website_url": "https://askskim.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "smarkly",
+   "source_url": "https://www.uneed.best/tool/smarkly",
+   "name": "Smarkly",
+   "description": "The AI marketing co-pilot for small teams and founders",
+   "website_url": "https://smarkly.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "snapblock",
+   "source_url": "https://www.uneed.best/tool/snapblock",
+   "name": "SnapBlock",
+   "description": "AI-powered platform to build websites and apps without weeks of setup",
+   "website_url": "https://snapblock.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "snipr",
+   "source_url": "https://www.uneed.best/tool/snipr",
+   "name": "Snipr",
+   "description": "Custom domain URL shortener with QR codes and analytics",
+   "website_url": "https://snipr.sh/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "sparkdry-car-wash-weather-app",
+   "source_url": "https://www.uneed.best/tool/sparkdry-car-wash-weather-app",
+   "name": "SparkDry-Car Wash Weather App",
+   "description": "Find the best day to wash your car with live weather data",
+   "website_url": "https://sparkdryapp.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "spritzspot",
+   "source_url": "https://www.uneed.best/tool/spritzspot",
+   "name": "Spritzspot",
+   "description": "SpritzSpit is for finding sunny spots, happy hours and places to save and review",
+   "website_url": "https://www.spritzspot.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "stacys-brain",
+   "source_url": "https://www.uneed.best/tool/stacys-brain",
+   "name": "Stacy's Brain",
+   "description": "Marketing's collective memory with graded research findings",
+   "website_url": "https://stacysbrain.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "stash",
+   "source_url": "https://www.uneed.best/tool/stash",
+   "name": "Stash",
+   "description": "A read-later with a Done list and exact completion times",
+   "website_url": "https://stashitforlater.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "stay-up",
+   "source_url": "https://www.uneed.best/tool/stay-up",
+   "name": "Stay Up",
+   "description": "List, build, and track Domain Rating for growing projects",
+   "website_url": "https://stayup.lol/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "stillmind",
+   "source_url": "https://www.uneed.best/tool/stillmind",
+   "name": "StillMind",
+   "description": "AI-guided meditation and mindfulness tailored to your mood",
+   "website_url": "https://stillmind-app.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "story2-board",
+   "source_url": "https://www.uneed.best/tool/story2-board",
+   "name": "Story2Board",
+   "description": "AI co-director turning scripts into storyboards and shot plans",
+   "website_url": "https://story2board.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "strokes",
+   "source_url": "https://www.uneed.best/tool/strokes",
+   "name": "Strokes",
+   "description": "Desktop writing app with a personal assistant; your files stay on your machine.",
+   "website_url": "https://strokes.ink/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "sumly-dev",
+   "source_url": "https://www.uneed.best/tool/sumly-dev",
+   "name": "Sumly",
+   "description": "Unified dashboard for revenue and visitor metrics across all payment platforms",
+   "website_url": "https://sumly.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "svgformat",
+   "source_url": "https://www.uneed.best/tool/svgformat",
+   "name": "SVGFormat",
+   "description": "Free PNG to SVG, DXF and embroidery file converters",
+   "website_url": "https://svgformat.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "t-biz",
+   "source_url": "https://www.uneed.best/tool/t-biz",
+   "name": "T BIZ",
+   "description": "The agent that finds your prospects while you do something else",
+   "website_url": "https://tbiz.amavya.cloud/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "tabel",
+   "source_url": "https://www.uneed.best/tool/tabel",
+   "name": "Tabel",
+   "description": "Fast, private PostgreSQL & SQLite client for Mac with a built-in SSH tunnel.",
+   "website_url": "https://tabel.theill.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "tactile-ui",
+   "source_url": "https://www.uneed.best/tool/tactile-ui",
+   "name": "Tactile UI",
+   "description": "UI components that work like real hardware",
+   "website_url": "https://tactileui.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "takejournal",
+   "source_url": "https://www.uneed.best/tool/takejournal",
+   "name": "TakeJournal",
+   "description": "Trading journal for prop-firm and copy traders: one trade across all accounts",
+   "website_url": "https://takejournal.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "team-tasks",
+   "source_url": "https://www.uneed.best/tool/team-tasks",
+   "name": "Team Tasks",
+   "description": "Google Tasks, built for teams",
+   "website_url": "https://team-tasks.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "tera-cota",
+   "source_url": "https://www.uneed.best/tool/tera-cota",
+   "name": "Tera Cota",
+   "description": "Point your camera at a plant. Know what it is and if your cat can eat it.",
+   "website_url": "https://teracota.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "terminalwidget",
+   "source_url": "https://www.uneed.best/tool/terminalwidget",
+   "name": "TerminalWidget",
+   "description": "Monitor scripts and automations via system widgets",
+   "website_url": "https://terminalwidget.app/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "tidylist",
+   "source_url": "https://www.uneed.best/tool/tidylist",
+   "name": "TidyList",
+   "description": "Filter, search, curate, update and move your YouTube playlists",
+   "website_url": "https://tidylist.video/help",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "timefolk",
+   "source_url": "https://www.uneed.best/tool/timefolk",
+   "name": "Timefolk",
+   "description": "Log off, show up. Practical skills, in person, from local Experts",
+   "website_url": "https://timefolk.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "timether",
+   "source_url": "https://www.uneed.best/tool/timether",
+   "name": "Timether",
+   "description": "Privacy-first time tracking for freelancers and teams",
+   "website_url": "https://timether.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "tinty",
+   "source_url": "https://www.uneed.best/tool/tinty",
+   "name": "TINTY",
+   "description": "AI virtual staging for real estate listing photos",
+   "website_url": "https://tinty.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "toklab",
+   "source_url": "https://www.uneed.best/tool/toklab",
+   "name": "TokLab",
+   "description": "TokLab：one API for every AI model, billed only when it works",
+   "website_url": "https://toklab.ai/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "topview-t1",
+   "source_url": "https://www.uneed.best/tool/topview-t1",
+   "name": "Topview T1",
+   "description": "AI video generator for product animation and social media clips",
+   "website_url": "https://topview-t1.net/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "trust-prep",
+   "source_url": "https://www.uneed.best/tool/trust-prep",
+   "name": "Trust Prep",
+   "description": "Send security reviewers one link to your vendor list",
+   "website_url": "https://trustprep.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "tutor-clap",
+   "source_url": "https://www.uneed.best/tool/tutor-clap",
+   "name": "Tutor Clap",
+   "description": "Connecting Students to the Right Tutors for Better Learning Outcomes",
+   "website_url": "https://tutorclap.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "tym-track-your-money",
+   "source_url": "https://www.uneed.best/tool/tym-track-your-money",
+   "name": "TYM - Track Your Money",
+   "description": "Budget privately on your phone. No bank login, no account, no cloud.",
+   "website_url": "https://teralabsllc.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "tzuzu",
+   "source_url": "https://www.uneed.best/tool/tzuzu",
+   "name": "Tzuzu",
+   "description": "A quiet, text-first social network for thoughtful writing.",
+   "website_url": "https://tzuzu.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "uncoverai",
+   "source_url": "https://www.uneed.best/tool/uncoverai",
+   "name": "UncoverAI",
+   "description": "Independent index of AI model pricing, platform terms, SLAs and sub-processors.",
+   "website_url": "https://uncoverai.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "unlockmerchantcenter",
+   "source_url": "https://www.uneed.best/tool/unlockmerchantcenter",
+   "name": "UnlockMerchantCenter",
+   "description": "Free Google Merchant Center suspension checker and audit tool",
+   "website_url": "https://unlockmerchantcenter.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "uploadoff",
+   "source_url": "https://www.uneed.best/tool/uploadoff",
+   "name": "UploadOff",
+   "description": "Convert images and PDFs in your browser. Your files never leave your device.",
+   "website_url": "https://uploadoff.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "uptimepage",
+   "source_url": "https://www.uneed.best/tool/uptimepage",
+   "name": "Uptimepage",
+   "description": "Uptime monitoring, status pages and on-call scheduling in one open-source tool",
+   "website_url": "https://uptimepage.dev/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "usetuff",
+   "source_url": "https://www.uneed.best/tool/usetuff",
+   "name": "Tuff",
+   "description": "Project management for teams with AI agents, chat and docs",
+   "website_url": "https://usetuff.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "vibe-greenlight",
+   "source_url": "https://www.uneed.best/tool/vibe-greenlight",
+   "name": "Vibe Greenlight",
+   "description": "Launch readiness check for AI-built apps with security & performance audit",
+   "website_url": "https://vibegreenlight.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "vibemode",
+   "source_url": "https://www.uneed.best/tool/vibemode",
+   "name": "vibemode",
+   "description": "Curated gallery of AI-built websites for design inspiration",
+   "website_url": "https://www.vibemode.site/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "vidsembly",
+   "source_url": "https://www.uneed.best/tool/vidsembly",
+   "name": "Vidsembly",
+   "description": "Turn PowerPoint slides and documents into narrated videos with AI",
+   "website_url": "https://www.vidsembly.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "visibility-so",
+   "source_url": "https://www.uneed.best/tool/visibility-so",
+   "name": "Visibility.so",
+   "description": "Run a lean SEO agency with autonomous AI Agents.",
+   "website_url": "https://visibility.so/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "voloom-cad",
+   "source_url": "https://www.uneed.best/tool/voloom-cad",
+   "name": "Voloom CAD",
+   "description": "AI CAD generator: describe parts or upload photos to create parametric 3D models",
+   "website_url": "https://www.voloomcad.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "vpsyou",
+   "source_url": "https://www.uneed.best/tool/vpsyou",
+   "name": "VPSYOU",
+   "description": "VPS reviews and price comparison with real user feedback",
+   "website_url": "https://vpsyou.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "wealtii",
+   "source_url": "https://www.uneed.best/tool/wealtii",
+   "name": "Wealtii",
+   "description": "Index funds for crypto, gold and tokenized stocks. One purchase, from $10.",
+   "website_url": "https://wealtii.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "when-is-sale",
+   "source_url": "https://www.uneed.best/tool/when-is-sale",
+   "name": "When is Sale",
+   "description": "Every clothing brand's sale calendar — so you know whether to buy now or wait",
+   "website_url": "https://whenissale.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Marketing"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "wheretogo",
+   "source_url": "https://www.uneed.best/tool/wheretogo",
+   "name": "WhereToGo · Travel & Places",
+   "description": "Live map showing where friends and crowds are right now",
+   "website_url": "https://getwheretogo.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "whisperstream",
+   "source_url": "https://www.uneed.best/tool/whisperstream",
+   "name": "Whisperstream",
+   "description": "On-device speech-to-text for Windows & Mac, open source, offline",
+   "website_url": "https://whisperstream.io/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Development"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "winbrief",
+   "source_url": "https://www.uneed.best/tool/winbrief",
+   "name": "Winbrief",
+   "description": "Turn client notes into proposals with pricing guidance",
+   "website_url": "https://www.getwinbrief.com/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Business"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "wthumb",
+   "source_url": "https://www.uneed.best/tool/wthumb",
+   "name": "WThumb",
+   "description": "Remake a thumbnail you like, describe one, or pick a template",
+   "website_url": "https://wthumb.co/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Design"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "your-stressy",
+   "source_url": "https://www.uneed.best/tool/your-stressy",
+   "name": "Your Stressy",
+   "description": "The battery your body never had. A clean and fun UI & UX for iPhone/Apple Watch.",
+   "website_url": "https://stressy.ervo.rocks/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  },
+  {
+   "source_key": "uneed",
+   "external_id": "zyflow",
+   "source_url": "https://www.uneed.best/tool/zyflow",
+   "name": "Zyflow",
+   "description": "Know where to stop. Bike-friendly stays, cafés and chargers on one map.",
+   "website_url": "https://www.zyflow.eu/",
+   "launch_year": 2026,
+   "country_code": null,
+   "company_name": null,
+   "company_external_id": null,
+   "source_categories": [
+    "Personal Life"
+   ],
+   "licence": "Uneed read API (no data licence stated; Source: Uneed, uneed.best)",
+   "retrieved_at": "2026-11-10T18:09:06.618Z"
+  }
+ ]
+}
