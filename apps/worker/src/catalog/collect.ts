@@ -14,7 +14,7 @@ if (source !== "wikidata" || !out) {
   process.exit(2);
 }
 
-const snapshot = await collectWikidata({ run: wikidataHttpRunner(), pauseMs: 5_000 });
+const snapshot = await collectWikidata({ run: wikidataHttpRunner(), pauseMs: 1_000 });
 for (const q of snapshot.queries) {
   process.stdout.write(`${q.key}: ${q.status} ${q.rows} rows${q.error ? ` (${q.error})` : ""}\n`);
 }

@@ -51,40 +51,63 @@ export interface WikidataQuery {
   limit: number;
 }
 
-/** The item selections of the collection (one query each, run one after the other). */
+/**
+ * The item selections of the collection. Each one is a light query that only
+ * returns item ids; details are then read in small batches (one heavy query
+ * over thousands of items exceeds the 60 s deadline: HTTP 504).
+ */
 export const WIKIDATA_QUERIES: WikidataQuery[] = [
   {
     key: "saas_instances",
     pattern: "?item wdt:P31/wdt:P279* wd:Q1254596 .", // instance of (a subclass of) software as a service
-    limit: 20000,
+    limit: 30000,
   },
   {
     key: "saas_distribution",
     pattern: "?item wdt:P437 wd:Q1254596 .", // distribution format: software as a service
-    limit: 20000,
+    limit: 30000,
   },
   {
     key: "web_applications",
     pattern: "?item wdt:P31 wd:Q189210 .", // instance of web application
-    limit: 20000,
+    limit: 30000,
+  },
+  {
+    key: "web_application_subclasses",
+    pattern: "?item wdt:P31/wdt:P279+ wd:Q189210 .", // instance of a subclass of web application
+    limit: 30000,
+  },
+  {
+    key: "web_services",
+    pattern: "?item wdt:P31 wd:Q193424 .", // instance of web service
+    limit: 30000,
   },
 ];
 
-/** SPARQL for one selection: active items with an official website and an English label. */
-export function buildWikidataQuery(q: WikidataQuery): string {
+/** Items per details query (keeps each query far below the 60 s deadline). */
+export const WIKIDATA_DETAILS_BATCH = 150;
+
+/** Ids of the items of one selection that have an official website. */
+export function buildWikidataIdsQuery(q: WikidataQuery): string {
+  return `SELECT DISTINCT ?item WHERE {
+  ${q.pattern}
+  ?item wdt:P856 [] .
+} LIMIT ${q.limit}`;
+}
+
+/** Details of a batch of items: active, not a non-product class, English label. */
+export function buildWikidataDetailsQuery(qids: string[]): string {
   const excluded = NON_PRODUCT_CLASSES.map((c) => `wd:${c}`).join(" ");
+  const values = qids.map((q) => `wd:${q}`).join(" ");
   return `SELECT ?item ?label (SAMPLE(?desc) AS ?description) (SAMPLE(?site) AS ?website)
   (MIN(?inc) AS ?inception) (SAMPLE(?cc) AS ?countryCode) (SAMPLE(?dcc) AS ?developerCountryCode)
-  (SAMPLE(?devLabel) AS ?developer)
+  (SAMPLE(?devLabel) AS ?developer) (SAMPLE(?dev) AS ?developerItem)
   (GROUP_CONCAT(DISTINCT ?clsLabel; separator="|") AS ?classes)
 WHERE {
-  { SELECT DISTINCT ?item WHERE {
-      ${q.pattern}
-      ?item wdt:P856 [] .
-      FILTER NOT EXISTS { ?item wdt:P576 [] }
-      FILTER NOT EXISTS { ?item wdt:P2669 [] }
-      FILTER NOT EXISTS { ?item wdt:P31 ?bad . VALUES ?bad { ${excluded} } }
-    } LIMIT ${q.limit} }
+  VALUES ?item { ${values} }
+  FILTER NOT EXISTS { ?item wdt:P576 [] }
+  FILTER NOT EXISTS { ?item wdt:P2669 [] }
+  FILTER NOT EXISTS { ?item wdt:P31 ?bad . VALUES ?bad { ${excluded} } }
   ?item rdfs:label ?label . FILTER(LANG(?label) = "en")
   ?item wdt:P856 ?site .
   OPTIONAL { ?item schema:description ?desc . FILTER(LANG(?desc) = "en") }
@@ -96,6 +119,15 @@ WHERE {
              ?cls rdfs:label ?clsLabel . FILTER(LANG(?clsLabel) = "en") }
 }
 GROUP BY ?item ?label`;
+}
+
+/** QIDs of an ids query result. */
+export function parseWikidataIds(json: unknown): string[] {
+  const bindings = (json as { results?: { bindings?: SparqlBinding[] } })?.results?.bindings ?? [];
+  return bindings.flatMap((b) => {
+    const m = QID.exec(b.item?.value ?? "");
+    return m?.[1] ? [m[1]] : [];
+  });
 }
 
 interface SparqlValue {
@@ -168,6 +200,8 @@ export function parseWikidataResults(
       launch_year: yearOf(b.inception?.value),
       country_code: /^[A-Za-z]{2}$/.test(country) ? country : null,
       company_name: b.developer?.value?.trim().slice(0, 200) || null,
+      company_external_id:
+        (b.developer?.value && QID.exec(b.developerItem?.value ?? "")?.[1]) || null,
       source_categories: [...new Set(classes)].slice(0, 30).map((c) => c.slice(0, 200)),
       licence: WIKIDATA_LICENCE,
       retrieved_at: retrievedAt,
@@ -183,50 +217,59 @@ export function parseWikidataResults(
 export type SparqlRunner = (query: string) => Promise<unknown>;
 
 /**
- * Collects every selection, one query after the other, and merges the
- * listings by QID (a product selected by several queries keeps the union of
- * its source categories). A failed query is reported, never retried in a loop.
+ * Collects every selection (ids, one light query each), then reads the
+ * details of the union in batches, one query after the other with a pause.
+ * A failed query is reported and skipped, never retried in a loop; the
+ * snapshot contains only what the source actually returned.
  */
 export async function collectWikidata(options: {
   run: SparqlRunner;
   queries?: WikidataQuery[];
   pauseMs?: number;
+  batchSize?: number;
+  /** Stops reading details after this many items (CI time budget). */
+  maxItems?: number;
   now?: () => Date;
 }): Promise<CatalogSnapshot> {
   const now = options.now ?? (() => new Date());
   const queries = options.queries ?? WIKIDATA_QUERIES;
+  const batchSize = options.batchSize ?? WIKIDATA_DETAILS_BATCH;
+  const pause = () =>
+    options.pauseMs ? new Promise((r) => setTimeout(r, options.pauseMs)) : Promise.resolve();
   const retrievedAt = now().toISOString();
-  const byId = new Map<string, CatalogListing>();
   const report: CatalogSnapshot["queries"] = [];
+  const ids = new Set<string>();
   for (const [i, q] of queries.entries()) {
-    if (i > 0 && options.pauseMs) await new Promise((r) => setTimeout(r, options.pauseMs));
+    if (i > 0) await pause();
     try {
-      const json = await options.run(buildWikidataQuery(q));
-      const { listings } = parseWikidataResults(json, retrievedAt);
-      for (const l of listings) {
-        const prev = byId.get(l.external_id);
-        byId.set(
-          l.external_id,
-          prev
-            ? {
-                ...prev,
-                source_categories: [
-                  ...new Set([...prev.source_categories, ...l.source_categories]),
-                ].slice(0, 30),
-              }
-            : l,
-        );
-      }
-      report.push({ key: q.key, status: "ok", rows: listings.length });
+      const found = parseWikidataIds(await options.run(buildWikidataIdsQuery(q)));
+      for (const id of found) ids.add(id);
+      report.push({ key: q.key, status: "ok", rows: found.length });
     } catch (err) {
-      report.push({
-        key: q.key,
-        status: "error",
-        rows: 0,
-        error: (err instanceof Error ? err.message : String(err)).slice(0, 300),
-      });
+      report.push({ key: q.key, status: "error", rows: 0, error: errorText(err) });
     }
   }
+  const all = [...ids].sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+  const selected = options.maxItems ? all.slice(0, options.maxItems) : all;
+  const byId = new Map<string, CatalogListing>();
+  let failedBatches = 0;
+  let firstError: string | undefined;
+  for (let i = 0; i < selected.length; i += batchSize) {
+    await pause();
+    try {
+      const json = await options.run(buildWikidataDetailsQuery(selected.slice(i, i + batchSize)));
+      for (const l of parseWikidataResults(json, retrievedAt).listings) byId.set(l.external_id, l);
+    } catch (err) {
+      failedBatches++;
+      firstError ??= errorText(err);
+    }
+  }
+  report.push({
+    key: "details",
+    status: failedBatches === 0 ? "ok" : "error",
+    rows: byId.size,
+    ...(failedBatches ? { error: `${failedBatches} batch(es) failed: ${firstError}` } : {}),
+  });
   const listings = [...byId.values()].sort(
     (a, b) => Number(a.external_id.slice(1)) - Number(b.external_id.slice(1)),
   );
@@ -238,6 +281,10 @@ export async function collectWikidata(options: {
     queries: report,
     listings,
   };
+}
+
+function errorText(err: unknown): string {
+  return (err instanceof Error ? err.message : String(err)).slice(0, 300);
 }
 
 /** SPARQL runner over HTTPS with the descriptive User-Agent and a hard timeout. */

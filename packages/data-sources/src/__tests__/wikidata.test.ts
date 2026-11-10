@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 import {
   WIKIDATA_QUERIES,
   WIKIDATA_USER_AGENT,
-  buildWikidataQuery,
+  buildWikidataDetailsQuery,
+  buildWikidataIdsQuery,
   collectWikidata,
   parseWikidataResults,
   wikidataHttpRunner,
@@ -22,6 +23,7 @@ function row(over: Record<string, unknown> = {}) {
     inception: lit("2014-03-01T00:00:00Z"),
     countryCode: lit("US"),
     developer: lit("Synthetic Labs"),
+    developerItem: uri("http://www.wikidata.org/entity/Q900"),
     classes: lit("software as a service|project management software"),
     ...over,
   };
@@ -30,17 +32,23 @@ const results = (...rows: unknown[]) => ({ results: { bindings: rows } });
 const AT = "2026-11-10T12:00:00.000Z";
 
 describe("Wikidata connector", () => {
-  it("selects active items with an official website and drops non-product classes", () => {
-    const q = buildWikidataQuery(WIKIDATA_QUERIES[0]!);
-    expect(q).toContain("wdt:P856");
-    expect(q).toContain("FILTER NOT EXISTS { ?item wdt:P576 [] }"); // dissolved
-    expect(q).toContain("FILTER NOT EXISTS { ?item wdt:P2669 [] }"); // discontinued
-    expect(q).toContain("wd:Q35127"); // websites excluded
-    expect(q).toContain('LANG(?label) = "en"');
+  it("selects ids with a light query, then reads details of active product items in batches", () => {
+    const ids = buildWikidataIdsQuery(WIKIDATA_QUERIES[0]!);
+    expect(ids).toContain("wd:Q1254596");
+    expect(ids).toContain("wdt:P856");
+    expect(ids).not.toContain("rdfs:label"); // no join in the ids query
+    const details = buildWikidataDetailsQuery(["Q1", "Q2"]);
+    expect(details).toContain("VALUES ?item { wd:Q1 wd:Q2 }");
+    expect(details).toContain("FILTER NOT EXISTS { ?item wdt:P576 [] }"); // dissolved
+    expect(details).toContain("FILTER NOT EXISTS { ?item wdt:P2669 [] }"); // discontinued
+    expect(details).toContain("wd:Q35127"); // websites excluded
+    expect(details).toContain('LANG(?label) = "en"');
     expect(WIKIDATA_QUERIES.map((x) => x.key)).toEqual([
       "saas_instances",
       "saas_distribution",
       "web_applications",
+      "web_application_subclasses",
+      "web_services",
     ]);
   });
 
@@ -58,6 +66,7 @@ describe("Wikidata connector", () => {
         launch_year: 2014,
         country_code: "US",
         company_name: "Synthetic Labs",
+        company_external_id: "Q900",
         source_categories: ["software as a service", "project management software"],
         licence: "CC0-1.0",
         retrieved_at: AT,
@@ -83,6 +92,7 @@ describe("Wikidata connector", () => {
       launch_year: null,
       country_code: "FR",
       company_name: null,
+      company_external_id: null,
     });
   });
 
@@ -105,30 +115,32 @@ describe("Wikidata connector", () => {
     expect(listings[0]?.launch_year).toBeNull(); // out-of-range year is unknown, not invented
   });
 
-  it("merges the selections by QID, reports a failed query and never retries it", async () => {
+  it("unions the selections, reads details in batches, reports failures and never retries", async () => {
     const calls: string[] = [];
+    const idsOf = (...q: number[]) =>
+      results(...q.map((n) => ({ item: uri(`http://www.wikidata.org/entity/Q${n}`) })));
     const snapshot = await collectWikidata({
       now: () => new Date(AT),
+      queries: WIKIDATA_QUERIES.slice(0, 3),
+      batchSize: 2,
       run: async (query) => {
         calls.push(query);
-        if (calls.length === 2) throw new Error("wikidata_http_429");
-        if (calls.length === 1)
-          return results(row(), row({ item: uri("http://www.wikidata.org/entity/Q20") }));
-        return results(row({ classes: lit("web application") }));
+        if (query.startsWith("SELECT DISTINCT ?item")) {
+          if (calls.length === 2) throw new Error("wikidata_http_504");
+          return calls.length === 1 ? idsOf(100, 20) : idsOf(100, 30);
+        }
+        if (query.includes("wd:Q100")) throw new Error("wikidata_http_429"); // batch [Q30, Q100]
+        return results(row({ item: uri("http://www.wikidata.org/entity/Q20") }));
       },
     });
-    expect(calls).toHaveLength(3);
+    expect(calls).toHaveLength(5); // 3 ids queries + 2 detail batches (Q20, Q30 | Q100)
     expect(snapshot.queries).toEqual([
       { key: "saas_instances", status: "ok", rows: 2 },
-      { key: "saas_distribution", status: "error", rows: 0, error: "wikidata_http_429" },
-      { key: "web_applications", status: "ok", rows: 1 },
+      { key: "saas_distribution", status: "error", rows: 0, error: "wikidata_http_504" },
+      { key: "web_applications", status: "ok", rows: 2 },
+      { key: "details", status: "error", rows: 1, error: "1 batch(es) failed: wikidata_http_429" },
     ]);
-    expect(snapshot.listings.map((l) => l.external_id)).toEqual(["Q20", "Q100"]);
-    expect(snapshot.listings[1]?.source_categories).toEqual([
-      "software as a service",
-      "project management software",
-      "web application",
-    ]);
+    expect(snapshot.listings.map((l) => l.external_id)).toEqual(["Q20"]);
   });
 
   it("sends the descriptive User-Agent and fails on HTTP errors", async () => {
