@@ -114,6 +114,16 @@ jobs:
             sor-worker:ci
       - run: pnpm --filter @sor/web exec playwright install --with-deps chromium
       - run: pnpm test:e2e
+      # First bulk collection (10 Nov 2026): the real Wikidata snapshot is
+      # ingested after the main suite (its journeys count the labelled demo
+      # products), then Discover is checked on real data.
+      - name: Ingest the collected catalog (real Wikidata listings)
+        run: |
+          pnpm --filter @sor/worker catalog:build
+          node apps/worker/dist-catalog/ingest.js data/catalog/wikidata/listings.json | tee "$RUNNER_TEMP/ingest.json"
+          { echo '## Catalog ingestion'; echo '```json'; cat "$RUNNER_TEMP/ingest.json"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Discover on the real catalog
+        run: REAL_CATALOG=1 pnpm --filter @sor/web exec playwright test e2e/real-catalog.e2e.ts
       - name: Worker memory peak and graceful SIGTERM
         if: always()
         run: |

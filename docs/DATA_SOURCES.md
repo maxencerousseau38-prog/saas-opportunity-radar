@@ -1,6 +1,6 @@
 # Data sources — terms reviews and integration status
 
-**Last updated:** 6 November 2026 (Sprint 6 implemented; S6.0 review, S6.7 status update)
+**Last updated:** 10 November 2026 (first bulk catalog collection: catalog sources review, Wikidata integrated)
 **Governs:** ADR-013 (source acquisition and compliance), PD-14 method, PD-28.
 
 This document is the written terms review required by ADR-013 before a
@@ -25,6 +25,8 @@ Sprint 6** (product-owner instruction, 6 November 2026).
 | `hacker_news` | Discovery leads | Official HN API (Firebase), read-only, no key | 0 | 3 (community) for the launch fact only | Metadata only (see below) | **Approved 6 Nov 2026 (PD-28); connector implemented and tested on synthetic responses; registry row `planned`, disabled** (migration M8); activation blocked until the open verification below is done |
 | `product_hunt` | Discovery leads | API v2 (OAuth token) | 0 | 3 | — | **Not approved**: written permission requested from Product Hunt first (draft: `docs/sources/product-hunt-permission-request.md`, not sent) |
 | `brave_search` | Web search leads | API key, metered billing | Paid | — | Transient only | **Deferred** by the product owner (no spending) |
+| `wikidata` | **Catalog (bulk)** | Public SPARQL query service, no key | 0 | 3 (community-declared) | Full (CC0) | **Integrated and enabled (10 Nov 2026)**: first bulk catalog source (migration `20261116090001_catalog_sources`) |
+| `product_hunt` (catalog) | Catalog (fresh launches) | API v2, OAuth token | 0 | 3 | Metadata only | **Registered `planned`, disabled**: non-commercial use only; needs a token created by the product owner |
 
 Sources of PRD §13.1 not retained for discovery: see "Not retained".
 
@@ -51,6 +53,59 @@ those domains to the environment's allowed domains (pages are read only;
 no API call).
 
 ---
+
+## Catalog sources review (10 November 2026, first bulk collection)
+
+Instruction of the product owner (10 Nov 2026): collect real, recent and
+varied SaaS massively from the best catalog libraries (Product Hunt,
+Microlaunch, Uneed and others), after checking their real access and terms,
+without unauthorized scraping. The official pages were frozen by the
+`eval-snapshot` workflow on GitHub runners (this session's network policy
+blocks them): `docs/sources/terms/` (`index.json` lists URL, date, status).
+
+| Source | Access | What the official page says | Decision |
+|---|---|---|---|
+| **Wikidata** | Public SPARQL service, no key | "All structured data (i.e. the main, Property, Lexeme, and EntitySchema namespaces) is released into the public domain under Creative Commons Zero" (Wikidata:Licensing). WDQS manual: "a hard query deadline configured which is set to 60 seconds"; "One client (user agent + IP) is allowed 60 seconds of processing time each 60 seconds"; "access to the service is limited to 5 parallel queries per IP"; "Clients who don't comply with the User-Agent policy may be blocked completely". | **Retained — first connector, integrated and enabled.** Volume: several thousand software products with an official website, all categories; quality: curated identities (official site, inception, country, developer); freshness: weaker for recent launches. |
+| **Product Hunt** | API v2 (GraphQL), OAuth token | "The Product Hunt API must not be used for commercial purposes. If you would like to use it for your business, please contact us at hello@producthunt.com." "Currently the API is only accessible with a provided access_token." Terms of service page: HTTP 403 (not readable from the runners). | **Retained — second connector, not enabled.** Best freshness (daily launches). Allowed for SOR's personal, non-commercial use with a token the product owner creates in the API dashboard (never pasted in chat: a repository secret). Commercial use needs Product Hunt's permission (PD-29 draft). |
+| **Hacker News** (official API) | Firebase API, no key | Y Combinator Terms of Use: "you agree not to modify, copy, frame, scrape … the Site or the Site Content … In connection with your use of the Site you will not engage in or use any data mining, robots, scraping or similar data gathering or extraction methods", except "as expressly authorized"; no commercial use. The official API is the means Hacker News makes available. | **Kept as approved (PD-28)**, metadata only, personal non-commercial use; a Show HN item is a lead that needs its official site (Discovery), not a ready catalog record. Open verification of 6 Nov 2026 now done. |
+| **SaaSHub** | Beta JSON API, personal `api_key` | "To make requests and access the API you need an API key"; "If you are using the API, you have to disclose somewhere on your website that you are using SaaSHub' API." Lists of alternatives are "licensed under Creative Commons: Attribution-ShareAlike 4.0". | **Candidate for later** (alternatives graph); needs an account key and attribution/ShareAlike handling. |
+| **Microlaunch** | No API or feed found | "Permission is granted to temporarily download one copy of the materials on our Website for personal, non-commercial transitory viewing only … you may not: modify or copy the materials". | **Not retained** (copying prohibited; scraping would be unauthorized). |
+| **BetaList** | No API or feed found | Same licence wording: "personal, non-commercial transitory viewing only … you may not: modify or copy the materials". | **Not retained.** |
+| **Y Combinator company directory** (and the `yc-oss` mirror built from its search index) | No official API | The Terms of Use above prohibit copying and scraping the Site Content. | **Not retained.** |
+| **Uneed** | No API found on the home page | Terms are at `/terms-of-use` (the snapshot read `/terms`: HTTP 404); `robots.txt` allows listing pages. | **To review** (terms page to snapshot next). |
+
+### `wikidata` — controls
+
+- Collector: `packages/data-sources/src/connectors/wikidata.ts`, run by the
+  **Catalog collection** workflow (`.github/workflows/catalog-collect.yml`),
+  output committed in `data/catalog/wikidata/listings.json` (contract
+  `catalog-listing-1`, `@sor/contracts`).
+- Selections (light queries returning ids only): instances of software as a
+  service and its subclasses, items distributed as SaaS, web applications
+  and their subclasses, web services; each item must have an official
+  website (P856). Details are read in batches of 150 ids: English label and
+  description, official website, inception, country of origin (or the
+  developer's country), developer, classes / genres / uses.
+- Dropped: dissolved (P576) or discontinued (P2669) items, websites, social
+  networks, video games, online newspapers, search engines and similar
+  non-product classes.
+- Etiquette: one query at a time, 1 s pause, descriptive User-Agent with the
+  repository URL (no personal data), no retry loop on 429/504.
+- Ingestion (`apps/worker/src/catalog/ingest.ts`, RPC
+  `sor_ingest_catalog_listing`): identity by canonical URL and by Wikidata
+  id (never the name alone); a listing on a shared host (app stores, code
+  hosts, large vendors' shared domains) or matching an existing product only
+  by domain is **not imported** and counted for review; companies are
+  deduplicated by the developer's Wikidata id; the permanent exclusion
+  classifier runs on the name, description and source classes (excluded and
+  `needs_review` products are stored hidden); categories come from the
+  deterministic mapping `catmap-1` (`@sor/domain`), none when nothing
+  matches. Every stored field has provenance: a declared, third-party
+  evidence item (reliability 3) on a snapshot that keeps the listing and its
+  licence; re-ingesting the same listing creates nothing.
+- What Wikidata facts are not: verified product facts, pricing, customers,
+  traction or willingness to pay. They stay `declared` until an official
+  source confirms them.
 
 ## `manual_entry` and `user_import` (existing)
 
@@ -215,8 +270,9 @@ owner on 6 November 2026; no account, no key, no call.
 
 | Item | Page | Blocks |
 |---|---|---|
-| HN / Y Combinator site terms (data licence, commercial use, storage) | `https://www.ycombinator.com/legal/` | Activation of `hacker_news` |
-| Product Hunt API terms (commercial use, storage, attribution) | `https://www.producthunt.com/v2/docs`, `https://www.producthunt.com/legal/terms-of-service` | Any Product Hunt work |
+| ~~HN / Y Combinator site terms~~ | Read 10 Nov 2026 (see the catalog sources review) | Done; activation still needs a go-ahead |
+| Product Hunt terms of service (storage, attribution) | `https://www.producthunt.com/legal/terms-of-service` (HTTP 403 from the runners) | Enabling `product_hunt` |
+| Uneed terms of use | `https://www.uneed.best/terms-of-use` | Any Uneed work |
 | Brave Search API terms and pricing | `https://brave.com/search/api/`, `https://api-dashboard.search.brave.com/documentation/resources/terms-of-service` | Nothing (deferred) |
 
 ## Activation procedure (no source is enabled yet)

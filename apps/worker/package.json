@@ -13,7 +13,8 @@
     "test:resilience": "vitest run --dir test/resilience --no-file-parallelism",
     "eval:build": "tsup --config tsup.evals.config.ts",
     "build:container": "tsup --config tsup.container.config.ts",
-    "catalog:build": "tsup --config tsup.catalog.config.ts"
+    "catalog:build": "tsup --config tsup.catalog.config.ts",
+    "catalog:ingest": "node dist-catalog/ingest.js"
   },
   "dependencies": {
     "@sor/ai-gateway": "workspace:*",

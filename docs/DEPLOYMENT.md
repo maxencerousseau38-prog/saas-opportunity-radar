@@ -177,3 +177,31 @@ Status as of 7 November 2026, based on the repository's sprint notes:
 The security/RLS review and failure-mode work are not listed as outstanding:
 the review is S7.4, and the implemented failure-mode scenarios are S7.5a--b.
 No current CI run was checked while updating this runbook.
+
+## 9. Real catalog: collection and loading (10 November 2026)
+
+- **Collection** runs on GitHub runners: the *Catalog collection* workflow
+  (`.github/workflows/catalog-collect.yml`, manual or on connector changes)
+  writes `data/catalog/wikidata/listings.json` and commits it. No database
+  access, no secret.
+- **Local stack** (development, CI): after `supabase start` (migrations
+  applied) and, if wanted, `pnpm --filter @sor/web seed:demo`:
+
+  ```bash
+  pnpm --filter @sor/worker catalog:build
+  SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SECRET_KEY=<local secret key> \
+    pnpm --filter @sor/worker catalog:ingest ../../data/catalog/wikidata/listings.json
+  ```
+
+  The command prints a JSON summary (created, hidden by exclusion, matched,
+  sent to review with reasons, primary categories) and is idempotent.
+- **Hosted project** (staging, production): only on the product owner's
+  explicit go-ahead for that environment, after its migrations are applied
+  (including `20261116090001_catalog_sources`). Run the same command from a
+  trusted machine with that project's URL and secret key in the environment
+  (never committed, never pasted in chat). Nothing has been loaded into a
+  hosted project by Claude.
+- **Product Hunt** (prepared, disabled): needs a token created by the
+  product owner in the Product Hunt API dashboard, stored as a repository
+  secret, and a migration enabling `product_hunt`; non-commercial use only.
+

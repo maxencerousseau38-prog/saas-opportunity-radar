@@ -42,7 +42,7 @@ export const NON_PRODUCT_CLASSES = [
 
 /** Words in a source class label that mark a non-product item (checked after the query). */
 const NON_PRODUCT_LABELS =
-  /\b(video game|website|web portal|social network|online newspaper|news website|blog|online encyclopedia|wiki|dating|pornograph|online casino|gambling|cryptocurrency|television|film|tv series|magazine)\b/i;
+  /\b(video game|browser game|online game|game|website|web portal|social network|online newspaper|news website|news aggregator|blog|online encyclopedia|encyclopedia|dictionary|wiki|dating|pornograph|online casino|gambling|cryptocurrency|television|film|tv series|magazine|covid-19|epidemiolog|online database|scientific database|bibliographic database|biological database|digital library|museum|archive|radio station|internet forum|imageboard)\b/i;
 
 export interface WikidataQuery {
   key: string;
@@ -80,6 +80,16 @@ export const WIKIDATA_QUERIES: WikidataQuery[] = [
   {
     key: "web_services",
     pattern: "?item wdt:P31 wd:Q193424 .", // instance of web service
+    limit: 30000,
+  },
+  {
+    key: "web_browser_platform",
+    pattern: "?item wdt:P400 wd:Q6368 .", // platform: web browser
+    limit: 30000,
+  },
+  {
+    key: "www_platform",
+    pattern: "?item wdt:P400 wd:Q466 .", // platform: World Wide Web
     limit: 30000,
   },
 ];

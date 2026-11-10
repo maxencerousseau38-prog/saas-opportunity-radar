@@ -81,6 +81,40 @@ export async function importProductRow(
   return res as unknown as { status: string; product_id?: string; exclusion_status?: string };
 }
 
+/** Id of a registered source (null when the key is unknown). */
+export async function sourceIdByKey(service: DbClient, sourceKey: string): Promise<string | null> {
+  const row = check(
+    await service.from("sources").select("id").eq("source_key", sourceKey).maybeSingle(),
+  );
+  return row?.id ?? null;
+}
+
+/**
+ * Writes one collected catalog listing through the provenance pipeline
+ * (first bulk collection, migration 20261116090001_catalog_sources).
+ */
+export async function ingestCatalogListing(
+  service: DbClient,
+  args: { row: JsonValue; decision: JsonValue; exclusion: JsonValue },
+): Promise<{
+  status: "created" | "matched_existing";
+  product_id?: string;
+  exclusion_status?: string;
+}> {
+  const res = check(
+    await service.rpc("sor_ingest_catalog_listing", {
+      p_row: args.row,
+      p_decision: args.decision,
+      p_exclusion: args.exclusion,
+    }),
+  );
+  return res as unknown as {
+    status: "created" | "matched_existing";
+    product_id?: string;
+    exclusion_status?: string;
+  };
+}
+
 export async function importFeedbackRow(
   service: DbClient,
   args: { jobId: string; productId: string; row: JsonValue },
@@ -185,9 +219,23 @@ export async function identityLookups(
       .ilike("name", args.name.replace(/[%_\\]/g, (c) => `\\${c}`).slice(0, 200))
       .limit(10),
   );
+  const byExternal =
+    args.sourceId && args.externalId
+      ? check(
+          await service
+            .from("entity_identifiers")
+            .select("product_id")
+            .eq("identifier_type", "external_id")
+            .eq("source_id", args.sourceId)
+            .eq("value_normalized", args.externalId)
+            .is("valid_to", null)
+            .not("product_id", "is", null)
+            .limit(1),
+        )
+      : [];
   return {
     productByCanonicalUrl: byUrl?.[0]?.product_id ?? null,
-    productByExternalId: null,
+    productByExternalId: byExternal?.[0]?.product_id ?? null,
     productsByDomain: (byDomain ?? []).flatMap((r) => (r.product_id ? [r.product_id] : [])),
     companyByDomain: company?.[0]?.id ?? null,
     similarNameProducts: similar ?? [],

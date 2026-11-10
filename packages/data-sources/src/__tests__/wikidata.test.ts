@@ -49,6 +49,8 @@ describe("Wikidata connector", () => {
       "web_applications",
       "web_application_subclasses",
       "web_services",
+      "web_browser_platform",
+      "www_platform",
     ]);
   });
 
@@ -102,6 +104,8 @@ describe("Wikidata connector", () => {
         row({ website: uri("ftp://files.example/") }),
         row({ label: lit("Q12345") }),
         row({ classes: lit("video game") }),
+        row({ classes: lit("web application|COVID-19 dashboard") }),
+        row({ classes: lit("browser game") }),
         row({ item: uri("http://example.org/not-wikidata") }),
         row({
           inception: lit("1600-01-01T00:00:00Z"),
@@ -110,7 +114,7 @@ describe("Wikidata connector", () => {
       ),
       AT,
     );
-    expect(dropped).toBe(4);
+    expect(dropped).toBe(6);
     expect(listings).toHaveLength(1);
     expect(listings[0]?.launch_year).toBeNull(); // out-of-range year is unknown, not invented
   });

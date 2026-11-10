@@ -36,8 +36,10 @@ select ok(not exists (select 1 from public.companies where id = tests.id('c3')),
   'a company without any visible product is hidden');
 select is((select count(*)::int from public.categories where is_permanently_excluded), 0,
   'permanently excluded categories are never visible');
-select is((select count(*)::int from public.categories where parent_id is null), 7,
-  'the seven PRD parent categories are visible');
+select is((select count(*)::int from public.categories where parent_id is null
+             and slug in ('marketing-growth','sales-crm','data-analytics','automation-ai',
+                          'business-operations','ecommerce','developer-tools')), 7,
+  'the seven PRD parent categories are visible (others may be added, PRD §4.2.E)');
 
 select throws_ok($$select * from public.entity_identifiers$$, '42501', null,
   'identity data is server-only');

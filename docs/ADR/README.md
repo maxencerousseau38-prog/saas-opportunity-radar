@@ -200,6 +200,36 @@ Approved by the product owner:
   **Hugging Face (~260K products) and Enlisted (10K+)**, to be integrated
   only after their licences and data quality are verified (PD-34 below).
 
+## First bulk catalog collection (10 November 2026)
+
+Instruction of the product owner (10 Nov 2026): build the system that feeds
+the library and the Discover feed with real SaaS collected massively from
+the best catalog libraries, after checking their access and terms, without
+unauthorized scraping; implement the first working connector and prepare
+the next ones; import real SaaS; normalize, categorize, deduplicate while
+keeping the original sources. Decisions taken under that instruction (terms
+review: `docs/DATA_SOURCES.md`, official pages frozen in `docs/sources/terms`):
+
+- **Wikidata** (CC0, public query service) is the first catalog source,
+  integrated and enabled (migration `20261116090001_catalog_sources`).
+  Collection runs on GitHub runners (Catalog collection workflow) and is
+  committed as a snapshot; ingestion goes through identity resolution, the
+  permanent exclusion classifier, the deterministic category mapping
+  `catmap-1` and declared evidence with field provenance.
+- **Product Hunt**: connector prepared, source registered `planned` and
+  disabled. Its API terms allow only non-commercial use and require a token
+  the product owner creates; enabling it is a product-owner action (token
+  as a repository secret, then a migration). PD-29 remains for commercial use.
+- **Microlaunch, BetaList, Y Combinator directory**: not retained (their
+  terms prohibit copying). **Uneed**, **SaaSHub**: to review / later.
+- **Taxonomy**: six top-level categories added (Communication &
+  Collaboration, Productivity, Design & Creative, HR & Recruiting, Education
+  & Learning, Security & IT) under PRD §4.2.E ("Pouvoir créer de nouvelles
+  catégories") and §24.1 (global catalog, no sectoral restriction).
+- Loading the snapshot into a **hosted** database is not done by Claude: it
+  needs the product owner's go-ahead per environment and the hosted
+  project's migrations (`docs/DEPLOYMENT.md` §9).
+
 ## Pending decision register
 
 These questions were **not** settled by the 4 November arbitration. Each

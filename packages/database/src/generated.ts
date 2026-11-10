@@ -1774,6 +1774,9 @@ isOneToOne: true
 "sor_import_product_row":
 { Args: { "p_decision": Json,"p_exclusion": Json,"p_job_id": string,"p_row": Json,"p_row_index": number }; Returns: Json
                            },
+"sor_ingest_catalog_listing":
+{ Args: { "p_decision": Json,"p_exclusion": Json,"p_row": Json }; Returns: Json
+                           },
 "sor_manual_add_product":
 { Args: { "p_entry": Json,"p_exclusion": Json,"p_requested_by": string,"p_workspace_id": string }; Returns: Json
                            },
