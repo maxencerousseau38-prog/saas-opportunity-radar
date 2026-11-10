@@ -141,7 +141,9 @@ test("Ask AI builds a product dossier with selectable destination and context", 
 }) => {
   const ws = await signIn(page, MEMBER);
   await page.goto(`/w/${ws}/saas/metricflow`);
-  await page.getByRole("link", { name: "Ask AI" }).click();
+  // The profile's Ask AI link carries the product (the sidebar has an "Ask AI" link too).
+  await page.locator('main a[href*="/ask-ai?products="]').first().click();
+  await expect(page).toHaveURL(/\/ask-ai\?products=/);
 
   await expect(page.getByRole("heading", { level: 1, name: "Ask AI" })).toBeVisible();
   await expect(page.getByText("MetricFlow · 1 SaaS")).toBeVisible();
