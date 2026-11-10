@@ -1,0 +1,80 @@
+https://mcp.uneed.best/v1/launches?limit=2
+2026-11-10T18:21:14.982Z
+
+{
+"launches": [
+{
+"name": "pdf.net MCP",
+"slug": "pdf-net-mcp",
+"description": "Connect ChatGPT and Claude to automate PDF workflows with AI",
+"rich_description": " pdf.net MCP is a Model Context Protocol (MCP) server that integrates PDF automation capabilities with AI assistants like ChatGPT and Claude. Generate, translate, merge, split, and edit PDF documents programmatically through AI-powered workflows.
+Ideal for developers and teams looking to automate document processing tasks without manual intervention. Connect your favorite AI assistant to handle complex PDF operations efficiently.
+",
+"url": "https://pdf.net/mcp-server",
+"uneed_url": "https://www.uneed.best/tool/pdf-net-mcp",
+"logo": "https://apcdouatoejrvwoqevfc.supabase.co/storage/v1/object/public/logos/logos/pdf-net-mcp_20261109133911.png",
+"images": null,
+"category": "Business",
+"pricing": "Free",
+"rate": 0,
+"premium": false,
+"launch_date": "2026-11-10",
+"created_at": "2026-11-10T08:02:04.022313",
+"twitter": null,
+"bluesky": null,
+"linkedin": "https://www.linkedin.com/company/pdfnet/",
+"github": null,
+"instagram": "https://www.instagram.com/pdf.net_official/",
+"facebook": null,
+"youtube": "https://www.youtube.com/@PDFDotNetOfficial",
+"open_source": false,
+"repo_url": null,
+"tiktok": "https://www.tiktok.com/@pdf.net_official",
+"domain_rating": 37,
+"on_sale": false,
+"sold": false,
+"sale_price": null,
+"sale_listed_at": null,
+"ttm_revenue": null,
+"ttm_profit": null
+},
+{
+"name": "Corenna",
+"slug": "corenna",
+"description": "Autonomous Zero-Clone Android & iOS builds from repo's using GitHub's security",
+"rich_description": " Corenna Converts web applications into native mobile apps for Android and iOS. Uses GitHubs security, Zero-Clone build's in your own repository with ephemeral runners keeping your code safe and never leaves your possession.
+Now with AI builds: connect Claude, ChatGPT, Claude Code or Cursor through our official MCP server and ask for your app. Your AI sets up the project, runs the build and hands you the download link. In Claude Code or Cursor, it can also fix a failed build and try again on its own. Sandbox builds, .apk,.aab and .ipa files in minutes. No-Mac or PC required.
+Works with Capacitor, React Native and Flutter, and with repos from Lovable (with or without TanStack Start), Cursor, v0, Replit and more.
+Creates your Android signing key, stores your Apple certificates and profiles, and manages app IDs and build numbers.
+Upload your .aab straight to Google Play, or build an .apk to test on a real phone. Free sandbox builds check your setup first, and your first Android build is free.
+",
+"url": "https://corenna.dev",
+"uneed_url": "https://www.uneed.best/tool/corenna",
+"logo": "https://apcdouatoejrvwoqevfc.storage.supabase.co/storage/v1/object/public/logos/logos/1794221264692-corennaicon512.webp",
+"images": null,
+"category": "Development",
+"pricing": "Paid",
+"rate": 0,
+"premium": false,
+"launch_date": "2026-11-10",
+"created_at": "2026-11-10T08:02:03.578677",
+"twitter": null,
+"bluesky": null,
+"linkedin": null,
+"github": null,
+"instagram": null,
+"facebook": null,
+"youtube": null,
+"open_source": false,
+"repo_url": null,
+"tiktok": null,
+"domain_rating": 14,
+"on_sale": false,
+"sold": false,
+"sale_price": null,
+"sale_listed_at": null,
+"ttm_revenue": null,
+"ttm_profit": null
+}
+]
+}

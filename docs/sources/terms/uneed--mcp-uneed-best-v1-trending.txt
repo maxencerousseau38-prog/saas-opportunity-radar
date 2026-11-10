@@ -1,0 +1,57 @@
+https://mcp.uneed.best/v1/trending?period=weekly&date=2026-11-02&limit=3
+2026-11-10T18:21:13.959Z
+
+{
+"period": "weekly",
+"date": "2026-11-02",
+"ranking": [
+{
+"rank": 1,
+"name": "One-click teaching",
+"slug": "one-click-teaching",
+"description": "Transform class notes into study guides and practice tests",
+"url": "https://oneclickteaching.com",
+"uneed_url": "https://www.uneed.best/tool/one-click-teaching",
+"logo": "https://apcdouatoejrvwoqevfc.supabase.co/storage/v1/object/public/logos/logos/one-click-teaching_20261102151525.png",
+"category": "Personal Life",
+"pricing": "Freemium",
+"rate": 5,
+"premium": false,
+"launch_date": "2026-11-03",
+"vote_count": 51,
+"vote_value_sum": 172
+},
+{
+"rank": 2,
+"name": "TimeLoop",
+"slug": "timeloop",
+"description": "Say or type what you need to do. TimeLoop plans the day.",
+"url": "https://trytimeloop.com",
+"uneed_url": "https://www.uneed.best/tool/timeloop",
+"logo": "https://apcdouatoejrvwoqevfc.supabase.co/storage/v1/object/public/logos/logos/timeloop_20261104094408.png",
+"category": "Personal Life",
+"pricing": "Freemium",
+"rate": 5,
+"premium": false,
+"launch_date": "2026-11-05",
+"vote_count": 57,
+"vote_value_sum": 171
+},
+{
+"rank": 3,
+"name": "Highseat",
+"slug": "highseat",
+"description": "Cookieless web analytics with revenue on every breakdown, net of refunds",
+"url": "https://highseat.com",
+"uneed_url": "https://www.uneed.best/tool/highseat",
+"logo": "https://apcdouatoejrvwoqevfc.storage.supabase.co/storage/v1/object/public/logos/logos/1793801253614-highseatlogo.webp",
+"category": "Marketing",
+"pricing": "Paid",
+"rate": 5,
+"premium": false,
+"launch_date": "2026-11-06",
+"vote_count": 39,
+"vote_value_sum": 157
+}
+]
+}

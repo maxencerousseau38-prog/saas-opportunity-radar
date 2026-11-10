@@ -13,7 +13,7 @@
   {
     "vendor": "producthunt",
     "url": "https://www.producthunt.com/legal/terms-of-service",
-    "retrieved_at": "2026-11-10T18:00:08.321Z",
+    "retrieved_at": "2026-11-10T18:21:13.122Z",
     "status": "blocked",
     "reason": "http_403"
   },
@@ -75,7 +75,7 @@
   {
     "vendor": "uneed",
     "url": "https://www.uneed.best/terms",
-    "retrieved_at": "2026-11-10T18:00:08.423Z",
+    "retrieved_at": "2026-11-10T18:21:13.239Z",
     "status": "unavailable",
     "reason": "http_404"
   },
@@ -243,5 +243,27 @@
     "text_chars": 12649,
     "html_bytes": 26397,
     "file": "uneed--mcp-uneed-best-openapi-json.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://mcp.uneed.best/v1/trending?period=weekly&date=2026-11-02&limit=3",
+    "final_url": "https://mcp.uneed.best/v1/trending?period=weekly&date=2026-11-02&limit=3",
+    "retrieved_at": "2026-11-10T18:21:13.959Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1578,
+    "html_bytes": 1862,
+    "file": "uneed--mcp-uneed-best-v1-trending.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://mcp.uneed.best/v1/launches?limit=2",
+    "final_url": "https://mcp.uneed.best/v1/launches?limit=2",
+    "retrieved_at": "2026-11-10T18:21:14.982Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 3315,
+    "html_bytes": 3795,
+    "file": "uneed--mcp-uneed-best-v1-launches.txt"
   }
 ]
