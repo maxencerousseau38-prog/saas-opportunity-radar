@@ -13,7 +13,7 @@
   {
     "vendor": "producthunt",
     "url": "https://www.producthunt.com/legal/terms-of-service",
-    "retrieved_at": "2026-11-10T17:21:10.526Z",
+    "retrieved_at": "2026-11-10T17:50:49.373Z",
     "status": "blocked",
     "reason": "http_403"
   },
@@ -75,7 +75,7 @@
   {
     "vendor": "uneed",
     "url": "https://www.uneed.best/terms",
-    "retrieved_at": "2026-11-10T17:21:11.756Z",
+    "retrieved_at": "2026-11-10T17:50:49.596Z",
     "status": "unavailable",
     "reason": "http_404"
   },
@@ -89,6 +89,17 @@
     "text_chars": 158,
     "html_bytes": 159,
     "file": "uneed--www-uneed-best-robots-txt.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/terms-of-use",
+    "final_url": "https://www.uneed.best/terms-of-use",
+    "retrieved_at": "2026-11-10T17:50:50.971Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 16995,
+    "html_bytes": 166447,
+    "file": "uneed--www-uneed-best-terms-of-use.txt"
   },
   {
     "vendor": "betalist",
@@ -199,5 +210,16 @@
     "text_chars": 8358,
     "html_bytes": 63048,
     "file": "saashub--www-saashub-com-site-terms.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/llms.txt",
+    "final_url": "https://www.uneed.best/llms.txt",
+    "retrieved_at": "2026-11-10T17:50:51.981Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 579903,
+    "html_bytes": 785381,
+    "file": "uneed--www-uneed-best-llms-txt.txt"
   }
 ]

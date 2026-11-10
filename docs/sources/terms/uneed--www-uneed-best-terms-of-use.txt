@@ -1,0 +1,207 @@
+https://www.uneed.best/terms-of-use
+2026-11-10T17:50:50.971Z
+
+Launchpad
+Community
+Pricing
+Black Friday
+Products
+More
+Terms of Use
+Terms of Use for Uneed
+Last Updated: November 6, 2026
+1. Introduction
+Welcome to Uneed ("the Platform"), operated by Uneed Platform , a company registered in France, located at 20 rue du calvaire de grillaud, 44100 Nantes, France. By accessing or using our website at https://www.uneed.best/ and all related services, you agree to comply with and be bound by these Terms of Use. Please read these terms carefully before using our services.
+These Terms of Use ("Terms") constitute a legally binding agreement between you ("User," "you," or "your") and Uneed Platform ("we," "us," or "our") regarding your use of the Platform.
+2. Acceptance of Terms
+By accessing or using the Platform, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to all the terms and conditions of this agreement, you may not access or use the Platform.
+3. Changes to Terms
+We reserve the right to modify these Terms at any time. We will provide notice of any material changes by updating the "Last Updated" date at the top of these Terms. Where a material change affects a paid service you have already purchased, we will also notify you by email at the address associated with your account. Your continued use of the Platform following the posting of revised Terms means that you accept and agree to the changes.
+4. Account Registration
+4.1 Account Creation
+To access certain features of the Platform, you may be required to register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.
+4.2 Account Security
+You are responsible for safeguarding the password that you use to access the Platform and for any activities or actions under your account. We encourage you to use "strong" passwords (passwords that use a combination of upper and lowercase letters, numbers, and symbols) with your account.
+4.3 Account Termination
+We reserve the right to suspend or terminate your account and your access to the Platform if you violate these Terms or if we determine, in our sole discretion, that your actions may cause legal liability for you, other users, or Uneed. Uneed may remove accounts, submitted products, votes, comments, or any other content without prior notice and at our sole discretion for any reason, including but not limited to violations of these Terms, inappropriate content, or actions that compromise the integrity of the Platform.
+5. User Content
+5.1 Content Responsibility
+You are solely responsible for the content that you post, upload, or otherwise make available via the Platform ("User Content"). You represent and warrant that:
+You own or have the necessary rights to use and authorize us to use all intellectual property rights in and to any User Content.
+The User Content does not violate any third-party rights, including intellectual property rights and privacy rights.
+The User Content complies with these Terms and all applicable laws and regulations.
+5.2 Content License
+By submitting User Content to the Platform, you grant us a worldwide, non-exclusive, royalty-free license to use, copy, modify, create derivative works based on, distribute, publicly display, publicly perform, and otherwise exploit such User Content in connection with the Platform.
+5.3 Content Removal
+We reserve the right to remove any User Content, product listings, profiles, or other content from the Platform for any reason, without prior notice or liability. Uneed has full discretion to determine what content is appropriate for the Platform and may remove content that violates these Terms or that we believe may adversely affect the Platform, its users, or Uneed's reputation.
+6. Prohibited Activities
+You agree not to engage in any of the following prohibited activities:
+Violating any applicable laws, regulations, or third-party rights.
+Using the Platform for any illegal purpose or to promote illegal activities.
+Posting or transmitting any content that is unlawful, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, or otherwise objectionable.
+Attempting to interfere with, compromise, or disable any features of the Platform.
+Impersonating another person or entity or misrepresenting your affiliation with a person or entity.
+Using the Platform in any manner that could disable, overburden, damage, or impair it.
+Engaging in any automated use of the system, such as using scripts to send comments or messages.
+Using bots, scripts, or automated tools to manipulate votes, rankings, or any other metrics.
+Creating multiple accounts for the purpose of manipulating rankings, inflating metrics, or circumventing restrictions.
+Submitting or promoting NSFW (Not Safe For Work) content, including but not limited to pornography, excessive violence, or other adult content.
+Submitting or promoting gambling products, services, or applications that involve real money wagering.
+Submitting products on behalf of third parties as a commercial service (for example, as a directory submission service, launch agency, or backlink provider), or reselling, sharing, or transferring any launch, pass, or credit purchased on Uneed.
+Any form of cheating or manipulation of the Platform's intended functionality and metrics.
+7. Enforcement and Anti-Cheating Measures
+7.1 Right to Ban and Remove Content
+Uneed reserves the absolute right to ban, suspend, or remove any tools, products, accounts, or content from the Platform that are suspected of cheating, manipulation, or violation of these Terms, regardless of whether the user or product owner has paid for premium services, queue-skipping features, or any other paid promotional services.
+7.2 Anti-Cheating Policy
+The Platform maintains a zero-tolerance policy toward cheating and manipulation activities, including but not limited to:
+Creating multiple accounts to promote the same product or circumvent platform restrictions
+Using artificial means to inflate votes, views, rankings, or any other metrics
+Coordinated manipulation campaigns involving multiple users or accounts
+Any attempt to game or exploit the Platform's algorithms, ranking systems, or promotional features
+7.3 Investigation and Detection
+Uneed employs various methods and technologies to detect suspicious activities and may investigate accounts, tools, and user behavior patterns. We reserve the right to take immediate action based on our investigation findings without prior notice.
+7.4 No Refunds for Violations
+Users who engage in cheating or manipulation activities forfeit any right to refunds for paid services, including but not limited to premium listings, queue-skipping payments, advertising placements, or any other promotional services. Payment for these services does not grant immunity from enforcement actions.
+7.5 Permanent Consequences
+Violations of our anti-cheating policies may result in permanent bans from the Platform, removal of all associated content, and prohibition from creating new accounts or submitting new products in the future.
+7.6 Brand Impersonation and Fraudulent Products
+Products that impersonate, copy, or misrepresent well-known brands, services, or companies (for example, claiming to be "Facebook," "Google," or any other established brand while redirecting to unrelated websites or services) are strictly prohibited. Uneed reserves the right to immediately remove such products and permanently ban the associated accounts without prior notice and without refund for any paid services. This includes products whose name or domain uses the name of a third-party product, service, or AI model (for example, a domain built around the name of a well-known AI model) to capture its search traffic, when the product is not operated by or officially affiliated with the owner of that name. This policy applies regardless of the amount paid for premium features, queue-skipping, launch passes, or promotional services.
+8. Intellectual Property Rights
+8.1 Platform Content
+The Platform and its original content, features, and functionality are owned by Uneed and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.
+8.2 Trademarks
+All trademarks, logos, and service marks displayed on the Platform are the property of their respective owners, whether or not they are affiliated with us.
+9. Product Submissions and Promotions
+9.1 Submissions
+If you submit a product to be listed on Uneed, you represent and warrant that you are a founder, employee, or partner of the company or project behind the product, that you have the authority to promote the product, and that all information provided is accurate and complete. Submitting products on behalf of clients or other third parties as a commercial service is not permitted without Uneed's prior written agreement.
+9.2 Product Information
+We do not guarantee the accuracy, completeness, or usefulness of any product information on the Platform. Product descriptions and other content may contain inaccuracies or errors.
+9.3 Promotions
+We may run promotions, contests, or other events on the Platform. Each promotion may have additional terms and conditions, which will be posted or otherwise made available to you.
+9.4 Launch Passes and Launch Credits
+Launch passes, launch credits, and any other offer granting multiple launches (including offers described as "unlimited," "annual," or "lifetime") are subject to the following rules:
+They are personal and non-transferable. They may only be used for products that meet the requirements of Section 9.1, and may not be resold, shared, or used to launch products for clients or other third parties.
+"Lifetime" refers to the lifetime of the Uneed service, not to the lifetime of the purchaser.
+Uneed may set and adjust reasonable usage limits (for example, a maximum number of launches per month) to protect the quality of the Platform and fair access for all makers, including for offers described as "unlimited."
+Every launch made with a pass or credit remains subject to these Terms and to Uneed's moderation, including Sections 6 and 7.
+If Uneed terminates a pass for reasons other than a violation of these Terms, Uneed will refund the price paid for the pass. If a pass is terminated because of a violation of these Terms, Section 7.4 applies and no refund is due.
+10. Third-Party Links and Services
+The Platform may contain links to third-party websites or services that are not owned or controlled by Uneed. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party websites or services. You acknowledge and agree that we shall not be responsible or liable for any damage or loss caused by or in connection with the use of any such content, goods, or services available through third-party websites or services.
+11. Disclaimer of Warranties
+THE PLATFORM IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. UNEED EXPRESSLY DISCLAIMS ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+WE DO NOT WARRANT THAT THE PLATFORM WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE, OR THAT DEFECTS, IF ANY, WILL BE CORRECTED.
+12. Limitation of Liability
+IN NO EVENT SHALL UNEED BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION, LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, RESULTING FROM YOUR ACCESS TO OR USE OF OR INABILITY TO ACCESS OR USE THE PLATFORM.
+13. Indemnification
+You agree to defend, indemnify, and hold harmless Uneed and its licensees and licensors, and their employees, contractors, agents, officers, and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees) arising from:
+Your use of and access to the Platform;
+Your violation of any term of these Terms;
+Your violation of any third-party right, including without limitation any copyright, property, or privacy right; or
+Any claim that your User Content caused damage to a third party.
+14. Refund Policy
+14.1 General Policy
+Due to the nature of our services, which primarily consist of advertising placements and promotional services, we generally do not offer refunds once a service has been delivered or a promotional campaign has been launched.
+14.2 Exceptions
+We may provide refunds or service credits in the following limited circumstances:
+Technical issues or bugs on our platform that prevent the proper delivery of purchased services
+Service outages or platform downtime that significantly impact the delivery of your purchased promotional services
+Errors on our part in the delivery or execution of your purchased services
+14.3 Refund Process
+If you believe you are entitled to a refund under the circumstances outlined above:
+Contact us at contact@uneed.best within 7 days of the issue occurring
+Provide detailed information about the technical issue or service problem
+We will investigate your claim and respond within 5 business days
+Approved refunds will be processed within 10 business days to the original payment method
+14.4 Non-Refundable Services
+The following services are strictly non-refundable:
+Advertising placements that have been successfully displayed or promoted
+Premium listings that have been published and made visible to users
+Any promotional services where delivery has been completed as specified
+14.5 Lifetime Pro (Black Friday 2026)
+By exception to Sections 14.1 and 14.4, Lifetime Pro bought between November 16 and December 4, 2026 is refundable in full, for any reason, on request sent before December 31, 2026, 11:59 pm Pacific Time to contact@uneed.best . The refund ends Lifetime Pro and removes the Skip the line credits still on the account. Section 7.4 still applies.
+15. Governing Law and Jurisdiction
+These Terms shall be governed by and construed in accordance with the laws of France, without regard to its conflict of law provisions. You agree to submit to the personal and exclusive jurisdiction of the courts located within France for the resolution of any disputes.
+16. Severability
+If any provision of these Terms is held to be unenforceable or invalid, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law, and the remaining provisions will continue in full force and effect.
+17. Entire Agreement
+These Terms constitute the entire agreement between you and Uneed regarding the use of the Platform and supersede all prior and contemporaneous written or oral agreements between you and Uneed.
+18. Waiver
+Our failure to exercise or enforce any right or provision of these Terms shall not operate as a waiver of such right or provision.
+19. Contact Information
+If you have any questions about these Terms, please contact us at:
+Company: Uneed Platform
+Address: 20 rue du calvaire de grillaud, 44100 Nantes, France
+Email: contact@uneed.best
+Thank you for taking the time to read these Terms of Use. By using Uneed, you acknowledge that you have read, understood, and agree to be bound by these Terms.
+Uneed is a social launchpad for tech products. Get guaranteed homepage visibility, powerful SEO juice with a 75 DR backlink, and feedback from a community that actually cares
+Made in EU 🇪🇺
+Categories
+Development products
+Design products
+Marketing products
+Business products
+Personal life products
+Products For Sale
+Alternatives
+Product Hunt alternatives
+Supabase alternatives
+Stripe alternatives
+Vercel alternatives
+Nuxt alternatives
+Ahrefs alternatives
+Semrush alternatives
+Zapier alternatives
+Mailchimp alternatives
+Flippa alternatives
+All our alternatives
+Buying guides
+Best tags
+AI Products
+Analytics Tools
+SEO Tools
+Productivity
+Open Source
+All tags
+Uneed
+How it works
+Features
+Launch Guide
+Our blog
+The Build Brief
+Advertise on Uneed
+Pricing
+Pro perks
+Add your product
+MCP for AI agents
+Affiliate programs to promote
+Become an affiliate
+FAQs
+Contact
+Changelog
+Community Leaderboard
+Free tools
+Product Launch Checklist
+Fake Notification Generator
+Startup Name Generator
+Fake Analytics Generator
+Reaction Time Test
+YouTube Playlist Length Calculator
+Twitter (X) Carousel Maker
+NPS Calculator
+SaaS Valuation Calculator
+Domain Rating Checker
+All free tools
+Best products
+Best AI products
+Best Analytics tools
+Best SEO tools
+Best Productivity tools
+Ask AI about Uneed
+Ask ChatGPT
+Ask Claude
+Ask Perplexity
+Ask Grok
+© 2019-2026 Uneed™. All Rights Reserved. Privacy Policy - Terms of Use
+We use cookies
+Essential and analytics cookies keep Uneed running and help us understand usage, and a referral cookie credits the partner who sent you. Marketing cookies are optional. Privacy policy
+Reject Accept
