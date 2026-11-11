@@ -14,6 +14,13 @@ test("browse Discover: only eligible products, three display modes", async ({ pa
   await expect(
     page.getByRole("article", { name: "MetricFlow" }).getByTestId("product-visual-preview"),
   ).toContainText("Capture d’interface non disponible");
+  // The preview zone opens the official site (PRD §24.4), even without a visual.
+  await expect(
+    page
+      .getByRole("article", { name: "MetricFlow" })
+      .getByTestId("product-visual-preview")
+      .getByRole("link", { name: "Ouvrir le site officiel de MetricFlow" }),
+  ).toHaveAttribute("href", "https://metricflow.test/");
   // Permanently excluded and under-review products never appear.
   await expect(page.getByText("AffiliTrack")).toHaveCount(0);
   await expect(page.getByText("Partnerly Hub")).toHaveCount(0);
@@ -105,7 +112,7 @@ test("French text search", async ({ page }) => {
 test("profile: sourced values, pricing, evidence and competitors", async ({ page }) => {
   await signIn(page, MEMBER);
   await waitForResults(page);
-  await page.getByRole("link", { name: "MetricFlow" }).first().click();
+  await page.getByRole("link", { name: "MetricFlow", exact: true }).first().click();
   await expect(page.getByRole("heading", { level: 1, name: "MetricFlow" })).toBeVisible();
 
   const analyze = page.getByRole("button", { name: "Analyze Opportunity" });

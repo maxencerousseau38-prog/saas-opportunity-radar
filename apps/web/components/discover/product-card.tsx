@@ -9,6 +9,7 @@ import {
   ACQUISITION_CHANNEL_STATUS,
   CUSTOMER_TYPE,
   PRICING_STATUS,
+  confidenceLabel,
   countryName,
   isDemoUrl,
   teamLabel,
@@ -103,6 +104,22 @@ function Facts({ product }: { product: ProductCard }) {
   );
 }
 
+/** Visible, keyboard-reachable access to the official site from the preview. */
+function OfficialSiteLink({ product, className }: { product: ProductCard; className?: string }) {
+  if (!product.website_url) return null;
+  return (
+    <a
+      href={product.website_url}
+      target="_blank"
+      rel="noopener noreferrer nofollow"
+      aria-label={`Ouvrir le site officiel de ${product.name}`}
+      className={cn("inline-flex items-center gap-1 text-xs", className)}
+    >
+      Ouvrir le site officiel <ExternalLink size={12} aria-hidden />
+    </a>
+  );
+}
+
 export function ProductCardView({
   product,
   compact,
@@ -138,15 +155,38 @@ export function ProductCardView({
         {asset ? (
           <>
             {/* Only authorized, evidence-linked catalog assets reach this DTO. */}
-            {/* eslint-disable-next-line @next/next/no-img-element -- source-approved external product asset */}
-            <img
-              src={asset.url}
-              alt={asset.alt_text}
-              loading="lazy"
-              decoding="async"
-              referrerPolicy="no-referrer"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+            {product.website_url ? (
+              // The preview opens the official site (PRD §24.4); the visible
+              // link below is the keyboard path, this one is pointer-only.
+              <a
+                href={product.website_url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                tabIndex={-1}
+                aria-hidden
+                className="absolute inset-0"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- source-approved external product asset */}
+                <img
+                  src={asset.url}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  className="h-full w-full object-cover"
+                />
+              </a>
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element -- source-approved external product asset
+              <img
+                src={asset.url}
+                alt={asset.alt_text}
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8 text-white">
               <span className="text-xs font-medium">
                 {asset.asset_type === "product_screenshot"
@@ -155,14 +195,17 @@ export function ProductCardView({
                     ? "Visuel officiel"
                     : "Illustration officielle"}
               </span>
-              <a
-                href={asset.source_url}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="inline-flex items-center gap-1 text-xs underline"
-              >
-                Source <ExternalLink size={12} />
-              </a>
+              <span className="flex items-center gap-3">
+                <OfficialSiteLink product={product} className="text-white underline" />
+                <a
+                  href={asset.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="inline-flex items-center gap-1 text-xs underline"
+                >
+                  Source du visuel <ExternalLink size={12} />
+                </a>
+              </span>
             </div>
           </>
         ) : (
@@ -180,6 +223,7 @@ export function ProductCardView({
                 <ImageOff size={12} aria-hidden /> Aperçu authentique non disponible · Capture
                 d’interface non disponible
               </p>
+              <OfficialSiteLink product={product} className="mt-1 text-accent hover:underline" />
             </div>
           </>
         )}
@@ -218,7 +262,7 @@ export function ProductCardView({
               href={channel.source_url}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              title={`${channel.role === "primary" ? "Principal" : "Secondaire"} · ${channel.source_name ?? "Source"} · ${new Date(channel.observed_at).toLocaleDateString("fr-FR")} · confiance ${channel.confidence ?? "inconnue"}%`}
+              title={`${channel.role === "primary" ? "Principal" : "Secondaire"} · ${channel.source_name ?? "Source"} · ${new Date(channel.observed_at).toLocaleDateString("fr-FR")} · ${confidenceLabel(channel.confidence)}`}
               className="inline-flex min-w-28 flex-col items-start rounded border border-border px-1.5 py-1 text-[11px] hover:bg-surface-2"
             >
               <span className="flex items-center gap-1">
@@ -230,8 +274,8 @@ export function ProductCardView({
               </span>
               <span className="text-[10px] text-muted">
                 {channel.source_name ?? "Source"} ·{" "}
-                {new Date(channel.observed_at).toLocaleDateString("fr-FR")} · confiance{" "}
-                {channel.confidence ?? "inconnue"}%
+                {new Date(channel.observed_at).toLocaleDateString("fr-FR")} ·{" "}
+                {confidenceLabel(channel.confidence)}
               </span>
             </a>
           ))}
@@ -315,8 +359,8 @@ export function ProductListRow({ product, ...actions }: ActionProps & { product:
                 </a>
                 <span className="block text-[10px] text-muted">
                   {channel.source_name ?? "Source"} ·{" "}
-                  {new Date(channel.observed_at).toLocaleDateString("fr-FR")} · confiance{" "}
-                  {channel.confidence ?? "inconnue"}%
+                  {new Date(channel.observed_at).toLocaleDateString("fr-FR")} ·{" "}
+                  {confidenceLabel(channel.confidence)}
                 </span>
               </li>
             ))}
