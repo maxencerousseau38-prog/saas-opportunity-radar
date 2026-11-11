@@ -1,0 +1,137 @@
+{
+  "id": "canny",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:59:58.778Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Free",
+      "name_any": ["free"],
+      "price_amount_any": [0],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "$ 0 / month Free",
+      "page": "https://canny.io/pricing"
+    },
+    {
+      "name": "Pro",
+      "name_any": ["pro"],
+      "price_amount_any": [79],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "usage"],
+      "quote": "starts at $ 79 / month billed yearly",
+      "page": "https://canny.io/pricing"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Tie feedback to opportunity revenue at enterprise scale",
+      "page": "https://canny.io/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Autopilot AI feedback capture and deduplication",
+      "any": ["autopilot", "feedback capture", "capture feedback", "deduplicat"],
+      "quote": "Autopilot automatically captures, deduplicates, and triages feedback",
+      "page": "https://canny.io/pricing"
+    },
+    {
+      "label": "Feedback portal with feature requests and voting",
+      "any": ["portal", "feature request", "vote", "voting", "feedback board"],
+      "quote": "Customers submit feature requests and vote for the ones they want most",
+      "page": "https://canny.io/"
+    },
+    {
+      "label": "Prioritization by revenue impact",
+      "any": ["priorit", "mrr", "revenue impact"],
+      "quote": "Keep track of the amount of revenue a feature impacts",
+      "page": "https://canny.io/features"
+    },
+    {
+      "label": "Product roadmap",
+      "any": ["roadmap"],
+      "quote": "Create public or private roadmaps and keep everyone on the same page",
+      "page": "https://canny.io/features"
+    },
+    {
+      "label": "Changelog",
+      "any": ["changelog", "product update", "announce"],
+      "quote": "Announce product updates to engage people with your newest features.",
+      "page": "https://canny.io/features"
+    },
+    {
+      "label": "Status updates to close the feedback loop",
+      "any": ["status update", "close the loop", "feedback loop", "notif"],
+      "quote": "Close the feedback loop with status updates sent via email",
+      "page": "https://canny.io/features"
+    },
+    {
+      "label": "MCP server for AI tools",
+      "any": ["mcp"],
+      "quote": "Connect Canny to ChatGPT, Claude, and Cursor.",
+      "page": "https://canny.io/features/mcp"
+    },
+    {
+      "label": "User segmentation",
+      "any": ["segment"],
+      "quote": "Filter feedback to user groups you care about e.g. paying customers",
+      "page": "https://canny.io/features"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Slack",
+      "any": ["slack"],
+      "quote": "Intercom, Zendesk, Slack, Chrome Extension",
+      "page": "https://canny.io/pricing"
+    },
+    {
+      "label": "Jira",
+      "any": ["jira"],
+      "quote": "Jira, ClickUp, Linear, Asana, GitHub, Azure DevOps",
+      "page": "https://canny.io/pricing"
+    },
+    {
+      "label": "HubSpot",
+      "any": ["hubspot"],
+      "quote": "HubSpot, Salesforce",
+      "page": "https://canny.io/pricing"
+    },
+    {
+      "label": "Salesforce",
+      "any": ["salesforce"],
+      "quote": "HubSpot, Salesforce",
+      "page": "https://canny.io/pricing"
+    },
+    {
+      "label": "Zendesk",
+      "any": ["zendesk"],
+      "quote": "Intercom, Zendesk, Slack, Chrome Extension",
+      "page": "https://canny.io/pricing"
+    },
+    {
+      "label": "Intercom",
+      "any": ["intercom"],
+      "quote": "Intercom, Zendesk, Slack, Chrome Extension",
+      "page": "https://canny.io/pricing"
+    }
+  ],
+  "fields": [],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "The pricing toggle was captured on 'Yearly 20% off': Pro shows 'starts at $79 / month billed yearly'; the monthly-billed Pro price is not in the snapshot, so only 79 is listed. Pro is also scaled by tracked users (100+, automatic upgrade to the next tier), hence 'usage' is accepted. Business has no displayed price ('Let's talk', 'Custom'). 'Plans for B2C' and non-profit discounts are not plans. Gong is also prominently named as a feedback source (6-integration cap). ChatGPT, Claude and Cursor are MCP clients; counting them as integrations is acceptable but they were not selected. '100K+ registered companies' and testimonials are company claims, not payment proof. The MCP pages mention LLMs as product features; they contain no instruction aimed at an AI reader."
+}

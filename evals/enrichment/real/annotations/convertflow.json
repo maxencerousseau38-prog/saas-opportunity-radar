@@ -1,0 +1,164 @@
+{
+  "id": "convertflow",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:58:11.114Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Free",
+      "name_any": ["free"],
+      "price_amount_any": [0],
+      "currency": "USD",
+      "billing_period_any": ["month", "unknown"],
+      "quote": "You can use ConvertFlow's funnel platform for free to launch 5 funnel campaigns.",
+      "page": "https://www.convertflow.com/pricing"
+    },
+    {
+      "name": "Personal",
+      "name_any": ["personal"],
+      "price_amount_any": [29, 25],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "usage"],
+      "quote": "Personal Starts at $29/m Annual discount to $25/m",
+      "page": "https://www.convertflow.com/pricing"
+    },
+    {
+      "name": "Prime",
+      "name_any": ["prime"],
+      "price_amount_any": [99, 83],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "usage"],
+      "quote": "Prime Starts at $99/m Annual discount to $83/m",
+      "page": "https://www.convertflow.com/pricing"
+    },
+    {
+      "name": "Pro",
+      "name_any": ["pro"],
+      "price_amount_any": [299, 250],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "usage"],
+      "quote": "Pro Starts at $299/m Annual discount to $250/m",
+      "page": "https://www.convertflow.com/pricing"
+    },
+    {
+      "name": "Custom",
+      "name_any": ["custom", "enterprise"],
+      "price_amount_any": [999, 833, null],
+      "currency": "USD",
+      "billing_period_any": ["month", "year", "custom", "usage"],
+      "quote": "Custom Starts at $999/m Annual discount to $833/m+",
+      "page": "https://www.convertflow.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Quiz funnel builder",
+      "any": ["quiz"],
+      "quote": "Quiz logic branching based on answers and scoring",
+      "page": "https://www.convertflow.com/"
+    },
+    {
+      "label": "Popup and sticky bar builder",
+      "any": ["popup", "pop-up", "sticky bar"],
+      "quote": "Full-screen popups, modals, slide-ups and sticky bars",
+      "page": "https://www.convertflow.com/"
+    },
+    {
+      "label": "Landing page builder",
+      "any": ["landing page"],
+      "quote": "100+ landing page templates to remix with AI",
+      "page": "https://www.convertflow.com/"
+    },
+    {
+      "label": "Lead capture forms (multi-step)",
+      "any": ["form", "lead capture"],
+      "quote": "Create, personalize and A/B test lead capture forms",
+      "page": "https://www.convertflow.com/"
+    },
+    {
+      "label": "A/B split-testing",
+      "any": ["a/b", "split-test", "split test", "experiment"],
+      "quote": "Quickly create variants, allocate traffic percentages and report on your experiments.",
+      "page": "https://www.convertflow.com/features"
+    },
+    {
+      "label": "Website personalization",
+      "any": ["personaliz"],
+      "quote": "Use first-party & contextual data to personalize website content & offers",
+      "page": "https://www.convertflow.com/"
+    },
+    {
+      "label": "Funnel analytics and reporting",
+      "any": ["analytic", "report"],
+      "quote": "Get conversion funnel analytics and multi-step results from one dashboard.",
+      "page": "https://www.convertflow.com/"
+    },
+    {
+      "label": "AI funnel generation (ConvertFlow AI)",
+      "any": [
+        "convertflow ai",
+        "ai agent",
+        "ai funnel",
+        "remix ai",
+        "ai-generated",
+        "ai-powered",
+        "with ai"
+      ],
+      "quote": "Chat with ConvertFlow's AI to generate your next funnel experiment.",
+      "page": "https://www.convertflow.com/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Shopify",
+      "any": ["shopify"],
+      "quote": "Install ConvertFlow on your Shopify store instantly.",
+      "page": "https://www.convertflow.com/features"
+    },
+    {
+      "label": "Klaviyo",
+      "any": ["klaviyo"],
+      "quote": "Personalize your website for Klaviyo contact segments.",
+      "page": "https://www.convertflow.com/features"
+    },
+    {
+      "label": "HubSpot",
+      "any": ["hubspot"],
+      "quote": "Personalize your website for HubSpot contact segments.",
+      "page": "https://www.convertflow.com/features"
+    },
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "Integrate 2,000+ apps via Zapier",
+      "page": "https://www.convertflow.com/features"
+    },
+    {
+      "label": "Salesforce",
+      "any": ["salesforce"],
+      "quote": "Build & A/B test lead capture funnels for Salesforce.",
+      "page": "https://www.convertflow.com/features"
+    },
+    {
+      "label": "ActiveCampaign",
+      "any": ["activecampaign"],
+      "quote": "Personalize your website for ActiveCampaign segments.",
+      "page": "https://www.convertflow.com/features"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "city",
+      "value": "Miami",
+      "quote": "Made with in Miami, FL",
+      "page": "https://www.convertflow.com/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["founded_year", "launch_year", "employee_min", "employee_max"],
+    "texts": []
+  },
+  "notes": "Pricing is traffic-based ('Your ConvertFlow plan's rate depends on traffic to your funnel campaigns'; '$29 /m+'), with a Monthly/Yearly toggle ('2 months free'); the comparison table shows each plan's monthly price and its annual-billed monthly equivalent ('Annual discount to $25/m'), so both are listed. The Custom plan card shows only 'Custom' while the comparison table says 'Starts at $999/m', hence null is also accepted. The Free plan wording is inconsistent ('Build for free. Upgrade to launch' vs the FAQ 'launch 5 funnel campaigns'). NOT plans: the 'Pro Partner $0/mo' tier and the partner rates ($22/$75/$225 per site) are agency-partner discounts; '+$100 per 10k funnel views' is an overage rate; the competitor-cost comparison ($200/m-$500/m etc., '$10,000/m+' hiring) is marketing. EXCLUSION: the pages describe a partner program where 'partners can receive commissions for the ConvertFlow customers they refer'; this is the vendor's own go-to-market program, while the product's core purpose is a funnel/popup/quiz builder for lead capture and ecommerce, so eligible (not an affiliate/partner-management tool). Location: 'Made with ♥ in Miami, FL' (heart stripped in the snapshot) states the city; country_code US is implied by 'FL' but not written, so it is neither expected nor forbidden. The homepage contains a placeholder testimonial ('Christian Cardenas, Founder, XYZ' with Lorem ipsum text): it must not be reported as a customer. '10,000+ brands', '$1B+ GMV', '$500m in sales' and review ratings are company/customer claims, not payment proof. No instruction aimed at an AI reader was found; 'AI agent' mentions are product features."
+}

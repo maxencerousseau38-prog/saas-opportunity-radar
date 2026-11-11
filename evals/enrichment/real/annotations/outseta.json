@@ -1,0 +1,154 @@
+{
+  "id": "outseta",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T09:00:08.823Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Start",
+      "name_any": ["start"],
+      "price_amount_any": [37, 47],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Start $37/mo.",
+      "page": "https://www.outseta.com/pricing"
+    },
+    {
+      "name": "Scale",
+      "name_any": ["scale"],
+      "price_amount_any": [97, 127],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Most popular Scale $97/mo.",
+      "page": "https://www.outseta.com/pricing"
+    },
+    {
+      "name": "Pro",
+      "name_any": ["pro"],
+      "price_amount_any": [197, 247],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Pro $197/mo.",
+      "page": "https://www.outseta.com/pricing"
+    },
+    {
+      "name": "Max",
+      "name_any": ["max"],
+      "price_amount_any": [697, 897],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Max $697/mo.",
+      "page": "https://www.outseta.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Payments and subscription billing via Stripe",
+      "any": ["payment", "billing", "subscription", "stripe"],
+      "quote": "Connect to Stripe and start accepting payments in minutes with a beautifully optimized checkout experience.",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "Authentication and protected (gated) content",
+      "any": ["auth", "gat", "protected content", "login", "member-only"],
+      "quote": "Our protected content features make it easy to control access your content.",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "CRM for member data",
+      "any": ["crm"],
+      "quote": "All of your member data in one place. Simplify your stack and stop jumping between tools.",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "Email marketing and transactional email",
+      "any": ["email"],
+      "quote": "Marketing, transactional, product emails, and notifications in the same platform",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "Help desk (live chat, tickets, knowledge base)",
+      "any": ["help desk", "helpdesk", "support ticket", "live chat", "knowledge base"],
+      "quote": "Responding to your members via live chat or support tickets.",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "Subscription reporting (MRR, churn)",
+      "any": ["report", "mrr", "metric", "churn"],
+      "quote": "Track subscription metrics, analyze engagement with your product or site, and understand why members are cancelling.",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "Branded embeds (sign up, login, profile)",
+      "any": ["embed", "sign up", "signup"],
+      "quote": "Fully customizable embeds fit natively with your site's design.",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "Webhooks and MCP / API access",
+      "any": ["api", "mcp", "webhook"],
+      "quote": "MCP / API access",
+      "page": "https://www.outseta.com/pricing"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "Connect to Stripe and start selling",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "Webflow",
+      "any": ["webflow"],
+      "quote": "I can’t believe how simple it is to implement Outseta with Webflow.",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "Framer",
+      "any": ["framer"],
+      "quote": "Because Outseta adds to any website—Webflow, Squarespace, Framer, or custom code",
+      "page": "https://www.outseta.com/saas-and-digital-products"
+    },
+    {
+      "label": "Squarespace",
+      "any": ["squarespace"],
+      "quote": "Because Outseta adds to any website—Webflow, Squarespace, Framer, or custom code",
+      "page": "https://www.outseta.com/saas-and-digital-products"
+    },
+    {
+      "label": "WordPress",
+      "any": ["wordpress"],
+      "quote": "Framer Framer WordPress WordPress React React",
+      "page": "https://www.outseta.com/"
+    },
+    {
+      "label": "React",
+      "any": ["react"],
+      "quote": "Framer Framer WordPress WordPress React React",
+      "page": "https://www.outseta.com/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "pricing_status",
+      "value": "paid",
+      "quote": "You can choose to subscribe to a paid plan at the end of the trial period if you'd like to.",
+      "page": "https://www.outseta.com/pricing"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "The pricing page renders both toggle states: the first block (yearly, '~25% savings') shows Start $37, Scale $97, Pro $197, Max $697 per month; the second block (monthly) shows Start $47, Scale $127, Pro $247, Max $897 per month. No yearly total is displayed. Each plan also carries a transaction fee (2% on Start, 1% on Scale and Pro, none on Max) and a contact cap (1,000 / 10,000 / 25,000 / 100,000 contacts). The 'old stack' calculator ($49, $50/user, $25, $29, $49; total $153/mo, $1,836/yr) prices competitor tools, not Outseta plans. 14-day free trial on every plan ('Sign up for free' starts the trial), 30-day money-back guarantee; no free plan, hence pricing_status paid (product owner to confirm). WordPress and React appear only as names in the home-page integrations grid under 'Integrate with nearly any tool or framework under the sun.'; Carrd and Weweb are also listed there. Customer stats ('46 Countries with Outseta customers', '9+ Years powering creator businesses') and customer stories are company-stated, not payment proof; '9+ years' must not be turned into a launch_year or founded_year (forbidden). The company page shows six team members but states no headcount, and states no country or city (team 'fully remote'), so these fields are forbidden. Footer 'Partner program' link and 'Stripe verified partner' badge are incidental: the core product is an all-in-one membership/SaaS operations stack (payments, auth, CRM, email, help desk), eligible."
+}

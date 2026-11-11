@@ -1,0 +1,300 @@
+# Continuous integration (ADR-011, PD-01 A).
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TURBO_TELEMETRY_DISABLED: "1"
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  checks:
+    name: Format, lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4 # version from package.json "packageManager"
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  security:
+    name: Security (secrets, dependencies, migration order)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # full history: secrets are searched in every commit
+      - name: Secret scan (gitleaks, full history)
+        run: |
+          docker run --rm -u "$(id -u):$(id -g)" -v "$PWD:/repo" -w /repo \
+            zricethezav/gitleaks:v8.18.4 detect --source /repo --config /repo/.gitleaks.toml \
+            --redact --verbose --exit-code 1
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Migration order (forward-only, strictly increasing)
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+        run: |
+          node --test scripts/
+          node scripts/check-migrations.mjs "$BASE"
+      - run: pnpm install --frozen-lockfile
+      - name: Dependency audit (production dependencies, high and critical)
+        run: pnpm audit --prod --audit-level high
+
+  e2e:
+    name: End-to-end (Playwright, local Supabase stack)
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.0.0
+      - name: Start the local stack (database, auth, API) and apply migrations
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
+      - name: Export the local stack credentials (local defaults, masked)
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase.env"
+          set -a; . "$RUNNER_TEMP/supabase.env"; set +a
+          seed_password="e2e-$(openssl rand -hex 16)"
+          author_salt="$(openssl rand -hex 32)"
+          echo "::add-mask::$SECRET_KEY"
+          echo "::add-mask::$seed_password"
+          echo "::add-mask::$author_salt"
+          {
+            echo "APP_ENV=test"
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
+            echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
+            echo "SEED_PASSWORD=$seed_password"
+            echo "SUPABASE_URL=$API_URL"
+            echo "AUTHOR_HASH_SECRET=$author_salt"
+            echo "WORKER_ID=e2e-worker"
+          } >> "$GITHUB_ENV"
+      - name: Seed labelled demo fixtures
+        run: pnpm --filter @sor/web seed:demo
+      # The worker runs from its production image (PD-27: Render, plan
+      # 0.5c-512mb), limited to 512 MB like the Render instance.
+      - name: Build the worker image
+        run: docker build -f apps/worker/Dockerfile -t sor-worker:ci .
+      - name: Start the worker container (fake AI provider, PD-24 pending)
+        run: |
+          docker run -d --name sor-worker --network host --memory 512m \
+            -e APP_ENV -e SUPABASE_URL -e SUPABASE_SECRET_KEY -e AUTHOR_HASH_SECRET -e WORKER_ID \
+            sor-worker:ci
+      - run: pnpm --filter @sor/web exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      # First bulk collection (10 Nov 2026): the real Wikidata snapshot is
+      # ingested after the main suite (its journeys count the labelled demo
+      # products), then Discover is checked on real data.
+      - name: Ingest the collected catalog (real Wikidata and Uneed listings)
+        run: |
+          set -o pipefail
+          pnpm --filter @sor/worker catalog:build
+          node apps/worker/dist-catalog/ingest.js data/catalog/*/listings.json | tee "$RUNNER_TEMP/ingest.json"
+          { echo '## Catalog ingestion'; echo '```json'; cat "$RUNNER_TEMP/ingest.json"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Discover on the real catalog
+        run: REAL_CATALOG=1 pnpm --filter @sor/web exec playwright test e2e/real-catalog.e2e.ts
+      # Measured on the real catalog, as the browser role (RLS applies): the
+      # search and count behind Discover's first page.
+      - name: Real catalog search timing (EXPLAIN ANALYZE as a viewer)
+        if: always()
+        run: |
+          db_url="$(supabase status -o env | sed -n 's/^DB_URL="\(.*\)"$/\1/p')"
+          psql "$db_url" -X -v ON_ERROR_STOP=0 <<'SQL'
+          \pset pager off
+          select rolname, rolconfig from pg_roles where rolname in ('authenticated', 'authenticator', 'anon');
+          select count(*) as visible_products from public.saas_products where record_status = 'active' and exclusion_status = 'eligible';
+          select w.id as ws, m.user_id as uid from public.workspaces w
+            join public.workspace_members m on m.workspace_id = w.id and m.role = 'viewer'
+           where w.name = 'Démo' limit 1 \gset
+          begin;
+          select set_config('request.jwt.claims', json_build_object('sub', :'uid', 'role', 'authenticated')::text, true);
+          set local role authenticated;
+          explain (analyze, summary on) select count(*) from public.catalog_search_v2(:'ws', '{"configurable_exclusions":[],"include_hidden":false,"current_year":2026}', 'relevance', 0, null, null, 30);
+          explain (analyze, summary on) select public.catalog_count_v2(:'ws', '{"configurable_exclusions":[],"include_hidden":false,"current_year":2026}');
+          rollback;
+          SQL
+      - name: Worker memory peak and graceful SIGTERM
+        if: always()
+        run: |
+          echo "memory.peak (bytes): $(docker exec sor-worker cat /sys/fs/cgroup/memory.peak 2>/dev/null || echo unavailable)"
+          docker stats --no-stream sor-worker || true
+          docker stop -t 60 sor-worker
+          code=$(docker inspect -f '{{.State.ExitCode}}' sor-worker)
+          docker logs sor-worker 2>&1 | grep -E '"msg":"(shutdown requested|worker stopped)"'
+          # S7.3: the monitoring cycle ran against the real stack, without failing.
+          docker logs sor-worker 2>&1 | grep -m1 '"msg":"ops snapshot"'
+          if docker logs sor-worker 2>&1 | grep '"msg":"ops monitor failed"'; then exit 1; fi
+          echo "worker exit code: $code"
+          test "$code" = "0"
+      - name: Worker log
+        if: always()
+        run: docker logs sor-worker 2>&1 | tail -200 || true
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report
+          retention-days: 7
+      - if: always()
+        run: supabase stop --no-backup
+
+  worker-integration:
+    name: Worker integration (PGMQ, RPCs, crash recovery)
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.0.0
+      - name: Start the local stack (database, auth, API) and apply migrations
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
+      - name: Export the local stack credentials (local defaults, masked)
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase.env"
+          set -a; . "$RUNNER_TEMP/supabase.env"; set +a
+          echo "::add-mask::$SECRET_KEY"
+          {
+            echo "SUPABASE_URL=$API_URL"
+            echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
+          } >> "$GITHUB_ENV"
+      - run: pnpm --filter @sor/worker test:integration
+      - if: always()
+        run: supabase stop --no-backup
+
+  resilience:
+    name: Resilience (fault injection, local Supabase stack)
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.0.0
+      - name: Start the local stack (database, auth, API) and apply migrations
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
+      - name: Export the local stack credentials (local defaults, masked)
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase.env"
+          set -a; . "$RUNNER_TEMP/supabase.env"; set +a
+          echo "::add-mask::$SECRET_KEY"
+          {
+            echo "SUPABASE_URL=$API_URL"
+            echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
+            echo "DB_URL=$DB_URL"
+          } >> "$GITHUB_ENV"
+      # Correctness of every scenario is blocking (S7.5, decision 7 Nov 2026).
+      - run: pnpm --filter @sor/worker test:resilience
+      # F5 (S7.5b): real restart of the database container, last because it
+      # restarts the shared stack; bounded health wait inside the test.
+      - name: Real PostgreSQL restart during a job (F5)
+        env:
+          RESILIENCE_DB_RESTART: "1"
+        run: pnpm --filter @sor/worker exec vitest run test/resilience/db-restart.test.ts
+      - if: always()
+        run: supabase stop --no-backup
+
+  database:
+    name: Database (migrations, pgTAP, advisors, types)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.0.0
+      - name: Start the local stack (database, auth, API) and apply migrations
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
+      - name: API key model (variable names only, never values)
+        run: supabase status -o env | cut -d= -f1
+      - name: PGMQ verification gate (ADR-004) — extension and function signatures
+        run: |
+          db_url="$(supabase status -o env | sed -n 's/^DB_URL="\(.*\)"$/\1/p')"
+          psql "$db_url" -v ON_ERROR_STOP=1 -X -q <<'SQL'
+          \pset pager off
+          select name, default_version, installed_version from pg_available_extensions where name in ('pgmq', 'pg_cron', 'vector');
+          begin;
+          create extension if not exists pgmq;
+          select extversion from pg_extension where extname = 'pgmq';
+          select p.proname || '(' || pg_get_function_identity_arguments(p.oid) || ') -> ' || pg_get_function_result(p.oid) as signature
+            from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+           where n.nspname = 'pgmq'
+             and p.proname in ('create', 'send', 'send_batch', 'read', 'set_vt', 'archive', 'delete', 'pop', 'drop_queue', 'list_queues', 'metrics')
+           order by 1;
+          select pgmq.create('sor_jobs_probe');
+          select * from pgmq.send('sor_jobs_probe', '{"probe": true}'::jsonb);
+          select msg_id, read_ct, message from pgmq.read('sor_jobs_probe', 30, 1);
+          rollback;
+          SQL
+      - name: pgTAP tests
+        run: supabase test db
+      - name: Lint database functions
+        run: supabase db lint --level warning
+      - name: Security advisors
+        run: supabase db advisors --type security --level warn --fail-on error
+      - name: Generated types are up to date
+        run: |
+          supabase gen types typescript --schema public > generated.ts
+          if ! diff -q generated.ts packages/database/src/generated.ts; then
+            echo "::error::packages/database/src/generated.ts is out of date (artifact database-generated-types)"
+            # Also printed in the log, between markers, for environments that cannot download artifacts.
+            echo "----- BEGIN GENERATED TYPES -----"
+            cat generated.ts
+            echo "----- END GENERATED TYPES -----"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: database-generated-types
+          path: generated.ts
+          if-no-files-found: ignore
+          retention-days: 7
+      - if: always()
+        run: supabase stop --no-backup

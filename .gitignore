@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Builds and caches
+dist/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+coverage/
+
+# Test artefacts
+playwright-report/
+test-results/
+blob-report/
+
+# Environment (never commit secrets; .env.example is the template)
+.env
+.env.*
+!.env.example
+
+# Supabase local state
+supabase/.branches/
+supabase/.temp/
+
+# OS / editors
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
+apps/web/next-env.d.ts
+
+# Evaluation tooling build
+dist-evals/
+dist-container/
+dist-catalog/

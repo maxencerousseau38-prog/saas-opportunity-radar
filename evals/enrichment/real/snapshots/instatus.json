@@ -1,0 +1,69 @@
+{
+  "id": "instatus",
+  "url": "https://instatus.com/",
+  "segment": "dev/status-pages",
+  "retrieved_at": "2026-11-05T08:59:46.457Z",
+  "connector": "official_website (production connector, robots.txt obeyed)",
+  "home_links": [
+    "https://instatus.com/",
+    "https://instatus.com/customers",
+    "https://instatus.com/integrations",
+    "https://instatus.com/pricing",
+    "https://dashboard.instatus.com/login",
+    "https://dashboard.instatus.com/onboarding",
+    "https://instatus.com/get",
+    "https://instatus.com/login",
+    "https://instatus.com/help",
+    "https://instatus.com/changes",
+    "https://instatus.com/blog",
+    "https://instatus.com/x",
+    "https://instatus.com/instagram",
+    "https://instatus.com/tiktok",
+    "https://instatus.com/youtube",
+    "https://instatus.com/github",
+    "https://instatus.com/policies/privacy"
+  ],
+  "pages": [
+    {
+      "requested_url": "https://instatus.com/",
+      "canonical_url": "https://instatus.com",
+      "title": "Beautiful Status Page & Uptime Monitoring – Instatus",
+      "http_status": 200,
+      "retrieved_at": "2026-11-05T08:59:40.470Z",
+      "content_hash": "bec4edd17867ce9527101a585813e0f60f70de48cde2db369fe6b648b4506828",
+      "chars": 1282,
+      "text": "Instatus home page\nSkip to content\nInstatus home page\nProduct\nCustomers\nIntegrations\nPricing\nLogin Sign up\nGet ready for downtime\nStart free\nA\nplay game\nplay game\nP\nMonitor your services\nFix incidents with your team\nShare your status with customers\nGet ready for downtime\nMonitor your services\nFix incidents with your team\nShare your status with customers\nStart free\nA\nplay game\nplay game\nP\nInstatus customers\nOur Customers\nmonitor fix share\nMonitor everything\nHouston, we have a problem\nCheck all your services\nTrack availability and performance\nReal-time alerts across all channels\nNotify the right people\nFix incidents\nwith your team\nRoger that!\nIntegrate with tools you already use\nCollaborate on incidents with your team\nGet things done from Slack & Teams\nPublish to status page\nHailing all stations!\nPublish to status page\nMake it yours\nMake it private\nOr share to the world!\n$0/month\nget started\nTakes 30 seconds\nNo card required\nFree forever plan\nCheck pricing\nStay ahead of the crash\nStart free\nTakes 30 seconds Takes 30 seconds\nNo credit card required No card required\nFree forever plan Free forever plan\nGet started\nSign up\nLog in\nLearn more\nHelp & API\nSupport\nOur updates\nChangelog\nBlog\nKeep in touch\nAll systems operational\n© Instatus, Inc\nPolicies\nYour privacy choices"
+    },
+    {
+      "requested_url": "https://instatus.com/pricing",
+      "canonical_url": "https://instatus.com/pricing",
+      "title": "Instatus – Pricing: free plan, Pro from $20/mo",
+      "http_status": 200,
+      "retrieved_at": "2026-11-05T08:59:42.479Z",
+      "content_hash": "0b88428440f94c5cc493698609dfb4711bd1a1e9a8985d63215f1fbb27d71e2e",
+      "chars": 2561,
+      "text": "Instatus home page\nSkip to content\nInstatus home page\nProduct\nCustomers\nIntegrations\nPricing\nLogin Sign up\nNo per-seat fees\nStatus page and monitoring, free forever. Paid plans are a flat price, never per seat.\nCompare Instatus plans and features to find the right plan for you\nChoose your plan\nYearly\n25% off\nStarter\nFree\nPro\n/ month\nBusiness\n/ month\nFeatures Start free Start free Start trial Start trial Start trial Start trial\nMonitors\n15\n50\n1,000\nChecks\n2 min\n30 sec\n30 sec\nAlerts\nEmail\nEmail & SMS\nSMS & Calls\nTeam members\n5\n50\nOn-call members\n2\n20\n50\nSAML SSO\nStatus page type\nPublic\nPublic\nAll\nCustom domain\n1+\n3+\nSubscribers\n200\n5,000\n25,000\nStarter\n15 Monitors\n2 min checks\nEmail alerts\n5 team members\n2 on-call members\nNo SAML SSO\nPublic status page\nNo custom domain\n200 subscribers\nSign up free\nPro\n50 Monitors\n30 sec checks\nEmail & SMS alerts\n50 team members\n20 on-call members\nNo SAML SSO\nPublic\n1+ custom domain\n5,000 subscribers\nSign up free\nBusiness\n1,000 Monitors\n30 sec checks\nSMS & Calls alerts\nteam members\n50 on-call members\nSAML SSO\nAll status pages\n3+ custom domain\n25,000 subscribers\nSign up free\nEnterprise\nEnterprise\nEnterprise\nEnterprise\nSCIM Directory Sync\nPriority customer support\n99.99% Uptime SLA\nMultiple SSO connections\nCustom contracts\nCustom policies\nContact us Book a demo\nEnterprise\nSCIM Directory Sync\nPriority customer support\n99.99% Uptime SLA\nMultiple SSO connections\nCustom contracts\nCustom policies\nContact us Book a demo\nInstatus customers\nOur Customers\nCalculate your savings Simplify & save\nReplace 3 DevOps services with Instatus. Simplify and save!\nMonitoring\n50 monitors\nPingdom\nIncident response\n10 team members\nPagerDuty\nStatus page\n1,000 subscribers\nAtlassian Statuspage\nTotal bill\n/ mo\n50 monitors\n30 sec checks\nSMS & Calls\nteam members\n20 on-call members\nIncident escalations\n50 team members\n5,000 subscribers\nCustom domain\nStart free\n/ mo\nFrequently Asked Questions\nDo you offer discounts?\nYes. When you pay for a year up front, you’ll get three months free. Also if you’re a non-profit organization or an open-source project, you can email us to get a free Pro account.\nCan we cancel at any time?\nWhat payment methods do you accept?\nIs billing per team or per project?\nHave more questions?\nStay ahead of the crash\nStart free\nTakes 30 seconds Takes 30 seconds\nNo credit card required No card required\nFree forever plan Free forever plan\nGet started\nSign up\nLog in\nLearn more\nHelp & API\nSupport\nOur updates\nChangelog\nBlog\nKeep in touch\nAll systems operational\n© Instatus, Inc\nPolicies\nYour privacy choices"
+    },
+    {
+      "requested_url": "https://instatus.com/integrations",
+      "canonical_url": "https://instatus.com/integrations",
+      "title": "Instatus – Integrations",
+      "http_status": 200,
+      "retrieved_at": "2026-11-05T08:59:44.471Z",
+      "content_hash": "a7d75f7dd476fd549e5148800a34689f7e6c81936265e281595697900060d7b4",
+      "chars": 3565,
+      "text": "Instatus home page\nSkip to content\nInstatus home page\nProduct\nCustomers\nIntegrations\nPricing\nLogin Sign up\nInstant integrations\nConnect your favorite tools. Sync fast and go far.\nSlack\nUpdate your status page, right from Slack!\nIntercom\nShow your status in your Intercom widget\nX\nAutomatically tweet your status updates\nMicrosoft Teams\nNotify teammates about status updates\nDiscord\nSend updates to your discord server\nMonitoring\nCheckly\nUse Checkly to automate your status page. Create an incident when a check fails.\nDatadog\nUse Datadog to automate your page. Create an incident when they detect an outage.\nNew Relic\nUse New Relic to automate your page. Create a new incident when they detect an issue.\nPagerDuty\nCreate an incident on your status page when there is a PagerDuty incident\nPingdom\nCreate a new incident when Pingdom detects an outage with your service.\nPrometheus\nCreate a new incident when Prometheus detects an issue with your service\nFreshping\nCreate a new incident when Freshping detects a downtime with your check.\nGrafana\nCreate an incident on your status page when there is a Grafana alert\nBetter Uptime\nCreate a new incident when Better Uptime detects an issue with your monitor.\nHetrixTools\nCreate a new incident when HetrixTools detects an issue with your monitor.\nRunscope\nAutomate your status page using Runscope. Create a new incident when they detect an outage.\nSite24x7\nCreate a new incident when Site24x7 detects an issue with your monitor.\nStatusCake\nCreate a new incident when StatusCake detects an issue with your monitor.\nUptime Robot\nCreate a new incident when UptimeRobot detects an issue with your service.\nUpdown.io\nAutomatically update your status page using Updown.io\nWebhook\nSend a webhook request to automatically update your status page.\nEmail\nSend an email to automatically update your status page\nGoogle Cloud Monitoring\nAutomatically update your status page by sending a webhook from Google Cloud\nDynatrace\nCreate incidents automatically when Dynatrace detects issues with your services\nAPI\nUpdate your status page using our API\nNotifications\nX\nAutomatically tweet your status updates\nSlack\nUpdate your status page, right from Slack!\nIntercom\nShow your status in your Intercom widget\nMicrosoft Teams\nNotify teammates about status updates\nDiscord\nSend updates to your discord server\nGoogle Chat\nSend updates to your Google Chat room\nZendesk\nInform customers about your incidents\nZapier\nTrigger workflows when incidents are created or updated, and automatically create incidents from other apps\nUpdate your page\nSlack\nUpdate your status page, right from Slack!\nWebhook\nSend a webhook request to automatically update your status page.\nEmail\nSend an email to automatically update your status page\nAPI\nUpdate your status page using our API\nJira\nUpdate your status page through Jira issues\nZapier\nTrigger workflows when incidents are created or updated, and automatically create incidents from other apps\nMetrics\nPingdom Metrics\nDisplay Pingdom checks as charts on your status page\nDatadog Metrics\nDisplay Datadog charts on your status page\nNew Relic Metrics\nDisplay New Relic charts on your status page\nPrometheus Metrics\nDisplay Prometheus charts on your status page\nAPI\nUpdate your status page using our API\nStay ahead of the crash\nStart free\nTakes 30 seconds Takes 30 seconds\nNo credit card required No card required\nFree forever plan Free forever plan\nGet started\nSign up\nLog in\nLearn more\nHelp & API\nSupport\nOur updates\nChangelog\nBlog\nKeep in touch\nAll systems operational\n© Instatus, Inc\nPolicies\nYour privacy choices"
+    },
+    {
+      "requested_url": "https://instatus.com/customers",
+      "canonical_url": "https://instatus.com/customers",
+      "title": "Instatus – Customers",
+      "http_status": 200,
+      "retrieved_at": "2026-11-05T08:59:46.457Z",
+      "content_hash": "a512df15c324ba4280ec2e6148e7c538f8ef3aeaf8d28551a4c693648aa5090c",
+      "chars": 2081,
+      "text": "Instatus home page\nSkip to content\nInstatus home page\nProduct\nCustomers\nIntegrations\nPricing\nLogin Sign up\nMeet early explorers M e e t e a r l y e x p l o r e r s\nvisit Todoist’s status page\n/ customers\nvisit Sketch’s status page\nWorking with Instatus has been amazing. If I ever have a question or a problem, it’s resolved super quickly. It really felt like a partnership.\nChris Howard, Stytch\nCase study\nvisit Wistia’s status page\nSiemens – private page\nvisit Harvard’s status page\nvisit Graphite’s status page\nCheck Capterra reviews\nCheck Instatus on Product Hunt\nCheck G2 reviews\nvisit Dovetail’s status page\nvisit Deno’s status page\nvisit Adalo’s status page\nvisit Podium’s status page\nvisit Queens University’s status page\nvisit Polymarket’s status page\nvisit Code.Org’s status page\nKFC – private page\nvisit Restream’s status page\nYou’ve built a great product. I recommend it for anyone who wants a no-frills blazing fast status page.\nGuillermo Rauch, CEO – Vercel\nvisit Airbyte’s status page\nvisit Whereby’s status page\nvisit Kinde’s status page\nvisit Mastodon’s status page\nvisit PopSQL’s status page\nvisit env0’s status page\nvisit Optimism’s status page\nvisit Philo’s status page\nvisit Modern Treasury’s status page\nvisit Gitkraken’s status page\nvisit ManyChat’s status page\nvisit Monarch’s status page\nThe best platform for incident reports. Period.\nJay Desai\nOpen review on Capterra\nvisit Padlet’s status page\nvisit Stedi’s status page\nvisit Mollie’s status page\nArcadia – private page\nvisit Tella’s status page\nvisit Wowza’s status page\nvisit Twist’s status page\nvisit Soneium’s status page\nMotorola – private page\nvisit Fastmail’s status page\nvisit Nascar’s status page\nvisit IETF’s status page\nTakeTwo Interactive – private page\nvisit Zed’s status page\nStay ahead of the crash\nStart free\nTakes 30 seconds Takes 30 seconds\nNo credit card required No card required\nFree forever plan Free forever plan\nGet started\nSign up\nLog in\nLearn more\nHelp & API\nSupport\nOur updates\nChangelog\nBlog\nKeep in touch\nAll systems operational\n© Instatus, Inc\nPolicies\nYour privacy choices"
+    }
+  ],
+  "failures": []
+}

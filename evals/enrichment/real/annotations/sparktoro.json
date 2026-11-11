@@ -1,0 +1,120 @@
+{
+  "id": "sparktoro",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:56:32.841Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Personal",
+      "name_any": ["personal"],
+      "price_amount_any": [38],
+      "currency": "USD",
+      "billing_period_any": ["year", "month"],
+      "quote": "Personal $ 38 /mo",
+      "page": "https://sparktoro.com/pricing"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [150],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Business $ 150 /mo Save $456/year",
+      "page": "https://sparktoro.com/pricing"
+    },
+    {
+      "name": "Agency",
+      "name_any": ["agency"],
+      "price_amount_any": [300],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Agency $ 300 /mo Save $900/year",
+      "page": "https://sparktoro.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Audience research reports",
+      "any": ["audience"],
+      "quote": "Build an audience from a sentence.",
+      "page": "https://sparktoro.com/pricing"
+    },
+    {
+      "label": "Audience affinities (websites, podcasts, YouTube, social accounts)",
+      "any": ["affinit", "websites", "podcast", "social accounts"],
+      "quote": "Surface the websites, podcasts, YouTube channels, and social accounts your audience engages with far more than average",
+      "page": "https://sparktoro.com/"
+    },
+    {
+      "label": "Search keywords",
+      "any": ["keyword"],
+      "quote": "See the words and phrases your audience types into Google and Bing",
+      "page": "https://sparktoro.com/"
+    },
+    {
+      "label": "Social network usage",
+      "any": ["social network"],
+      "quote": "Compare how much your audience uses each social network versus the average person",
+      "page": "https://sparktoro.com/"
+    },
+    {
+      "label": "Demographics and Persona Builder",
+      "any": ["demographic", "persona"],
+      "quote": "Roll demographics, interests, and behaviors into clear, shareable personas",
+      "page": "https://sparktoro.com/"
+    },
+    {
+      "label": "AI tools used by the audience",
+      "any": ["ai tool"],
+      "quote": "Identify the AI tools and platforms your audience engages with",
+      "page": "https://sparktoro.com/"
+    },
+    {
+      "label": "Take Action (insights to marketing tasks)",
+      "any": ["take action", "marketing task"],
+      "quote": "Take Action turns your SparkToro insights into ready-to-use marketing tasks",
+      "page": "https://sparktoro.com/"
+    },
+    {
+      "label": "MCP server access",
+      "any": ["mcp"],
+      "quote": "Lets you build audiences and explore section data right inside your AI assistant.",
+      "page": "https://sparktoro.com/pricing"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "ChatGPT (MCP)",
+      "any": ["chatgpt"],
+      "quote": "connect SparkToro to ChatGPT, Claude, Cursor, or any other Model Context Protocol-compatible client",
+      "page": "https://sparktoro.com/pricing"
+    },
+    {
+      "label": "Claude (MCP)",
+      "any": ["claude"],
+      "quote": "connect SparkToro to ChatGPT, Claude, Cursor, or any other Model Context Protocol-compatible client",
+      "page": "https://sparktoro.com/pricing"
+    },
+    {
+      "label": "Cursor (MCP)",
+      "any": ["cursor"],
+      "quote": "connect SparkToro to ChatGPT, Claude, Cursor, or any other Model Context Protocol-compatible client",
+      "page": "https://sparktoro.com/pricing"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "country_code",
+      "value": "US",
+      "quote": "based in Washington State, USA",
+      "page": "https://sparktoro.com/about"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["founded_year", "launch_year", "city", "employee_min", "employee_max"],
+    "texts": []
+  },
+  "notes": "Pricing: the snapshot captured a monthly/annual toggle but only one amount per plan: Personal $38/mo ('Only available as an annual plan'), Business $150/mo with 'Save $456/year', Agency $300/mo with 'Save $900/year'. Annual-equivalent amounts for Business/Agency are not rendered, and it is ambiguous whether $150/$300 are the monthly-billed prices or annual equivalents; the PO may want to check. Personal is annual-only, so its period is 'year' (amount displayed per month). Prices are shown with '$' only; USD assumed. The free audience preview ('Create an account and run a free audience preview first. No credit card needed') is a free trial-like preview, not a plan; pricing_status was left out (paid vs freemium is ambiguous). The SparkToro API is a separate pay-as-you-go credit product ('no subscription required'), not a plan. Integrations: only the MCP clients named on the page (ChatGPT, Claude, Cursor); Google/Bing are data sources, not integrations. Fields: country US is stated ('based in Washington State, USA'); a city is not (Washington State is a state); founders are named but no founding year or headcount is stated (prior Moz careers must not be used to infer dates). Customer testimonials and figures (e.g. '27% of the average cost per lead') are customer claims, not payment proof. The FAQ line forbidding bots/scrapers is a usage policy, not an instruction aimed at the extractor."
+}

@@ -1,0 +1,134 @@
+{
+  "id": "fathom",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:56:42.951Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Pageview-tier subscription (volume slider)",
+      "name_any": ["pageview", "100,000", "100k", "fathom", "standard", "plan"],
+      "price_amount_any": [15, 25, 45, 60, 100, 140, 200, 290, 380, 470],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "$15/month Up to 100,000 monthly pageviews $25/month Up to 200,000 monthly pageviews",
+      "page": "https://usefathom.com/pricing"
+    },
+    {
+      "name": "Custom (over 25,000,000 monthly pageviews)",
+      "name_any": ["custom", "25,000,000", "25m", "high traffic", "enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Custom Over 25,000,000 monthly pageviews",
+      "page": "https://usefathom.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Cookieless, privacy-focused website analytics (no consent banner)",
+      "any": ["cookie", "privacy", "consent"],
+      "quote": "Fathom doesn’t use cookies , so you can keep analytics on your site without the pop-up.",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "Event and revenue (conversion) tracking",
+      "any": ["event", "conversion", "revenue", "goal"],
+      "quote": "Record newsletter signups, form submissions and purchases as events.",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "UTM campaign tracking",
+      "any": ["utm", "campaign"],
+      "quote": "Use UTM tags to tell your newsletters, ads and social campaigns apart.",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "Scheduled email reports",
+      "any": ["email report", "report"],
+      "quote": "Schedule weekly or monthly emails for yourself, colleagues or clients.",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "EU data isolation (EU traffic processed in the EU)",
+      "any": ["data isolation", "eu ", "gdpr"],
+      "quote": "EU visitors’ personal data stays in the EU.",
+      "page": "https://usefathom.com/features/data-isolation"
+    },
+    {
+      "label": "Bot filtering and real-time data",
+      "any": ["bot", "real time", "real-time"],
+      "quote": "We filter out bots, crawlers, DDoS junk and other non-human traffic",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "Multi-site all-sites view and dashboard sharing",
+      "any": ["all-sites", "all sites", "multi-site", "sharing", "shared dashboard"],
+      "quote": "Check them together in the all-sites view, then open a site for the details.",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "CSV exports and analytics API",
+      "any": ["api", "export", "csv"],
+      "quote": "Download CSV files for a spreadsheet or report, or use our API to bring Fathom data into your own tools.",
+      "page": "https://usefathom.com/features"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Google Search Console",
+      "any": ["search console"],
+      "quote": "connect Google Search Console to see search terms, clicks, impressions and search positions",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "Google Analytics (GA4 importer)",
+      "any": ["google analytics", "ga4"],
+      "quote": "Our GA importer brings GA4 data into Fathom",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "WordPress",
+      "any": ["wordpress"],
+      "quote": "Use Fathom with WordPress, Ghost, Webflow, Next.js, Nuxt and plenty more.",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "Ghost",
+      "any": ["ghost"],
+      "quote": "Use Fathom with WordPress, Ghost, Webflow, Next.js, Nuxt and plenty more.",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "Webflow",
+      "any": ["webflow"],
+      "quote": "Use Fathom with WordPress, Ghost, Webflow, Next.js, Nuxt and plenty more.",
+      "page": "https://usefathom.com/features"
+    },
+    {
+      "label": "Next.js",
+      "any": ["next.js", "nextjs"],
+      "quote": "Use Fathom with WordPress, Ghost, Webflow, Next.js, Nuxt and plenty more.",
+      "page": "https://usefathom.com/features"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "country_code",
+      "value": "CA",
+      "quote": "as a Canadian company, we're covered by Canada's EU adequacy decision",
+      "page": "https://usefathom.com/"
+    },
+    {
+      "field_key": "pricing_status",
+      "value": "paid",
+      "quote": "Do you offer a free plan? Nope",
+      "page": "https://usefathom.com/pricing"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["founded_year", "launch_year", "employee_min", "employee_max", "city"],
+    "texts": []
+  },
+  "notes": "Pricing is a single feature-identical plan priced by a monthly-pageview slider ($15 to $470/month for 100k to 25M pageviews), plus a 'Custom' tier above 25M pageviews; plans have no names, so name_any is deliberately broad. Yearly billing is offered ('Get 2 months free (switch to yearly)') but no yearly amount is displayed, so only the monthly amounts are listed. 7-day free trial is a trial, not a free plan. Add-on: extra 50-site packs at $10/month or $100/year (add-on, not a plan). 'Trusted by ... over a million websites' and testimonials are company claims, not payment proof. Country CA is stated twice ('Canadian company', 'Canadian corporation'); the 'Anonymized analytics are stored on our US infrastructure' sentence must not be read as a US headquarters. A footer 'Affiliates' link is incidental: core purpose is web analytics, eligible. Founder (Jack Ellis) is named but no founding year or headcount is stated."
+}

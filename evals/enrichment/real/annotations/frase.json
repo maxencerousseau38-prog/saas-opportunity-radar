@@ -1,0 +1,146 @@
+{
+  "id": "frase",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:57:42.760Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [39, 49, 468],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Starter For solos and freelancers running one site. $39 was $49 /mo, $468 billed yearly",
+      "page": "https://www.frase.io/pricing"
+    },
+    {
+      "name": "Professional",
+      "name_any": ["professional"],
+      "price_amount_any": [103, 129, 1236],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "$103 was $129 /mo, $1,236 billed yearly",
+      "page": "https://www.frase.io/pricing"
+    },
+    {
+      "name": "Scale",
+      "name_any": ["scale"],
+      "price_amount_any": [239, 299, 2868],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Scale For agencies and brands running many sites. $239 was $299 /mo, $2,868 billed yearly",
+      "page": "https://www.frase.io/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Enterprise For large organizations that need SSO, security, or white-label. Custom scoped to your org Talk to sales",
+      "page": "https://www.frase.io/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "SEO content research and briefs",
+      "any": ["research", "brief", "serp"],
+      "quote": "Frase assembles the findings into a structured outline — headings, sections, the keywords and sources to cover.",
+      "page": "https://www.frase.io/features/seo-research"
+    },
+    {
+      "label": "AI agent drafting in brand voice",
+      "any": ["agent", "draft", "writ", "brand voice"],
+      "quote": "Frase Agent reads the pages already ranking, then writes the draft in your brand voice",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "SEO and GEO content scoring / optimization",
+      "any": ["score", "optimiz", "geo"],
+      "quote": "Every page gets a search score and an AI-readiness score",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "AI Visibility tracking (ChatGPT, Perplexity, Gemini, Google AI)",
+      "any": ["ai visibility", "share of voice", "visibility"],
+      "quote": "AI Visibility tracks where you show up across ChatGPT, Perplexity, Claude, Gemini, and Google AI on a daily cadence",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "Site audit ranked by impact",
+      "any": ["audit"],
+      "quote": "Frase audits your site and your search data, then ranks what to fix and write, most useful first.",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "Content Guard (ranking decay monitoring and fixes)",
+      "any": ["content guard", "decay", "monitor"],
+      "quote": "Content Guard watches rankings and traffic on your published pages.",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "Topic clusters / topical map",
+      "any": ["cluster", "topic map", "topical"],
+      "quote": "Frase maps your pillar pages and the supporting content around them",
+      "page": "https://www.frase.io/features/clusters"
+    },
+    {
+      "label": "CMS publishing (incl. hosted FraseCMS)",
+      "any": ["publish", "cms"],
+      "quote": "Frase publishes to WordPress, Webflow, Sanity, and Wix, or hosts the page on FraseCMS.",
+      "page": "https://www.frase.io/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "WordPress",
+      "any": ["wordpress"],
+      "quote": "Publishes to WordPress, Webflow, Sanity, Wix or FraseCMS",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "Webflow",
+      "any": ["webflow"],
+      "quote": "Publishes to WordPress, Webflow, Sanity, Wix or FraseCMS",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "Sanity",
+      "any": ["sanity"],
+      "quote": "Publishes to WordPress, Webflow, Sanity, Wix or FraseCMS",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "Wix",
+      "any": ["wix"],
+      "quote": "Publishes to WordPress, Webflow, Sanity, Wix or FraseCMS",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "Google Search Console",
+      "any": ["search console"],
+      "quote": "Watches Google position and clicks, from Search Console",
+      "page": "https://www.frase.io/"
+    },
+    {
+      "label": "MCP server (Claude, Cursor and other AI tools)",
+      "any": ["mcp", "claude", "cursor"],
+      "quote": "Run any step from Claude, Cursor, or your other AI tools through the Frase MCP server",
+      "page": "https://www.frase.io/"
+    }
+  ],
+  "fields": [],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "Pricing page shows the Yearly view (Save 20%): each plan's yearly-billed monthly price, the struck 'was' monthly price (= month-to-month price, confirmed on the homepage: '$39/mo on yearly billing, or $49 month to month', Professional '$103/mo yearly or $129 monthly') and the yearly total. All three amounts are listed per plan. Enterprise is custom. Not plans: FraseCMS Free/Basic ($19/mo or $190/yr)/Pro ($99/mo or $990/yr) hosting add-ons, the free Frase Answers widget tier, extra seats ($29/mo) and pay-as-you-go overages. pricing_status is NOT annotated: there is no free plan of the core product (7-day trial only), but free tiers exist for the Answers widget and FraseCMS add-on, so 'paid' vs 'freemium' is ambiguous — product owner to decide. 'Plan, research, and write cluster content in 70+ languages' describes content/SERP locales, not the product UI language; languages left unannotated (a model reporting en/de/fr/es/pt from it is debatable). ChatGPT/Perplexity/Claude/Gemini/Google AI are engines Frase monitors, not integrations (only the MCP-server access is annotated). '4.8/5 · 600+ reviews', 'Thousands of teams' and logos (Shopify, Atlassian next to a testimonial) are not payment proof. No company location, founding year or headcount is stated. Footer 'Affiliate Program' is incidental: core purpose is SEO/GEO content, eligible."
+}

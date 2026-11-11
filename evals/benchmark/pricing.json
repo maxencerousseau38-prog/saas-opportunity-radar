@@ -1,0 +1,101 @@
+{
+  "verified_on": "2026-11-05",
+  "method": "Read from official vendor pages snapshotted in evals/benchmark/vendor-docs (see index.json for URLs and retrieval times). Prices in USD per million tokens, standard (synchronous) tier, global endpoint.",
+  "models": {
+    "claude-haiku-5-5": {
+      "vendor": "anthropic",
+      "input": 0.1,
+      "output": 0.5,
+      "cache_read": 0.01,
+      "notes": "Prompt > 100,000 tokens: 0.50 / 2.50 (whole request). Thinking can be disabled at effort <= high.",
+      "source": "anthropic--platform-claude-com-docs-en-about-claude-pricing.txt",
+      "long_context": {
+        "threshold_tokens": 100000,
+        "input": 0.5,
+        "output": 2.5
+      }
+    },
+    "claude-sonnet-5-5": {
+      "vendor": "anthropic",
+      "input": 2,
+      "output": 10,
+      "cache_read": 0.1,
+      "notes": "Thinking cannot be disabled; lowest mode is between_tools (no up-front thinking) at effort <= high.",
+      "source": "anthropic--platform-claude-com-docs-en-about-claude-pricing.txt"
+    },
+    "claude-opus-5-5": {
+      "vendor": "anthropic",
+      "input": 4,
+      "output": 20,
+      "cache_read": 0.2,
+      "notes": "Thinking always on; effort is the only control.",
+      "source": "anthropic--platform-claude-com-docs-en-about-claude-pricing.txt"
+    },
+    "gpt-6-luna": {
+      "vendor": "openai",
+      "input": 0.1,
+      "output": 0.5,
+      "cache_read": 0.01,
+      "notes": "reasoning.effort: none, low, medium, high, xhigh, max.",
+      "source": "openai--developers-openai-com-api-docs-pricing.txt; openai--developers-openai-com-api-docs-models.txt"
+    },
+    "gpt-6.1-terra": {
+      "vendor": "openai",
+      "input": 1,
+      "output": 5,
+      "cache_read": 0.05,
+      "notes": "Not in the matrix (between Luna and Sol); available if stage 1 shows a gap.",
+      "source": "openai--developers-openai-com-api-docs-pricing.txt"
+    },
+    "gpt-6.1-sol": {
+      "vendor": "openai",
+      "input": 2,
+      "output": 10,
+      "cache_read": 0.1,
+      "notes": "reasoning.effort: low, medium, high, xhigh, max (no none).",
+      "source": "openai--developers-openai-com-api-docs-pricing.txt; openai--developers-openai-com-api-docs-models.txt"
+    },
+    "gpt-6-astra": {
+      "vendor": "openai",
+      "input": 10,
+      "output": 50,
+      "cache_read": 1,
+      "notes": "Flagship; reasoning.effort low..max.",
+      "source": "openai--developers-openai-com-api-docs-pricing.txt"
+    },
+    "mistral-small-2603": {
+      "vendor": "mistral",
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.015,
+      "notes": "Mistral Small 4; reasoning_effort none or high.",
+      "source": "mistral--docs-mistral-ai-inference-pricing.txt; mistral--docs-mistral-ai-models-mistral-small-4-0-26-03.txt"
+    },
+    "mistral-large-4": {
+      "vendor": "mistral",
+      "input": 0.7,
+      "output": 2.1,
+      "cache_read": 0.07,
+      "notes": "Public Preview (6 Oct 2026); reasoning_effort low, medium, high.",
+      "source": "mistral--docs-mistral-ai-inference-pricing.txt; mistral--docs-mistral-ai-models-mistral-large-4-0.txt"
+    },
+    "ministral-14b-2512": {
+      "vendor": "mistral",
+      "input": 0.2,
+      "output": 0.2,
+      "cache_read": 0.02,
+      "notes": "Ministral 3 14B; API id from the official model page (mistral--docs-mistral-ai-models-ministral-3-14b-25-12.txt).",
+      "source": "mistral--docs-mistral-ai-inference-pricing.txt; mistral--docs-mistral-ai-models-ministral-3-14b-25-12.txt"
+    }
+  },
+  "discounts_and_uplifts": {
+    "anthropic": "Batch API -50% (stacks with caching; not ZDR-eligible). inference_geo 'us' x1.1; no EU option on the first-party API (EU only via Bedrock EU profiles or Google Cloud 'eu' multi-region, +10%).",
+    "openai": "Batch/Flex -50%. Data residency (eu.api.openai.com) +10%, subject to sales eligibility; ZDR / Modified Abuse Monitoring by prior approval; default abuse-monitoring retention up to 30 days.",
+    "mistral": "Batch -50%. EU regional endpoint api.eu.mistral.ai +10% (Batch and Files not available there). Default API data retention: not verified (legal pages not readable as text)."
+  },
+  "embeddings_for_pd24b": {
+    "anthropic": "No own embedding model (docs point to Voyage AI); a second vendor would be needed.",
+    "openai": "text-embedding-3-small / -large documented; prices not read yet (PD-24b).",
+    "mistral": "mistral-embed 0.10 input; codestral-embed 0.15."
+  }
+}

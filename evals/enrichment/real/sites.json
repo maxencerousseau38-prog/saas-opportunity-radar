@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "purpose": "PD-24 benchmark: real official websites, snapshotted once by the eval-snapshot workflow with the production official-website connector, then frozen.",
+  "max_pages_per_site": 5,
+  "sites": [
+    {
+      "id": "buttondown",
+      "name": "Buttondown",
+      "url": "https://buttondown.com/",
+      "segment": "martech/email",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "savvycal",
+      "name": "SavvyCal",
+      "url": "https://savvycal.com/",
+      "segment": "sales/scheduling",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "transistor",
+      "name": "Transistor",
+      "url": "https://transistor.fm/",
+      "segment": "martech/podcast",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "userlist",
+      "name": "Userlist",
+      "url": "https://userlist.com/",
+      "segment": "martech/lifecycle-email",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "sparktoro",
+      "name": "SparkToro",
+      "url": "https://sparktoro.com/",
+      "segment": "martech/audience-research",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "fathom",
+      "name": "Fathom Analytics",
+      "url": "https://usefathom.com/",
+      "segment": "martech/analytics",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "testimonial",
+      "name": "Testimonial",
+      "url": "https://testimonial.to/",
+      "segment": "martech/social-proof",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "hypefury",
+      "name": "Hypefury",
+      "url": "https://hypefury.com/",
+      "segment": "martech/social",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "typefully",
+      "name": "Typefully",
+      "url": "https://typefully.com/",
+      "segment": "martech/social",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "frase",
+      "name": "Frase",
+      "url": "https://www.frase.io/",
+      "segment": "martech/seo-content",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "clearscope",
+      "name": "Clearscope",
+      "url": "https://www.clearscope.io/",
+      "segment": "martech/seo-content",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "keywordseverywhere",
+      "name": "Keywords Everywhere",
+      "url": "https://keywordseverywhere.com/",
+      "segment": "martech/seo",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "convertflow",
+      "name": "ConvertFlow",
+      "url": "https://www.convertflow.com/",
+      "segment": "martech/cro",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "getsitecontrol",
+      "name": "Getsitecontrol",
+      "url": "https://getsitecontrol.com/",
+      "segment": "martech/lead-capture",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "leadpages",
+      "name": "Leadpages",
+      "url": "https://www.leadpages.com/",
+      "segment": "martech/landing-pages",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "mailshake",
+      "name": "Mailshake",
+      "url": "https://mailshake.com/",
+      "segment": "sales/cold-email",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "plausible",
+      "name": "Plausible Analytics",
+      "url": "https://plausible.io/",
+      "segment": "martech/analytics (EU control)",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "growsurf",
+      "name": "GrowSurf",
+      "url": "https://growsurf.com/",
+      "segment": "boundary: customer referral program (PD-11 flag, stays eligible unless core is affiliate/partner)",
+      "expected_exclusion": "to_annotate"
+    },
+    {
+      "id": "rewardful",
+      "name": "Rewardful",
+      "url": "https://www.rewardful.com/",
+      "segment": "excluded: affiliate core",
+      "expected_exclusion": "excluded_or_needs_review"
+    },
+    {
+      "id": "firstpromoter",
+      "name": "FirstPromoter",
+      "url": "https://firstpromoter.com/",
+      "segment": "excluded: affiliate core",
+      "expected_exclusion": "excluded_or_needs_review"
+    },
+    {
+      "id": "carrd",
+      "name": "Carrd",
+      "url": "https://carrd.co/",
+      "segment": "web/site-builder",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "fillout",
+      "name": "Fillout",
+      "url": "https://www.fillout.com/",
+      "segment": "forms",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "formspree",
+      "name": "Formspree",
+      "url": "https://formspree.io/",
+      "segment": "dev/forms",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "cronitor",
+      "name": "Cronitor",
+      "url": "https://cronitor.io/",
+      "segment": "dev/monitoring",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "instatus",
+      "name": "Instatus",
+      "url": "https://instatus.com/",
+      "segment": "dev/status-pages",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "groove",
+      "name": "Groove",
+      "url": "https://www.groovehq.com/",
+      "segment": "support/helpdesk",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "canny",
+      "name": "Canny",
+      "url": "https://canny.io/",
+      "segment": "product/feedback",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "outseta",
+      "name": "Outseta",
+      "url": "https://www.outseta.com/",
+      "segment": "saas-ops/membership",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "churnkey",
+      "name": "Churnkey",
+      "url": "https://churnkey.co/",
+      "segment": "saas-ops/retention",
+      "expected_exclusion": "eligible"
+    },
+    {
+      "id": "baremetrics",
+      "name": "Baremetrics",
+      "url": "https://baremetrics.com/",
+      "segment": "saas-ops/metrics",
+      "expected_exclusion": "eligible"
+    }
+  ]
+}

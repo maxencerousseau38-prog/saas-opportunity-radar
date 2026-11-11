@@ -1,0 +1,165 @@
+{
+  "purpose": "Official vendor pages read to verify models, prices, batch, structured outputs and data residency for PD-24. Snapshotted by the eval-snapshot workflow (this session's network policy blocks them).",
+  "pages": [
+    {
+      "vendor": "anthropic",
+      "url": "https://platform.claude.com/docs/en/about-claude/pricing"
+    },
+    {
+      "vendor": "anthropic",
+      "url": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "vendor": "anthropic",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+    },
+    {
+      "vendor": "anthropic",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+    },
+    {
+      "vendor": "anthropic",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/data-residency"
+    },
+    {
+      "vendor": "anthropic",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/embeddings"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://openai.com/api/pricing/"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://platform.openai.com/docs/pricing"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/pricing"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/models"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/guides/your-data"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/guides/structured-outputs"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/guides/batch"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/guides/reasoning"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://help.openai.com/en/articles/10503543-data-residency-for-the-openai-api"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://mistral.ai/pricing"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/getting-started/models/"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/getting-started/models/models_overview/"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/capabilities/structured-output/custom_structured_output/"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/capabilities/batch/"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/capabilities/reasoning/"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/capabilities/embeddings/overview/"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://legal.mistral.ai/terms"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://help.mistral.ai/en/"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/inference/pricing"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/inference/regional-inference"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/inference/conversations/structured-output/custom"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/inference/conversations/reasoning"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/inference/batch-processing"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/inference/conversations/advanced/prompt-caching"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/models/mistral-small-4-0-26-03"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/models/mistral-medium-3-5-26-04"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/models/mistral-large-4-0"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/models/mistral-embed-23-12"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/inference/embeddings"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/guides/embeddings"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6-luna"
+    },
+    {
+      "vendor": "openai",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol"
+    },
+    {
+      "vendor": "mistral",
+      "url": "https://docs.mistral.ai/models/ministral-3-14b-25-12"
+    },
+    {
+      "vendor": "anthropic",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+    }
+  ]
+}

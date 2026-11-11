@@ -1,0 +1,19 @@
+# Reference documentation is formatted by hand (Pandoc-style blueprint, French PRD).
+docs/
+CLAUDE.md
+PREMIER_PROMPT_AUDIT.txt
+pnpm-lock.yaml
+.next/
+dist/
+coverage/
+playwright-report/
+test-results/
+# Generated from the database schema (supabase gen types); checked in CI.
+packages/database/src/generated.ts
+# Frozen evaluation snapshots (machine-written)
+evals/enrichment/real/snapshots/
+evals/benchmark/vendor-docs/
+dist-evals/
+dist-catalog/
+# Collected catalog snapshots (machine-written)
+data/catalog/

@@ -1,0 +1,9 @@
+https://www.uneed.best/robots.txt
+2026-11-10T17:21:12.438Z
+
+# START nuxt-robots (indexable)
+User-agent: *
+Disallow: /*?*sortBy=
+Disallow: /*?*orderBy=
+Sitemap: https://www.uneed.best/sitemap_index.xml
+# END nuxt-robots

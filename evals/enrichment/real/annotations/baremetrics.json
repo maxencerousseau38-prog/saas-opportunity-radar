@@ -1,0 +1,138 @@
+{
+  "id": "baremetrics",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T09:00:29.396Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Launch",
+      "name_any": ["launch"],
+      "price_amount_any": [75, 49],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "STARTS AT: $ 75 / mo $0-360K ARR",
+      "page": "https://baremetrics.com/pricing"
+    },
+    {
+      "name": "Growth",
+      "name_any": ["growth"],
+      "price_amount_any": [255, 189],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "STARTS AT: $ 255 / mo $360K -3.6M ARR",
+      "page": "https://baremetrics.com/pricing"
+    },
+    {
+      "name": "Scale",
+      "name_any": ["scale"],
+      "price_amount_any": [1152, 749],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "STARTS AT: $ 1152 / mo $3.6M+ ARR",
+      "page": "https://baremetrics.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Subscription analytics (MRR, ARR, churn and other SaaS metrics)",
+      "any": ["subscription analytics", "subscription metric", "saas metric", "mrr", "metrics"],
+      "quote": "Baremetrics tracks over 28 key subscription metrics including Monthly Recurring Revenue (MRR)",
+      "page": "https://baremetrics.com/features/metrics"
+    },
+    {
+      "label": "Customer segmentation",
+      "any": ["segment"],
+      "quote": "you can create and save groupings of all your customers in seconds",
+      "page": "https://baremetrics.com/features/segmentation"
+    },
+    {
+      "label": "Financial forecasting",
+      "any": ["forecast", "financial planning", "scenario"],
+      "quote": "Make future planning simple with accurate financial forecasts.",
+      "page": "https://baremetrics.com/"
+    },
+    {
+      "label": "Cancellation Insights (churn reason feedback, add-on)",
+      "any": ["cancellation", "cancel", "churn feedback"],
+      "quote": "Start collecting valuable feedback in minutes, learn how much revenue you're losing to each reason",
+      "page": "https://baremetrics.com/"
+    },
+    {
+      "label": "Payment Recovery / dunning (add-on)",
+      "any": ["recover", "dunning", "failed payment", "failing charge"],
+      "quote": "Turn failed payments into revenue with automated recovery tools.",
+      "page": "https://baremetrics.com/pricing"
+    },
+    {
+      "label": "Trial Insights",
+      "any": ["trial"],
+      "quote": "Trial Insights allow you to see what customers are doing during their trial.",
+      "page": "https://baremetrics.com/features/metrics"
+    },
+    {
+      "label": "Automated email reports",
+      "any": ["email report", "report"],
+      "quote": "Keep a pulse on performance with customizable daily, weekly, or monthly reports.",
+      "page": "https://baremetrics.com/features/metrics"
+    },
+    {
+      "label": "Benchmarks",
+      "any": ["benchmark"],
+      "quote": "Benchmark your SaaS metrics against the competition",
+      "page": "https://baremetrics.com/features/metrics"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "We have native integrations with Stripe, Shopify Partners, Braintree, Recurly, App Store Connect, Google Play, and Chargebee.",
+      "page": "https://baremetrics.com/features/metrics"
+    },
+    {
+      "label": "Chargebee",
+      "any": ["chargebee"],
+      "quote": "We have native integrations with Stripe, Shopify Partners, Braintree, Recurly, App Store Connect, Google Play, and Chargebee.",
+      "page": "https://baremetrics.com/features/metrics"
+    },
+    {
+      "label": "Recurly",
+      "any": ["recurly"],
+      "quote": "We have native integrations with Stripe, Shopify Partners, Braintree, Recurly, App Store Connect, Google Play, and Chargebee.",
+      "page": "https://baremetrics.com/features/metrics"
+    },
+    {
+      "label": "Braintree",
+      "any": ["braintree"],
+      "quote": "We have native integrations with Stripe, Shopify Partners, Braintree, Recurly, App Store Connect, Google Play, and Chargebee.",
+      "page": "https://baremetrics.com/features/metrics"
+    },
+    {
+      "label": "Slack",
+      "any": ["slack"],
+      "quote": "Slack Integration",
+      "page": "https://baremetrics.com/pricing"
+    },
+    {
+      "label": "Intercom",
+      "any": ["intercom"],
+      "quote": "Intercom Integration allows a two-way sync",
+      "page": "https://baremetrics.com/features/metrics"
+    }
+  ],
+  "fields": [],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "CONTRADICTION on the pricing page: the plan cards show Launch $75/mo, Growth $255/mo, Scale $1152/mo ('STARTS AT', tiered by ARR), while the FAQ on the same page says Launch $49/month, Growth $189/month, Scale $749/month. Both sets are listed in price_amount_any; the FAQ figures may be annual-billed equivalents ('35% Annual Discount', 'up to a 35% discount') but the page does not say so (255*0.65 is not 189), so the product owner should decide which amounts a correct run must report. Payment Recovery and Cancellation Insights (+$129/mo each) are add-ons, not plans; 'Build your own plan' has no displayed price and the FAQ says there are three plans, so it is not annotated as a plan. The free trial and 'Free Metrics' link are not plans. The footer 'Affiliate Partners' link is an incidental program of the company, not the product's purpose: eligible. '+900 companies using Baremetrics' and testimonials are company claims, not payment proof. The phone number (725) is not a stated country. The blog page (saas-pricing-models) is generic content and was not used for product facts."
+}

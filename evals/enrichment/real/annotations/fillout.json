@@ -1,0 +1,162 @@
+{
+  "id": "fillout",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:59:21.733Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Free",
+      "name_any": ["free"],
+      "price_amount_any": [0],
+      "currency": "USD",
+      "billing_period_any": ["month"],
+      "quote": "Free $0 / month Free forever",
+      "page": "https://www.fillout.com/pricing"
+    },
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [15, 180, 228],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Starter $15 / month $ 228 $ 180 billed annually",
+      "page": "https://www.fillout.com/pricing"
+    },
+    {
+      "name": "Pro",
+      "name_any": ["pro"],
+      "price_amount_any": [40, 480, 588],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Pro $40 / month $ 588 $ 480 billed annually",
+      "page": "https://www.fillout.com/pricing"
+    },
+    {
+      "name": "Business",
+      "name_any": ["business"],
+      "price_amount_any": [75, 900, 1068],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Business $75 / month $ 1068 $ 900 billed annually",
+      "page": "https://www.fillout.com/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Enterprise For organizations with advanced security and data intake needs.",
+      "page": "https://www.fillout.com/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Form, quiz and survey builder (AI or drag and drop)",
+      "any": ["form builder", "build with ai", "drag and drop", "form", "survey", "quiz"],
+      "quote": "Make any form, quiz or survey in minutes Build with AI or drag and drop",
+      "page": "https://www.fillout.com/"
+    },
+    {
+      "label": "Conditional logic and calculations",
+      "any": ["conditional logic", "logic", "calculation", "scoring"],
+      "quote": "Conditional logic Unlimited file uploads Fillout Workflows Resume in-progress forms Calculations and scoring",
+      "page": "https://www.fillout.com/pricing"
+    },
+    {
+      "label": "Payment collection in forms",
+      "any": ["payment"],
+      "quote": "Stripe Process payments from a form, with 0% added fees.",
+      "page": "https://www.fillout.com/integrations"
+    },
+    {
+      "label": "Scheduling forms",
+      "any": ["schedul", "booking", "book meetings"],
+      "quote": "Multi-page forms Form embedding Collect payments Answer piping Scheduling forms PDF generation",
+      "page": "https://www.fillout.com/pricing"
+    },
+    {
+      "label": "PDF generation",
+      "any": ["pdf"],
+      "quote": "Scheduling forms PDF generation Conditional logic",
+      "page": "https://www.fillout.com/pricing"
+    },
+    {
+      "label": "Workflows / automation",
+      "any": ["workflow", "automat"],
+      "quote": "Fillout integrates with the tools you already use to help you automate these workflows",
+      "page": "https://www.fillout.com/about"
+    },
+    {
+      "label": "Signature collection",
+      "any": ["signature"],
+      "quote": "Collect signatures",
+      "page": "https://www.fillout.com/pricing"
+    },
+    {
+      "label": "Branding, white-label and custom domains",
+      "any": ["white-label", "white label", "branding", "custom domain", "theme"],
+      "quote": "Fully white-label your forms, down to the favicon.",
+      "page": "https://www.fillout.com/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Airtable",
+      "any": ["airtable"],
+      "quote": "Airtable Create and update records in your Airtable bases.",
+      "page": "https://www.fillout.com/integrations"
+    },
+    {
+      "label": "HubSpot",
+      "any": ["hubspot"],
+      "quote": "HubSpot Collect leads and update your HubSpot data.",
+      "page": "https://www.fillout.com/integrations"
+    },
+    {
+      "label": "Notion",
+      "any": ["notion"],
+      "quote": "Notion Create and update entries in your Notion databases.",
+      "page": "https://www.fillout.com/integrations"
+    },
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "Stripe Process payments from a form, with 0% added fees.",
+      "page": "https://www.fillout.com/integrations"
+    },
+    {
+      "label": "Google Sheets",
+      "any": ["google sheets"],
+      "quote": "Google Sheets Send form submissions to Google Sheets.",
+      "page": "https://www.fillout.com/integrations"
+    },
+    {
+      "label": "Salesforce",
+      "any": ["salesforce"],
+      "quote": "Salesforce Create and update Salesforce records from a form.",
+      "page": "https://www.fillout.com/integrations"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "pricing_status",
+      "value": "freemium",
+      "quote": "Make unlimited forms for free No per-seat charges.",
+      "page": "https://www.fillout.com/pricing"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "Pricing page has a monthly/annual toggle ('Billed annually (Save 20%)'); the captured view shows the annual-billed monthly equivalents ($15/$40/$75) with a struck-through and a discounted annual total ($228→$180, $588→$480, $1068→$900). Monthly-billed amounts ($19/$49/$89 implied by 228/12 etc.) are NOT displayed and must not be expected. Enterprise has no price ('Learn more'). A 'Team bundle' / 'Team & Enterprise' tier is referenced in the comparison table but shown without a price or plan card, so it is not annotated as a plan (a model reporting it as custom is acceptable but not required). 'Standard Scale' tab labels and discounts for non-profits are not plans. The legal entity '© 2026 Restly, Inc.' appears in the footer (legal_name is not an annotatable field here); no country, city, founding year or headcount is stated — the About page mentions Microsoft, Retool and Jet.com only as prior employers of the team. '100,000+ organizations' and G2/Product Hunt ratings are company claims, not payment proof. 'Partner integrations' (via Zapier) is incidental; core purpose is a form builder: eligible."
+}

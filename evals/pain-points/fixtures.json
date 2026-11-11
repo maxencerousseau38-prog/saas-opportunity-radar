@@ -1,0 +1,224 @@
+[
+  {
+    "id": "same-problem-different-words",
+    "label": "Same customer problem phrased differently across products (must cluster together)",
+    "products": [
+      {
+        "id": "00000000-0000-4000-8000-0000000a0001",
+        "name": "Alpha CRM",
+        "total_known_review_count": 50
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000a0002",
+        "name": "Beta CRM",
+        "total_known_review_count": 40
+      }
+    ],
+    "feedback": [
+      {
+        "id": "00000000-0000-4000-8000-0000000f0101",
+        "product_id": "00000000-0000-4000-8000-0000000a0001",
+        "author": "a1",
+        "text": "Exports to CSV time out on big accounts."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0102",
+        "product_id": "00000000-0000-4000-8000-0000000a0001",
+        "author": "a2",
+        "text": "The CSV export keeps timing out."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0103",
+        "product_id": "00000000-0000-4000-8000-0000000a0002",
+        "author": "a3",
+        "text": "Exporting to CSV times out every single time."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0104",
+        "product_id": "00000000-0000-4000-8000-0000000a0002",
+        "author": "a4",
+        "text": "Downloading a spreadsheet of my contacts never finishes."
+      }
+    ],
+    "expected": {
+      "same_cluster": [
+        [
+          "00000000-0000-4000-8000-0000000f0101",
+          "00000000-0000-4000-8000-0000000f0102",
+          "00000000-0000-4000-8000-0000000f0103",
+          "00000000-0000-4000-8000-0000000f0104"
+        ]
+      ],
+      "different_clusters": []
+    }
+  },
+  {
+    "id": "shared-vocabulary-different-problems",
+    "label": "Different problems sharing vocabulary (must not merge)",
+    "products": [
+      {
+        "id": "00000000-0000-4000-8000-0000000a0003",
+        "name": "Gamma Reports",
+        "total_known_review_count": null
+      }
+    ],
+    "feedback": [
+      {
+        "id": "00000000-0000-4000-8000-0000000f0201",
+        "product_id": "00000000-0000-4000-8000-0000000a0003",
+        "author": "b1",
+        "text": "The report export button is confusing and hard to find."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0202",
+        "product_id": "00000000-0000-4000-8000-0000000a0003",
+        "author": "b2",
+        "text": "The report export is slow and times out."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0203",
+        "product_id": "00000000-0000-4000-8000-0000000a0003",
+        "author": "b3",
+        "text": "The report export menu is confusing."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0204",
+        "product_id": "00000000-0000-4000-8000-0000000a0003",
+        "author": "b4",
+        "text": "Report exports are slow."
+      }
+    ],
+    "expected": {
+      "same_cluster": [],
+      "different_clusters": [
+        ["00000000-0000-4000-8000-0000000f0201", "00000000-0000-4000-8000-0000000f0202"],
+        ["00000000-0000-4000-8000-0000000f0203", "00000000-0000-4000-8000-0000000f0204"]
+      ]
+    }
+  },
+  {
+    "id": "same-author-counted-once",
+    "label": "Several reviews by the same author (counted once)",
+    "products": [
+      {
+        "id": "00000000-0000-4000-8000-0000000a0004",
+        "name": "Delta Mail",
+        "total_known_review_count": null
+      }
+    ],
+    "feedback": [
+      {
+        "id": "00000000-0000-4000-8000-0000000f0301",
+        "product_id": "00000000-0000-4000-8000-0000000a0004",
+        "author": "c1",
+        "text": "Support never answers my tickets."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0302",
+        "product_id": "00000000-0000-4000-8000-0000000a0004",
+        "author": "c1",
+        "text": "Again, support never answers my tickets, a week later."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0303",
+        "product_id": "00000000-0000-4000-8000-0000000a0004",
+        "author": "c1",
+        "text": "Still waiting: support never answers tickets."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0304",
+        "product_id": "00000000-0000-4000-8000-0000000a0004",
+        "author": "c2",
+        "text": "Support never answers tickets on time."
+      }
+    ],
+    "expected": {
+      "same_cluster": [
+        [
+          "00000000-0000-4000-8000-0000000f0301",
+          "00000000-0000-4000-8000-0000000f0302",
+          "00000000-0000-4000-8000-0000000f0303",
+          "00000000-0000-4000-8000-0000000f0304"
+        ]
+      ],
+      "different_clusters": [],
+      "cluster_checks": [
+        {
+          "feedback_id": "00000000-0000-4000-8000-0000000f0301",
+          "feedback_count": 4,
+          "distinct_author_count": 2,
+          "distinct_author_count_status": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "id": "many-vs-few-reviews",
+    "label": "Product with many reviews vs one with few (relative frequency)",
+    "products": [
+      {
+        "id": "00000000-0000-4000-8000-0000000a0005",
+        "name": "Epsilon Big",
+        "total_known_review_count": 1000
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000a0006",
+        "name": "Zeta Small",
+        "total_known_review_count": 20
+      }
+    ],
+    "feedback": [
+      {
+        "id": "00000000-0000-4000-8000-0000000f0401",
+        "product_id": "00000000-0000-4000-8000-0000000a0005",
+        "author": "d1",
+        "text": "Pricing is too expensive for small teams."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0402",
+        "product_id": "00000000-0000-4000-8000-0000000a0005",
+        "author": "d2",
+        "text": "Pricing is too expensive for a small team like ours."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0403",
+        "product_id": "00000000-0000-4000-8000-0000000a0006",
+        "author": "d3",
+        "text": "Pricing is too expensive for small teams."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0404",
+        "product_id": "00000000-0000-4000-8000-0000000a0006",
+        "author": "d4",
+        "text": "Way too expensive pricing for small teams."
+      },
+      {
+        "id": "00000000-0000-4000-8000-0000000f0405",
+        "product_id": "00000000-0000-4000-8000-0000000a0006",
+        "author": "d5",
+        "text": "Our small team finds the pricing far too expensive."
+      }
+    ],
+    "expected": {
+      "same_cluster": [
+        [
+          "00000000-0000-4000-8000-0000000f0401",
+          "00000000-0000-4000-8000-0000000f0402",
+          "00000000-0000-4000-8000-0000000f0403",
+          "00000000-0000-4000-8000-0000000f0404",
+          "00000000-0000-4000-8000-0000000f0405"
+        ]
+      ],
+      "different_clusters": [],
+      "cluster_checks": [
+        {
+          "feedback_id": "00000000-0000-4000-8000-0000000f0401",
+          "relative_frequency": {
+            "00000000-0000-4000-8000-0000000a0005": 0.002,
+            "00000000-0000-4000-8000-0000000a0006": 0.15
+          }
+        }
+      ]
+    }
+  }
+]

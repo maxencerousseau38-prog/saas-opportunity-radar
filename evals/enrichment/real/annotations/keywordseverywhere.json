@@ -1,0 +1,169 @@
+{
+  "id": "keywordseverywhere",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:58:01.041Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Bronze",
+      "name_any": ["bronze"],
+      "price_amount_any": [84, 7],
+      "currency": "USD",
+      "billing_period_any": ["year"],
+      "quote": "Bronze $84/year Best for solo marketers starting out",
+      "page": "https://keywordseverywhere.com/compare-plans.html"
+    },
+    {
+      "name": "Silver",
+      "name_any": ["silver"],
+      "price_amount_any": [168, 14],
+      "currency": "USD",
+      "billing_period_any": ["year"],
+      "quote": "Silver $168/year Best for full-time creators and small teams",
+      "page": "https://keywordseverywhere.com/compare-plans.html"
+    },
+    {
+      "name": "Gold",
+      "name_any": ["gold"],
+      "price_amount_any": [480, 40],
+      "currency": "USD",
+      "billing_period_any": ["year"],
+      "quote": "Gold $480/year Best for agencies and heavy researchers",
+      "page": "https://keywordseverywhere.com/compare-plans.html"
+    },
+    {
+      "name": "Platinum",
+      "name_any": ["platinum"],
+      "price_amount_any": [1440, 120],
+      "currency": "USD",
+      "billing_period_any": ["year"],
+      "quote": "Platinum $1,440/year Best for large teams pulling lots of data",
+      "page": "https://keywordseverywhere.com/compare-plans.html"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Need more than Platinum? We offer custom Enterprise plans.",
+      "page": "https://keywordseverywhere.com/compare-plans.html"
+    }
+  ],
+  "features": [
+    {
+      "label": "Search volume, CPC and competition data in the browser across 15+ sites",
+      "any": ["search volume", "cpc", "keyword data", "keyword metric"],
+      "quote": "Search volume, CPC, and competition data on Google, YouTube, Amazon, Bing, eBay, Etsy, and every other supported site",
+      "page": "https://keywordseverywhere.com/compare-plans.html"
+    },
+    {
+      "label": "Related, People Also Search For and long-tail keyword widgets",
+      "any": [
+        "related",
+        "people also search",
+        "pasf",
+        "long-tail",
+        "long tail",
+        "keyword widget",
+        "keyword idea"
+      ],
+      "quote": "See Related keywords, People Also Search For (PASF) keywords, and Long-tail keyword ideas for any search.",
+      "page": "https://keywordseverywhere.com/free-features.html"
+    },
+    {
+      "label": "Website traffic metrics and competitor keyword research",
+      "any": ["traffic", "competitor"],
+      "quote": "See monthly estimated traffic and the top keywords that any URL or domain ranks for.",
+      "page": "https://keywordseverywhere.com/free-features.html"
+    },
+    {
+      "label": "Backlink and Moz link metrics",
+      "any": ["backlink", "link metric", "moz", "domain authority"],
+      "quote": "View Moz Domain Authority, DA trend, Spam Score, referring domains, backlinks and more.",
+      "page": "https://keywordseverywhere.com/free-features.html"
+    },
+    {
+      "label": "12-month and historical trend charts",
+      "any": ["trend"],
+      "quote": "12-month trend charts, plus historical search volume back to 2004",
+      "page": "https://keywordseverywhere.com/compare-plans.html"
+    },
+    {
+      "label": "Bulk keyword data and competitor gap analysis",
+      "any": ["bulk", "gap"],
+      "quote": "Bulk keyword uploads to pull metrics for your own lists",
+      "page": "https://keywordseverywhere.com/free-features.html"
+    },
+    {
+      "label": "AI prompt templates for ChatGPT, Claude, Gemini",
+      "any": ["prompt template", "prompt"],
+      "quote": "200+ ready-made prompt templates built into ChatGPT, Claude, Gemini & DeepSeek.",
+      "page": "https://keywordseverywhere.com/"
+    },
+    {
+      "label": "REST API and MCP server",
+      "any": ["api", "mcp"],
+      "quote": "The REST API and MCP server, sharing the same credit pool",
+      "page": "https://keywordseverywhere.com/compare-plans.html"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Google Search Console",
+      "any": ["search console", "gsc"],
+      "quote": "Turn your Google Search Console performance report into clean, easy-to-read tables and charts in one click.",
+      "page": "https://keywordseverywhere.com/free-features.html"
+    },
+    {
+      "label": "YouTube",
+      "any": ["youtube"],
+      "quote": "Search Insights, SERP Metrics, Video Insights and YouTube Tags, right on YouTube.",
+      "page": "https://keywordseverywhere.com/free-features.html"
+    },
+    {
+      "label": "Amazon",
+      "any": ["amazon"],
+      "quote": "Use the Amazon, Etsy and eBay APIs to optimize your listings",
+      "page": "https://keywordseverywhere.com/"
+    },
+    {
+      "label": "Etsy",
+      "any": ["etsy"],
+      "quote": "Use the Amazon, Etsy and eBay APIs to optimize your listings",
+      "page": "https://keywordseverywhere.com/"
+    },
+    {
+      "label": "ChatGPT",
+      "any": ["chatgpt"],
+      "quote": "200+ optimized prompt templates built right into ChatGPT.",
+      "page": "https://keywordseverywhere.com/free-features.html"
+    },
+    {
+      "label": "Claude",
+      "any": ["claude"],
+      "quote": "Connect our MCP server to ChatGPT, Claude, Cursor or VS Code",
+      "page": "https://keywordseverywhere.com/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "launch_year",
+      "value": 2015,
+      "quote": "In late 2015, we created Keywords Everywhere",
+      "page": "https://keywordseverywhere.com/product-news.html"
+    },
+    {
+      "field_key": "pricing_status",
+      "value": "freemium",
+      "quote": "Start free. Upgrade when you need the data.",
+      "page": "https://keywordseverywhere.com/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["country_code", "city", "employee_min", "employee_max"],
+    "texts": []
+  },
+  "notes": "All plans are annual only ('Do you have monthly plans? No, all plans are annual'); the table also shows a monthly equivalent ($7/mo, $14/mo, $40/mo, $120/mo), listed in price_amount_any, but the billing period is year only. Enterprise is a custom plan by email, no price. The free extension features (no API key) are a free tier, not a named plan; hence pricing_status freemium. Credit top-ups are add-ons, not plans. The product-news page is a historical incident log: the 2019 note about '$1 for 10,000 keywords' pay-as-you-go credits and 'no monthly recurring plans' describes the 2019 launch of paid credits and is NOT the current offer - reporting it as a current plan is an error. 'trusted by over 1.5 million users' / 'Join 1,555,575 marketing professionals' are company-stated user counts, not payment proof; 'starting with paying customers' (2022 note) is also not verified payment evidence. launch_year 2015 comes from 'In late 2015, we created Keywords Everywhere' (also '(c) 2015-2026'); founded_year is neither expected nor forbidden because the company is not described separately. Supported sites listed in the footer (Google Analytics, Google Trends, Keyword Planner, Bing, eBay, Pinterest, Instagram, X, Gemini, DeepSeek) are also valid integrations but capped at 6. Footer 'Affiliate Program' link is incidental: the core product is an SEO/keyword research browser extension, eligible."
+}

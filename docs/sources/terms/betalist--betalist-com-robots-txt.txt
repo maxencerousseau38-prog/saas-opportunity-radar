@@ -1,0 +1,4 @@
+https://betalist.com/robots.txt
+2026-11-10T17:21:12.882Z
+
+# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file

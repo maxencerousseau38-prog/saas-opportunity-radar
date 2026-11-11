@@ -1,0 +1,795 @@
+https://mcp.uneed.best/openapi.json
+2026-11-10T18:00:09.919Z
+
+{
+"openapi": "3.1.0",
+"info": {
+"title": "Uneed read API",
+"version": "1.1.0",
+"description": "Read-only API over uneed.best product data: search, product profiles, alternatives, community rankings, recent launches, deals, products for sale, categories and monthly launch statistics. The same contract is served as a remote MCP server (Streamable HTTP) at https://mcp.uneed.best/mcp: prefer MCP if your agent supports it. No authentication in v1; per-IP rate limits apply.",
+"contact": {
+"url": "https://www.uneed.best"
+}
+},
+"servers": [
+{
+"url": "https://mcp.uneed.best"
+}
+],
+"paths": {
+"/v1/search": {
+"get": {
+"operationId": "searchProducts",
+"summary": "Full-text product search (typo-tolerant, over names, descriptions and tags)",
+"parameters": [
+{
+"name": "q",
+"in": "query",
+"required": true,
+"schema": {
+"type": "string"
+},
+"description": "Search terms"
+},
+{
+"name": "limit",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"minimum": 1,
+"maximum": 25,
+"default": 10
+}
+}
+],
+"responses": {
+"200": {
+"description": "Matching products with relevance rank"
+}
+}
+}
+},
+"/v1/products/{slug}": {
+"get": {
+"operationId": "getProduct",
+"summary": "Full product profile: details, tags, deals and community stats (aggregates only)",
+"parameters": [
+{
+"name": "slug",
+"in": "path",
+"required": true,
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Product profile",
+"content": {
+"application/json": {
+"schema": {
+"type": "object",
+"description": "A product listed on uneed.best (public projection)",
+"properties": {
+"id": {
+"type": "integer"
+},
+"name": {
+"type": "string"
+},
+"slug": {
+"type": "string"
+},
+"description": {
+"type": "string"
+},
+"rich_description": {
+"type": [
+"string",
+"null"
+]
+},
+"url": {
+"type": "string",
+"description": "The product's own website"
+},
+"uneed_url": {
+"type": "string",
+"description": "The product page on uneed.best"
+},
+"logo": {
+"type": [
+"string",
+"null"
+]
+},
+"images": {
+"type": [
+"array",
+"null"
+],
+"items": {
+"type": "string"
+}
+},
+"category": {
+"type": [
+"string",
+"null"
+]
+},
+"pricing": {
+"type": [
+"string",
+"null"
+]
+},
+"rate": {
+"type": [
+"number",
+"null"
+],
+"description": "Average community rating"
+},
+"premium": {
+"type": "boolean",
+"description": "True when the product pays for featured placement (disclosure)"
+},
+"launch_date": {
+"type": "string",
+"format": "date"
+},
+"created_at": {
+"type": "string"
+},
+"twitter": {
+"type": [
+"string",
+"null"
+]
+},
+"bluesky": {
+"type": [
+"string",
+"null"
+]
+},
+"linkedin": {
+"type": [
+"string",
+"null"
+]
+},
+"github": {
+"type": [
+"string",
+"null"
+]
+},
+"instagram": {
+"type": [
+"string",
+"null"
+]
+},
+"facebook": {
+"type": [
+"string",
+"null"
+]
+},
+"youtube": {
+"type": [
+"string",
+"null"
+]
+},
+"open_source": {
+"type": "boolean",
+"description": "True when the product's source code is publicly available"
+},
+"repo_url": {
+"type": [
+"string",
+"null"
+],
+"description": "Source code repository, when the maker provided one"
+},
+"tiktok": {
+"type": [
+"string",
+"null"
+]
+},
+"domain_rating": {
+"type": [
+"number",
+"null"
+],
+"description": "Ahrefs Domain Rating (0-100), null until measured"
+},
+"on_sale": {
+"type": "boolean",
+"description": "True while the maker lists the product for acquisition"
+},
+"sold": {
+"type": "boolean",
+"description": "True once the product was sold through its listing"
+},
+"sale_price": {
+"type": [
+"integer",
+"null"
+],
+"description": "Asking price in whole US dollars; present while listed or once sold, null otherwise, and null when the maker did not disclose one"
+},
+"sale_listed_at": {
+"type": [
+"string",
+"null"
+],
+"format": "date-time",
+"description": "When the current (or final) listing went live; same gating as sale_price"
+},
+"ttm_revenue": {
+"type": [
+"integer",
+"null"
+],
+"description": "Trailing-twelve-month revenue in US dollars as disclosed by the maker; only while listed"
+},
+"ttm_profit": {
+"type": [
+"integer",
+"null"
+],
+"description": "Trailing-twelve-month profit in US dollars as disclosed by the maker; only while listed"
+},
+"reviews": {
+"type": "array",
+"description": "Up to 3 most-liked published reviews (preview). Full list at /v1/products/{slug}/reviews",
+"items": {
+"type": "object",
+"description": "A published community review (testimonial) of a product",
+"properties": {
+"rate": {
+"type": [
+"integer",
+"null"
+],
+"description": "Star rating, 1-5"
+},
+"review": {
+"type": "string",
+"description": "Review body (testimonial text)"
+},
+"author_username": {
+"type": [
+"string",
+"null"
+],
+"description": "Public author handle"
+},
+"like_count": {
+"type": "integer"
+},
+"created_at": {
+"type": "string",
+"format": "date-time"
+}
+}
+}
+}
+}
+}
+}
+}
+},
+"404": {
+"description": "Unknown slug"
+}
+}
+}
+},
+"/v1/products/{slug}/alternatives": {
+"get": {
+"operationId": "getAlternatives",
+"summary": "Alternatives scored by weighted tag overlap, with the shared tags explaining each match",
+"parameters": [
+{
+"name": "slug",
+"in": "path",
+"required": true,
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "limit",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"minimum": 1,
+"maximum": 25,
+"default": 10
+}
+}
+],
+"responses": {
+"200": {
+"description": "Scored alternatives"
+},
+"404": {
+"description": "Unknown slug"
+}
+}
+}
+},
+"/v1/products/{slug}/reviews": {
+"get": {
+"operationId": "getReviews",
+"summary": "Published community reviews (ratings + testimonials) for a product",
+"parameters": [
+{
+"name": "slug",
+"in": "path",
+"required": true,
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "sort",
+"in": "query",
+"required": false,
+"description": "'recent' (default, newest first) or 'top' (most liked first)",
+"schema": {
+"type": "string",
+"enum": [
+"recent",
+"top"
+],
+"default": "recent"
+}
+},
+{
+"name": "limit",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"minimum": 1,
+"maximum": 50,
+"default": 10
+}
+}
+],
+"responses": {
+"200": {
+"description": "Reviews for the product",
+"content": {
+"application/json": {
+"schema": {
+"type": "object",
+"properties": {
+"product_slug": {
+"type": "string"
+},
+"sort": {
+"type": "string",
+"enum": [
+"recent",
+"top"
+]
+},
+"reviews": {
+"type": "array",
+"items": {
+"type": "object",
+"description": "A published community review (testimonial) of a product",
+"properties": {
+"rate": {
+"type": [
+"integer",
+"null"
+],
+"description": "Star rating, 1-5"
+},
+"review": {
+"type": "string",
+"description": "Review body (testimonial text)"
+},
+"author_username": {
+"type": [
+"string",
+"null"
+],
+"description": "Public author handle"
+},
+"like_count": {
+"type": "integer"
+},
+"created_at": {
+"type": "string",
+"format": "date-time"
+}
+}
+}
+}
+}
+}
+}
+}
+},
+"404": {
+"description": "Unknown slug"
+}
+}
+}
+},
+"/v1/trending": {
+"get": {
+"operationId": "getTrending",
+"summary": "Community-voted rankings of products launched in a period (ISO weeks, America/Los_Angeles anchored)",
+"parameters": [
+{
+"name": "period",
+"in": "query",
+"required": true,
+"schema": {
+"type": "string",
+"enum": [
+"daily",
+"weekly",
+"monthly",
+"yearly"
+]
+}
+},
+{
+"name": "date",
+"in": "query",
+"required": false,
+"description": "Any date inside the wanted period (YYYY-MM-DD); omit for the current period",
+"schema": {
+"type": "string",
+"format": "date"
+}
+},
+{
+"name": "limit",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"minimum": 1,
+"maximum": 50,
+"default": 20
+}
+}
+],
+"responses": {
+"200": {
+"description": "Ranked products with summed vote value"
+}
+}
+}
+},
+"/v1/launches": {
+"get": {
+"operationId": "getRecentLaunches",
+"summary": "Most recent launches, newest first, filterable by category and tag",
+"parameters": [
+{
+"name": "category",
+"in": "query",
+"required": false,
+"description": "Category slug or exact name (see /v1/categories)",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "tag",
+"in": "query",
+"required": false,
+"schema": {
+"type": "string"
+},
+"description": "Tag slug"
+},
+{
+"name": "limit",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"minimum": 1,
+"maximum": 50,
+"default": 20
+}
+}
+],
+"responses": {
+"200": {
+"description": "Recent launches"
+}
+}
+}
+},
+"/v1/deals": {
+"get": {
+"operationId": "listDeals",
+"summary": "Active promo deals (discount codes and offers) with the product they apply to",
+"parameters": [
+{
+"name": "category",
+"in": "query",
+"required": false,
+"description": "Category slug or exact name (see /v1/categories)",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Active deals"
+}
+}
+}
+},
+"/v1/for-sale": {
+"get": {
+"operationId": "listProductsForSale",
+"summary": "Products listed for acquisition by their makers, newest listing first, with asking price and disclosed TTM revenue and profit",
+"parameters": [
+{
+"name": "category",
+"in": "query",
+"required": false,
+"description": "Category slug or exact name (see /v1/categories)",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "max_price",
+"in": "query",
+"required": false,
+"description": "Maximum asking price in US dollars",
+"schema": {
+"type": "number",
+"exclusiveMinimum": 0
+}
+},
+{
+"name": "min_revenue",
+"in": "query",
+"required": false,
+"description": "Minimum trailing-twelve-month revenue in US dollars (drops listings with no disclosed revenue)",
+"schema": {
+"type": "number",
+"minimum": 0
+}
+},
+{
+"name": "include_sold",
+"in": "query",
+"required": false,
+"description": "Also return recently sold products (price and listing date, no financials) as comparables",
+"schema": {
+"type": "boolean",
+"default": false
+}
+},
+{
+"name": "limit",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"minimum": 1,
+"maximum": 50,
+"default": 20
+}
+}
+],
+"responses": {
+"200": {
+"description": "Listings, newest first",
+"content": {
+"application/json": {
+"schema": {
+"type": "object",
+"properties": {
+"listings": {
+"type": "array",
+"items": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string"
+},
+"slug": {
+"type": "string"
+},
+"description": {
+"type": "string"
+},
+"uneed_url": {
+"type": "string",
+"description": "Where a buyer contacts the seller"
+},
+"url": {
+"type": "string"
+},
+"logo": {
+"type": [
+"string",
+"null"
+]
+},
+"category": {
+"type": [
+"string",
+"null"
+]
+},
+"pricing": {
+"type": [
+"string",
+"null"
+]
+},
+"on_sale": {
+"type": "boolean",
+"description": "True while the maker lists the product for acquisition"
+},
+"sold": {
+"type": "boolean",
+"description": "True once the product was sold through its listing"
+},
+"sale_price": {
+"type": [
+"integer",
+"null"
+],
+"description": "Asking price in whole US dollars; present while listed or once sold, null otherwise, and null when the maker did not disclose one"
+},
+"sale_listed_at": {
+"type": [
+"string",
+"null"
+],
+"format": "date-time",
+"description": "When the current (or final) listing went live; same gating as sale_price"
+},
+"ttm_revenue": {
+"type": [
+"integer",
+"null"
+],
+"description": "Trailing-twelve-month revenue in US dollars as disclosed by the maker; only while listed"
+},
+"ttm_profit": {
+"type": [
+"integer",
+"null"
+],
+"description": "Trailing-twelve-month profit in US dollars as disclosed by the maker; only while listed"
+},
+"revenue_multiple": {
+"type": [
+"number",
+"null"
+],
+"description": "sale_price / ttm_revenue rounded to one decimal; null without a disclosed price and a positive disclosed revenue"
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+},
+"/v1/categories": {
+"get": {
+"operationId": "listCategories",
+"summary": "Product categories with slug and product count",
+"responses": {
+"200": {
+"description": "Categories"
+}
+}
+}
+},
+"/v1/stats/launches": {
+"get": {
+"operationId": "getLaunchStats",
+"summary": "Monthly submitted, launched and declined counts",
+"description": "One row per month (America/Los_Angeles) since 2024-02. `launched` = products launched in the month and still published, by launch date. `submitted` and `declined` start in 2026-08 (null before). `estimated` marks the months before the submission ledger (2026-11-05). The answer carries the field definitions and the license: CC BY 4.0, attribution \"Source: Uneed, uneed.best\". Cached for an hour.",
+"responses": {
+"200": {
+"description": "Monthly launch statistics",
+"content": {
+"application/json": {
+"schema": {
+"type": "object",
+"properties": {
+"source": {
+"type": "string"
+},
+"license": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string"
+},
+"url": {
+"type": "string"
+},
+"attribution": {
+"type": "string"
+}
+}
+},
+"timezone": {
+"type": "string"
+},
+"definitions": {
+"type": "object",
+"additionalProperties": {
+"type": "string"
+}
+},
+"months": {
+"type": "array",
+"items": {
+"type": "object",
+"properties": {
+"month": {
+"type": "string",
+"description": "YYYY-MM"
+},
+"complete": {
+"type": "boolean"
+},
+"launched": {
+"type": "integer"
+},
+"submitted": {
+"type": [
+"integer",
+"null"
+]
+},
+"declined": {
+"type": [
+"integer",
+"null"
+]
+},
+"estimated": {
+"type": "boolean"
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}

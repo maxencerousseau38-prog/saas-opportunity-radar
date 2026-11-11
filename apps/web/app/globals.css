@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/*
+ * SaaS Opportunity Radar — monochrome shadcn-inspired system.
+ * Keep existing semantic token names so product components stay compatible.
+ */
+@theme {
+  --color-bg: oklch(0.145 0 0);
+  --color-surface: oklch(0.205 0 0);
+  --color-surface-2: oklch(0.269 0 0);
+  --color-border: oklch(1 0 0 / 10%);
+  --color-fg: oklch(0.985 0 0);
+  --color-muted: oklch(0.708 0 0);
+  --color-accent: oklch(0.922 0 0);
+  --color-accent-fg: oklch(0.205 0 0);
+
+  /* Semantic colors are reserved for statuses and destructive actions. */
+  --color-success: oklch(0.792 0.209 151.711);
+  --color-warning: oklch(0.75 0.183 55.934);
+  --color-danger: oklch(0.704 0.191 22.216);
+
+  --font-sans: Inter, Geist, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-bg text-fg;
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    color: oklch(0.145 0 0);
+    background: oklch(0.985 0 0);
+  }
+
+  :focus-visible {
+    outline: 2px solid oklch(0.922 0 0);
+    outline-offset: 2px;
+  }
+}

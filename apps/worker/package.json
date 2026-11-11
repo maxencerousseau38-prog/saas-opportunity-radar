@@ -1,0 +1,37 @@
+{
+  "name": "@sor/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "start": "node dist/main.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --exclude 'test/integration/**' --exclude 'test/resilience/**'",
+    "test:integration": "vitest run --dir test/integration --no-file-parallelism",
+    "test:resilience": "vitest run --dir test/resilience --no-file-parallelism",
+    "eval:build": "tsup --config tsup.evals.config.ts",
+    "build:container": "tsup --config tsup.container.config.ts",
+    "catalog:build": "tsup --config tsup.catalog.config.ts",
+    "catalog:ingest": "node dist-catalog/ingest.js"
+  },
+  "dependencies": {
+    "@sor/ai-gateway": "workspace:*",
+    "@sor/contracts": "workspace:*",
+    "@sor/data-sources": "workspace:*",
+    "@sor/database": "workspace:*",
+    "@sor/discovery-engine": "workspace:*",
+    "@sor/domain": "workspace:*",
+    "@sor/opportunity-engine": "workspace:*",
+    "@sor/pain-point-engine": "workspace:*",
+    "@supabase/supabase-js": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

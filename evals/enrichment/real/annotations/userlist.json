@@ -1,0 +1,149 @@
+{
+  "id": "userlist",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:56:26.785Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Basic",
+      "name_any": ["basic"],
+      "price_amount_any": [null, 10],
+      "currency": "USD",
+      "billing_period_any": ["usage", "month"],
+      "quote": "Each additional 1,000 users $10/month",
+      "page": "https://userlist.com/pricing/"
+    },
+    {
+      "name": "Professional",
+      "name_any": ["professional"],
+      "price_amount_any": [null, 12],
+      "currency": "USD",
+      "billing_period_any": ["usage", "month"],
+      "quote": "1,000 users $10/month $12/month",
+      "page": "https://userlist.com/pricing/"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Get in touch to discuss custom pricing.",
+      "page": "https://userlist.com/pricing/"
+    }
+  ],
+  "features": [
+    {
+      "label": "Visual workflows (behavior-triggered automation)",
+      "any": ["workflow", "automation"],
+      "quote": "Design automation journeys using visual workflows , with clear branching paths and triggers for every customer scenario",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "Lifecycle and marketing email",
+      "any": ["lifecycle", "marketing email", "email marketing"],
+      "quote": "Automate onboarding, activation, and retention with perfectly timed lifecycle messages for every customer stage",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "Company-level (account) automation",
+      "any": ["company", "account-level"],
+      "quote": "Trigger workflows based on account-level events, helping you automate B2B lifecycle communication",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "Segmentation for users and companies",
+      "any": ["segment"],
+      "quote": "Create dynamic segments based on behavior and attributes, ensuring every email is highly relevant",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "Transactional email",
+      "any": ["transactional"],
+      "quote": "Send password reset emails, activity notifications, and billing receipts with transactional email",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "In-app messages",
+      "any": ["in-app"],
+      "quote": "Send an in-app message inside your web application to onboard and engage users",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "Broadcasts",
+      "any": ["broadcast", "newsletter"],
+      "quote": "Reach your entire user base or targeted segments with broadcasts for newsletters, one-off announcements, updates, and product news",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "A/B testing and conversion goals",
+      "any": ["a/b", "split test", "conversion goal"],
+      "quote": "Randomly split your journeys in up to 5 paths to measure performance",
+      "page": "https://userlist.com/features/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "Leverage Zapier to connect Userlist with thousands of apps and automate your workflows",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "Make",
+      "any": ["make"],
+      "quote": "Use our Zapier and Make integrations to enable actions in thousands of other apps",
+      "page": "https://userlist.com/"
+    },
+    {
+      "label": "Segment",
+      "any": ["segment"],
+      "quote": "Easily integrate with Segment to sync your data with a single click",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "Mixpanel",
+      "any": ["mixpanel"],
+      "quote": "Sync segments from other tools to keep lists aligned across platforms, e.g. Mixpanel or Amplitude",
+      "page": "https://userlist.com/features/"
+    },
+    {
+      "label": "Amplitude",
+      "any": ["amplitude"],
+      "quote": "Sync segments from other tools to keep lists aligned across platforms, e.g. Mixpanel or Amplitude",
+      "page": "https://userlist.com/features/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "country_code",
+      "value": "US",
+      "quote": "Atlanta, GA 30328 USA",
+      "page": "https://userlist.com/"
+    },
+    {
+      "field_key": "city",
+      "value": "Atlanta",
+      "quote": "Atlanta, GA 30328 USA",
+      "page": "https://userlist.com/"
+    },
+    {
+      "field_key": "customer_type",
+      "value": "b2b",
+      "quote": "Userlist is an all-in-one email marketing platform that meets advanced needs of growing SaaS companies.",
+      "page": "https://userlist.com/"
+    },
+    {
+      "field_key": "pricing_status",
+      "value": "paid",
+      "quote": "we offer a free 14-day trial for all plans. We’ll ask for your card details upfront",
+      "page": "https://userlist.com/pricing/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": ["founded_year", "employee_min", "employee_max"],
+    "texts": []
+  },
+  "notes": "Pricing is a volume slider whose base prices did not render in the snapshot ('[# , # , # , # ] /month'). The only displayed amounts are the per-1,000-user increments in the comparison table: Basic $10/month and Professional $12/month for each additional 1,000 users (10,000 users included). A correct run should either report the base price as unknown (null) or report these increments as usage pricing; it must not invent a base price. A Monthly / 'Annual — Save 20%' toggle exists but no annual amounts are rendered. Enterprise is 'Let's talk' / custom pricing. Prices are shown with '$' only; USD assumed. The 50% early-stage startup discount and done-for-you services are not plans. Fields: country US and city Atlanta come from the footer address of 'Userlist, Inc.' (6595 Roswell Road, Atlanta, GA 30328 USA); customer_type b2b from the positioning for SaaS companies; pricing_status paid (14-day trial with card upfront, no free plan). founded_year is forbidden because the pages only say 'Helping SaaS companies with email marketing automation since 2017' and 'Pioneering company-level automation since 2017', which is an activity start, not a stated founding date; launch_year 2017 is arguable from the same sentence, so it is neither expected nor forbidden (PO to decide). The 'segment' substring for the Segment integration also matches the segmentation feature; it is meant for reported integration names only. The footer link 'Ask AI for a summary of Userlist' is a navigation label for visitors, not an instruction to the extractor. Testimonial figures (e.g. 'We cut our churn by 25%') are customer claims, not payment proof."
+}

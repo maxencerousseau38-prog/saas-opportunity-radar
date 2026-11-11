@@ -1,0 +1,352 @@
+{
+  "purpose": "PD-24a benchmark configurations and stages (evals/benchmark/PLAN.md). Prices come from pricing.json.",
+  "configs": {
+    "FAKE": {
+      "provider": "fake",
+      "label": "fake provider (dry run, zero cost)",
+      "d5": {
+        "model": "fake-extraction-1"
+      },
+      "d6": {
+        "model": "fake-verification-1"
+      }
+    },
+    "A1": {
+      "provider": "anthropic",
+      "label": "Haiku 5.5, thinking disabled",
+      "d5": {
+        "maxOutputTokens": 16000,
+        "timeoutMs": 180000,
+        "model": "claude-haiku-5-5",
+        "thinking": "disabled"
+      },
+      "d6": {
+        "maxOutputTokens": 8000,
+        "timeoutMs": 180000,
+        "model": "claude-haiku-5-5",
+        "thinking": "disabled"
+      }
+    },
+    "A2": {
+      "provider": "anthropic",
+      "label": "Haiku 5.5, adaptive thinking, effort medium",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "claude-haiku-5-5",
+        "thinking": "adaptive",
+        "reasoningEffort": "medium"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "claude-haiku-5-5",
+        "thinking": "adaptive",
+        "reasoningEffort": "medium"
+      }
+    },
+    "A3": {
+      "provider": "anthropic",
+      "label": "Sonnet 5.5, between_tools, effort low",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "claude-sonnet-5-5",
+        "thinking": "between_tools",
+        "reasoningEffort": "low"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "claude-sonnet-5-5",
+        "thinking": "between_tools",
+        "reasoningEffort": "low"
+      }
+    },
+    "A4": {
+      "provider": "anthropic",
+      "label": "Sonnet 5.5, adaptive thinking, effort medium",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "claude-sonnet-5-5",
+        "thinking": "adaptive",
+        "reasoningEffort": "medium"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "claude-sonnet-5-5",
+        "thinking": "adaptive",
+        "reasoningEffort": "medium"
+      }
+    },
+    "A5": {
+      "provider": "anthropic",
+      "label": "Opus 5.5, effort low (top-tier reference)",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "claude-opus-5-5",
+        "reasoningEffort": "low"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "claude-opus-5-5",
+        "reasoningEffort": "low"
+      }
+    },
+    "O1": {
+      "provider": "openai",
+      "label": "GPT-6 Luna, reasoning none",
+      "d5": {
+        "maxOutputTokens": 16000,
+        "timeoutMs": 180000,
+        "model": "gpt-6-luna",
+        "reasoningEffort": "none"
+      },
+      "d6": {
+        "maxOutputTokens": 8000,
+        "timeoutMs": 180000,
+        "model": "gpt-6-luna",
+        "reasoningEffort": "none"
+      }
+    },
+    "O2": {
+      "provider": "openai",
+      "label": "GPT-6 Luna, reasoning medium",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "gpt-6-luna",
+        "reasoningEffort": "medium"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "gpt-6-luna",
+        "reasoningEffort": "medium"
+      }
+    },
+    "O3": {
+      "provider": "openai",
+      "label": "GPT-6.1 Sol, reasoning low",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "gpt-6.1-sol",
+        "reasoningEffort": "low"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "gpt-6.1-sol",
+        "reasoningEffort": "low"
+      }
+    },
+    "O4": {
+      "provider": "openai",
+      "label": "GPT-6.1 Sol, reasoning medium",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "gpt-6.1-sol",
+        "reasoningEffort": "medium"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "gpt-6.1-sol",
+        "reasoningEffort": "medium"
+      }
+    },
+    "O5": {
+      "provider": "openai",
+      "label": "GPT-6 Astra, reasoning low (top-tier reference)",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "gpt-6-astra",
+        "reasoningEffort": "low"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "gpt-6-astra",
+        "reasoningEffort": "low"
+      }
+    },
+    "M1": {
+      "provider": "mistral",
+      "label": "Ministral 3 14B (ministral-14b-2512), no reasoning",
+      "d5": {
+        "maxOutputTokens": 16000,
+        "timeoutMs": 180000,
+        "model": "ministral-14b-2512"
+      },
+      "d6": {
+        "maxOutputTokens": 8000,
+        "timeoutMs": 180000,
+        "model": "ministral-14b-2512"
+      }
+    },
+    "M2": {
+      "provider": "mistral",
+      "label": "Mistral Small 4, reasoning none",
+      "d5": {
+        "maxOutputTokens": 16000,
+        "timeoutMs": 180000,
+        "model": "mistral-small-2603",
+        "reasoningEffort": "none"
+      },
+      "d6": {
+        "maxOutputTokens": 8000,
+        "timeoutMs": 180000,
+        "model": "mistral-small-2603",
+        "reasoningEffort": "none"
+      }
+    },
+    "M3": {
+      "provider": "mistral",
+      "label": "Mistral Small 4, reasoning high",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "mistral-small-2603",
+        "reasoningEffort": "high"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "mistral-small-2603",
+        "reasoningEffort": "high"
+      }
+    },
+    "M4": {
+      "provider": "mistral",
+      "label": "Mistral Large 4, reasoning low",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "mistral-large-4",
+        "reasoningEffort": "low"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "mistral-large-4",
+        "reasoningEffort": "low"
+      }
+    },
+    "M5": {
+      "provider": "mistral",
+      "label": "Mistral Large 4, reasoning high (top-tier reference)",
+      "d5": {
+        "maxOutputTokens": 24000,
+        "timeoutMs": 300000,
+        "model": "mistral-large-4",
+        "reasoningEffort": "high"
+      },
+      "d6": {
+        "maxOutputTokens": 12000,
+        "timeoutMs": 300000,
+        "model": "mistral-large-4",
+        "reasoningEffort": "high"
+      }
+    }
+  },
+  "case_sets": {
+    "all": "*",
+    "screening": [
+      "official-pricing",
+      "paid-without-customers",
+      "sparse",
+      "prompt-injection",
+      "affiliate-core",
+      "incidental-referral",
+      "adv-discontinued",
+      "adv-multi-product",
+      "adv-similar-names",
+      "adv-contradictory",
+      "adv-social-proof-injection",
+      "rewardful",
+      "firstpromoter",
+      "growsurf",
+      "typefully",
+      "instatus",
+      "cronitor",
+      "savvycal",
+      "transistor",
+      "testimonial",
+      "frase"
+    ],
+    "hard": [
+      "official-pricing",
+      "paid-without-customers",
+      "sparse",
+      "prompt-injection",
+      "affiliate-core",
+      "incidental-referral",
+      "adv-discontinued",
+      "adv-multi-product",
+      "adv-similar-names",
+      "adv-contradictory",
+      "adv-social-proof-injection",
+      "rewardful",
+      "firstpromoter",
+      "growsurf"
+    ],
+    "rest": {
+      "real_except": "screening"
+    }
+  },
+  "stages": {
+    "dry-run": {
+      "cap_usd": 0,
+      "groups": [
+        {
+          "configs": ["FAKE"],
+          "cases": "all",
+          "runs": 1
+        }
+      ]
+    },
+    "stage1": {
+      "cap_usd": 22,
+      "groups": [
+        {
+          "configs": ["A1", "A2", "A3", "A4", "O1", "O2", "O3", "O4", "M1", "M2", "M3", "M4"],
+          "cases": "screening",
+          "runs": 1
+        },
+        {
+          "configs": ["A5", "O5", "M5"],
+          "cases": "hard",
+          "runs": 1
+        }
+      ],
+      "calibration": {
+        "cases": ["official-pricing", "rewardful"],
+        "margin": 1.25,
+        "note": "Each configuration first runs these cases; the remaining work is forecast from the measured tokens and runs only if forecast x margin + the largest single-call reservation fits the remaining cap (PD-24a, approved 5 Nov 2026)."
+      }
+    },
+    "stage2": {
+      "cap_usd": null,
+      "note": "finalists and cap given on the command line after the product owner approves them (cap = 30 USD minus the stage-1 spend)",
+      "groups": [
+        {
+          "configs": "finalists",
+          "cases": "rest",
+          "runs": 1
+        },
+        {
+          "configs": "finalists",
+          "cases": "screening",
+          "runs": 2
+        }
+      ]
+    }
+  }
+}

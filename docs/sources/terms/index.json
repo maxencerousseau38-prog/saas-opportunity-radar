@@ -1,0 +1,269 @@
+[
+  {
+    "vendor": "producthunt",
+    "url": "https://api.producthunt.com/v2/docs",
+    "final_url": "https://api.producthunt.com/v2/docs",
+    "retrieved_at": "2026-11-10T17:21:10.307Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 8274,
+    "html_bytes": 19565,
+    "file": "producthunt--api-producthunt-com-v2-docs.txt"
+  },
+  {
+    "vendor": "producthunt",
+    "url": "https://www.producthunt.com/legal/terms-of-service",
+    "retrieved_at": "2026-11-10T18:21:13.122Z",
+    "status": "blocked",
+    "reason": "http_403"
+  },
+  {
+    "vendor": "producthunt",
+    "url": "https://www.producthunt.com/robots.txt",
+    "final_url": "https://www.producthunt.com/robots.txt",
+    "retrieved_at": "2026-11-10T17:21:10.652Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1489,
+    "html_bytes": 1501,
+    "file": "producthunt--www-producthunt-com-robots-txt.txt"
+  },
+  {
+    "vendor": "microlaunch",
+    "url": "https://microlaunch.net/",
+    "final_url": "https://microlaunch.net/",
+    "retrieved_at": "2026-11-10T17:21:10.725Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 12011,
+    "html_bytes": 2651235,
+    "file": "microlaunch--microlaunch-net.txt"
+  },
+  {
+    "vendor": "microlaunch",
+    "url": "https://microlaunch.net/terms",
+    "final_url": "https://microlaunch.net/terms",
+    "retrieved_at": "2026-11-10T17:21:11.276Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 3938,
+    "html_bytes": 4817,
+    "file": "microlaunch--microlaunch-net-terms.txt"
+  },
+  {
+    "vendor": "microlaunch",
+    "url": "https://microlaunch.net/robots.txt",
+    "final_url": "https://microlaunch.net/robots.txt",
+    "retrieved_at": "2026-11-10T17:21:11.382Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 479,
+    "html_bytes": 482,
+    "file": "microlaunch--microlaunch-net-robots-txt.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/",
+    "final_url": "https://www.uneed.best/",
+    "retrieved_at": "2026-11-10T17:21:11.507Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 5356,
+    "html_bytes": 387253,
+    "file": "uneed--www-uneed-best.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/terms",
+    "retrieved_at": "2026-11-10T18:21:13.239Z",
+    "status": "unavailable",
+    "reason": "http_404"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/robots.txt",
+    "final_url": "https://www.uneed.best/robots.txt",
+    "retrieved_at": "2026-11-10T17:21:12.438Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 158,
+    "html_bytes": 159,
+    "file": "uneed--www-uneed-best-robots-txt.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/terms-of-use",
+    "final_url": "https://www.uneed.best/terms-of-use",
+    "retrieved_at": "2026-11-10T17:50:50.971Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 16995,
+    "html_bytes": 166447,
+    "file": "uneed--www-uneed-best-terms-of-use.txt"
+  },
+  {
+    "vendor": "betalist",
+    "url": "https://betalist.com/terms",
+    "final_url": "https://betalist.com/terms",
+    "retrieved_at": "2026-11-10T17:21:12.577Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 4775,
+    "html_bytes": 45532,
+    "file": "betalist--betalist-com-terms.txt"
+  },
+  {
+    "vendor": "betalist",
+    "url": "https://betalist.com/robots.txt",
+    "final_url": "https://betalist.com/robots.txt",
+    "retrieved_at": "2026-11-10T17:21:12.882Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 98,
+    "html_bytes": 99,
+    "file": "betalist--betalist-com-robots-txt.txt"
+  },
+  {
+    "vendor": "ycombinator",
+    "url": "https://www.ycombinator.com/legal/",
+    "final_url": "https://www.ycombinator.com/legal/",
+    "retrieved_at": "2026-11-10T17:21:12.995Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 68562,
+    "html_bytes": 507425,
+    "file": "ycombinator--www-ycombinator-com-legal.txt"
+  },
+  {
+    "vendor": "ycombinator",
+    "url": "https://www.ycombinator.com/robots.txt",
+    "final_url": "https://www.ycombinator.com/robots.txt",
+    "retrieved_at": "2026-11-10T17:21:13.610Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 279,
+    "html_bytes": 283,
+    "file": "ycombinator--www-ycombinator-com-robots-txt.txt"
+  },
+  {
+    "vendor": "ycombinator",
+    "url": "https://news.ycombinator.com/robots.txt",
+    "final_url": "https://news.ycombinator.com/robots.txt",
+    "retrieved_at": "2026-11-10T17:21:13.890Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 242,
+    "html_bytes": 243,
+    "file": "ycombinator--news-ycombinator-com-robots-txt.txt"
+  },
+  {
+    "vendor": "wikidata",
+    "url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+    "final_url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+    "retrieved_at": "2026-11-10T17:21:14.337Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 7841,
+    "html_bytes": 64872,
+    "file": "wikidata--www-wikidata-org-wiki-Wikidata-Licensing.txt"
+  },
+  {
+    "vendor": "wikidata",
+    "url": "https://meta.wikimedia.org/wiki/User-Agent_policy",
+    "final_url": "https://meta.wikimedia.org/wiki/User-Agent_policy",
+    "retrieved_at": "2026-11-10T17:21:14.400Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1772,
+    "html_bytes": 48996,
+    "file": "wikidata--meta-wikimedia-org-wiki-User-Agent-policy.txt"
+  },
+  {
+    "vendor": "wikidata",
+    "url": "https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual",
+    "final_url": "https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual",
+    "retrieved_at": "2026-11-10T17:21:14.467Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 34033,
+    "html_bytes": 185458,
+    "file": "wikidata--www-mediawiki-org-wiki-Wikidata-Query-Service-User-Manual.txt"
+  },
+  {
+    "vendor": "saashub",
+    "url": "https://www.saashub.com/site/api",
+    "final_url": "https://www.saashub.com/site/api",
+    "retrieved_at": "2026-11-10T17:21:14.543Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 5583,
+    "html_bytes": 60313,
+    "file": "saashub--www-saashub-com-site-api.txt"
+  },
+  {
+    "vendor": "saashub",
+    "url": "https://www.saashub.com/site/terms",
+    "final_url": "https://www.saashub.com/site/terms",
+    "retrieved_at": "2026-11-10T17:21:14.868Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 8358,
+    "html_bytes": 63048,
+    "file": "saashub--www-saashub-com-site-terms.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/llms.txt",
+    "final_url": "https://www.uneed.best/llms.txt",
+    "retrieved_at": "2026-11-10T17:50:51.981Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 579903,
+    "html_bytes": 785381,
+    "file": "uneed--www-uneed-best-llms-txt.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://www.uneed.best/mcp",
+    "final_url": "https://www.uneed.best/mcp",
+    "retrieved_at": "2026-11-10T18:00:09.234Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 5678,
+    "html_bytes": 139100,
+    "file": "uneed--www-uneed-best-mcp.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://mcp.uneed.best/openapi.json",
+    "final_url": "https://mcp.uneed.best/openapi.json",
+    "retrieved_at": "2026-11-10T18:00:09.919Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 12649,
+    "html_bytes": 26397,
+    "file": "uneed--mcp-uneed-best-openapi-json.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://mcp.uneed.best/v1/trending?period=weekly&date=2026-11-02&limit=3",
+    "final_url": "https://mcp.uneed.best/v1/trending?period=weekly&date=2026-11-02&limit=3",
+    "retrieved_at": "2026-11-10T18:21:13.959Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 1578,
+    "html_bytes": 1862,
+    "file": "uneed--mcp-uneed-best-v1-trending.txt"
+  },
+  {
+    "vendor": "uneed",
+    "url": "https://mcp.uneed.best/v1/launches?limit=2",
+    "final_url": "https://mcp.uneed.best/v1/launches?limit=2",
+    "retrieved_at": "2026-11-10T18:21:14.982Z",
+    "status": "ok",
+    "http_status": 200,
+    "text_chars": 3315,
+    "html_bytes": 3795,
+    "file": "uneed--mcp-uneed-best-v1-launches.txt"
+  }
+]

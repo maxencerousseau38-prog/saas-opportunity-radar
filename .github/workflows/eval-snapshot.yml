@@ -1,0 +1,52 @@
+# Freezes the PD-24 benchmark inputs (evals/README.md): official pages of the
+# evaluation sites and the official vendor pricing/model pages. Runs when the
+# input lists change; commits the snapshots back to the same branch. Existing
+# snapshots are never overwritten. No AI call, no secret.
+name: Eval snapshots
+
+on:
+  push:
+    branches: ["claude/**"]
+    paths:
+      - evals/enrichment/real/sites.json
+      - evals/benchmark/vendor-docs.json
+      - docs/sources/terms-pages.json
+      - apps/worker/src/evals/snapshot.ts
+      - .github/workflows/eval-snapshot.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eval-snapshot-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    name: Snapshot evaluation inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @sor/worker eval:build
+      - name: Snapshot evaluation sites
+        run: node apps/worker/dist-evals/snapshot.js sites evals/enrichment/real/sites.json evals/enrichment/real/snapshots
+      - name: Snapshot vendor documentation
+        run: node apps/worker/dist-evals/snapshot.js docs evals/benchmark/vendor-docs.json evals/benchmark/vendor-docs
+      - name: Snapshot catalog source terms
+        run: node apps/worker/dist-evals/snapshot.js docs docs/sources/terms-pages.json docs/sources/terms
+      - name: Commit snapshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evals/enrichment/real/snapshots evals/benchmark/vendor-docs docs/sources/terms
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -m "Eval snapshots: frozen benchmark inputs (automated)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

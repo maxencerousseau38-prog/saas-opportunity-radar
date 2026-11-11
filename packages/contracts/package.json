@@ -1,0 +1,37 @@
+{
+  "name": "@sor/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./common": "./src/common.ts",
+    "./catalog": "./src/catalog.ts",
+    "./filters": "./src/filters.ts",
+    "./workspace": "./src/workspace.ts",
+    "./api": "./src/api.ts",
+    "./env": "./src/env.ts",
+    "./evidence": "./src/evidence.ts",
+    "./jobs": "./src/jobs.ts",
+    "./agents/enrichment": "./src/agents/enrichment.ts",
+    "./pain-points": "./src/pain-points.ts",
+    "./analysis": "./src/analysis.ts",
+    "./agents/opportunity": "./src/agents/opportunity.ts",
+    "./discovery": "./src/discovery.ts",
+    "./listings": "./src/listings.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "id": "mailshake",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T08:58:38.354Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [29, 25],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Starter $ 29 /MO $ 29 25 /MO",
+      "page": "https://mailshake.com/pricing/"
+    },
+    {
+      "name": "Email Outreach",
+      "name_any": ["email outreach", "outreach"],
+      "price_amount_any": [49, 45],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Email Outreach $ 49 /MO $ 49 45 /MO",
+      "page": "https://mailshake.com/pricing/"
+    },
+    {
+      "name": "Sales Engagement",
+      "name_any": ["sales engagement", "engagement"],
+      "price_amount_any": [99, 85],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "Sales Engagement $ 99 /MO $ 99 85 /MO",
+      "page": "https://mailshake.com/pricing/"
+    },
+    {
+      "name": "Agency Plan",
+      "name_any": ["agency"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Agency Plan All of Sales Engagement Unlimited Email Addresses Talk to Sales",
+      "page": "https://mailshake.com/pricing/"
+    }
+  ],
+  "features": [
+    {
+      "label": "Automated cold email sequences and follow-ups",
+      "any": ["sequence", "follow-up", "follow up", "cold email", "email automation", "outreach"],
+      "quote": "contact your sales prospects all at once with email outreach campaigns and automated follow-ups",
+      "page": "https://mailshake.com/features/"
+    },
+    {
+      "label": "Email deliverability tools (warm-up, validation, spam score)",
+      "any": ["deliverability", "warm up", "warm-up", "warmup", "validation"],
+      "quote": "Email Deliverability Tools Included with Every Plan",
+      "page": "https://mailshake.com/features/email-deliverability/"
+    },
+    {
+      "label": "AI email writer (SHAKEspeare)",
+      "any": ["ai email", "shakespeare", "ai writ", "email writer"],
+      "quote": "Auto-generate several versions of copy from scratch by telling SHAKEspeare a few important things about your business.",
+      "page": "https://mailshake.com/"
+    },
+    {
+      "label": "Data Finder (prospect email search)",
+      "any": ["data finder", "find prospect", "prospect"],
+      "quote": "Data Finder allows you to filter prospects with ease.",
+      "page": "https://mailshake.com/features/"
+    },
+    {
+      "label": "Mail merge personalization",
+      "any": ["mail merge", "personaliz"],
+      "quote": "Insert text and links personalized to each recipient with a powerful mail merge",
+      "page": "https://mailshake.com/features/"
+    },
+    {
+      "label": "Lead Catcher (lead management)",
+      "any": ["lead catcher", "lead management", "lead status"],
+      "quote": "Manage leads without leaving Mailshake: mark leads as won or lost, and reply to leads with Mailshake Lead Catcher",
+      "page": "https://mailshake.com/features/"
+    },
+    {
+      "label": "Phone dialer (cold calling)",
+      "any": ["dialer", "call"],
+      "quote": "Make calls to leads and prospects right from your browser",
+      "page": "https://mailshake.com/pricing/"
+    },
+    {
+      "label": "A/B testing and outreach analytics",
+      "any": ["a/b", "analytic", "split-test"],
+      "quote": "Improve your performance over time by A/B testing emails, follow-ups, or whole campaigns",
+      "page": "https://mailshake.com/features/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Salesforce",
+      "any": ["salesforce"],
+      "quote": "A native integration with Salesforce and Hubspot allows you to stay on top of all of your contacts automatically",
+      "page": "https://mailshake.com/features/mail-merge/"
+    },
+    {
+      "label": "HubSpot",
+      "any": ["hubspot"],
+      "quote": "A native integration with Salesforce and Hubspot allows you to stay on top of all of your contacts automatically",
+      "page": "https://mailshake.com/features/mail-merge/"
+    },
+    {
+      "label": "Pipedrive",
+      "any": ["pipedrive"],
+      "quote": "Salesforce / Pipedrive / Hubspot",
+      "page": "https://mailshake.com/pricing/"
+    },
+    {
+      "label": "Zapier",
+      "any": ["zapier"],
+      "quote": "1,000+ integrations via Zapier",
+      "page": "https://mailshake.com/pricing/"
+    },
+    {
+      "label": "Gmail / G Suite",
+      "any": ["gmail", "g suite", "google"],
+      "quote": "Mailshake works with Gmail, G Suite, Office 365, most Outlook and Exchange accounts",
+      "page": "https://mailshake.com/pricing/"
+    },
+    {
+      "label": "Office 365 / Outlook",
+      "any": ["office 365", "outlook", "microsoft", "exchange"],
+      "quote": "Mailshake works with Gmail, G Suite, Office 365, most Outlook and Exchange accounts",
+      "page": "https://mailshake.com/pricing/"
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "pricing_status",
+      "value": "paid",
+      "quote": "No, we collect payment up front",
+      "page": "https://mailshake.com/pricing/"
+    }
+  ],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "The pricing page has a Monthly/Yearly toggle; each plan shows the monthly price and, for yearly billing, the struck-through monthly price followed by the discounted monthly equivalent (Starter $29 -> $25/mo, Email Outreach $49 -> $45/mo, Sales Engagement $99 -> $85/mo). No yearly total is displayed. Prices are per user ('Billing is paid by your team and is based on how many users you purchase'). Agency Plan has no price ('Talk to Sales'). Data Finder ($19/$17 per month) and Ready to Use Mailboxes ($12/$11 per month) are add-ons, not plans. No free trial ('we collect payment up front'). 'Trusted by sales teams at 100,000+ companies' / 'Trusted by 100,000+ sales teams' and the case-study revenue figures (SaaSMQL $1M+, New Reach Marketing $800K) are company-stated, not payment proof. Footer 'Affiliate Program' link and a reviewer titled 'Partner' are incidental: the core product is cold email / sales outreach automation, eligible."
+}

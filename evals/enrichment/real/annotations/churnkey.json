@@ -1,0 +1,144 @@
+{
+  "id": "churnkey",
+  "status": "draft",
+  "annotator": "Claude (draft, pending product-owner review)",
+  "snapshot_retrieved_at": "2026-11-05T09:00:19.205Z",
+  "expected_exclusion": "eligible",
+  "plans": [
+    {
+      "name": "Starter",
+      "name_any": ["starter"],
+      "price_amount_any": [250],
+      "currency": "USD",
+      "billing_period_any": ["month", "year"],
+      "quote": "$250 per month billed yearly",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "name": "Core",
+      "name_any": ["core"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom", "unknown"],
+      "quote": "Our baseline churn reduction platform with testing, segmentation, and advanced retry logic.",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "name": "Intelligence",
+      "name_any": ["intelligence"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Our ultimate retention suite to help you optimize LTV and find hidden revenue with AI.",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "name": "Enterprise",
+      "name_any": ["enterprise"],
+      "price_amount_any": [null],
+      "billing_period_any": ["custom"],
+      "quote": "Enterprise Custom Quote",
+      "page": "https://churnkey.co/pricing"
+    }
+  ],
+  "features": [
+    {
+      "label": "Cancel flows (retention offers and exit surveys)",
+      "any": ["cancel flow", "cancellation flow", "cancel"],
+      "quote": "Retain more customers, run exit surveys to capture product feedback, and increase customer loyalty.",
+      "page": "https://churnkey.co/"
+    },
+    {
+      "label": "Payment recovery (smart retries, dunning)",
+      "any": ["payment recovery", "failed payment", "dunning", "retr"],
+      "quote": "Get paid before it's too late with smart retries, dunning campaigns, and in-app card updates.",
+      "page": "https://churnkey.co/"
+    },
+    {
+      "label": "Churn metrics",
+      "any": ["churn metric", "metrics", "churn analytics"],
+      "quote": "Track churn volume, identify trends across customer cohorts, and strategize to lower churn.",
+      "page": "https://churnkey.co/"
+    },
+    {
+      "label": "Feedback AI",
+      "any": ["feedback ai", "feedback analysis", "feedback"],
+      "quote": "Capture product feedback, prioritize features, and drive growth with AI-powered insights.",
+      "page": "https://churnkey.co/"
+    },
+    {
+      "label": "Personalized / adaptive offers",
+      "any": ["adaptive offer", "dynamic offer", "personaliz", "offer"],
+      "quote": "Offer cross-sells, pauses, discounts, seat handoffs, and more based on dynamic personalization.",
+      "page": "https://churnkey.co/"
+    },
+    {
+      "label": "A/B testing",
+      "any": ["a/b", "ab test", "split test"],
+      "quote": "A/B Testing (Cancel Flows & Payment Recovery)",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "label": "Annual upsell",
+      "any": ["annual upsell", "upsell", "monthly to annual"],
+      "quote": "Target monthly subscribers on tenure, usage and plan",
+      "page": "https://churnkey.co/"
+    },
+    {
+      "label": "Open-source cancel-flow SDK",
+      "any": ["sdk", "open source", "open-source"],
+      "quote": "The Churnkey SDK is open source, starting with React.",
+      "page": "https://churnkey.co/"
+    }
+  ],
+  "integrations": [
+    {
+      "label": "Stripe",
+      "any": ["stripe"],
+      "quote": "We currently support Stripe, Chargebee, Maxio, Paddle, and Braintree.",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "label": "Chargebee",
+      "any": ["chargebee"],
+      "quote": "We currently support Stripe, Chargebee, Maxio, Paddle, and Braintree.",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "label": "Paddle",
+      "any": ["paddle"],
+      "quote": "We currently support Stripe, Chargebee, Maxio, Paddle, and Braintree.",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "label": "Braintree",
+      "any": ["braintree"],
+      "quote": "We currently support Stripe, Chargebee, Maxio, Paddle, and Braintree.",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "label": "Maxio",
+      "any": ["maxio"],
+      "quote": "We currently support Stripe, Chargebee, Maxio, Paddle, and Braintree.",
+      "page": "https://churnkey.co/pricing"
+    },
+    {
+      "label": "Slack",
+      "any": ["slack"],
+      "quote": "Connect to Slack and your team can experience cancel flow sessions as they happen in a dedicated channel.",
+      "page": "https://churnkey.co/integrations"
+    }
+  ],
+  "fields": [],
+  "forbidden": {
+    "monetization_signals": ["payment_confirmed", "customer_verified"],
+    "fields": [
+      "founded_year",
+      "launch_year",
+      "country_code",
+      "city",
+      "employee_min",
+      "employee_max"
+    ],
+    "texts": []
+  },
+  "notes": "Pricing is driven by monthly churned revenue. Only Starter shows an amount ('$250 per month billed yearly', for less than $5k/mo churn volume); the monthly-billed Starter price is not displayed although the FAQ says month-to-month options exist. Core has a 'Start 14-day Trial' button but no displayed price (annotated [null], custom/unknown); Intelligence is 'Get a Pricing Quote' and Enterprise 'Custom Quote'. 'Free Churn Metrics' is a free tool, not a plan; the open-source SDK and MCP server are free on every plan, not plans. 'Shared Slack Channel Over $1k/mo' is a plan-comparison condition, not a price. 'Stripe Preferred Partner' describes Churnkey's Stripe partnership, not an affiliate/partner business model: eligible. The headline metrics ('~54% of customers', '$300 million in revenue', '72% Recovered payments') and the 'Churnkey, Inc.' copyright are company claims; no country, founding year or headcount is stated. The 'For Agents / llms.txt' menu entries and the MCP sections describe product features; no instruction aimed at an AI reader was found. The docs page (Data API) contains example payloads (planPrice 1299, emails) that are API samples, not Churnkey prices."
+}

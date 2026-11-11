@@ -1,0 +1,38 @@
+# Render Blueprint (PD-27, approved 6 Nov 2026): the persistent worker as a
+# Render Background Worker in Frankfurt. NOT APPLIED: committing this file
+# creates nothing. Applying it in the Render dashboard creates a paid service
+# and needs the product owner's explicit approval (docs/DEPLOYMENT.md).
+# Reference: https://render.com/docs/blueprint-spec
+services:
+  # Staging first (PD-02 A); production is added after a staging validation.
+  - type: worker
+    name: sor-worker-staging
+    runtime: docker
+    region: frankfurt # same metro as Supabase eu-central-1 (cannot change later)
+    plan: 0.5c-512mb # 0.5 CPU / 512 MB, formerly "Starter"
+    dockerfilePath: ./apps/worker/Dockerfile
+    dockerContext: .
+    autoDeployTrigger: off # deploys are manual until approved otherwise
+    maxShutdownDelaySeconds: 60 # SIGTERM → up to 60 s before SIGKILL (grace 40 s + release)
+    envVars:
+      - key: APP_ENV
+        value: staging
+      - key: AI_PROVIDER
+        value: fake # PD-24 pending: no real provider yet
+      - key: WORKER_CONCURRENCY
+        value: "2"
+      - key: WORKER_SHUTDOWN_GRACE_SECONDS
+        value: "40"
+      - key: WORKER_WATCHDOG_STALL_SECONDS
+        value: "300"
+      - key: WORKER_WATCHDOG_BLOCKED_SECONDS
+        value: "60"
+      - key: WORKER_MONITOR_INTERVAL_SECONDS
+        value: "300" # platform snapshot + alerts in the logs (S7.3)
+      # Secrets: entered by the product owner in the Render dashboard, never committed.
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: AUTHOR_HASH_SECRET
+        sync: false

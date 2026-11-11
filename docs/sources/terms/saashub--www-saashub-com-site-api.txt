@@ -1,0 +1,302 @@
+https://www.saashub.com/site/api
+2026-11-10T17:21:14.543Z
+
+Software Alternatives &
+Startups
+Register
+|
+Login
+Tools & Categories
+/submit/list
+SaaSHub Submit
+Our free tool that helps you to promote your product.
+/experts
+Experts
+Become an expert and promote your product.
+/startups
+Startups
+List your product to our Startup Directory.
+https://chrome.google.com/webstore/detail/alternative-to-by-saashub/bfllfmelefabahclnehpdocekedapcbj
+Extension
+Find product alternatives by the click of a button.
+Browse Categories
+eCommerce
+Project Management
+Productivity
+Monitoring Tools
+CRM
+Marketing Platform
+Developer Tools
+Design Tools
+Communication
+Finance
+Education
+HR
+eCommerce
+eCommerce Platform
+eCommerce Tools
+Online Marketplace
+Shopping
+Inventory Management
+Web
+Online Shopping
+Fashion
+Classifieds Ads
+Shipping and Tracking
+Classifieds
+Shipping
+Project Management
+Governance, Risk And Compliance
+Workflow Automation
+Field Service Management
+Spreadsheets
+Construction
+Work Collaboration
+Construction Project Management
+Document Management System
+Construction Management
+BPM
+Energy And Utilities Vertical Software
+Agile Project Management
+Productivity
+Office & Productivity
+Email
+Events
+Slack
+Books
+Transcription
+Time Management
+Team Collaboration
+Business Productivity
+Digital Whiteboard
+Calendar And Scheduling
+Meetings
+Monitoring Tools
+Security & Privacy
+Data Integration
+Website Monitoring
+Personalization
+Uptime Monitoring
+Web Application Security
+Data Cleansing
+Ad Blockers
+Device Management
+Simulation Software
+Command Line Tools
+Application Performance Monitoring
+CRM
+Sales
+ERP
+Accounting
+Lead Generation
+Help Desk
+Accounting & Finance
+Marketing Automation
+Sales Tools
+File Manager
+Sales Workflow
+Contact Management
+CRM Platforms
+Marketing Platform
+Email Marketing
+Reputation Management
+B2B SaaS
+Practice Management
+Digital Asset Management
+Chess
+Strategy
+Brand Management
+Church Management
+Loyalty Marketing
+Dental Software
+Customer Loyalty Program
+Developer Tools
+Cloud Computing
+Text Editors
+Software Development
+Utilities
+IDE
+API Tools
+Javascript UI Libraries
+Web Frameworks
+JavaScript Framework
+Realtime Backend / API
+Software Engineering
+Coding
+Design Tools
+Image Editing
+Graphic Design Software
+3D
+Prototyping
+Development Tools
+Presentations
+Web Icons
+Design Collaboration
+Image Marketplace
+Color Tools
+CSS Framework
+Logo Maker
+Communication
+Task Management
+Group Chat & Notifications
+Messaging
+Customer Support
+Social & Communications
+Enterprise Communication
+Video Conferencing
+Instant Messaging
+VoIP
+SMS Marketing
+Chat
+Online Meetings
+Finance
+Online Calculators
+Recurring Billing
+Calculators
+Financial Planner
+Expense Tracking
+Money Transfer
+Tax Preparation
+Budgeting
+Finance Calculators
+Stock Market
+Banking
+Stocks
+Education
+Online Courses
+Spaced Repetition
+Online Education
+Studying
+Language Learning
+School Management
+Kids Education
+Writing Services
+Essay Writing
+Classroom Management
+Exam Preparation
+Digital Assessments And Tests
+HR
+Employee Performance Management
+HR And Payroll Software
+Employee Engagement
+Employee Management
+HRMS
+Payroll
+HR Management
+Leave Management
+Employee Rewards And Recognition
+Employee Feedback
+Timesheets
+Employee Feedback System
+Categories
+Experts
+Startups
+Register
+Login
+Feature My Product
+Submit Product
+Public API
+About
+FAQ
+Experts
+Product Verification
+Product Promotion
+Browser Extension
+Featured Products
+API
+SaaSHub's public API
+This is a "beta" version of our API. It is simple and has only two endpoints.
+This is a JSON API and follows the jsonapi.org specification.
+To make requests and access the API you need an API key. All SaaSHub users
+can find their api_key in their profile -
+/profile/api_key.
+If you are using the API, you have to disclose somewhere on your website that
+you are using SaaSHub' API.
+/api/alternatives/__query__
+Returns the first product that matches the query and the top 10 relevant alternatives.
+https://www.saashub.com/api/alternatives/__query__?api_key=__your_api_key__
+e.g.
+https://www.saashub.com/api/alternatives/basecamp?api_key=1234
+JSON Response:
+{
+"data":{
+"product": {
+"id":"0ab5e650b476","type":"product",
+"attributes": {
+"name":"Basecamp",
+"saashubUrl":"https://www.saashub.com/basecamp-alternatives",
+"tagline":"A simple and elegant project management system."
+}
+},
+"alternatives":[
+{"id":"e36e0c6b8e80","type":"product","attributes":{...}},
+{"id":"e36e0c6b8e80","type":"product","attributes":{...}},
+{"id":"e36e0c6b8e80","type":"product","attributes":{...}},
+...
+]
+}
+}
+/api/product/__query__
+The same as the /alternatives endpoint but returns only product data.
+https://www.saashub.com/api/product/__query__?api_key=__your_api_key__
+SaaSHub
+SaaSHub is an independent software marketplace. Our goal is to be objective,
+simple and your first stop when researching for a new service to help you grow your business.
+We will help you find alternatives and reviews of the products you already use.
+Helping software professionals since 2014.
+Company
+Product Promotion
+Contacts
+Discuss
+About
+API
+Sitemap
+Browse Categories
+Compare Software
+Chrome Extension
+Status Pages!
+Funding News
+Submit List
+SaaSHub Launch
+Newsletter
+Community
+Big Tech Alternatives
+Tech Radar
+Replace Facebook
+Google Alternatives
+Atlassian Alternatives
+Product Graveyard
+Google Graveyard
+Replace Google Domains
+EU Alternatives
+Verticals & Popular Categories
+AI
+No-Code
+Developer Tools
+Design Tools
+API
+CRM
+Help Desk
+Productivity
+Marketing
+Accounting
+eCommerce
+HR
+Writing Tools
+Project Management
+Monitoring Tools
+Finance
+Education
+SaaSHub
+Privacy Policy
+Terms
+Accelerated by
+Bunny.net
+Recommends:
+Spin The Wheel
+Schedule a
+when to meet poll
+Please confirm?
+Cancel
+Confirm
+Loading...

@@ -1,0 +1,148 @@
+// Server-role operations (secret key). Callers must have authenticated the
+// user and checked the role first; the RPCs re-check it (Implementation
+// Blueprint §3 job/server RPC table, §10 "Platform operator").
+import type { DbClient } from "../clients";
+import { DbError, mapPostgresError } from "../errors";
+import type { Database, Json } from "../generated";
+
+type ExclusionStatus = Database["public"]["Enums"]["exclusion_status"];
+type WorkspaceRole = Database["public"]["Enums"]["workspace_role"];
+
+export async function isPlatformOperator(service: DbClient, userId: string): Promise<boolean> {
+  const { data, error } = await service
+    .from("platform_operators")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) throw mapPostgresError(error);
+  return data !== null;
+}
+
+export interface ManualAddRpcResult {
+  status: "created" | "existing";
+  product_id: string;
+  exclusion_status: ExclusionStatus;
+}
+
+export async function manualAddProduct(
+  service: DbClient,
+  args: { workspaceId: string; requestedBy: string; entry: Json; exclusion: Json },
+): Promise<ManualAddRpcResult> {
+  const { data, error } = await service.rpc("sor_manual_add_product", {
+    p_workspace_id: args.workspaceId,
+    p_requested_by: args.requestedBy,
+    p_entry: args.entry,
+    p_exclusion: args.exclusion,
+  });
+  if (error) throw mapPostgresError(error);
+  return data as unknown as ManualAddRpcResult;
+}
+
+export async function addMemberByEmail(
+  service: DbClient,
+  args: { workspaceId: string; actor: string; email: string; role: WorkspaceRole },
+): Promise<string> {
+  const { data, error } = await service.rpc("sor_add_member_by_email", {
+    p_workspace_id: args.workspaceId,
+    p_actor: args.actor,
+    p_email: args.email,
+    p_role: args.role,
+  });
+  if (error) throw mapPostgresError(error);
+  return data;
+}
+
+/** Sends a Supabase Auth invitation (signup stays disabled). */
+export async function inviteUserByEmail(service: DbClient, email: string, redirectTo: string) {
+  const { error } = await service.auth.admin.inviteUserByEmail(email, { redirectTo });
+  if (error) throw new DbError("INTERNAL_ERROR", error);
+}
+
+export async function transferOwnership(
+  service: DbClient,
+  args: { workspaceId: string; currentOwner: string; newOwner: string },
+) {
+  const { error } = await service.rpc("sor_transfer_ownership", {
+    p_workspace_id: args.workspaceId,
+    p_current_owner: args.currentOwner,
+    p_new_owner: args.newOwner,
+  });
+  if (error) throw mapPostgresError(error);
+}
+
+// --------------------------------------------------------------- operator views
+export async function listExclusionReviews(service: DbClient) {
+  const { data, error } = await service
+    .from("saas_products")
+    .select(
+      "id, name, slug, website_url, tagline, short_description, record_status, exclusion_status, first_discovered_at, product_exclusion_assessments(status, rule_set_version, matched_rules, incidental_mentions, decided_by, reason, created_at)",
+    )
+    .eq("exclusion_status", "needs_review")
+    .order("first_discovered_at", { ascending: true })
+    .limit(200);
+  if (error) throw mapPostgresError(error);
+  return data ?? [];
+}
+
+export async function decideExclusion(
+  service: DbClient,
+  args: { operator: string; productId: string; decision: "eligible" | "excluded"; reason: string },
+) {
+  const { error } = await service.rpc("sor_operator_exclusion_decision", {
+    p_operator: args.operator,
+    p_product_id: args.productId,
+    p_decision: args.decision,
+    p_reason: args.reason,
+  });
+  if (error) throw mapPostgresError(error);
+}
+
+export async function listCorrectionReports(service: DbClient, status: "open" | "all" = "open") {
+  let query = service
+    .from("catalog_correction_reports")
+    .select(
+      "id, workspace_id, product_id, report_type, field_key, message, status, resolution_note, created_at, resolved_at, saas_products(name, slug, exclusion_status)",
+    )
+    .order("created_at", { ascending: true })
+    .limit(200);
+  if (status === "open") query = query.eq("status", "open");
+  const { data, error } = await query;
+  if (error) throw mapPostgresError(error);
+  return data ?? [];
+}
+
+export async function resolveCorrectionReport(
+  service: DbClient,
+  args: {
+    operator: string;
+    reportId: string;
+    status: "accepted" | "rejected";
+    note: string | null;
+  },
+) {
+  const { error } = await service.rpc("sor_operator_resolve_report", {
+    p_operator: args.operator,
+    p_report_id: args.reportId,
+    p_status: args.status,
+    p_note: args.note ?? "",
+  });
+  if (error) throw mapPostgresError(error);
+}
+
+/**
+ * Consumes one unit of an action rate limit (S7.4d); throws DbError
+ * RATE_LIMITED (with the limit kind and retry delay) when the hourly budget
+ * is spent. Subject: the workspace for invitations, the user otherwise.
+ */
+export async function consumeRateLimit(
+  service: DbClient,
+  action: "invitation" | "manual_addition" | "correction_report",
+  subject: string,
+): Promise<number> {
+  const { data, error } = await service.rpc("sor_consume_rate_limit", {
+    p_action: action,
+    p_subject: subject,
+  });
+  if (error) throw mapPostgresError(error);
+  return data;
+}

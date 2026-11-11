@@ -1,0 +1,158 @@
+https://docs.mistral.ai/inference/conversations/structured-output/custom
+2026-11-05T09:02:48.107Z
+
+Docs & API
+Search docs
+⌘K
+Vibe Studio Inference & Models Admin Resources API Reference Search docs
+⌘K
+Toggle theme Reach out Try Studio
+Home
+Inference
+Get started
+Quickstarts
+Models
+Generate
+Conversations
+Chat Completions
+Responses API (preview)
+Vision
+Reasoning
+Function Calling
+Structured Outputs
+Custom
+JSON Mode
+Citations & References
+Embeddings
+Prompting
+Sampling
+Optimize cost and latency
+Batch Processing
+Prompt caching
+Predicted outputs
+Priority Tier
+Platform
+Regional inference
+Pricing
+Model lifecycle policy
+Labs
+API Reference ↗
+Inference & Models
+Inference
+Conversations
+Structured Outputs
+Custom
+Custom Structured Outputs
+Custom Structured Outputs allow you to ensure the model provides an answer in a very specific JSON format by supplying a clear JSON schema. This approach allows the model to consistently deliver responses with the correct typing and keywords.
+Usage
+Copy section link Usage
+Generate and Use custom Structured Outputs
+Here is an example of how to achieve this using the Mistral AI client and Pydantic/Zod/JSON Schemas:
+Define the Data Model
+Copy section link Define the Data Model
+First, define the structure of the output using a Pydantic, Zod or a JSON Schema:
+python typescript curl json schema
+from pydantic import BaseModel
+class Book ( BaseModel ) :
+name : str
+authors : list [ str ]
+from pydantic import BaseModel
+class Book ( BaseModel ) :
+name : str
+authors : list [ str ]
+Start the completion
+Copy section link Start the completion
+Next, make a request and ensure the response adheres to the defined structure using response_format set to the corresponding model:
+python typescript curl
+Output
+V2 V1
+import os
+from mistralai . client import Mistral
+api_key = os . environ [ "MISTRAL_API_KEY" ]
+model = "ministral-8b-latest"
+client = Mistral ( api_key = api_key )
+chat_response = client . chat . parse (
+model = model ,
+messages = [
+{
+"role" : "system" ,
+"content" : "Extract the books information."
+} ,
+{
+"role" : "user" ,
+"content" : "I recently read 'To Kill a Mockingbird' by Harper Lee."
+} ,
+] ,
+response_format = Book ,
+max_tokens = 256 ,
+temperature = 0
+)
+import os
+from mistralai . client import Mistral
+api_key = os . environ [ "MISTRAL_API_KEY" ]
+model = "ministral-8b-latest"
+client = Mistral ( api_key = api_key )
+chat_response = client . chat . parse (
+model = model ,
+messages = [
+{
+"role" : "system" ,
+"content" : "Extract the books information."
+} ,
+{
+"role" : "user" ,
+"content" : "I recently read 'To Kill a Mockingbird' by Harper Lee."
+} ,
+] ,
+response_format = Book ,
+max_tokens = 256 ,
+temperature = 0
+)
+In this example, the Book class defines the structure of the output, ensuring that the model's response adheres to the specified format.
+There are two types of possible outputs that are easily accessible via our SDK.
+Raw JSON Output
+Parsed Output
+Close
+Corresponds to the raw structured JSON output of the model.
+python typescript
+# Accessed with `chat_response.choices[0].message.content`:
+print ( chat_response . choices [ 0 ] . message . content )
+# {
+# "authors": ["Harper Lee"],
+# "name": "To Kill a Mockingbird"
+# }
+# Accessed with `chat_response.choices[0].message.content`:
+print ( chat_response . choices [ 0 ] . message . content )
+# {
+# "authors": ["Harper Lee"],
+# "name": "To Kill a Mockingbird"
+# }
+Note
+To better guide the model, the following is being always prepended to the System Prompt when using this method:
+Your output should be an instance of a JSON object following this schema: {{ json_schema }}
+Your output should be an instance of a JSON object following this schema: {{ json_schema }}
+However, it is recommended to add more explanations and iterate on your system prompt to better clarify the expected schema and behavior.
+FAQ
+Copy section link FAQ
+Which models support custom Structured Outputs?
+Contents
+Usage
+Define the Data Model
+Start the completion
+FAQ
+Go to Top
+WHY MISTRAL
+About us Our customers Careers Contact us
+EXPLORE
+AI Solutions Partners Research
+DOCUMENTATION
+Documentation Ambassadors Cookbooks
+BUILD
+Studio Vibe Mistral Code Mistral Compute Try the API
+LEGAL
+Terms of service Privacy policy Legal notice Privacy Choices Brand
+COMMUNITY
+Discord ↗ X ↗ Github ↗ LinkedIn ↗ Ambassadors
+Mistral AI © 2026
+Toggle theme
+Structured Outputs JSON Mode

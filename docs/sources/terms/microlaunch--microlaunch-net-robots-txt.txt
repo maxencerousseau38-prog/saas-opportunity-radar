@@ -1,0 +1,17 @@
+https://microlaunch.net/robots.txt
+2026-11-10T17:21:11.382Z
+
+# *
+User-agent: *
+Allow: /
+# Host
+Host: https://microlaunch.net
+# Sitemaps
+Sitemap: https://microlaunch.net/sitemap.xml
+Sitemap: https://microlaunch.net/server-sitemap.xml
+Sitemap: https://microlaunch.net/categories-sitemap.xml
+Sitemap: https://microlaunch.net/howtos-sitemap.xml
+Sitemap: https://microlaunch.net/alts-sitemap.xml
+Sitemap: https://microlaunch.net/blog-sitemap.xml
+Sitemap: https://microlaunch.net/refs-sitemap.xml
+Sitemap: https://microlaunch.net/tags-sitemap.xml

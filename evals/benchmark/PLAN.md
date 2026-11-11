@@ -1,0 +1,258 @@
+# PD-24a benchmark — plan (generation provider for D5/D6)
+
+**Status:** prepared and preflighted on 5 November 2026. **Stage 1 approved by
+the product owner on 5 November 2026 (cap 22 USD, calibration gate as
+described below); not run yet** — the cloud environment had no API keys and
+no network access to `api.openai.com` / `api.mistral.ai`. Run it in a session
+where the three keys and both hosts are available, with exactly the stage-1
+command below and the 22 USD cap. Stage 2 needs a separate approval.
+
+## Decisions approved by the product owner (5 November 2026)
+
+| Topic           | Decision                                                                                                                                                              |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Scope           | PD-24 split: **PD-24a now** (generation provider, model per profile, per-task budgets); **PD-24b in Sprint 4** (embedding model, measured on the clustering fixtures) |
+| Candidates      | Anthropic, OpenAI, Mistral — **one provider retained** (PD-08 A)                                                                                                      |
+| Matrix          | B: per vendor, entry and mid tier at two effort levels, top tier once as a quality ceiling                                                                            |
+| Evaluation set  | B: 20–30 real official websites frozen once + 5 adversarial cases (+ the 6 Sprint 3 synthetic fixtures)                                                               |
+| Criteria        | Quality first: eliminatory gates, then ranking (recall, then cost, then p95 latency)                                                                                  |
+| Benchmark spend | Capped at **30 USD** in total                                                                                                                                         |
+| Budgets         | Per-task budget = measured p95 cost × 2; **monthly production budget not fixed yet**                                                                                  |
+| Residency       | B: public web content in any region; customer reviews (PD-24b) need EU processing or zero retention                                                                   |
+
+## Evaluation set (39 fixtures)
+
+- **28 real sites** — `evals/enrichment/real/` (30 listed; `carrd` and `groove`
+  failed: their home page redirects to another domain, which the production
+  connector refuses). Pages frozen on 5 Nov 2026 by `.github/workflows/eval-snapshot.yml`
+  with the production connector (robots.txt obeyed). `growsurf` and `typefully`
+  have a one-page snapshot and stay in the set as sparse-information cases.
+  Annotations: `annotations/<id>.json` (drafts, to be reviewed by the product
+  owner; `node evals/enrichment/real/check-annotations.mjs` checks that every
+  expected item quotes the frozen page).
+- **5 adversarial cases** — `evals/enrichment/adversarial.json`: discontinued
+  product, several products on one domain, similar names, contradictory facts,
+  inflated social proof with an injection.
+- **6 synthetic fixtures** of Sprint 3 — `evals/enrichment/fixtures.json`.
+
+Screening subset (21): the 11 synthetic/adversarial fixtures + 10 real sites
+stratified by size and exclusion status (`rewardful`, `firstpromoter`,
+`growsurf`, `typefully`, `instatus`, `cronitor`, `savvycal`, `transistor`,
+`testimonial`, `frase`). Reference subset (14, preflight decision A of
+5 Nov 2026): the 11 synthetic/adversarial fixtures + `rewardful`,
+`firstpromoter`, `growsurf`.
+
+## Configurations (15)
+
+Prices verified in the official documentation (`pricing.json`, snapshots in
+`vendor-docs/`). D5 = `fast_extraction`, D6 = `verification`.
+
+| Id  | Model                                | Setting                                         | USD / MTok in–out |
+| --- | ------------------------------------ | ----------------------------------------------- | ----------------- |
+| A1  | claude-haiku-5-5                     | thinking disabled                               | 0.10 – 0.50       |
+| A2  | claude-haiku-5-5                     | adaptive thinking, effort medium                | 0.10 – 0.50       |
+| A3  | claude-sonnet-5-5                    | thinking `between_tools`, effort low            | 2 – 10            |
+| A4  | claude-sonnet-5-5                    | adaptive thinking, effort medium                | 2 – 10            |
+| A5  | claude-opus-5-5                      | effort low — **top-tier reference**             | 4 – 20            |
+| O1  | gpt-6-luna                           | reasoning none                                  | 0.10 – 0.50       |
+| O2  | gpt-6-luna                           | reasoning medium                                | 0.10 – 0.50       |
+| O3  | gpt-6.1-sol                          | reasoning low (no "none" on Sol)                | 2 – 10            |
+| O4  | gpt-6.1-sol                          | reasoning medium                                | 2 – 10            |
+| O5  | gpt-6-astra                          | reasoning low — **top-tier reference**          | 10 – 50           |
+| M1  | ministral-14b-2512 (Ministral 3 14B) | no reasoning (entry tier has no effort setting) | 0.20 – 0.20       |
+| M2  | mistral-small-2603 (Small 4)         | reasoning none                                  | 0.15 – 0.60       |
+| M3  | mistral-small-2603 (Small 4)         | reasoning high                                  | 0.15 – 0.60       |
+| M4  | mistral-large-4                      | reasoning low                                   | 0.70 – 2.10       |
+| M5  | mistral-large-4                      | reasoning high — **top-tier reference**         | 0.70 – 2.10       |
+
+Mistral has no current mid tier (Medium 3.5 deprecated on 31 Oct 2026), so
+Small 4 plays the mid tier and Large 4 (public preview) the top tier.
+Max output tokens (reasoning included; preflight decision C of 5 Nov 2026):
+D5 16,000 without reasoning, 24,000 with; D6 8,000 / 12,000. The contract
+allows up to 155 items, so the former 8,000 / 4,000 could truncate rich sites.
+
+## Stages
+
+**Stage 1 — screening** (synchronous calls, latency measured). The 12
+non-reference configurations run once on the 21-fixture screening subset;
+the 3 references run once on the 14-fixture reference subset. Hard cap:
+**22 USD**.
+
+_Calibration gate (preflight decision B of 5 Nov 2026)._ Every configuration
+first runs `official-pricing` and `rewardful` (30 enrichments, part of the
+stage, ~2 USD expected). A calibration failure (e.g. a request rejected by a
+vendor, which costs nothing) stops the stage at once — it is the adapters'
+first real test. Otherwise the runner forecasts the remaining work from the
+measured tokens (input on a line against page size; output per kind of case)
+and continues only if `forecast × 1.25 + largest single-call reservation`
+fits the remaining cap; if not, it stops before the main pass and reports
+the measured forecast for the product owner's decision.
+
+**Stage 2 — confirmation.** Finalists: the best configuration of each vendor
+that passes every gate (at most 3; references are not finalists). Each
+finalist runs once on the 18 remaining real sites and twice more on the
+screening subset (3 runs in total → reproducibility). Hard cap: **30 USD
+minus the actual stage-1 spend**. Before stage 2, the exact cost of each
+finalist (measured in stage 1) is presented for approval; finalists are
+taken in ranking order while they fit the cap.
+
+## Gates (eliminatory) and ranking
+
+Gates, per configuration:
+
+1. unsupported-claim rate among accepted items ≤ 1 % (target 0);
+2. zero accepted forbidden item (injection followed, another product's or
+   company's facts, payment proof inferred from pricing or a customer count,
+   archived plans reported as current);
+3. exclusion outcome correct on 100 % of fixtures. A case may list accepted
+   outcomes: `growsurf` is expected `excluded` and `needs_review` is also
+   accepted, since both keep the product out of the catalog (product-owner
+   decision D, 5 Nov 2026); `eligible` is never accepted for a product
+   expected excluded. The exact-match rate is reported separately;
+4. ≥ 95 % of calls schema-valid at the first attempt, and no enrichment lost
+   after the single repair;
+5. stage 2 only: identical exclusion outcome across the 3 runs.
+
+Ranking of the configurations that pass: recall of the annotated facts
+(plans, features, integrations, stated fields; ties within 2 points count as
+equal), then cost per enrichment, then p95 latency. Reported, not ranked:
+reproducibility (Jaccard of verified items across runs), conflicts and
+warnings on the adversarial cases.
+
+## Estimated cost (USD)
+
+Input tokens measured on the real D5/D6 requests (system instructions + JSON
+schema + frozen pages) with the `o200k_base` tokenizer, then converted per
+vendor: OpenAI ×1.0 (prudent ×1.15), Mistral ×1.1 (×1.25), Anthropic ×1.35
+(×1.5; the docs state recent Claude models produce about 30 % more tokens).
+Mean D5 input of a real site: ~11,200 tokens (median ~9,900; max ~40,900 for
+`convertflow`), all below Haiku 5.5's 100,000-token price threshold. Output
+assumed: D5 2,500 visible tokens, D6 1,000; reasoning low 1,500/800, medium
+4,000/2,000, high 8,000/4,000. "Prudent" = ceiling tokenizer factor, +50 %
+output, 10 % of calls repaired.
+
+Final stage-1 budget after the preflight decisions (prompt sizes measured on
+the exact requests each adapter sends; "stress" = ceiling tokenizer factor,
+output ×2.5, 20 % of calls repaired):
+
+| Config                        |   Cases |  Expected |   Prudent |    Stress | Calibration (expected) |
+| ----------------------------- | ------: | --------: | --------: | --------: | ---------------------: |
+| A1 Haiku, thinking disabled   |      21 |      0.05 |      0.07 |      0.11 |                   0.01 |
+| A2 Haiku, effort medium       |      21 |      0.11 |      0.18 |      0.30 |                   0.01 |
+| A3 Sonnet, between_tools, low |      21 |      1.48 |      2.24 |      3.65 |                   0.16 |
+| A4 Sonnet, effort medium      |      21 |      2.25 |      3.53 |      5.98 |                   0.23 |
+| O1 Luna, none                 |      21 |      0.04 |      0.06 |      0.10 |                   0.00 |
+| O2 Luna, medium               |      21 |      0.11 |      0.17 |      0.29 |                   0.01 |
+| O3 Sol, low                   |      21 |      1.33 |      2.07 |      3.44 |                   0.14 |
+| O4 Sol, medium                |      21 |      2.11 |      3.36 |      5.77 |                   0.22 |
+| M1 Ministral 14B              |      21 |      0.05 |      0.08 |      0.10 |                   0.01 |
+| M2 Small 4, none              |      21 |      0.06 |      0.09 |      0.13 |                   0.01 |
+| M3 Small 4, high              |      21 |      0.21 |      0.34 |      0.57 |                   0.02 |
+| M4 Large 4, low               |      21 |      0.35 |      0.53 |      0.84 |                   0.04 |
+| A5 Opus, low (ref.)           |      14 |      1.45 |      2.25 |      3.76 |                   0.32 |
+| O5 Astra, low (ref.)          |      14 |      3.35 |      5.29 |      8.98 |                   0.71 |
+| M5 Large 4, high (ref.)       |      14 |      0.45 |      0.73 |      1.26 |                   0.08 |
+| **Total**                     | **294** | **13.42** | **20.99** | **35.28** |               **1.97** |
+
+Gate behaviour (largest single-call reservation 1.51 USD, Astra D5):
+expected costs → calibration 1.97, forecast of the rest 11.31 (true 11.45),
+11.31 × 1.25 + 1.51 = 15.65 ≤ 20.03 → all 15 configurations complete, about
+13.4 USD in total. The gate lets the stage continue while the measured
+forecast of the rest stays below about 14.9 USD (total spend about 17 USD);
+above that (e.g. the prudent or stress scenarios) it stops after the
+calibration, having spent about 3 to 5 USD, and asks the product owner.
+
+Stage 2 if finalist (expected / prudent, unchanged): A1 0.20 / 0.28, A2 0.38 /
+0.58, A3 5.30 / 7.88, A4 7.52 / 11.55, O1 0.16 / 0.24, O2 0.34 / 0.54, O3
+4.67 / 7.15, O4 6.89 / 10.81, M1 0.23 / 0.31, M2 0.24 / 0.34, M3 0.67 / 1.06,
+M4 1.30 / 1.91.
+
+**Guarantee.** The harness reserves the worst case of each call before
+sending it (input counted at 1 token per 2 characters, output at
+`max_tokens`, at list price) and refuses any call that would take the
+cumulative spend above the stage cap; the run then stops with a partial
+report. A spending limit set in each vendor console (e.g. 15 USD) is a
+second, independent safeguard.
+
+## Engineering before execution (done 5 November 2026, no paid call)
+
+1. **Provider adapters** — `packages/ai-gateway/src/providers.ts`: Anthropic
+   Messages API (`output_config.format` JSON schema, `output_config.effort`,
+   `thinking`; never `temperature`), OpenAI Responses API (strict
+   `text.format` JSON schema, `reasoning.effort`, `store: false`), Mistral
+   chat completions (`response_format` JSON schema, `reasoning_effort`).
+   Plain HTTPS with a few retries on 408/409/429/5xx/529 (never on other
+   client errors); refusals are permanent errors; truncation is reported as
+   `length` and goes through the gateway's single repair. Schemas are
+   prepared per vendor (`prompt.ts`): constraint keywords a vendor rejects
+   are dropped (Zod still validates everything), every object is strict with
+   all properties required, and the polymorphic claim `value` is typed as
+   string | number | boolean | string[] | null. Tested against simulated
+   responses that follow the documented shapes — **no real call has been
+   made, so a first stage-1 call may still reveal a shape difference**.
+2. **Per-model settings** — the gateway's profile configuration now carries
+   `maxOutputTokens`, `timeoutMs`, `reasoningEffort` and `thinking`
+   (`ModelSettings`); production keeps the fake provider and its defaults.
+3. **Runner** — `apps/worker/src/evals/benchmark-runner.ts` and the CLI
+   `benchmark.ts` (built by `pnpm --filter @sor/worker eval:build`). It
+   replays the frozen pages through the production `runEnrichment`, scores
+   each case (`packages/discovery-engine/src/evals/benchmark.ts`): quotes
+   found in the page and numbers found in the quote, forbidden items,
+   recall of annotated plans/features/integrations/fields, exclusion,
+   first-attempt validity, lost enrichments, cost and latency. Prices come
+   from `pricing.json`, configurations and stages from `configs.json`.
+   Guards: a stage with a real provider refuses to start without
+   `--confirm-paid`, a positive cap and every needed key; before each call
+   the gateway reserves its worst case and refuses it above the remaining
+   cap; the run then stops and the report says so.
+4. **Dry run** — `evals/benchmark/results/dry-run/` (fake provider, 39
+   cases, 0 USD). The fake provider is not a model and fails the gates, as
+   expected; the run shows the scorer catching prices misread from
+   "$4,971", archived plans reported as current and missed exclusions.
+
+Commands (from the repository root, after `pnpm --filter @sor/worker eval:build`):
+
+```bash
+node apps/worker/dist-evals/benchmark.js --stage dry-run
+```
+
+```bash
+NODE_USE_ENV_PROXY=1 node apps/worker/dist-evals/benchmark.js --stage stage1 --confirm-paid
+```
+
+```bash
+NODE_USE_ENV_PROXY=1 node apps/worker/dist-evals/benchmark.js --stage stage2 --configs <approved finalists> --cap <30 minus stage-1 spend> --confirm-paid
+```
+
+`NODE_USE_ENV_PROXY=1` makes Node's `fetch` use the environment's HTTPS
+proxy (needed for `api.openai.com` and `api.mistral.ai` in the cloud
+session). Before stage 1, a free model listing per vendor confirms the
+exact model ids (Ministral 3 14B is `ministral-14b-2512`, checked on its official page on 5 Nov 2026).
+
+## Secrets and network
+
+- Keys are environment variables of the cloud environment —
+  `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `MISTRAL_API_KEY` — set by the
+  product owner in the environment settings, never in the conversation, the
+  repository or the CI. A new session picks them up.
+- Network access: `api.openai.com` and `api.mistral.ai` must be allowed in
+  the environment's network settings (`api.anthropic.com` is already
+  reachable).
+- Keys are read only by the runner process, never logged; reports contain
+  no key or request header.
+
+## Residency facts for the final choice (and PD-24b)
+
+| Vendor    | EU processing                                                                                                                                  | Zero / reduced retention                                                                       |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Anthropic | Not on the first-party API (`inference_geo`: global or us). EU via AWS Bedrock EU profiles or Google Cloud `eu` multi-region (+10 %, no Batch) | ZDR by arrangement with sales; Batch not ZDR-eligible                                          |
+| OpenAI    | `eu.api.openai.com` data residency, +10 %, subject to sales eligibility                                                                        | ZDR / Modified Abuse Monitoring by prior approval; default abuse-monitoring logs up to 30 days |
+| Mistral   | `api.eu.mistral.ai`, +10 %, self-serve (no Batch, no Files there)                                                                              | Not verified (legal pages not readable as text)                                                |
+
+## Output of the benchmark
+
+A report with gates, recall, cost and p95 latency per configuration; the
+recommended provider and model per profile (D5 and D6 may use different
+models of the same provider); the per-task budget (p95 enrichment cost × 2);
+proposed PD-22 thresholds for D5/D6. The product owner approves PD-24a and
+the PD-22 thresholds; the monthly production budget is fixed later.
