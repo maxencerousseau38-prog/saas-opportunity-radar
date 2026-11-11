@@ -207,6 +207,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"catalog_listing_reviews": {
+                  Row: {
+                    "candidate_product_ids": (string)[],"content_hash": string,"exclusion": NonNullable<Json>,"external_id": string,"first_seen_at": string,"id": string,"last_seen_at": string,"listing": NonNullable<Json>,"reason": string,"resolution_note": string | null,"resolved_at": string | null,"resolved_by": string | null,"resolved_product_id": string | null,"source_id": string,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_product_ids"?: (string)[],"content_hash": string,"exclusion": NonNullable<Json>,"external_id": string,"first_seen_at"?: string,"id"?: string,"last_seen_at"?: string,"listing": NonNullable<Json>,"reason": string,"resolution_note"?: string | null,"resolved_at"?: string | null,"resolved_by"?: string | null,"resolved_product_id"?: string | null,"source_id": string,"status"?: string
+                  }
+                  Update: {
+                    "candidate_product_ids"?: (string)[],"content_hash"?: string,"exclusion"?: NonNullable<Json>,"external_id"?: string,"first_seen_at"?: string,"id"?: string,"last_seen_at"?: string,"listing"?: NonNullable<Json>,"reason"?: string,"resolution_note"?: string | null,"resolved_at"?: string | null,"resolved_by"?: string | null,"resolved_product_id"?: string | null,"source_id"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "catalog_listing_reviews_resolved_product_id_fkey"
+      columns: ["resolved_product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "catalog_listing_reviews_source_id_fkey"
+      columns: ["source_id"]
+isOneToOne: false
+      referencedRelation: "sources"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"categories": {
                   Row: {
                     "created_at": string,"description": string | null,"id": string,"is_active": boolean,"is_permanently_excluded": boolean,"is_user_visible": boolean,"name": string,"parent_id": string | null,"priority_weight": number,"slug": string
@@ -1741,6 +1767,9 @@ isOneToOne: true
 "sor_cancel_job":
 { Args: { "p_actor": string,"p_job_id": string,"p_workspace_id": string }; Returns: Database["public"]['Enums']["job_state"]
                            },
+"sor_catalog_record_review":
+{ Args: { "p_candidates": (string)[],"p_exclusion": Json,"p_reason": string,"p_row": Json }; Returns: string
+                           },
 "sor_catalog_refresh_statistics":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
@@ -1785,6 +1814,9 @@ isOneToOne: true
                            },
 "sor_operator_exclusion_decision":
 { Args: { "p_decision": Database["public"]['Enums']["exclusion_status"],"p_operator": string,"p_product_id": string,"p_reason": string }; Returns: undefined
+                           },
+"sor_operator_resolve_catalog_review":
+{ Args: { "p_action": string,"p_note"?: string,"p_operator": string,"p_product_id"?: string,"p_review_id": string }; Returns: Json
                            },
 "sor_operator_resolve_report":
 { Args: { "p_note": string,"p_operator": string,"p_report_id": string,"p_status": string }; Returns: undefined

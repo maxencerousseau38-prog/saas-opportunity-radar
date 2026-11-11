@@ -84,6 +84,79 @@ export async function listExclusionReviews(service: DbClient) {
   return data ?? [];
 }
 
+/** Open catalog listing reviews (S8.2), oldest first, with their candidate products. */
+export async function listCatalogReviews(service: DbClient, limit = 100) {
+  const { data, error, count } = await service
+    .from("catalog_listing_reviews")
+    .select(
+      "id, external_id, listing, reason, candidate_product_ids, first_seen_at, last_seen_at, sources(source_key, name)",
+      { count: "exact" },
+    )
+    .eq("status", "open")
+    .order("first_seen_at", { ascending: true })
+    .order("id", { ascending: true })
+    .limit(limit);
+  if (error) throw mapPostgresError(error);
+  const rows = data ?? [];
+  const ids = [...new Set(rows.flatMap((r) => r.candidate_product_ids))];
+  const products = new Map<
+    string,
+    { id: string; name: string; slug: string; website_url: string | null }
+  >();
+  if (ids.length) {
+    const res = await service
+      .from("saas_products")
+      .select("id, name, slug, website_url")
+      .in("id", ids);
+    if (res.error) throw mapPostgresError(res.error);
+    for (const p of res.data ?? []) products.set(p.id, p);
+  }
+  return {
+    total: count ?? rows.length,
+    reviews: rows.map((r) => {
+      const l = r.listing as Record<string, unknown>;
+      const source = r.sources as unknown as { source_key: string; name: string } | null;
+      return {
+        id: r.id,
+        source_key: source?.source_key ?? null,
+        source_name: source?.name ?? null,
+        external_id: r.external_id,
+        name: String(l.name ?? ""),
+        description: typeof l.description === "string" ? l.description : null,
+        website_url: typeof l.canonical_url === "string" ? l.canonical_url : null,
+        source_url: typeof l.source_url === "string" ? l.source_url : null,
+        reason: r.reason,
+        candidates: r.candidate_product_ids.flatMap((id) => {
+          const p = products.get(id);
+          return p ? [p] : [];
+        }),
+        first_seen_at: r.first_seen_at,
+      };
+    }),
+  };
+}
+
+export async function resolveCatalogReview(
+  service: DbClient,
+  args: {
+    operator: string;
+    reviewId: string;
+    action: "create" | "attach" | "reject";
+    productId?: string;
+    note?: string;
+  },
+): Promise<{ status: string; product_id: string | null }> {
+  const { data, error } = await service.rpc("sor_operator_resolve_catalog_review", {
+    p_operator: args.operator,
+    p_review_id: args.reviewId,
+    p_action: args.action,
+    ...(args.productId ? { p_product_id: args.productId } : {}),
+    ...(args.note ? { p_note: args.note } : {}),
+  });
+  if (error) throw mapPostgresError(error);
+  return data as unknown as { status: string; product_id: string | null };
+}
+
 export async function decideExclusion(
   service: DbClient,
   args: { operator: string; productId: string; decision: "eligible" | "excluded"; reason: string },

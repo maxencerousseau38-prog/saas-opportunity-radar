@@ -1,13 +1,24 @@
-# First bulk catalog collection (10 November 2026; docs/DATA_SOURCES.md).
-# Runs the catalog collectors on GitHub runners (this session's network
-# policy blocks the sources) and commits the normalized snapshot back to the
-# same branch. Sources: Wikidata (CC0, public query service, no key) and
-# Uneed (official read-only API, no key). No
-# database access, no secret, no paid call.
+# Catalog collection (first run 10 November 2026; weekly since S8.2;
+# docs/DATA_SOURCES.md). Runs the catalog collectors on GitHub runners and
+# validates the normalized snapshots (apps/worker/test/catalog-snapshots.test.ts)
+# before anything is written. Sources: Wikidata (CC0, public query service,
+# no key) and Uneed (official read-only API, no key). No database access, no
+# secret, no paid call; nothing is loaded into any hosted project.
+#
+# - Weekly schedule, or a manual run from main: the snapshots go to a dated
+#   branch `catalog/snapshots-YYYY-MM-DD` and an automatic pull request into
+#   main. CI is dispatched on that branch (pushes made with GITHUB_TOKEN do not
+#   trigger workflows). Nothing is ever pushed to main: the product owner
+#   reviews and merges the PR.
+# - Push to a claude/** branch that changes a collector: the snapshots are
+#   committed back to that same branch (as before).
 name: Catalog collection
 
 on:
   workflow_dispatch:
+  schedule:
+    # Mondays 03:41 UTC (off the hour to avoid scheduler congestion).
+    - cron: "41 3 * * 1"
   push:
     branches: ["claude/**"]
     paths:
@@ -19,6 +30,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  actions: write
 
 concurrency:
   group: catalog-collect-${{ github.ref }}
@@ -45,7 +58,12 @@ jobs:
       - name: Collect Uneed listings (official read API)
         continue-on-error: true
         run: node apps/worker/dist-catalog/collect.js uneed data/catalog/uneed/listings.json
-      - name: Commit the snapshot
+      # A snapshot that fails the contract and quality checks is never
+      # committed (no PR, no push): the run fails and says why.
+      - name: Validate the snapshots
+        run: pnpm --filter @sor/worker exec vitest run test/catalog-snapshots.test.ts
+      - name: Commit the snapshot to the same branch (claude/** push)
+        if: github.event_name == 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -54,3 +72,38 @@ jobs:
           git commit -m "Catalog collection: listings snapshots (automated)"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Open a pull request with the new snapshots (weekly / manual)
+        if: github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/catalog
+          if git diff --cached --quiet; then echo "snapshots unchanged: no pull request"; exit 0; fi
+          day="$(date -u +%Y-%m-%d)"
+          branch="catalog/snapshots-${day}-${GITHUB_RUN_ID}"
+          stats="$(node -e '
+            const fs = require("node:fs");
+            for (const s of ["wikidata", "uneed"]) {
+              const f = `data/catalog/${s}/listings.json`;
+              if (!fs.existsSync(f)) continue;
+              const d = JSON.parse(fs.readFileSync(f, "utf8"));
+              const failed = (d.queries || []).filter((q) => q.status !== "ok").length;
+              console.log(`- ${s}: ${d.listings.length} listings, retrieved ${d.retrieved_at}, ${failed} failed queries`);
+            }')"
+          git switch -c "${branch}"
+          git commit -m "Catalog collection ${day}: listings snapshots (automated)"
+          git push origin "HEAD:${branch}"
+          printf '%s\n' \
+            "Automated weekly catalog collection (Wikidata CC0, Uneed official read API)." \
+            "" "${stats}" "" \
+            "The snapshots passed apps/worker/test/catalog-snapshots.test.ts before this commit." \
+            "CI is dispatched on this branch. Nothing is loaded into any hosted project:" \
+            "ingesting is a separate, manual step (docs/DATA_SOURCES.md)." \
+            "" "Merge only after review by the product owner." > "${RUNNER_TEMP}/pr-body.md"
+          gh pr create --base "${BASE}" --head "${branch}" \
+            --title "Catalog collection ${day}: listings snapshots" \
+            --body-file "${RUNNER_TEMP}/pr-body.md"
+          gh workflow run ci.yml --ref "${branch}"

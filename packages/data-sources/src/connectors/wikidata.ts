@@ -162,6 +162,9 @@ function websiteOf(value: string | undefined): string | null {
   try {
     const url = new URL(value.trim());
     if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    // A page of Wikidata or a sister Wikimedia project (e.g. a user script
+    // documented on wikidata.org) is never a product's official site.
+    if (/(^|\.)(wikidata|wikipedia|wikimedia)\.org$/i.test(url.hostname)) return null;
     // An official site needs no query: tracking parameters and share tokens are dropped.
     url.hash = "";
     url.search = "";

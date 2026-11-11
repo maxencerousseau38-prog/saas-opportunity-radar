@@ -1,5 +1,7 @@
-import { createHmac } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash, createHmac } from "node:crypto";
+import { readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { expect, type Page } from "@playwright/test";
 
 export const PASSWORD = process.env.SEED_PASSWORD ?? "";
@@ -41,7 +43,15 @@ export function totp(secretBase32: string, at = Date.now()): string {
 }
 
 // The operator enrols once per database; later sessions reuse the secret.
-const SECRET_FILE = "test-results/.operator-totp-secret";
+// Kept outside test-results (emptied at each Playwright run): the real-catalog
+// run after the main suite reuses the enrolment of that database (S8.2).
+const SECRET_FILE = join(
+  tmpdir(),
+  `sor-e2e-operator-totp-${createHash("sha256")
+    .update(process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL ?? "local")
+    .digest("hex")
+    .slice(0, 16)}`,
+);
 
 /** Opens /operator as the signed-in operator and completes MFA (enrolment or challenge). */
 export async function operatorMfa(page: Page): Promise<void> {
@@ -53,8 +63,7 @@ export async function operatorMfa(page: Page): Promise<void> {
   if (await enrol.isVisible()) {
     await enrol.click();
     secret = (await page.getByTestId("totp-secret").textContent())?.trim() ?? "";
-    mkdirSync("test-results", { recursive: true });
-    writeFileSync(SECRET_FILE, secret);
+    writeFileSync(SECRET_FILE, secret, { mode: 0o600 });
   } else {
     secret = readFileSync(SECRET_FILE, "utf8").trim();
   }

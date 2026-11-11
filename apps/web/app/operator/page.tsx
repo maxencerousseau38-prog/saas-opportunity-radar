@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { serverRepo } from "@sor/database";
+import { CatalogReviews } from "@/components/workspace/catalog-reviews";
 import { OperatorMfa } from "@/components/workspace/operator-mfa";
 import { OperatorView } from "@/components/workspace/operator-view";
 import { PlatformHealth } from "@/components/workspace/platform-health";
@@ -12,7 +13,8 @@ export const metadata = { title: "Opérateur — SaaS Opportunity Radar" };
 
 /**
  * Platform operator console (ADR-007, PD-12 A): platform health (S7.3),
- * exclusion reviews and correction reports.
+ * exclusion reviews, collected catalog listings to review (S8.2) and
+ * correction reports.
  */
 export default async function OperatorPage() {
   const { client, user } = await requireUser();
@@ -30,8 +32,9 @@ export default async function OperatorPage() {
     );
   }
   const service = getServiceClient();
-  const [reviews, reports, memberships, health] = await Promise.all([
+  const [reviews, catalogReviews, reports, memberships, health] = await Promise.all([
     serverRepo.listExclusionReviews(service),
+    serverRepo.listCatalogReviews(service),
     serverRepo.listCorrectionReports(service, "open"),
     getMemberships(user.id),
     platformHealth(),
@@ -54,6 +57,7 @@ export default async function OperatorPage() {
         être annulée ici : corrigez les données puis relancez le classifieur.
       </p>
       <PlatformHealth health={health} />
+      <CatalogReviews total={catalogReviews.total} reviews={catalogReviews.reviews} />
       <OperatorView
         reviews={reviews.map((r) => ({
           id: r.id,

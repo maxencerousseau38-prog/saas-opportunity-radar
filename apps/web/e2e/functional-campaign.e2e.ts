@@ -6,7 +6,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures";
-import { MEMBER, signIn, waitForResults } from "./helpers";
+import { MEMBER, OWNER, operatorMfa, signIn, waitForResults } from "./helpers";
 
 test.skip(process.env.REAL_CATALOG !== "1", "real catalog step only (REAL_CATALOG=1)");
 
@@ -480,4 +480,67 @@ test("9. comparison of real products from Saved", async ({ page }) => {
   await expect(page.getByRole("row", { name: /Prix d’entrée/ })).toBeVisible();
   const rows = (await page.getByRole("row").allTextContents()).slice(0, 8).join(" | ");
   process.stdout.write(`comparison rows: ${rows}\n`);
+});
+
+test("10. the operator resolves collected listings sent to review (S8.2)", async ({ page }) => {
+  // Listings the ingestion rules did not import alone are kept in the queue.
+  const { count: open } = await admin
+    .from("catalog_listing_reviews")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "open");
+  expect(open ?? 0).toBeGreaterThan(0);
+
+  await signIn(page, OWNER); // the demo owner is the platform operator
+  await operatorMfa(page);
+  const section = page.getByRole("region", { name: /Annonces de catalogue à revoir/ });
+  await expect(section).toContainText(`(${open})`);
+
+  // Reject one listing, with a note.
+  const card = section.getByTestId("catalog-review").first();
+  const name = (await card.locator("p.font-medium").textContent())?.split(" ")[0] ?? "";
+  const external = (await card.locator("p.font-medium span").textContent())?.split(" · ")[1] ?? "";
+  await card.getByLabel(/^Note pour /).fill("Revue de campagne : rejet");
+  await card.getByRole("button", { name: "Rejeter" }).click();
+  await expect(section).toContainText(`(${(open ?? 0) - 1})`);
+  const { data: rejected } = await admin
+    .from("catalog_listing_reviews")
+    .select("status, resolution_note, resolved_at")
+    .eq("external_id", external)
+    .single();
+  expect(rejected).toMatchObject({
+    status: "rejected",
+    resolution_note: "Revue de campagne : rejet",
+  });
+  process.stdout.write(`rejected review: ${name} (${external})\n`);
+
+  // Attach a listing that has a candidate product, when the queue holds one.
+  const attachable = section.getByTestId("catalog-review").filter({
+    has: page.getByRole("button", { name: /^Rattacher à / }),
+  });
+  if ((await attachable.count()) > 0) {
+    const target = attachable.first();
+    const ext = (await target.locator("p.font-medium span").textContent())?.split(" · ")[1] ?? "";
+    await target
+      .getByRole("button", { name: /^Rattacher à / })
+      .first()
+      .click();
+    await expect(section).toContainText(`(${(open ?? 0) - 2})`);
+    const { data: attached } = await admin
+      .from("catalog_listing_reviews")
+      .select("status, resolved_product_id")
+      .eq("external_id", ext)
+      .single();
+    expect(attached?.status).toBe("attached");
+    const { count: evidence } = await admin
+      .from("evidence_items")
+      .select("id", { count: "exact", head: true })
+      .eq("product_id", attached!.resolved_product_id as string);
+    expect(evidence ?? 0).toBeGreaterThan(0);
+  }
+
+  const { count: audited } = await admin
+    .from("audit_logs")
+    .select("id", { count: "exact", head: true })
+    .eq("action", "catalog.listing_review_resolution");
+  expect(audited ?? 0).toBeGreaterThan(0);
 });

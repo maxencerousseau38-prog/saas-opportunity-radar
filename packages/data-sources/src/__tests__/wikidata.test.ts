@@ -110,6 +110,8 @@ describe("Wikidata connector", () => {
     const { listings, dropped } = parseWikidataResults(
       results(
         row({ website: uri("ftp://files.example/") }),
+        // A page of Wikidata itself (e.g. a documented user script) is not an official site.
+        row({ website: uri("https://www.wikidata.org/wiki/User:Example/Tool.js") }),
         row({ label: lit("Q12345") }),
         row({ classes: lit("video game") }),
         row({ classes: lit("web application|COVID-19 dashboard") }),
@@ -122,7 +124,7 @@ describe("Wikidata connector", () => {
       ),
       AT,
     );
-    expect(dropped).toBe(6);
+    expect(dropped).toBe(7);
     expect(listings).toHaveLength(1);
     expect(listings[0]?.launch_year).toBeNull(); // out-of-range year is unknown, not invented
   });

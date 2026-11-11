@@ -218,7 +218,7 @@ export async function listEvidence(client: DbClient, productId: string, companyI
   let query = client
     .from("evidence_items")
     .select(
-      "id, claim_type, claim_text, claim_value, evidence_type, fact_status, monetization_signal, reliability_level, confidence, verification_status, verified_at, published_at, observed_at, source_snapshots(id, retrieved_at, last_retrieved_at, published_at, fetch_status, source_records(canonical_url, title, sources(source_key, name, source_type)))",
+      "id, claim_type, claim_text, claim_value, evidence_type, fact_status, monetization_signal, reliability_level, confidence, verification_status, verified_at, published_at, observed_at, source_snapshots(id, retrieved_at, last_retrieved_at, published_at, fetch_status, licence:extracted_metadata->>licence, source_records(canonical_url, title, sources(source_key, name, source_type)))",
     );
   query = companyId
     ? query.or(`product_id.eq.${productId},company_id.eq.${companyId}`)

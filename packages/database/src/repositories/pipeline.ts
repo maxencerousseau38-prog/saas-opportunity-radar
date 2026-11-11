@@ -115,6 +115,25 @@ export async function ingestCatalogListing(
   };
 }
 
+/**
+ * Keeps a catalog listing sent to review in the operator queue (S8.2,
+ * migration 20261122090001_catalog_review_queue). Idempotent per source item.
+ */
+export async function recordCatalogReview(
+  service: DbClient,
+  args: { row: JsonValue; exclusion: JsonValue; reason: string; candidates: string[] },
+): Promise<string> {
+  const id = check(
+    await service.rpc("sor_catalog_record_review", {
+      p_row: args.row,
+      p_exclusion: args.exclusion,
+      p_reason: args.reason,
+      p_candidates: args.candidates,
+    }),
+  );
+  return id as string;
+}
+
 /** Refreshes planner statistics of the catalog tables after a bulk load. */
 export async function refreshCatalogStatistics(service: DbClient): Promise<void> {
   check(await service.rpc("sor_catalog_refresh_statistics"));

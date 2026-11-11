@@ -1,4 +1,5 @@
-\set ON_ERROR_STOP on
+-- pgbench script (no psql meta-commands: pgbench rejects them; a failing
+-- statement is reported as a failed transaction).
 set role authenticated;
 
 -- Catalog page query shape, with RLS applied as an authenticated user.

@@ -181,9 +181,14 @@ No current CI run was checked while updating this runbook.
 ## 9. Real catalog: collection and loading (10 November 2026)
 
 - **Collection** runs on GitHub runners: the *Catalog collection* workflow
-  (`.github/workflows/catalog-collect.yml`, manual or on connector changes)
-  writes `data/catalog/<source>/listings.json` (Wikidata, Uneed) and commits them. No database
-  access, no secret.
+  (`.github/workflows/catalog-collect.yml`; weekly on Mondays, manual, or on
+  connector changes in a `claude/**` branch) writes
+  `data/catalog/<source>/listings.json` (Wikidata, Uneed), validates them
+  (`apps/worker/test/catalog-snapshots.test.ts`) and, for the weekly or
+  manual run, opens a pull request from a dated `catalog/snapshots-…` branch
+  (never a push to `main`; S8.2, docs/DATA_SOURCES.md). No database access,
+  no secret. One-time repository setting: allow GitHub Actions to create pull
+  requests (Settings → Actions → General → Workflow permissions).
 - **Local stack** (development, CI): after `supabase start` (migrations
   applied) and, if wanted, `pnpm --filter @sor/web seed:demo`:
 
@@ -193,7 +198,10 @@ No current CI run was checked while updating this runbook.
   ```
 
   The command prints a JSON summary (created, hidden by exclusion, matched,
-  sent to review with reasons, primary categories) and is idempotent.
+  sent to review with reasons, reviews recorded, primary categories) and is
+  idempotent. Listings sent to review are kept in the operator queue
+  (operator console, *Annonces de catalogue à revoir*): create, attach or
+  reject, each audit-logged.
 - **Hosted project** (staging, production): only on the product owner's
   explicit go-ahead for that environment, after its migrations are applied
   (including `20261116090001_catalog_sources`). Run the same command from a

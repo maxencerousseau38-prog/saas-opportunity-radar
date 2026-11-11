@@ -15,7 +15,7 @@ const admin = createClient(
   { auth: { persistSession: false, autoRefreshToken: false } },
 );
 
-test("Discover scrolls through real SaaS collected from Wikidata, with their source", async ({
+test("Discover scrolls through real SaaS collected from Wikidata, with their source and licence", async ({
   page,
 }) => {
   test.setTimeout(120_000);
@@ -87,4 +87,28 @@ test("Discover scrolls through real SaaS collected from Wikidata, with their sou
   await expect(sources).toContainText("Wikidata");
   await expect(sources.locator('a[href^="https://www.wikidata.org/wiki/Q"]').first()).toBeVisible();
   await expect(sources).toContainText("Déclaré");
+  // S8.2: the licence recorded with the collected listing is shown.
+  await expect(
+    sources.getByTestId("source-licence").filter({ hasText: "CC0-1.0" }).first(),
+  ).toBeVisible();
+
+  // S8.2: a product collected from Uneed carries the required attribution.
+  const { data: uneedProduct } = await admin
+    .from("saas_products")
+    .select("name, slug, sources!inner(source_key)")
+    .eq("sources.source_key", "uneed")
+    .eq("record_status", "active")
+    .eq("exclusion_status", "eligible")
+    .order("name")
+    .limit(1)
+    .single();
+  await page.goto(page.url().replace(/\/saas\/[^/?#]+.*$/, `/saas/${uneedProduct!.slug}`));
+  await expect(page.getByRole("heading", { level: 1, name: uneedProduct!.name })).toBeVisible();
+  await expect(
+    page
+      .locator("#sources")
+      .getByTestId("source-licence")
+      .filter({ hasText: "Source: Uneed, uneed.best" })
+      .first(),
+  ).toBeVisible();
 });

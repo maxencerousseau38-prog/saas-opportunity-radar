@@ -18,7 +18,18 @@ const SQL_FILES = [SEED_SQL, READ_SQL, COUNT_SQL, INSPECT_SQL, BOUNDARY_SQL, CLE
 const PREFIX = "sorbench-s75c";
 const SCALES = [2_000, 10_000, 50_000];
 const CLIENTS = [1, 10];
-const TRANSACTIONS_PER_CLIENT = 100;
+// `--check` (CI): fail only on a major regression. Generous ceilings, about
+// 3-5x the first real measurement (11 Nov 2026, 4 vCPU, 50K: page 1.06 s with
+// 1 client, 3.1 s with 10; PostgREST p95 11 ms). The 10-client ceiling stays
+// under the browser role's 8 s statement timeout. Correctness (every pgbench
+// transaction completed, none failed) is always enforced.
+const THRESHOLDS = {
+  pgbench_average_latency_ms: { 1: 5_000, 10: 7_500 },
+  postgrest_p95_ms: 1_000,
+};
+// pgbench transactions per client (100 by default; CI uses fewer to bound
+// the job's duration, recorded in the output).
+const TRANSACTIONS_PER_CLIENT = Number(process.env.SOR_S75C_TRANSACTIONS ?? 100);
 const dockerCandidates = [
   resolve(
     homedir(),
@@ -38,7 +49,11 @@ const DOCKER =
   process.env.SOR_S75C_DOCKER_BIN ||
   dockerCandidates.find((candidate) => existsSync(candidate)) ||
   "docker";
-const DB_CONTAINER = "supabase_db_saas-opportunity-radar";
+// Local Supabase stack container (`supabase_db_<project_id>`); another local
+// project id can be named explicitly, never a non-Supabase container.
+const DB_CONTAINER = process.env.SOR_S75C_DB_CONTAINER || "supabase_db_saas-opportunity-radar";
+// Local API port of that stack (supabase/config.toml [api] port).
+const API_PORT = process.env.SOR_S75C_API_PORT || "54321";
 const DB_SOCKET = "/var/run/postgresql";
 const DB_PORT = "5432";
 const COMMAND_TIMEOUT_MS = Number(process.env.SOR_S75C_COMMAND_TIMEOUT_MS ?? 900_000);
@@ -48,6 +63,13 @@ let shutdownSignal = null;
 let activeChild = null;
 let activeChildMayFinish = false;
 
+if (!/^supabase_db_[A-Za-z0-9_.-]+$/.test(DB_CONTAINER)) {
+  throw new Error("SOR_S75C_DB_CONTAINER must name a local Supabase database container.");
+}
+if (!Number.isSafeInteger(TRANSACTIONS_PER_CLIENT) || TRANSACTIONS_PER_CLIENT < 1) {
+  throw new Error("SOR_S75C_TRANSACTIONS must be a positive integer.");
+}
+if (!/^\d{2,5}$/.test(API_PORT)) throw new Error("SOR_S75C_API_PORT must be a port number.");
 if (!Number.isSafeInteger(COMMAND_TIMEOUT_MS) || COMMAND_TIMEOUT_MS < 11_000) {
   throw new Error("SOR_S75C_COMMAND_TIMEOUT_MS must be an integer of at least 11000 milliseconds.");
 }
@@ -164,7 +186,7 @@ function run(command, args, env, { allowAfterInterrupt = false, binary = false }
 function dockerEnvironment() {
   if (process.env.DOCKER_HOST) {
     throw new Error(
-      "Unset DOCKER_HOST; the active Docker context must resolve to a local Windows named pipe.",
+      "Unset DOCKER_HOST; the active Docker context must resolve to a local named pipe or Unix socket.",
     );
   }
   return { ...process.env };
@@ -180,9 +202,12 @@ async function assertLocalDockerContainer(dockerEnv) {
       dockerEnv,
     )
   ).trim();
-  if (!endpoint.toLowerCase().startsWith("npipe://")) {
+  // Local engines only: Windows named pipe (Docker Desktop) or Unix socket
+  // (Linux, macOS, CI runners). TCP, SSH and other remote endpoints are refused.
+  const lowered = endpoint.toLowerCase();
+  if (!lowered.startsWith("npipe://") && !lowered.startsWith("unix://")) {
     throw new Error(
-      `Refusing Docker endpoint '${endpoint}'; a local Windows named-pipe context is required.`,
+      `Refusing Docker endpoint '${endpoint}'; a local named-pipe or Unix-socket context is required.`,
     );
   }
 
@@ -495,9 +520,9 @@ async function main() {
     if (
       parsedApiUrl.protocol !== "http:" ||
       !loopbackHostname(parsedApiUrl.hostname) ||
-      parsedApiUrl.port !== "54321"
+      parsedApiUrl.port !== API_PORT
     ) {
-      throw new Error("Refusing SUPABASE_URL outside local HTTP at port 54321.");
+      throw new Error(`Refusing SUPABASE_URL outside local HTTP at port ${API_PORT}.`);
     }
   }
   if (Boolean(apiUrl || publishableKey || jwtSecret) && !runApi) {
@@ -512,7 +537,12 @@ async function main() {
   }
 
   const psqlVersion = await run(DOCKER, psqlArgs(["--version"]), dockerEnv);
-  const pgbenchVersion = await run(DOCKER, pgbenchArgs(["--version"]), dockerEnv);
+  // `--version` is only accepted as pgbench's first argument.
+  const pgbenchVersion = await run(
+    DOCKER,
+    ["exec", "--user", "postgres", DB_CONTAINER, "pgbench", "--version"],
+    dockerEnv,
+  );
   if (!/\b17\.\d+/.test(psqlVersion) || !/\b17\.\d+/.test(pgbenchVersion)) {
     throw new Error(
       `PostgreSQL 17 client tools are required; psql=${psqlVersion.trim()}, pgbench=${pgbenchVersion.trim()}.`,
@@ -686,7 +716,16 @@ async function main() {
             ]),
             dockerEnv,
           );
-          pgResults.push(parsePgbench(output, scale, clients, query));
+          const measured = parsePgbench(output, scale, clients, query);
+          if (
+            measured.failed_transactions !== 0 ||
+            measured.transactions_completed !== measured.transactions_expected
+          ) {
+            throw new Error(
+              `pgbench ${query} at ${scale} with ${clients} clients: ${measured.transactions_completed}/${measured.transactions_expected} completed, ${measured.failed_transactions} failed.`,
+            );
+          }
+          pgResults.push(measured);
         }
       }
       if (runApi) {
@@ -726,6 +765,22 @@ async function main() {
   }
 
   throwIfInterrupted();
+  const thresholdViolations = [];
+  for (const r of pgResults) {
+    const limit = THRESHOLDS.pgbench_average_latency_ms[r.clients];
+    if (r.average_latency_ms > limit)
+      thresholdViolations.push(
+        `pgbench ${r.query} at ${r.scale} with ${r.clients} clients: ${r.average_latency_ms} ms > ${limit} ms`,
+      );
+  }
+  for (const r of apiResults) {
+    if (r.p95_ms > THRESHOLDS.postgrest_p95_ms)
+      thresholdViolations.push(
+        `PostgREST at ${r.scale} with concurrency ${r.concurrency}: p95 ${r.p95_ms} ms > ${THRESHOLDS.postgrest_p95_ms} ms`,
+      );
+  }
+  const check = process.argv.includes("--check");
+  if (check && thresholdViolations.length) process.exitCode = 1;
   process.stdout.write(
     `${JSON.stringify(
       {
@@ -736,6 +791,8 @@ async function main() {
         cpu_count: cpus().length,
         system_memory_bytes: totalmem(),
         scales: SCALES,
+        pgbench_clients: CLIENTS,
+        pgbench_transactions_per_client: TRANSACTIONS_PER_CLIENT,
         synthetic_prefix: PREFIX,
         database: {
           docker_context: dockerTarget.context,
@@ -759,6 +816,11 @@ async function main() {
         node_generator: nodeResults,
         postgresql_pgbench: pgResults,
         supabase_postgrest: runApi ? apiResults : "explicitly skipped with --postgres-only",
+        thresholds: {
+          enforced: check,
+          ...THRESHOLDS,
+          violations: thresholdViolations,
+        },
       },
       null,
       2,
@@ -766,7 +828,12 @@ async function main() {
   );
 }
 
-main().catch((error) => {
-  process.stderr.write(`${error.message}\n`);
-  process.exitCode = 1;
-});
+main()
+  .then(() => {
+    if (process.exitCode === 1)
+      process.stderr.write("Performance thresholds exceeded (see thresholds.violations).\n");
+  })
+  .catch((error) => {
+    process.stderr.write(`${error.message}\n`);
+    process.exitCode = 1;
+  });

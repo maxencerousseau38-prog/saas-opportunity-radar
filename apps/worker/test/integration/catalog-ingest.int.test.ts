@@ -122,6 +122,31 @@ run("catalog ingestion on the local Supabase stack", () => {
       record_status: "candidate",
       exclusion_status: "excluded",
     });
+
+    // S8.2: listings sent to review are kept in the operator queue, once each.
+    expect(summary.reviews_recorded).toBe(2);
+    const reviews = async () =>
+      (
+        await db
+          .from("catalog_listing_reviews")
+          .select("external_id, reason, status, candidate_product_ids, listing")
+          .in("external_id", [appStore.external_id, sibling.external_id])
+      ).data ?? [];
+    const first = await reviews();
+    expect(first.map((r) => [r.external_id, r.reason, r.status]).sort()).toEqual(
+      [
+        [appStore.external_id, "shared_host_website", "open"],
+        [sibling.external_id, "same_domain_other_url", "open"],
+      ].sort(),
+    );
+    const siblingReview = first.find((r) => r.external_id === sibling.external_id)!;
+    const baseProduct = await productByUrl(base.website_url);
+    expect(siblingReview.candidate_product_ids).toEqual([baseProduct!.id]);
+    expect((siblingReview.listing as { canonical_url?: string }).canonical_url).toBe(
+      sibling.website_url.replace(/\/$/, ""),
+    );
+    await ingestListings(db, [appStore, sibling], { sourceKey: "wikidata" });
+    expect(await reviews()).toHaveLength(2);
   });
 
   it("maps only to categories that exist and are visible in the taxonomy", async () => {

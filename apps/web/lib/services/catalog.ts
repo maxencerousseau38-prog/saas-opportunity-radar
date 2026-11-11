@@ -318,6 +318,8 @@ export function sourcesOf(evidence: EvidenceRow[]) {
       source_type: string | null;
       retrieved_at: string | null;
       last_retrieved_at: string | null;
+      /** Licence / attribution recorded with a collected catalog listing (S8.2). */
+      licence: string | null;
       evidence: Array<
         Pick<
           EvidenceRow,
@@ -342,6 +344,7 @@ export function sourcesOf(evidence: EvidenceRow[]) {
       source_type: snap.source_records?.sources?.source_type ?? null,
       retrieved_at: snap.retrieved_at,
       last_retrieved_at: snap.last_retrieved_at,
+      licence: typeof snap.licence === "string" && snap.licence ? snap.licence : null,
       evidence: [],
     };
     entry.evidence.push({
