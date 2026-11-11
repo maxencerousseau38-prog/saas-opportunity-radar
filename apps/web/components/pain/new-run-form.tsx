@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Select } from "@/components/ui/field";
 import { ErrorNote } from "@/components/ui/states";
 import { api } from "@/lib/client-api";
+import { mergeProductChoices, type ProductChoice } from "@/lib/product-choices";
+import { ProductSearch } from "@/components/workspace/product-search";
 
 type Scope = "product" | "product_set" | "category";
 
@@ -22,6 +24,8 @@ export function NewRunForm({
   const [title, setTitle] = useState("");
   const [scope, setScope] = useState<Scope>("product_set");
   const [selected, setSelected] = useState<string[]>([]);
+  const [found, setFound] = useState<ProductChoice[]>([]);
+  const choices = mergeProductChoices(found, products);
   const [category, setCategory] = useState(categories[0]?.slug ?? "");
   const [max, setMax] = useState(500);
   const [busy, setBusy] = useState(false);
@@ -122,11 +126,16 @@ export function NewRunForm({
           <legend className="text-sm font-medium">
             {scope === "product" ? "SaaS (un seul)" : `SaaS (${selected.length} sélectionnés)`}
           </legend>
-          {products.length === 0 ? (
+          <ProductSearch
+            workspaceId={workspaceId}
+            id="run-product-search"
+            onResults={(rows) => setFound((cur) => mergeProductChoices(rows, cur))}
+          />
+          {choices.length === 0 ? (
             <p className="text-sm text-muted">Aucun SaaS visible dans le catalogue.</p>
           ) : (
             <div className="grid max-h-48 gap-1 overflow-y-auto rounded-md border border-border p-2 sm:grid-cols-2">
-              {products.map((p) => (
+              {choices.map((p) => (
                 <label key={p.id} className="flex items-center gap-2 text-sm">
                   <input
                     type={scope === "product" ? "radio" : "checkbox"}

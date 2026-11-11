@@ -45,8 +45,13 @@ test("a pain point run clusters complaints across competitors and keeps them evi
   await page.goto(`/w/${ws}/opportunities`);
   const form = page.getByRole("form", { name: "Nouvelle analyse de problèmes" });
   await form.getByLabel("Titre").fill("Exports chez les concurrents");
-  await form.getByLabel("MetricFlow").check();
-  await form.getByLabel("LeadNest").check();
+  // The form preloads the first products by name only: search the catalog so
+  // the journey also works once a large real catalog is loaded.
+  for (const name of ["MetricFlow", "LeadNest"]) {
+    await form.getByLabel("Rechercher un SaaS du catalogue").fill(name);
+    await form.getByRole("button", { name: "Rechercher", exact: true }).click();
+    await form.getByLabel(name, { exact: true }).check();
+  }
   await form.getByRole("button", { name: "Lancer l’analyse" }).click();
 
   await expect(page.getByRole("heading", { name: "Exports chez les concurrents" })).toBeVisible();

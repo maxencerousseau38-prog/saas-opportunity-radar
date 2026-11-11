@@ -7,6 +7,8 @@ import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { ErrorNote } from "@/components/ui/states";
 import { api } from "@/lib/client-api";
+import { mergeProductChoices, type ProductChoice } from "@/lib/product-choices";
+import { ProductSearch } from "@/components/workspace/product-search";
 
 export interface ContextDefaults {
   targetCountry: string;
@@ -181,6 +183,8 @@ export function NewAnalysisForm({
   const router = useRouter();
   const [kind, setKind] = useState<"product_set" | "category">("product_set");
   const [selected, setSelected] = useState<string[]>([]);
+  const [found, setFound] = useState<ProductChoice[]>([]);
+  const choices = mergeProductChoices(found, products);
   const [category, setCategory] = useState(categories[0]?.slug ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -237,8 +241,13 @@ export function NewAnalysisForm({
       ) : (
         <fieldset className="space-y-1">
           <legend className="text-sm font-medium">SaaS ({selected.length} sélectionnés)</legend>
+          <ProductSearch
+            workspaceId={workspaceId}
+            id="an-product-search"
+            onResults={(rows) => setFound((cur) => mergeProductChoices(rows, cur))}
+          />
           <div className="grid max-h-48 gap-1 overflow-y-auto rounded-md border border-border p-2 sm:grid-cols-2">
-            {products.map((p) => (
+            {choices.map((p) => (
               <label key={p.id} className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"

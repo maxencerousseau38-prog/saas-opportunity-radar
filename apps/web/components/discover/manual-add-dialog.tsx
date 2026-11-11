@@ -89,7 +89,10 @@ export function ManualAddDialog({
                 ? "Ce SaaS est déjà connu du catalogue."
                 : "Ajout enregistré."}
             </p>
-            <p>{OUTCOME[result.exclusion_status] ?? ""}</p>
+            {/* An already known eligible product was not added again: no "ajouté" message. */}
+            {result.status === "existing" && result.exclusion_status === "eligible" ? null : (
+              <p>{OUTCOME[result.exclusion_status] ?? ""}</p>
+            )}
             {result.enrichment_note === "queued" ? (
               <p data-testid="enrichment-queued">
                 Enrichissement depuis le site officiel demandé : les informations vérifiées
