@@ -47,4 +47,36 @@ describe("external AI research contracts", () => {
       ImportExternalResearchAnswerSchema.safeParse({ answer_text: "ok", verified: true }).success,
     ).toBe(false);
   });
+
+  it("accepts exactly one subject: products, a category or a Pain Point Cluster (S8.4)", () => {
+    const base = { destination: "perplexity", strategy: "customer_voice", included_sections: [] };
+    expect(
+      CreateExternalResearchSchema.safeParse({ ...base, category_slug: "marketing" }).success,
+    ).toBe(true);
+    expect(CreateExternalResearchSchema.safeParse({ ...base, cluster_id: ID }).success).toBe(true);
+    expect(CreateExternalResearchSchema.safeParse(base).success).toBe(false);
+    expect(
+      CreateExternalResearchSchema.safeParse({
+        ...base,
+        product_ids: [ID],
+        category_slug: "marketing",
+      }).success,
+    ).toBe(false);
+    expect(
+      CreateExternalResearchSchema.safeParse({ ...base, category_slug: "Bad Slug!" }).success,
+    ).toBe(false);
+  });
+
+  it("knows the discovery, customer voice and opportunity analysis strategies (S8.4)", () => {
+    for (const strategy of ["saas_discovery", "customer_voice", "opportunity_analysis"]) {
+      expect(
+        CreateExternalResearchSchema.safeParse({
+          product_ids: [ID],
+          destination: "chatgpt",
+          strategy,
+          included_sections: [],
+        }).success,
+      ).toBe(true);
+    }
+  });
 });

@@ -17,7 +17,8 @@ import { api } from "@/lib/client-api";
 import {
   EXTERNAL_AI_DESTINATIONS,
   RESEARCH_STRATEGIES,
-  buildExternalResearchPrompt,
+  coverageLines,
+  fitExternalResearchPrompt,
   selectExternalResearchContext,
 } from "@/lib/ask-ai/prompt";
 import type {
@@ -76,11 +77,13 @@ export function AskAiWorkspace({
   initialContext,
   initialSession,
   initialSessions,
+  categories,
 }: {
   workspaceId: string;
   userId: string;
   canEdit: boolean;
   canAdmin: boolean;
+  categories: Array<{ slug: string; name: string }>;
   initialContext: ExternalResearchContext | null;
   initialSession: ExternalResearchSessionDetails | null;
   initialSessions: ExternalResearchSessionSummary[];
@@ -103,6 +106,7 @@ export function AskAiWorkspace({
     initialSession?.context_json.subject.product_ids ?? initialContext?.subject.product_ids ?? [],
   );
   const [searchText, setSearchText] = useState("");
+  const [categorySlug, setCategorySlug] = useState("");
   const [results, setResults] = useState<ProductCard[]>([]);
   const [answer, setAnswer] = useState(initialSession?.answer_text ?? "");
   const [notes, setNotes] = useState(initialSession?.notes ?? "");
@@ -118,12 +122,12 @@ export function AskAiWorkspace({
   const prompt = useMemo(
     () =>
       promptContext
-        ? buildExternalResearchPrompt({
+        ? (fitExternalResearchPrompt({
             destination,
             strategy,
             subjectLabel: promptContext.subject.label,
             context: promptContext,
-          })
+          })?.prompt ?? "")
         : "",
     [destination, promptContext, strategy],
   );
@@ -164,7 +168,15 @@ export function AskAiWorkspace({
   }
 
   async function createPrompt() {
-    if (!currentContext || selectedIds.length === 0) return;
+    if (!currentContext) return;
+    const subject = currentContext.subject;
+    const subjectBody: Record<string, unknown> =
+      subject.type === "category" && subject.category_slug
+        ? { category_slug: subject.category_slug }
+        : subject.type === "pain_point_cluster" && subject.cluster_id
+          ? { cluster_id: subject.cluster_id }
+          : { product_ids: selectedIds };
+    if (Array.isArray(subjectBody.product_ids) && subjectBody.product_ids.length === 0) return;
     setBusy(true);
     setError(null);
     setNotice(null);
@@ -174,7 +186,7 @@ export function AskAiWorkspace({
         {
           method: "POST",
           body: {
-            product_ids: selectedIds,
+            ...subjectBody,
             destination,
             strategy,
             included_sections: includedSections,
@@ -247,7 +259,12 @@ export function AskAiWorkspace({
 
   const currentSubject = currentContext?.subject;
   const previewPrompt = session?.prompt_text ?? prompt;
-  const canSavePrompt = canEdit && currentContext !== null && selectedIds.length > 0;
+  const canSavePrompt =
+    canEdit &&
+    currentContext !== null &&
+    (currentContext.subject.type === "category" ||
+      currentContext.subject.type === "pain_point_cluster" ||
+      selectedIds.length > 0);
 
   return (
     <section className="space-y-6">
@@ -312,6 +329,43 @@ export function AskAiWorkspace({
                   ))}
                 </ul>
               ) : null}
+              <form
+                className="flex flex-wrap items-end gap-2 border-t border-border pt-3"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  if (categorySlug)
+                    router.push(`/w/${workspaceId}/ask-ai?category=${categorySlug}`);
+                }}
+              >
+                <Field
+                  label="Ou étudier une catégorie"
+                  htmlFor="ask-ai-category"
+                  hint="Échantillon borné des SaaS les plus récemment ajoutés, avec le total de la catégorie."
+                >
+                  <Select
+                    id="ask-ai-category"
+                    value={categorySlug}
+                    onChange={(event) => setCategorySlug(event.target.value)}
+                  >
+                    <option value="">Choisir une catégorie…</option>
+                    {categories.map((category) => (
+                      <option key={category.slug} value={category.slug}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </Select>
+                </Field>
+                <Button type="submit" disabled={!categorySlug}>
+                  Charger la catégorie
+                </Button>
+              </form>
+              <p className="text-xs text-muted">
+                Pour un Pain Point Cluster, ouvrez-le depuis{" "}
+                <Link className="underline" href={`/w/${workspaceId}/opportunities`}>
+                  Opportunités
+                </Link>{" "}
+                puis choisissez « Ask AI ».
+              </p>
               {selectedIds.length ? (
                 <div className="space-y-2">
                   <p className="text-sm">Sélection : {selectedIds.length} / 5</p>
@@ -357,12 +411,35 @@ export function AskAiWorkspace({
                       {currentSubject?.label} · {currentSubject?.product_ids.length} SaaS
                     </p>
                   </div>
-                  {!session ? (
+                  {!session && currentSubject?.type !== "pain_point_cluster" ? (
                     <Button size="sm" onClick={() => setEditingSelection(true)}>
                       Modifier la sélection
                     </Button>
                   ) : null}
                 </div>
+                {promptContext ? (
+                  <div
+                    className="rounded border border-border bg-surface-2 p-3 text-sm"
+                    data-testid="ask-ai-coverage"
+                  >
+                    <p className="font-medium">Couverture du dossier</p>
+                    <ul className="mt-1 list-disc pl-5 text-xs">
+                      {coverageLines(promptContext).map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                {currentContext.cluster ? (
+                  <div
+                    className="rounded border border-warning/40 p-3 text-sm"
+                    data-testid="ask-ai-cluster"
+                  >
+                    <p className="font-medium">{currentContext.cluster.name}</p>
+                    <p className="text-xs text-muted">{currentContext.cluster.description}</p>
+                    <p className="mt-1 text-xs">{currentContext.cluster.provenance_warning}</p>
+                  </div>
+                ) : null}
                 <ul className="grid gap-2 sm:grid-cols-2">
                   {currentContext.overview.map((product) => (
                     <li key={product.id} className="rounded border border-border bg-surface-2 p-3">
@@ -497,7 +574,11 @@ export function AskAiWorkspace({
                       ))}
                     </Select>
                   </Field>
-                  <Field label="Stratégie de recherche" htmlFor="ask-ai-strategy">
+                  <Field
+                    label="Stratégie de recherche"
+                    htmlFor="ask-ai-strategy"
+                    hint={RESEARCH_STRATEGIES[strategy].objective}
+                  >
                     <Select
                       id="ask-ai-strategy"
                       value={strategy}

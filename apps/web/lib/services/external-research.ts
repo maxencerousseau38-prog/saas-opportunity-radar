@@ -9,11 +9,13 @@ import type { Database, DbClient, Json } from "@sor/database";
 import { z } from "zod";
 import { ApiError } from "@/lib/api/http";
 import {
+  buildCategoryResearchContext,
+  buildClusterResearchContext,
   buildExternalResearchContext,
   EXTERNAL_CONTEXT_VERSION,
   EXTERNAL_PROMPT_VERSION,
 } from "@/lib/ask-ai/context";
-import { buildExternalResearchPrompt, selectExternalResearchContext } from "@/lib/ask-ai/prompt";
+import { fitExternalResearchPrompt, selectExternalResearchContext } from "@/lib/ask-ai/prompt";
 import { getServiceClient } from "@/lib/supabase/server";
 import type { ExternalResearchSessionSummary } from "@/lib/ask-ai/types";
 
@@ -90,24 +92,36 @@ export async function createExternalResearch(args: {
   requestId: string;
   input: CreateExternalResearch;
 }) {
-  const context = await buildExternalResearchContext(
-    args.client,
-    args.input.product_ids,
-    args.input.included_sections,
-  );
-  const selectedContext = selectExternalResearchContext(context, args.input.included_sections);
-  const prompt = buildExternalResearchPrompt({
+  const sections = args.input.included_sections;
+  const context = args.input.category_slug
+    ? await buildCategoryResearchContext(
+        args.client,
+        args.workspaceId,
+        args.input.category_slug,
+        sections,
+      )
+    : args.input.cluster_id
+      ? await buildClusterResearchContext(
+          args.client,
+          args.workspaceId,
+          args.input.cluster_id,
+          sections,
+        )
+      : await buildExternalResearchContext(args.client, args.input.product_ids ?? [], sections);
+  // Lists are halved, with a stated note, until the prompt fits (S8.4).
+  const fitted = fitExternalResearchPrompt({
     destination: args.input.destination,
     strategy: args.input.strategy,
     subjectLabel: context.subject.label,
-    context: selectedContext,
+    context: selectExternalResearchContext(context, sections),
   });
-  if (prompt.length > 75_000) {
+  if (!fitted) {
     throw new ApiError(
       "VALIDATION_ERROR",
       "Contexte trop volumineux; retirez des sections ou des produits",
     );
   }
+  const { prompt, context: selectedContext } = fitted;
   const service = getServiceClient();
   const row = check<Session>(
     await service

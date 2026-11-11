@@ -299,8 +299,9 @@ and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
 - Database: `supabase/tests/022_external_ai_research.sql` covers grants,
   workspace read isolation and the session status/answer check; it runs in
   the CI database job.
-- Not covered yet: the creator-or-owner/admin rule for import and deletion,
-  the 75,000-character prompt limit, deletion.
+- Since S8.4, covered too: the creator-or-owner/admin rule for import and
+  deletion and deletion itself (`e2e/ask-ai.e2e.ts`), the 75,000-character
+  bound with deterministic reductions (`apps/web/test/ask-ai-completion.test.ts`).
 
 ## Catalog reliability (S8.2)
 
@@ -332,3 +333,18 @@ and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
 - Database: pgTAP `026_discover_v2_completion.sql` (privileges, channel rules, supersede and retract, rights gate before storage, private copy, removal and revalidation, `least_analyzed`, `ai_potential` refused); `023_discover_v2.sql` fixture now states the primacy excerpt a primary channel needs.
 - Worker integration: `apps/worker/test/integration/visual-assets.int.test.ts` (no download without rights, logo and non-image refused, admission replay, revalidation hides a changed visual).
 - E2E: `apps/web/e2e/discover-v2.e2e.ts` on the demo fixtures, with automated accessibility checks (`@axe-core/playwright`, WCAG 2 A/AA, serious and critical violations fail) on Discover Feed/Grid/List, the profile and the operator console, keyboard toggling of the display modes and a 375 px no-horizontal-scroll check. Synthetic visuals and demo channels are removed or retracted at the end.
+
+## Ask AI completion (S8.4)
+
+- Unit: `apps/web/test/ask-ai-completion.test.ts` (analysis types A–D, SOR
+  grid only in the opportunity analysis and labelled as a frame, coverage
+  statement, category and cluster lines, deterministic halving under 75,000
+  characters, refusal when nothing fits); contract tests for the subject
+  union and the new strategies.
+- Database: pgTAP `027_ask_ai_completion.sql` (new subject types and
+  strategies accepted, unknown values refused, browser roles still without
+  write grants).
+- E2E: `e2e/ask-ai.e2e.ts` (category dossier with its stated sample; viewer,
+  member, owner and creator rules for create, import and delete; deletion and
+  its audit) and the cluster handoff inside `e2e/pain-points.e2e.ts` (warning
+  about the simulated grouping, coverage of the cluster's problems).

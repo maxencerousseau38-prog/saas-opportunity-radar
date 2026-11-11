@@ -19,6 +19,42 @@ export const RESEARCH_STRATEGIES: Record<
   ExternalResearchStrategy,
   { label: string; objective: string; checklist: string[] }
 > = {
+  saas_discovery: {
+    label: "Découvrir et enrichir des SaaS",
+    objective:
+      "Trouver de vrais SaaS existants correspondant au sujet, vérifier leurs sites officiels, les classer et signaler les informations manquantes.",
+    checklist: [
+      "Ne proposer que des produits réellement existants, avec leur site officiel vérifié et la date de consultation.",
+      "Pour chaque produit : catégorie, clientèle, pays, tarification publique, signes d’activité commerciale — chacun avec sa source.",
+      "Signaler les doublons probables avec les SaaS déjà présents dans le dossier.",
+      "Écarter les produits dont le cœur d’activité est l’affiliation ou les programmes partenaires.",
+      "Rendre une liste que l’utilisateur pourra ajouter manuellement à SOR : rien n’est importé automatiquement.",
+    ],
+  },
+  customer_voice: {
+    label: "Customer Voice — voix des clients",
+    objective:
+      "Comprendre les frustrations, plaintes, fonctionnalités manquantes et raisons de changer de fournisseur exprimées par les clients.",
+    checklist: [
+      "Partir des avis et extraits transmis (liens et dates), puis poursuivre la recherche sur le web si ta plateforme le permet.",
+      "Classer : fonctionnalités manquantes, limites tarifaires, problèmes d’utilisation, bugs, intégrations, support, contournements, raisons de départ.",
+      "Pour chaque constat, citer les avis qui l’appuient et compter les auteurs distincts quand c’est possible.",
+      "Ne jamais présenter l’échantillon comme l’ensemble des avis publiés.",
+      "Distinguer plaintes isolées, plaintes récurrentes et éléments contradictoires.",
+    ],
+  },
+  opportunity_analysis: {
+    label: "Opportunity Analysis",
+    objective:
+      "Évaluer s’il existe une opportunité commerciale de construire une meilleure alternative, avec preuves, contre-arguments et recommandation.",
+    checklist: [
+      "Étudier le problème, les clients concernés, les avis positifs et négatifs, les concurrents directs et indirects et les alternatives.",
+      "Évaluer les preuves de demande et de volonté de payer, les prix et modèles économiques observés.",
+      "Évaluer la faisabilité, la distribution et l’adaptation éventuelle au marché français.",
+      "Donner les meilleurs arguments contraires, les risques et les raisons de ne pas construire.",
+      "Utiliser la grille de référence SOR ci-dessous comme cadre ; tout score que tu proposes reste une estimation externe.",
+    ],
+  },
   better_alternative: {
     label: "Better Alternative",
     objective: "Évaluer si une meilleure alternative à un produit existant peut être viable.",
@@ -88,6 +124,65 @@ export const RESEARCH_STRATEGIES: Record<
   },
 };
 
+/**
+ * SOR's reference grid (CLAUDE.md §10), given to the external assistant as an
+ * evaluation frame only: a score produced outside SOR is never a SOR result.
+ */
+export const SOR_REFERENCE_GRID = [
+  "Grille de référence SOR (cadre d’évaluation, pas un calcul vérifié par SOR) :",
+  "- Demande client et problèmes réels : 20 points",
+  "- Volonté de payer : 15 points",
+  "- Lacunes produit et potentiel d’amélioration : 20 points",
+  "- Attractivité du marché : 15 points",
+  "- Différenciation concurrentielle : 15 points",
+  "- Faisabilité, distribution et adaptation : 15 points",
+  "Chaque dimension est notée de 0 à 5 (entier) et pondérée : points = note / 5 × poids. Une dimension sans preuve suffisante n’est pas notée ; sans les six dimensions, il n’y a pas de score final.",
+  "Une note de volonté de payer ≥ 4 exige une preuve vérifiée de paiement ou de client payant ; une page de tarifs ne prouve pas l’existence de clients payants.",
+  "Verdicts indicatifs : critère éliminatoire avéré → REJETER ; couverture incomplète → VALIDER D’ABORD ; < 50 → REJETER ; 50–74 → VALIDER D’ABORD ; ≥ 75 → CANDIDAT À CONSTRUIRE seulement avec volonté de payer ≥ 10/15, preuve de clients payants, demande et différenciation suffisantes.",
+];
+
+export const EXTERNAL_PROMPT_LIMIT = 75_000;
+
+function feedbackIncluded(context: ExternalResearchContext, productId: string): number | null {
+  const feedback = context.sections.feedback as
+    Array<{ product?: { id?: string }; items?: unknown[] }> | undefined;
+  if (!feedback) return null;
+  const entry = feedback.find((row) => row.product?.id === productId);
+  return Array.isArray(entry?.items) ? entry.items.length : 0;
+}
+
+/**
+ * Plain statement of what the dossier carries (PRODUCT_VISION §4: say how many
+ * reviews and sources are included; never claim "all reviews").
+ */
+export function coverageLines(context: ExternalResearchContext): string[] {
+  const lines: string[] = [];
+  const coverage = context.coverage;
+  if (coverage?.category) {
+    lines.push(
+      `Catégorie « ${coverage.category.name} » : ${context.subject.products.length} SaaS transmis sur ${coverage.category.total_products} SaaS visibles dans SOR (${coverage.category.sample_rule}).`,
+    );
+  }
+  if (context.cluster) {
+    lines.push(
+      `Pain Point Cluster : ${context.cluster.members.length} problème(s) transmis sur ${coverage?.cluster_members_available ?? context.cluster.members.length} rattaché(s) au cluster.`,
+    );
+  }
+  for (const product of context.subject.products) {
+    const held = coverage?.products.find((row) => row.product_id === product.id);
+    const included = feedbackIncluded(context, product.id);
+    const feedback =
+      included === null
+        ? "avis clients non inclus (section non sélectionnée)"
+        : `${included} avis client(s) transmis sur ${held?.feedback_available ?? "un nombre inconnu de"} détenu(s) par SOR`;
+    lines.push(`${product.name} : ${feedback}.`);
+  }
+  lines.push(
+    `${context.evidence_index.length} preuve(s) sourcée(s) dans l’index transmis. Ce dossier ne contient pas tous les avis ni toutes les sources publiés sur Internet.`,
+  );
+  return lines;
+}
+
 export interface ExternalResearchPromptInput {
   destination: ExternalAiDestination;
   strategy: ExternalResearchStrategy;
@@ -144,6 +239,64 @@ export function selectExternalResearchContext(
   };
 }
 
+function isContext(value: unknown): value is ExternalResearchContext {
+  return (
+    !!value &&
+    typeof value === "object" &&
+    "subject" in value &&
+    "evidence_index" in value &&
+    Array.isArray((value as ExternalResearchContext).evidence_index)
+  );
+}
+
+const SHRINKABLE = new Set(["items", "plans", "integrations", "members", "evidence_index"]);
+
+/** Halves every bounded list of the dossier (reviews, evidence, features, plans, competitors, cluster members). */
+function halveLists(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(halveLists);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(
+    Object.entries(value).map(([key, item]) => [
+      key,
+      SHRINKABLE.has(key) && Array.isArray(item)
+        ? item.slice(0, Math.max(1, Math.ceil(item.length / 2))).map(halveLists)
+        : halveLists(item),
+    ]),
+  );
+}
+
+/**
+ * Deterministic bounding (PRODUCT_VISION §4: dossiers too large for one
+ * session are reduced cleanly). Lists are halved until the prompt fits the
+ * limit; each reduction is stated in the dossier. Returns null when even the
+ * smallest dossier does not fit.
+ */
+export function fitExternalResearchPrompt(
+  input: Omit<ExternalResearchPromptInput, "context"> & { context: ExternalResearchContext },
+  limit = EXTERNAL_PROMPT_LIMIT,
+): { prompt: string; context: ExternalResearchContext } | null {
+  let context = input.context;
+  for (let round = 1; round <= 6; round += 1) {
+    const prompt = buildExternalResearchPrompt({ ...input, context });
+    if (prompt.length <= limit) return { prompt, context };
+    const halved = halveLists(context) as ExternalResearchContext;
+    const sections = Object.keys(halved.sections) as ExternalResearchSection[];
+    const reselected = selectExternalResearchContext(
+      { ...halved, evidence_index: halved.evidence_index },
+      sections,
+    );
+    context = {
+      ...reselected,
+      reductions: [
+        ...(context.reductions ?? []),
+        `Réduction automatique n°${round} : listes d’avis, de preuves, de fonctionnalités, de tarifs, de concurrents et de problèmes divisées par deux pour respecter la limite de ${limit.toLocaleString("fr-FR")} caractères.`,
+      ],
+    };
+  }
+  const prompt = buildExternalResearchPrompt({ ...input, context });
+  return prompt.length <= limit ? { prompt, context } : null;
+}
+
 /** Prompt for a manual external handoff; this does not call or control the destination. */
 export function buildExternalResearchPrompt(input: ExternalResearchPromptInput): string {
   const strategy = RESEARCH_STRATEGIES[input.strategy];
@@ -154,6 +307,15 @@ export function buildExternalResearchPrompt(input: ExternalResearchPromptInput):
     `Sujet : ${input.subjectLabel}`,
     `Stratégie : ${strategy.label}`,
     `Objectif : ${strategy.objective}`,
+    "",
+    "## Couverture du dossier",
+    ...(isContext(input.context) ? coverageLines(input.context) : []),
+    ...(isContext(input.context) && input.context.cluster
+      ? [input.context.cluster.provenance_warning]
+      : []),
+    ...(isContext(input.context) && input.context.reductions?.length
+      ? input.context.reductions
+      : []),
     "",
     "## Consignes de recherche",
     "Agis comme un analyste senior en stratégie SaaS, produit et intelligence concurrentielle, avec un regard commercial sceptique.",
@@ -168,6 +330,7 @@ export function buildExternalResearchPrompt(input: ExternalResearchPromptInput):
     "",
     "## Cadre stratégique",
     ...strategy.checklist.map((item) => `- ${item}`),
+    ...(input.strategy === "opportunity_analysis" ? ["", ...SOR_REFERENCE_GRID] : []),
     "",
     "## Format de sortie attendu",
     "1. Résumé et conclusion provisoire",

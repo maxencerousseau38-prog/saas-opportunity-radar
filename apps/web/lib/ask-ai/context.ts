@@ -1,16 +1,25 @@
 import "server-only";
-import type { ExternalResearchSection } from "@sor/contracts";
+import { CatalogQuerySchema, type ExternalResearchSection } from "@sor/contracts";
 import { catalogRepo, type DbClient } from "@sor/database";
 import { ApiError } from "@/lib/api/http";
-import { buildGeneral } from "@/lib/services/catalog";
+import { buildGeneral, countProducts, searchProducts } from "@/lib/services/catalog";
+import { clusterEvidence, getCluster } from "@/lib/services/pain-points";
 import type {
+  ExternalResearchClusterContext,
   ExternalResearchContext,
+  ExternalResearchCoverage,
   ExternalResearchProductOverview,
   ExternalResearchEvidence,
 } from "./types";
 
-export const EXTERNAL_CONTEXT_VERSION = "sor-context.v1";
-export const EXTERNAL_PROMPT_VERSION = "sor-prompt.v1";
+// v2 (S8.4): coverage block, category and Pain Point Cluster subjects,
+// automatic reductions. Sessions saved in v1 stay readable.
+export const EXTERNAL_CONTEXT_VERSION = "sor-context.v2";
+export const EXTERNAL_PROMPT_VERSION = "sor-prompt.v2";
+/** Products sampled from a category (deterministic: most recently added). */
+export const CATEGORY_SAMPLE_SIZE = 5;
+/** Cluster problems transmitted at most (most severe first, then most recent). */
+export const CLUSTER_MEMBER_LIMIT = 30;
 
 type Product = NonNullable<Awaited<ReturnType<typeof catalogRepo.getProductById>>>;
 type Provenance = Awaited<ReturnType<typeof catalogRepo.listProvenance>>[number];
@@ -190,6 +199,33 @@ async function productContext(client: DbClient, product: Product) {
   };
 }
 
+/** How much SOR holds per product (RLS applies: what this member can see). */
+async function productCoverage(
+  client: DbClient,
+  products: Array<{ id: string; name: string }>,
+): Promise<ExternalResearchCoverage["products"]> {
+  return Promise.all(
+    products.map(async (product) => {
+      const [feedback, evidence] = await Promise.all([
+        client
+          .from("customer_feedback")
+          .select("id", { count: "exact", head: true })
+          .eq("product_id", product.id),
+        client
+          .from("evidence_items")
+          .select("id", { count: "exact", head: true })
+          .eq("product_id", product.id),
+      ]);
+      return {
+        product_id: product.id,
+        name: product.name,
+        feedback_available: feedback.error ? null : (feedback.count ?? 0),
+        evidence_available: evidence.error ? null : (evidence.count ?? 0),
+      };
+    }),
+  );
+}
+
 /** Builds a compact snapshot only from data visible to this workspace member. */
 export async function buildExternalResearchContext(
   client: DbClient,
@@ -207,12 +243,20 @@ export async function buildExternalResearchContext(
   );
   const overview = contexts.map((item) => item.overview);
   const sections: ExternalResearchContext["sections"] = {};
+  // Sections reference their product (id, slug, name); the full product
+  // overview is carried once, in `overview` (v2: duplicating it in every
+  // section made a five-SaaS dossier exceed the prompt limit).
+  const ref = (index: number) => ({
+    id: overview[index]!.id,
+    slug: overview[index]!.slug,
+    name: overview[index]!.name.value,
+  });
   const bySection: Record<ExternalResearchSection, Array<Record<string, unknown>>> = {
-    features: contexts.map((item, index) => ({ product: overview[index], ...item.features })),
-    pricing: contexts.map((item, index) => ({ product: overview[index], plans: item.pricing })),
-    feedback: contexts.map((item, index) => ({ product: overview[index], items: item.feedback })),
+    features: contexts.map((item, index) => ({ product: ref(index), ...item.features })),
+    pricing: contexts.map((item, index) => ({ product: ref(index), plans: item.pricing })),
+    feedback: contexts.map((item, index) => ({ product: ref(index), items: item.feedback })),
     competitors: contexts.map((item, index) => ({
-      product: overview[index],
+      product: ref(index),
       items: item.competitors,
     })),
   };
@@ -238,11 +282,148 @@ export async function buildExternalResearchContext(
       product_ids: uniqueIds,
       products: subjectProducts,
     },
+    coverage: { products: await productCoverage(client, subjectProducts) },
     overview,
     sections,
     evidence_index: [...evidenceById.values()].slice(0, 40),
     information_gaps: contexts.flatMap((item, index) =>
       item.information_gaps.map((gap) => `${overview[index]?.name.value ?? "Produit"} : ${gap}`),
     ),
+  };
+}
+
+/**
+ * Category subject (S8.4): a bounded, stated sample of the category's visible
+ * catalog SaaS (the most recently added), never the whole library.
+ */
+export async function buildCategoryResearchContext(
+  client: DbClient,
+  workspaceId: string,
+  categorySlug: string,
+  includedSections: ExternalResearchSection[],
+): Promise<ExternalResearchContext> {
+  const { data: category, error } = await client
+    .from("categories")
+    .select("slug, name")
+    .eq("slug", categorySlug)
+    .eq("is_user_visible", true)
+    .maybeSingle();
+  if (error) throw new ApiError("INTERNAL_ERROR");
+  if (!category) throw new ApiError("NOT_FOUND", "Catégorie introuvable");
+  const filters = { categories: { slugs: [categorySlug] } };
+  const [page, total] = await Promise.all([
+    searchProducts(
+      client,
+      workspaceId,
+      CatalogQuerySchema.parse({ filters, sort: "recently_added", limit: CATEGORY_SAMPLE_SIZE }),
+    ),
+    countProducts(client, workspaceId, CatalogQuerySchema.parse({ filters }).filters),
+  ]);
+  if (page.data.length === 0) {
+    throw new ApiError("VALIDATION_ERROR", "Aucun SaaS visible dans cette catégorie");
+  }
+  const base = await buildExternalResearchContext(
+    client,
+    page.data.map((product) => product.id),
+    includedSections,
+  );
+  return {
+    ...base,
+    subject: {
+      ...base.subject,
+      type: "category",
+      label: `Catégorie : ${category.name}`,
+      category_slug: category.slug,
+    },
+    coverage: {
+      products: base.coverage?.products ?? [],
+      category: {
+        slug: category.slug,
+        name: category.name,
+        total_products: Number(total),
+        sample_rule: `échantillon des ${CATEGORY_SAMPLE_SIZE} SaaS les plus récemment ajoutés au catalogue`,
+      },
+    },
+  };
+}
+
+/**
+ * Pain Point Cluster subject (S8.4): the cluster, its active problems with
+ * their sources, and the products it affects. Clusters come from SOR's
+ * internal Pain Point engine, whose providers are simulated until PD-24: the
+ * dossier says so and asks the assistant to re-check the grouping.
+ */
+export async function buildClusterResearchContext(
+  client: DbClient,
+  workspaceId: string,
+  clusterId: string,
+  includedSections: ExternalResearchSection[],
+): Promise<ExternalResearchContext> {
+  const cluster = await getCluster(client, workspaceId, clusterId);
+  const evidence = (await clusterEvidence(client, workspaceId, clusterId)).filter(
+    (row) => !row.removed,
+  );
+  const members: ExternalResearchClusterContext["members"] = [...evidence]
+    .sort(
+      (a, b) =>
+        (b.severity ?? 0) - (a.severity ?? 0) ||
+        String(b.published_at ?? "").localeCompare(String(a.published_at ?? "")),
+    )
+    .slice(0, CLUSTER_MEMBER_LIMIT)
+    .map((row) => ({
+      problem_statement: row.problem_statement,
+      severity: row.severity,
+      resolution_status: row.resolution_status,
+      workaround: row.workaround,
+      desired_solution: row.desired_solution,
+      product_id: row.product_id,
+      excerpt: short(row.excerpt, 400),
+      published_at: row.published_at,
+      source_name: row.source_name,
+      source_url: row.evidence_url,
+      evidence_id: row.evidence_id,
+    }));
+  const productIds = [...(cluster.products as Array<{ product_id: string; count: number }>)]
+    .sort((a, b) => b.count - a.count)
+    .map((p) => p.product_id)
+    .slice(0, 5);
+  if (productIds.length === 0) {
+    throw new ApiError("VALIDATION_ERROR", "Ce cluster ne touche aucun SaaS visible");
+  }
+  const base = await buildExternalResearchContext(client, productIds, includedSections);
+  return {
+    ...base,
+    subject: {
+      ...base.subject,
+      type: "pain_point_cluster",
+      label: `Pain Point Cluster : ${cluster.name}`,
+      cluster_id: cluster.id,
+    },
+    cluster: {
+      id: cluster.id,
+      name: cluster.name,
+      description: cluster.description,
+      problem_category: cluster.problem_category,
+      review_status: cluster.review_status,
+      algorithm_version: cluster.algorithm_version,
+      statistics: {
+        feedback_count: cluster.feedback_count,
+        distinct_author_count: cluster.distinct_author_count,
+        distinct_author_count_status: cluster.distinct_author_count_status,
+        distinct_company_count: cluster.distinct_company_count,
+        distinct_company_count_status: cluster.distinct_company_count_status,
+        affected_product_count: cluster.affected_product_count,
+        frequency_label: cluster.frequency_label,
+        severity_score: cluster.severity_score,
+      },
+      provenance_warning:
+        "Ce cluster a été proposé par le moteur Pain Point interne de SOR, dont les fournisseurs IA sont simulés tant que PD-24 n’est pas décidé : le regroupement est une hypothèse à vérifier à partir des avis cités, pas un résultat établi.",
+      members,
+    },
+    coverage: {
+      products: base.coverage?.products ?? [],
+      cluster_members_available: evidence.length,
+    },
+    evidence_index: base.evidence_index,
   };
 }
