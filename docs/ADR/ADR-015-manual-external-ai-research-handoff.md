@@ -80,3 +80,30 @@ shown once the session is saved.
 - **Automate browser sessions or use consumer account credentials:**
   rejected because this application has no supported authorization or
   session integration for those assistants.
+
+## S8.4 completion (11 November 2026)
+
+Implemented within this decision (no model call, no API key; details in
+`docs/sprints/S8.4-ASK-AI-COMPLETION.md`):
+
+- Strategies for PRODUCT_VISION §4 A–D: `saas_discovery`, `customer_voice`
+  and `opportunity_analysis` (SOR's reference grid as an evaluation frame,
+  never presented as a SOR-verified score), besides the existing six.
+- Subjects: a **category** (deterministic, stated sample of its five most
+  recently added visible SaaS, with the category total) and a workspace
+  **Pain Point Cluster** (active problems with their sources, affected SaaS,
+  and a warning that the grouping comes from the internal engine whose
+  providers are simulated until PD-24). Migration
+  `20261124090001_ask_ai_completion.sql` widens the two check constraints;
+  grants and RLS are unchanged.
+- Each dossier states its coverage (reviews included out of those SOR holds,
+  indexed sources, category sample, cluster members) and never claims all
+  reviews. Sections reference their product instead of repeating its
+  overview, and lists are halved deterministically, with a stated note,
+  until the prompt fits 75,000 characters.
+- Now covered by automated tests: the creator-or-owner/admin rule for
+  import and deletion, deletion (E2E `ask-ai.e2e.ts`), the size bound (unit
+  tests), the new values (pgTAP `027`). Context and prompt versions:
+  `sor-context.v2`, `sor-prompt.v2`; v1 sessions stay readable.
+- Automatic prefill of an assistant by URL is still not used: no official,
+  stable support; the copy-and-open path remains.

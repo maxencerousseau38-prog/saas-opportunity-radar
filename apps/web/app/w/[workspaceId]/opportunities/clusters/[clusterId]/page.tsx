@@ -75,6 +75,12 @@ export default async function ClusterPage(
             label="Analyser l’opportunité de ce problème"
           />
         ) : null}
+        <Link
+          href={`/w/${workspaceId}/ask-ai?cluster=${cluster.id}`}
+          className="inline-flex items-center gap-1 text-sm text-accent underline"
+        >
+          Ask AI — dossier externe sur ce problème
+        </Link>
         {analyses.data.length > 0 ? (
           <AnalysisList workspaceId={workspaceId} rows={analyses.data as AnalysisListRow[]} />
         ) : null}

@@ -1,6 +1,7 @@
 import type {
   ExternalResearchSection,
   ExternalResearchStrategy,
+  ExternalResearchSubjectType,
   ExternalAiDestination,
 } from "@sor/contracts";
 import type { Json } from "@sor/database";
@@ -47,18 +48,66 @@ export interface ExternalResearchEvidence {
   };
 }
 
+/** What SOR holds for each product, to state how much of it the dossier carries (S8.4). */
+export interface ExternalResearchCoverage {
+  products: Array<{
+    product_id: string;
+    name: string;
+    /** Customer feedback items SOR holds for this product (null: unknown). */
+    feedback_available: number | null;
+    /** Evidence items SOR holds for this product. */
+    evidence_available: number | null;
+  }>;
+  /** Category subject: catalog SaaS in the category and how the sample was chosen. */
+  category?: { slug: string; name: string; total_products: number; sample_rule: string };
+  /** Pain Point Cluster subject: active members held vs included. */
+  cluster_members_available?: number;
+}
+
+export interface ExternalResearchClusterContext {
+  id: string;
+  name: string;
+  description: string;
+  problem_category: string;
+  review_status: string;
+  algorithm_version: string;
+  statistics: Record<string, unknown>;
+  /** Clusters are produced by SOR's internal Pain Point engine (providers simulated until PD-24). */
+  provenance_warning: string;
+  members: Array<{
+    problem_statement: string;
+    severity: number | null;
+    resolution_status: string;
+    workaround: string | null;
+    desired_solution: string | null;
+    product_id: string | null;
+    excerpt: string | null;
+    published_at: string | null;
+    source_name: string | null;
+    source_url: string | null;
+    evidence_id: string | null;
+  }>;
+}
+
 export interface ExternalResearchContext {
   context_version: string;
   subject: {
-    type: "product" | "product_set";
+    type: ExternalResearchSubjectType;
     label: string;
     product_ids: string[];
     products: Array<{ id: string; slug: string; name: string; website_url: string | null }>;
+    category_slug?: string;
+    cluster_id?: string;
   };
   overview: ExternalResearchProductOverview[];
   sections: Partial<Record<ExternalResearchSection, unknown[]>>;
   evidence_index: ExternalResearchEvidence[];
   information_gaps: string[];
+  /** Absent in sessions saved before S8.4. */
+  coverage?: ExternalResearchCoverage;
+  cluster?: ExternalResearchClusterContext;
+  /** Automatic reductions applied to stay within the prompt limit (S8.4). */
+  reductions?: string[];
 }
 
 export interface ExternalResearchSessionSummary {

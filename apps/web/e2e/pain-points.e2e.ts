@@ -77,6 +77,23 @@ test("a pain point run clusters complaints across competitors and keeps them evi
   await page.getByRole("button", { name: "Confirmer le cluster" }).click();
   await expect(page.getByText("Confirmé", { exact: true })).toBeVisible();
 
+  // S8.4: an external Ask AI dossier on the cluster, with its members, their
+  // sources and an explicit warning that the grouping comes from the
+  // simulated internal engine.
+  await page.getByRole("link", { name: "Ask AI — dossier externe sur ce problème" }).click();
+  await expect(page).toHaveURL(/\/ask-ai\?cluster=/);
+  await expect(page.getByTestId("ask-ai-cluster")).toContainText("fournisseurs IA sont simulés");
+  await expect(page.getByTestId("ask-ai-coverage")).toContainText(
+    /Pain Point Cluster : 3 problème\(s\) transmis sur 3/,
+  );
+  await page.getByLabel("Stratégie de recherche").selectOption("customer_voice");
+  await page.getByRole("button", { name: "Générer et enregistrer le prompt" }).click();
+  await expect(page).toHaveURL(/\/ask-ai\?session=/);
+  const clusterPrompt = page.getByLabel("Prompt de recherche");
+  await expect(clusterPrompt).toHaveValue(/Sujet : Pain Point Cluster : /);
+  await expect(clusterPrompt).toHaveValue(/Customer Voice — voix des clients/);
+  await expect(clusterPrompt).toHaveValue(/moteur Pain Point interne de SOR/);
+
   await page.goto(`/w/${ws}/opportunities`);
   const hypothesis = page.getByRole("link", { name: /^Address:/ }).first();
   await expect(hypothesis).toBeVisible();
