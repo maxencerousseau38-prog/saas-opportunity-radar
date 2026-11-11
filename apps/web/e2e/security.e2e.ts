@@ -38,6 +38,18 @@ test("signed-in pages are covered by the policy too", async ({ page }) => {
   expect(res!.headers()["x-frame-options"]).toBe("DENY");
 });
 
+// Regression (S8.1): Discover once reported a blocked eval (a library probing
+// `new Function` in the browser). The guard of ./fixtures fails this test on
+// any `securitypolicyviolation`, including those never logged to the console.
+test("Discover and its filter panel run without any policy violation", async ({ page }) => {
+  await signIn(page, MEMBER);
+  await expect(page.getByTestId("result-count")).not.toHaveText("…");
+  await page.getByRole("button", { name: /^Filtres/ }).click();
+  await expect(page.getByRole("dialog", { name: "Filtres" })).toBeVisible();
+  // Let the browser deliver any late violation event before the guard checks.
+  await page.waitForTimeout(500);
+});
+
 test("the CSP report endpoint accepts reports without a session", async ({ request }) => {
   const res = await request.post("/api/csp-report", {
     headers: { "content-type": "application/csp-report" },
