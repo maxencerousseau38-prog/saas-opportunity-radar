@@ -112,7 +112,27 @@ jobs:
           docker run -d --name sor-worker --network host --memory 512m \
             -e APP_ENV -e SUPABASE_URL -e SUPABASE_SECRET_KEY -e AUTHOR_HASH_SECRET -e WORKER_ID \
             sor-worker:ci
-      - run: pnpm --filter @sor/web exec playwright install --with-deps chromium
+      # Playwright's system packages come from the Ubuntu apt mirrors, which can
+      # be unreachable from the runner for a while (11 Nov 2026: DNS failures on
+      # security.ubuntu.com failed this job twice before any test ran). They are
+      # installed with apt retries and a bounded time; if they still fail, the
+      # job goes on with the runner image's libraries. Nothing is hidden: a
+      # missing library makes Chromium fail to launch, so the journeys fail.
+      - name: Install Playwright system dependencies (apt retries, bounded time)
+        timeout-minutes: 8
+        continue-on-error: true
+        run: |
+          echo 'Acquire::Retries "3";' | sudo tee /etc/apt/apt.conf.d/80-playwright-retries > /dev/null
+          pnpm --filter @sor/web exec playwright install-deps chromium
+      # The browser itself comes from Playwright's CDN, not apt: retried.
+      - name: Install Chromium for Playwright (retried)
+        run: |
+          for attempt in 1 2 3; do
+            pnpm --filter @sor/web exec playwright install chromium && exit 0
+            echo "::warning::Chromium download failed (attempt $attempt)"
+            sleep $((attempt * 15))
+          done
+          exit 1
       - run: pnpm test:e2e
       # First bulk collection (10 Nov 2026): the real Wikidata snapshot is
       # ingested after the main suite (its journeys count the labelled demo
