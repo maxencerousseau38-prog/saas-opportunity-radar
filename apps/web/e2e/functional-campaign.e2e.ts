@@ -59,32 +59,61 @@ async function apiSearch(page: Page, ws: string, text: string, includeHidden = f
   return ((await res.json()) as { data: Array<{ id: string; name: string }> }).data;
 }
 
+/** Latest product_enrichment job of a product in a workspace (null when never enriched). */
+async function latestEnrichmentJob(ws: string, productId: string) {
+  const { data, error } = await admin
+    .from("job_executions")
+    .select("id, state, terminal_reason, last_error_code, result, payload")
+    .eq("job_kind", "product_enrichment")
+    .eq("workspace_id", ws)
+    .eq("payload->>product_id", productId)
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) throw new Error(`enrichment jobs: ${error.message}`);
+  return data?.[0] ?? null;
+}
+
+const TERMINAL_JOB_STATES = ["completed", "partial", "failed", "dead_letter", "cancelled"];
+
 test("1. enrichment from the official website of a real product", async ({ page }) => {
   test.setTimeout(150_000);
   const ws = await signIn(page, MEMBER);
   const product = await productBySlug("plausible-analytics");
   await page.goto(`/w/${ws}/saas/plausible-analytics`);
   const status = page.getByTestId("enrichment-status");
-  await status.getByRole("button", { name: "Enrichir depuis le site officiel" }).click();
-  await expect(status).toContainText(/Terminé|Échec|Abandonné/, { timeout: 120_000 });
 
-  const { data: jobs } = await admin
-    .from("job_executions")
-    .select("state, terminal_reason, last_error_code, result, payload")
-    .eq("job_kind", "product_enrichment")
-    .eq("workspace_id", ws)
-    .order("created_at", { ascending: false })
-    .limit(5);
-  const job = (jobs ?? []).find(
-    (j) => (j.payload as { product_id?: string } | null)?.product_id === product.id,
-  );
-  expect(job, "enrichment job recorded for the product").toBeTruthy();
+  // The product may already carry the result of an earlier run (re-runs): its
+  // label would satisfy a text check at once. Follow the job started by this
+  // click, identified by its id, instead of the text on screen.
+  const previous = await latestEnrichmentJob(ws, product.id);
+  await status.getByRole("button", { name: "Enrichir depuis le site officiel" }).click();
+  await expect
+    .poll(async () => (await latestEnrichmentJob(ws, product.id))?.id, {
+      message: "a new enrichment job is created by the click",
+      timeout: 20_000,
+    })
+    .not.toBe(previous?.id);
+
+  await expect
+    .poll(async () => (await latestEnrichmentJob(ws, product.id))?.state, {
+      message: "the new enrichment job reaches a terminal state",
+      timeout: 120_000,
+      intervals: [1_000, 2_000, 3_000],
+    })
+    .toMatch(new RegExp(`^(${TERMINAL_JOB_STATES.join("|")})$`));
+
+  const job = await latestEnrichmentJob(ws, product.id);
   process.stdout.write(`enrichment job: ${JSON.stringify(job)}\n`);
+  expect(job?.id).not.toBe(previous?.id);
   expect(["completed", "partial", "failed", "dead_letter"]).toContain(job?.state);
 
-  // The status survives a reload.
+  // The status survives a reload and no longer shows a running job.
   await page.reload();
-  await expect(page.getByTestId("enrichment-status")).toContainText(/Terminé|Échec|Abandonné/);
+  const after = page.getByTestId("enrichment-status");
+  await expect(after).toContainText(/Terminé|Échec|Abandonné/);
+  await expect(
+    after.getByRole("button", { name: "Enrichir depuis le site officiel" }),
+  ).toBeEnabled();
 });
 
 test("2. favourite and collection on a real product persist", async ({ page }) => {
