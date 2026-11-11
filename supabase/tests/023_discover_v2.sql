@@ -37,8 +37,9 @@ select tests.as_service_role();
 update public.evidence_items set verification_status='verified',verified_at=now()
   where id=tests.id('f1');
 insert into public.product_acquisition_channels
-  (product_id,channel_key,channel_category,role,fact_status,confidence,method,evidence_id)
-values (tests.id('d1'),'x','social','primary','confirmed',92,'official_statement',tests.id('f1'));
+  (product_id,channel_key,channel_category,role,fact_status,confidence,method,evidence_id,role_rationale)
+values (tests.id('d1'),'x','social','primary','confirmed',92,'official_statement',tests.id('f1'),
+        'X is our main acquisition channel (synthetic test excerpt)');
 
 select tests.authenticate_as(tests.id('a3'));
 select ok(not private.catalog_channel_matches(tests.id('d1'),

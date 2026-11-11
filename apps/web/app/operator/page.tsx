@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { serverRepo } from "@sor/database";
+import { discoverAssetsRepo, serverRepo } from "@sor/database";
 import { CatalogReviews } from "@/components/workspace/catalog-reviews";
+import {
+  AcquisitionChannelsAdmin,
+  VisualAssetsAdmin,
+} from "@/components/workspace/discover-curation";
 import { OperatorMfa } from "@/components/workspace/operator-mfa";
 import { OperatorView } from "@/components/workspace/operator-view";
 import { PlatformHealth } from "@/components/workspace/platform-health";
@@ -13,8 +17,8 @@ export const metadata = { title: "Opérateur — SaaS Opportunity Radar" };
 
 /**
  * Platform operator console (ADR-007, PD-12 A): platform health (S7.3),
- * exclusion reviews, collected catalog listings to review (S8.2) and
- * correction reports.
+ * exclusion reviews, collected catalog listings to review (S8.2), Acquisition
+ * Channels and product visuals (S8.3) and correction reports.
  */
 export default async function OperatorPage() {
   const { client, user } = await requireUser();
@@ -32,13 +36,16 @@ export default async function OperatorPage() {
     );
   }
   const service = getServiceClient();
-  const [reviews, catalogReviews, reports, memberships, health] = await Promise.all([
-    serverRepo.listExclusionReviews(service),
-    serverRepo.listCatalogReviews(service),
-    serverRepo.listCorrectionReports(service, "open"),
-    getMemberships(user.id),
-    platformHealth(),
-  ]);
+  const [reviews, catalogReviews, reports, memberships, health, channels, visuals] =
+    await Promise.all([
+      serverRepo.listExclusionReviews(service),
+      serverRepo.listCatalogReviews(service),
+      serverRepo.listCorrectionReports(service, "open"),
+      getMemberships(user.id),
+      platformHealth(),
+      discoverAssetsRepo.listAcquisitionChannels(service),
+      discoverAssetsRepo.listVisualAssets(service),
+    ]);
   return (
     <main className="mx-auto max-w-5xl space-y-4 px-4 py-6">
       <div className="flex items-center gap-3">
@@ -58,6 +65,8 @@ export default async function OperatorPage() {
       </p>
       <PlatformHealth health={health} />
       <CatalogReviews total={catalogReviews.total} reviews={catalogReviews.reviews} />
+      <AcquisitionChannelsAdmin channels={channels} />
+      <VisualAssetsAdmin assets={visuals} />
       <OperatorView
         reviews={reviews.map((r) => ({
           id: r.id,

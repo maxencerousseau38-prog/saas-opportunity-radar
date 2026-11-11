@@ -231,8 +231,13 @@ export const MVP_UNSUPPORTED_FILTER_KEYS = [
   "complaints",
 ] as const;
 
-/** Sort keys that need analyses (Sprint 5). */
-export const UNSUPPORTED_SORT_KEYS = ["least_analyzed", "ai_potential"] as const;
+/**
+ * Sort keys the API refuses. `least_analyzed` is served since S8.3 (real
+ * workspace analyses). `ai_potential` stays unavailable: analysis scores come
+ * from simulated agents until PD-24, so ranking real SaaS by them would
+ * present simulated results as real (S8.3, sprint plan D).
+ */
+export const UNSUPPORTED_SORT_KEYS = ["ai_potential"] as const;
 
 export type CatalogFilters = z.infer<typeof CatalogFiltersSchema>;
 export type CatalogFiltersInput = z.input<typeof CatalogFiltersSchema>;

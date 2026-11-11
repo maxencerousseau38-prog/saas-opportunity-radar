@@ -36,7 +36,9 @@ separate decisions.
 | [ADR-012](ADR-012-sprint-order.md) | Sprint order | ACCEPTED (PD-13) |
 | [ADR-013](ADR-013-source-acquisition-and-compliance.md) | Source acquisition and compliance | ACCEPTED (PD-14, PD-28); G2 and Product Hunt approval PENDING (PD-26, PD-29) |
 | [ADR-014](ADR-014-workspace-status-model.md) | Workspace opportunity status model | ACCEPTED (PD-04) |
-| [ADR-015](ADR-015-manual-external-ai-research-handoff.md) | Manual external AI research handoff | ACCEPTED (PD-35) |\n| [ADR-016](ADR-016-product-visual-assets-and-heroes.md) | Product visual assets and Discover Heroes | ACCEPTED (PD-36) |\n| [ADR-017](ADR-017-acquisition-channel-taxonomy.md) | Acquisition Channel taxonomy and evidence | ACCEPTED (PD-37) |
+| [ADR-015](ADR-015-manual-external-ai-research-handoff.md) | Manual external AI research handoff | ACCEPTED (PD-35) |
+| [ADR-016](ADR-016-product-visual-assets-and-heroes.md) | Product visual assets and Discover Heroes | ACCEPTED (PD-36) |
+| [ADR-017](ADR-017-acquisition-channel-taxonomy.md) | Acquisition Channel taxonomy and evidence | ACCEPTED (PD-37) |
 
 ## Decisions approved by the product owner on 4 November 2026
 

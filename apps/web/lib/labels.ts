@@ -1,4 +1,5 @@
 // French UI labels for catalog enums (the UI is in French, PRD §17).
+import { ACQUISITION_CHANNELS } from "@sor/domain/channels";
 export const CUSTOMER_TYPE: Record<string, string> = {
   b2b: "B2B",
   b2c: "B2C",
@@ -35,15 +36,11 @@ export const SORTS: Array<{ value: string; label: string; disabled?: string }> =
   { value: "oldest", label: "Plus anciens" },
   { value: "most_recent_activity", label: "Plus forte activité récente" },
   { value: "random", label: "Ordre aléatoire" },
-  {
-    value: "least_analyzed",
-    label: "Les moins analysés",
-    disabled: "Tri non disponible actuellement",
-  },
+  { value: "least_analyzed", label: "Les moins analysés" },
   {
     value: "ai_potential",
     label: "Potentiel IA",
-    disabled: "Tri non disponible actuellement",
+    disabled: "Indisponible : les scores d’analyse sont simulés tant que PD-24 n’est pas décidé",
   },
 ];
 
@@ -84,19 +81,24 @@ export const COMPANY_PROFILE: Record<string, string> = {
   subsidiary_or_group: "Filiale ou groupe",
   unknown: "Profil inconnu",
 };
-export const ACQUISITION_CHANNEL: Record<string, string> = {
-  x: "X",
-  reddit: "Reddit",
-  seo: "SEO",
-  linkedin: "LinkedIn",
-  product_hunt: "Product Hunt",
-  community: "Communautés",
-  content: "Contenu",
-  partnerships: "Partenariats",
-  paid_advertising: "Publicité payante",
-  referral: "Recommandation",
-  direct: "Accès direct",
-  other: "Autre canal",
+/** Labels of the canonical channel registry (@sor/domain chanreg-1, ADR-017). */
+export const ACQUISITION_CHANNEL: Record<string, string> = Object.fromEntries(
+  ACQUISITION_CHANNELS.map((c) => [c.key, c.label]),
+);
+export const ACQUISITION_CHANNEL_CATEGORY: Record<string, string> = {
+  organic: "Organique",
+  community: "Communauté",
+  content_search: "Contenu et recherche",
+  social: "Réseaux sociaux",
+  partnership: "Partenariats",
+  paid: "Acquisition payante",
+  other: "Autre",
+  unknown: "Inconnu",
+};
+export const VISUAL_ASSET_TYPE: Record<string, string> = {
+  official_hero: "Visuel officiel",
+  product_screenshot: "Capture authentique du produit",
+  official_illustration: "Illustration officielle",
 };
 export const ACQUISITION_CHANNEL_STATUS: Record<string, string> = {
   confirmed: "Confirmé",

@@ -77,3 +77,13 @@ S8.3 peut commencer par une acquisition contrôlée et limitée aux actifs dont 
 6. Le fallback reste correct et utilisable dans Feed, Grid et List.
 7. Des tests couvrent un cas positif autorisé, les cas refusés et l'absence d'actif.
 
+## Implémentation (S8.3, 11 novembre 2026)
+
+- **Mode de livraison retenu : copie privée uniquement.** L’intégration distante (hotlink) n’est pas implémentée : aucune autorisation explicite d’intégration n’a été documentée. Le contrat Discover n’accepte que le chemin de livraison SOR `/api/v1/catalog/assets/<id>`.
+- **Stockage privé sans nouveau service :** table serveur `product_visual_asset_files` (RLS activée, aucun droit navigateur, PNG/JPEG/WebP, 2 Mo maximum). Supabase Storage n’est pas requis ; le volume attendu est faible.
+- **Admission contrôlée :** commande worker `pnpm --filter @sor/worker assets:build` puis `node dist-assets/assets.js admit <manifeste>` (`visual-assets-1`). Les droits sont vérifiés **avant toute requête réseau** (`checkVisualAssetRights`, `@sor/domain`) : statut `approved`, base de droits, URL https de la preuve des droits et couverture explicite de la copie privée. Puis récupération par le fetcher SSRF-safe existant (adresses publiques, redirections revalidées, robots.txt, type MIME, taille, délai ; https obligatoire), contrôle des octets (format reconnu par ses en-têtes, SVG refusé, dimensions minimales, forme de logo refusée) et RPC auditée `sor_admit_visual_asset` (opérateur vérifié, hash recalculé, preuve `visual_asset` vérifiée liée au produit, rejouable).
+- **Livraison :** route `GET /api/v1/catalog/assets/[assetId]` ; la lecture RLS de l’utilisateur doit d’abord renvoyer l’actif (courant, approuvé, vérifié, produit et preuve visibles), puis le serveur lit les octets. En-têtes `private`, `nosniff`, `default-src 'none'; sandbox`. Jamais de redirection vers la source.
+- **Retrait et revalidation :** la console opérateur retire un visuel avec un motif (`sor_operator_remove_visual_asset` : masqué immédiatement, copie supprimée, journalisé). `assets.js revalidate` retélécharge chaque visuel affiché : identique, il reste ; modifié, disparu ou refusé, il est masqué et sa copie supprimée (`sor_record_visual_asset_check`) ; une erreur transitoire ne change rien.
+- **Correctif :** le trigger `check_product_discover_evidence` de la migration `20261115090001` lisait `NEW.fact_status` sur `product_visual_assets`, qui n’a pas cette colonne : aucun visuel n’était insérable. Corrigé dans `20261123090001_discover_v2_completion.sql`.
+- **Couverture réelle :** aucun visuel réel n’a été admis par S8.3 (aucun droit documenté à ce jour). Les tests utilisent des images synthétiques étiquetées. Le repli honnête reste l’état par défaut.
+

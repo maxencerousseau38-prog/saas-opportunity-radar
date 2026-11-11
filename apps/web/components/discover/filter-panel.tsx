@@ -3,12 +3,14 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Dialog as D } from "radix-ui";
 import { X } from "lucide-react";
 import { CatalogFiltersSchema, type CatalogFilters } from "@sor/contracts";
+import { ACQUISITION_CHANNELS, type AcquisitionChannelCategory } from "@sor/domain/channels";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/field";
 import { api } from "@/lib/client-api";
 import {
   AGE_BUCKETS,
   ACQUISITION_CHANNEL,
+  ACQUISITION_CHANNEL_CATEGORY,
   ACQUISITION_CHANNEL_STATUS,
   BILLING_MODEL,
   COMMERCIAL_VALIDATION,
@@ -20,6 +22,18 @@ import {
   countryName,
 } from "@/lib/labels";
 import type { CategoryOption } from "./types";
+
+/** Same limit as the catalog filter contract (acquisition_channels.values). */
+const MAX_CHANNEL_VALUES = 12;
+const ACQUISITION_CHANNEL_CATEGORY_ORDER: AcquisitionChannelCategory[] = [
+  "content_search",
+  "social",
+  "community",
+  "partnership",
+  "paid",
+  "organic",
+  "other",
+];
 
 const COUNTRIES = ["US", "FR", "GB", "CA", "DE", "ES", "IT", "NL", "BE", "CH", "IE", "AU"];
 
@@ -47,16 +61,19 @@ function Check({
   label,
   checked,
   onChange,
+  disabled,
 }: {
   label: string;
   checked: boolean;
   onChange: (v: boolean) => void;
+  disabled?: boolean;
 }) {
   return (
-    <label className="flex items-center gap-2 text-sm">
+    <label className={`flex items-center gap-2 text-sm${disabled ? " text-muted" : ""}`}>
       <input
         type="checkbox"
         checked={checked}
+        disabled={disabled}
         onChange={(e) => onChange(e.target.checked)}
         className="accent-accent"
       />
@@ -418,21 +435,37 @@ export function FilterPanel({
                 Canaux utilisés par ce SaaS pour acquérir ses clients. Ils sont distincts des
                 sources qui alimentent le catalogue et des recommandations Go-to-Market.
               </p>
-              {Object.entries(ACQUISITION_CHANNEL).map(([key, label]) => (
-                <Check
-                  key={key}
-                  label={label}
-                  checked={channels.values.includes(key as never)}
-                  onChange={(on) =>
-                    set({
-                      acquisition_channels: {
-                        ...channels,
-                        values: toggle(channels.values, key as never, on),
-                      },
-                    })
-                  }
-                />
+              {ACQUISITION_CHANNEL_CATEGORY_ORDER.map((category) => (
+                <fieldset key={category} className="mt-1">
+                  <legend className="text-xs font-medium text-muted">
+                    {ACQUISITION_CHANNEL_CATEGORY[category]}
+                  </legend>
+                  {ACQUISITION_CHANNELS.filter((c) => c.category === category).map((c) => (
+                    <Check
+                      key={c.key}
+                      label={ACQUISITION_CHANNEL[c.key] ?? c.label}
+                      checked={channels.values.includes(c.key as never)}
+                      disabled={
+                        !channels.values.includes(c.key as never) &&
+                        channels.values.length >= MAX_CHANNEL_VALUES
+                      }
+                      onChange={(on) =>
+                        set({
+                          acquisition_channels: {
+                            ...channels,
+                            values: toggle(channels.values, c.key as never, on),
+                          },
+                        })
+                      }
+                    />
+                  ))}
+                </fieldset>
               ))}
+              {channels.values.length >= MAX_CHANNEL_VALUES ? (
+                <p className="text-xs text-muted">
+                  {MAX_CHANNEL_VALUES} canaux au maximum par recherche.
+                </p>
+              ) : null}
               <div className="mt-2 border-t border-border pt-2">
                 <p className="mb-1 text-xs font-medium">Niveau de preuve</p>
                 {(["confirmed", "declared", "estimated"] as const).map((status) => (
