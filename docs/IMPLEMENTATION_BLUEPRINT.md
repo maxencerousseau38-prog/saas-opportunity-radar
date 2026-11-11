@@ -5839,13 +5839,20 @@ See [ADR-015](ADR/ADR-015-manual-external-ai-research-handoff.md).
 
 | Area | Implemented in this slice | Not implemented or not validated |
 |---|---|---|
-| Discover visual | Product cards display the catalogued logo when present, primary category, and an explicit “Capture d’interface non disponible” fallback. No interface screenshot was fabricated. | The catalog has no approved product screenshot source or screenshot field; authentic product UI imagery remains unavailable. |
+| Discover visual | Product cards display the catalogued logo when present, primary category, and an explicit “Capture d’interface non disponible” fallback. No interface screenshot was fabricated. | No approved product screenshot source: the `product_visual_assets` table (migration `20261115090001`) exists, but nothing acquires or stores an asset, so authentic product UI imagery remains unavailable (status 11 Nov 2026). |
 | Ask AI handoff | A workspace page supports a product or a set of up to five catalog products, six fixed strategies, four official assistant destinations, a preview of the bounded catalog context, optional features/pricing/feedback/competitor sections, copy-and-open handoff, and manual answer import as an unverified workspace note. | No assistant API call, account-session automation, custom strategy builder, cluster/opportunity subject context, reusable strategy library, or true cross-product pain-cluster computation. The cross-competitor prompt can only reason over the selected catalog snapshots and bounded feedback samples. |
-| Workspace security | Read access is workspace-scoped by RLS. Server routes authorize workspace membership before service-role writes; session edits/deletion are limited to the creator or workspace owner/admin. Imported text is not catalog evidence and does not update internal engines. | Migration and pgTAP tests have been authored but not applied or run. Security behavior is not runtime-validated. |
+| Workspace security | Read access is workspace-scoped by RLS. Server routes authorize workspace membership before service-role writes; session edits/deletion are limited to the creator or workspace owner/admin. Imported text is not catalog evidence and does not update internal engines. | Update 11 Nov 2026 (S8.1): the migration is applied by every CI database job and pgTAP `022_external_ai_research.sql` runs there; the E2E journeys and the F12 sweep of the Ask AI routes run in CI (green on `main` at `02e26d6`). Not yet covered by tests: the creator-or-owner/admin rule for import and deletion, the 75,000-character limit, deletion. |
 | Validation | Contract and prompt unit tests, Ask AI context/selection E2E coverage, and the external-research pgTAP file are present. The profile journey now checks that the real internal analysis dialog opens. | On Node 26.13.0 with dependencies present: `pnpm typecheck`, `pnpm test` (434 tests), `pnpm lint`, and `pnpm build` pass; build required the webpack backend and elevated filesystem access after Windows returned `EPERM`. Lint reports the existing Next Pages-directory warning. `pnpm format:check` fails on 442 files; unrelated files were not reformatted. `node scripts/check-migrations.mjs HEAD` passes for 18 migrations. Playwright E2E and pgTAP were not run: Docker Engine is unreachable, Supabase CLI is absent from PATH, and no local web environment file is present. A GitHub lookup found no CI statuses/runs for current HEAD `a80aec42395aca07ddb4666bcb5a890a9e9f9fae`; the previous successful run is on `cb45f8724a2b6911550b50b622bc8a5b48b679dc`. |
 
 The slice is therefore **implemented in source and unit/build validated, but
-not yet runtime validated against Supabase or through Playwright**. The
+not yet runtime validated against Supabase or through Playwright**.
+
+> **Validation update (11 November 2026, S8.1):** the statements above
+> describe commit `a80aec4`. Since then the slice runs against Supabase and
+> Playwright in CI (database job: pgTAP `022`; E2E job: Ask AI journeys of
+> `catalog.e2e.ts` and the F12 sweep), green on `main` at `02e26d6`, and was
+> re-run on a local stack during S8.1. Custom strategies and
+> cluster/opportunity contexts are still not implemented (PD-35 scope). The
 existing internal engines, scoring rules, and product requirements remain
 unchanged. A local Supabase-backed E2E and pgTAP run is still required before
 claiming the complete handoff flow or RLS behavior operational.

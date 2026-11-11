@@ -45,6 +45,35 @@ describe("HTML extraction", () => {
     expect(page.links).toEqual(["https://metricflow.test/features", "https://other.test/x"]);
     expect(decodeEntities("&eacute;quipe &#x20AC;")).toBe("équipe €");
   });
+
+  // Regression (audit 11 Nov 2026): links written inside scripts, comments or
+  // templates were resolved into page URLs such as "/$%7Blink.href%7D".
+  it("never extracts links from scripts, comments, templates or placeholders", () => {
+    const page = extractPage(
+      `<html><head><title>Synthetic</title></head><body>
+       <a href="/pricing">Pricing</a>
+       <script>
+         const tpl = \`<a href="\${link.href}">y</a>\`;
+         document.write("<a href='/js-only-page'>z</a>");
+       </script>
+       <!-- <a href="/old-commented-page">old</a> -->
+       <template><a href="{{ product.url }}">t</a></template>
+       <noscript><a href="/noscript-only">n</a></noscript>
+       <a href="/plans/\${plan.id}">templated in markup</a>
+       <a href="https://cdn.other.test/{{asset}}">templated external</a>
+       <p>Visible <a href="/features">Features</a> text</p>
+       </body></html>`,
+      "https://synthetic.test/",
+    );
+    expect(page.links).toEqual([
+      "https://synthetic.test/pricing",
+      "https://synthetic.test/features",
+    ]);
+    expect(page.title).toBe("Synthetic");
+    expect(page.text).toContain("Visible Features text");
+    expect(page.text).not.toContain("document.write");
+    expect(page.text).not.toContain("old-commented-page");
+  });
 });
 
 describe("CSV", () => {

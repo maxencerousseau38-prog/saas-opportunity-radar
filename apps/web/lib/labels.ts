@@ -104,6 +104,12 @@ export const ACQUISITION_CHANNEL_STATUS: Record<string, string> = {
   estimated: "Estimé",
   unknown: "Inconnu",
 };
+/** Confidence of a sourced fact: a percentage only when it is known. */
+export function confidenceLabel(confidence: number | null | undefined): string {
+  return typeof confidence === "number" && Number.isFinite(confidence)
+    ? `confiance ${confidence}%`
+    : "confiance inconnue";
+}
 export const CONFIGURABLE_EXCLUSIONS: Record<string, string> = {
   b2c_only: "SaaS uniquement B2C",
   groups_and_large_companies: "Grands groupes et entreprises > 100 personnes",

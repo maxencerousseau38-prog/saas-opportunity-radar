@@ -58,8 +58,19 @@ as a resolution of PD-24.
 The implementation uses workspace authorization before service-role writes,
 RLS for workspace reads, input schemas with size limits, prompt instructions
 that treat catalog text as untrusted data, and explicit unverified labels on
-imported responses. The migration and automated tests are present in source
-but have not been applied or run; runtime validation remains outstanding.
+imported responses.
+
+Validation status (updated 11 November 2026, S8.1): the migration
+`20261115090000_external_ai_research` is applied by every CI database job.
+pgTAP `022_external_ai_research.sql` (grants, workspace read isolation,
+status/answer check), the E2E journeys of `apps/web/e2e/catalog.e2e.ts`
+(saved handoff, assistant link, unverified import; product dossier preview)
+and the F12 isolation sweep over the five Ask AI routes run in CI (green on
+`main` at `02e26d6`) and were re-run on a local Supabase stack during S8.1.
+Not covered by automated tests yet: the creator-or-owner/admin rule for
+import and deletion, the 75,000-character prompt limit, and deletion. Before
+saving, the preview shows the bounded context; the prompt text itself is
+shown once the session is saved.
 
 ## Alternatives considered
 

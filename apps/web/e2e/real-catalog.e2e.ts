@@ -81,7 +81,7 @@ test("Discover scrolls through real SaaS collected from Wikidata, with their sou
   await expect(page.getByRole("article", { name: product!.name }).first()).toBeVisible({
     timeout: 30_000,
   });
-  await page.getByRole("link", { name: product!.name }).first().click();
+  await page.getByRole("link", { name: product!.name, exact: true }).first().click();
   await expect(page.getByRole("heading", { level: 1, name: product!.name })).toBeVisible();
   const sources = page.locator("#sources");
   await expect(sources).toContainText("Wikidata");

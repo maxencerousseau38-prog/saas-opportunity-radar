@@ -199,10 +199,13 @@ S7.4b–c (web hardening):
 - Unit: `apps/web/test/security-headers.test.ts` (policy, nonce, static
   headers, CSP report parsing and rate limit), `apps/web/test/api-routes.test.ts`
   (route guards and role manifest).
-- E2E: `e2e/fixtures.ts` makes every journey fail on a CSP violation;
+- E2E: `e2e/fixtures.ts` makes every journey fail on a CSP violation,
+  whether logged to the console or only reported as a
+  `securitypolicyviolation` event (S8.1: a blocked eval caught by page code,
+  such as Zod's `new Function` probe, never reaches the console);
   `e2e/security.e2e.ts` (headers, nonce, enforced policy blocks an injected
-  inline script, report endpoint). Import `test` / `expect` from
-  `./fixtures` in new journeys.
+  inline script, Discover and its filter panel without any violation, report
+  endpoint). Import `test` / `expect` from `./fixtures` in new journeys.
 
 S7.4d (rate limits, invitation links, password policy):
 
@@ -286,11 +289,17 @@ and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
 
 - Unit: contract and prompt tests cover destination/strategy schemas, bounded
   context selection, provenance and no-fabrication instructions.
-- E2E: the catalog journey opens the internal analysis dialog and exercises
-  the Ask AI product context preview, assistant/strategy selection and
-  optional feedback exclusion. It does not yet cover saving/importing a
-  research session or workspace isolation for the new table.
+- E2E (`e2e/catalog.e2e.ts`): saving a handoff from a Discover card, the
+  assistant link, importing an answer labelled unverified, and the product
+  dossier preview with assistant/strategy selection and optional feedback
+  exclusion. F12 (`e2e/workspace-isolation.e2e.ts`) sweeps the five Ask AI
+  routes with a real session id. With `REAL_CATALOG=1`,
+  `e2e/functional-campaign.e2e.ts` also checks the stored session and that
+  an imported answer leaves the catalog row unchanged (local runs; the CI
+  real-catalog step runs `real-catalog.e2e.ts` only).
 - Database: `supabase/tests/022_external_ai_research.sql` covers grants,
-  workspace read isolation and the session status/answer check. It has not
-  been applied or run in the current local environment.
+  workspace read isolation and the session status/answer check; it runs in
+  the CI database job.
+- Not covered yet: the creator-or-owner/admin rule for import and deletion,
+  the 75,000-character prompt limit, deletion.
 

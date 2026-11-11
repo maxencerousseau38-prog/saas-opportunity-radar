@@ -75,6 +75,42 @@ select is((select c.name || '/' || c.country_code from public.companies c where 
 select ok((select (ss.extracted_metadata ->> 'licence') = 'CC0-1.0'
              from public.evidence_items e join public.source_snapshots ss on ss.id = e.source_snapshot_id
             where e.product_id = (select id from p)), 'the snapshot keeps the listing and its licence');
+select is((select ss.storage_status::text || '/' || (ss.raw_content_location is null)
+             from public.evidence_items e join public.source_snapshots ss on ss.id = e.source_snapshot_id
+            where e.product_id = (select id from p)),
+  'stored_full/true', 'a full-storage source (Wikidata, CC0) keeps its snapshot stored in full');
+select tests.as_service_role();
+
+-- S8.1: a metadata-only source (Uneed) is never labelled as stored in full.
+insert into r values ('uneed', public.sor_ingest_catalog_listing(
+  tests.listing('uneed-synthetic-tool', 'https://uneed-synthetic.test', 'Uneed Synthetic Tool')
+    || jsonb_build_object('source_key', 'uneed', 'source_url', 'https://www.uneed.best/tool/uneed-synthetic-tool',
+                          'company_name', null, 'company_external_id', null,
+                          'licence', 'Uneed read API (no data licence stated; Source: Uneed, uneed.best)'),
+  '{"outcome":"new","rule":"no_match"}', '{"status":"eligible","rule_set_version":"excl-1"}'));
+insert into r values ('uneed_replay', public.sor_ingest_catalog_listing(
+  tests.listing('uneed-synthetic-tool', 'https://uneed-synthetic.test', 'Uneed Synthetic Tool')
+    || jsonb_build_object('source_key', 'uneed', 'source_url', 'https://www.uneed.best/tool/uneed-synthetic-tool',
+                          'company_name', null, 'company_external_id', null,
+                          'licence', 'Uneed read API (no data licence stated; Source: Uneed, uneed.best)'),
+  '{"outcome":"new","rule":"no_match"}', '{"status":"eligible","rule_set_version":"excl-1"}'));
+select tests.as_owner_role();
+select is((select string_agg(ss.storage_status::text || '/' || (ss.raw_content_location is null), ',')
+             from public.evidence_items e join public.source_snapshots ss on ss.id = e.source_snapshot_id
+            where e.product_id = (select (v ->> 'product_id')::uuid from r where k = 'uneed')),
+  'reference_only/true', 'a metadata-only source (Uneed) keeps a reference snapshot, never stored in full');
+select ok((select (ss.extracted_metadata ->> 'licence') like '%Source: Uneed, uneed.best%'
+                  and (ss.extracted_metadata -> 'listing' ->> 'name') = 'Uneed Synthetic Tool'
+             from public.evidence_items e join public.source_snapshots ss on ss.id = e.source_snapshot_id
+            where e.product_id = (select (v ->> 'product_id')::uuid from r where k = 'uneed')),
+  'the metadata-only snapshot keeps the listing metadata and its attribution');
+select is((select v ->> 'status' || '/' || (v ->> 'product_id') from r where k = 'uneed_replay'),
+  'matched_existing/' || (select v ->> 'product_id' from r where k = 'uneed'),
+  'a replayed metadata-only listing creates nothing');
+select is((select count(*)::int || '/' || string_agg(distinct ss.storage_status::text, ',')
+             from public.source_snapshots ss join public.source_records sr on sr.id = ss.source_record_id
+            where sr.external_id = 'uneed-synthetic-tool'),
+  '1/reference_only', 'the replay keeps one snapshot with the same storage label');
 select tests.as_service_role();
 
 -- Idempotent replay; a second product of the same developer reuses the company.

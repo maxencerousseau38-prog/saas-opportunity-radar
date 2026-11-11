@@ -48,24 +48,32 @@ export interface ExtractedPage {
   links: string[];
 }
 
+/** Template placeholders (`${…}`, `{{ … }}`) are code, never a page address. */
+const PLACEHOLDER = /\$\{|\{\{|\}\}/;
+
 export function extractPage(html: string, baseUrl: string): ExtractedPage {
   const title = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1];
   const description =
     /<meta[^>]+name=["']description["'][^>]*content=["']([^"']*)["']/i.exec(html)?.[1] ??
     /<meta[^>]+content=["']([^"']*)["'][^>]*name=["']description["']/i.exec(html)?.[1];
+  // Only rendered markup: links and text written inside scripts, styles,
+  // comments or templates are code or dead content, not navigable links.
+  const rendered = html
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<(script|style|noscript|svg|template|iframe|head)\b[\s\S]*?<\/\1>/gi, " ");
   const links: string[] = [];
-  for (const m of html.matchAll(/<a\b[^>]*href=["']([^"'#]+)["']/gi)) {
+  for (const m of rendered.matchAll(/<a\b[^>]*href=["']([^"'#]+)["']/gi)) {
+    const href = decodeEntities(m[1] ?? "");
+    if (PLACEHOLDER.test(href)) continue;
     try {
-      const u = new URL(decodeEntities(m[1] ?? ""), baseUrl);
+      const u = new URL(href, baseUrl);
       if (u.protocol === "http:" || u.protocol === "https:") links.push(u.toString());
     } catch {
       // ignore malformed links
     }
   }
   const text = decodeEntities(
-    html
-      .replace(/<!--[\s\S]*?-->/g, " ")
-      .replace(/<(script|style|noscript|svg|template|iframe|head)\b[\s\S]*?<\/\1>/gi, " ")
+    rendered
       .replace(
         /<(br|\/p|\/div|\/li|\/h[1-6]|\/tr|\/section|\/article|\/header|\/footer)\b[^>]*>/gi,
         "\n",
