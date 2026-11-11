@@ -67,18 +67,27 @@ export const ProductAcquisitionChannelSchema = z
     source_url: z.string().url(),
     source_name: z.string().nullable(),
     evidence_id: UUIDSchema,
+    /** Excerpt stating the channel is the main one (primary only; ADR-017 §3). */
+    role_rationale: z.string().nullable(),
+    /** Method and indices of an estimate. */
+    inference_rationale: z.string().nullable(),
+    confidence_method: z.string().nullable(),
+    confidence_reasons: z.array(z.string()),
   })
   .strict();
 
 export const ProductVisualAssetSchema = z
   .object({
     asset_type: z.enum(["official_hero", "product_screenshot", "official_illustration"]),
-    url: z.string().regex(/^\/(?!\/)/),
+    /** Authenticated SOR delivery path of the private copy, never a remote URL. */
+    url: z.string().regex(/^\/api\/v1\/catalog\/assets\/[0-9a-f-]{36}$/),
     alt_text: z.string().min(1).max(500),
     source_url: z.string().url(),
     observed_at: ISODateTimeSchema,
     rights_basis: z.string().min(1),
     confidence: z.number().min(0).max(100).nullable(),
+    width: z.number().int().positive().nullable(),
+    height: z.number().int().positive().nullable(),
   })
   .strict();
 

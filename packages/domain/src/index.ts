@@ -11,3 +11,4 @@ export * from "./discovery";
 export * from "./ops";
 export type * from "./agent";
 export * from "./catalog/categories";
+export * from "./discover";

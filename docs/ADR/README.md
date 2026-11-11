@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-**Last updated:** 6 November 2026 (PD-28 approved, Sprint 6 start); 4 November 2026 (product-owner arbitration of PD-01 to PD-23)
+**Last updated:** 11 November 2026 (PD-36 and PD-37 approved for S8.3); 6 November 2026 (PD-28 approved); 4 November 2026 (product-owner arbitration of PD-01 to PD-23)
 
 ## Status legend
 
@@ -37,6 +37,8 @@ separate decisions.
 | [ADR-013](ADR-013-source-acquisition-and-compliance.md) | Source acquisition and compliance | ACCEPTED (PD-14, PD-28); G2 and Product Hunt approval PENDING (PD-26, PD-29) |
 | [ADR-014](ADR-014-workspace-status-model.md) | Workspace opportunity status model | ACCEPTED (PD-04) |
 | [ADR-015](ADR-015-manual-external-ai-research-handoff.md) | Manual external AI research handoff | ACCEPTED (PD-35) |
+| [ADR-016](ADR-016-product-visual-assets-and-heroes.md) | Product visual assets and Discover Heroes | ACCEPTED (PD-36) |
+| [ADR-017](ADR-017-acquisition-channel-taxonomy.md) | Acquisition Channel taxonomy and evidence | ACCEPTED (PD-37) |
 
 ## Decisions approved by the product owner on 4 November 2026
 
@@ -234,6 +236,23 @@ review: `docs/DATA_SOURCES.md`, official pages frozen in `docs/sources/terms`):
 - Loading the snapshot into a **hosted** database is not done by Claude: it
   needs the product owner's go-ahead per environment and the hosted
   project's migrations (`docs/DEPLOYMENT.md` §9).
+
+## S8.3 launch (11 November 2026)
+
+The product owner authorized the start of **S8.3 — Discover V2 Completion** from `main` at `87e801f`, after S8.2 was merged and CI #137 passed. Work proceeds on a dedicated branch; no direct commits to `main`.
+
+The product owner approved the two policy directions recorded in:
+- **PD-36 / ADR-016:** authentic static product visuals only; rights must cover the selected delivery method; no synthetic screenshot, no private/authenticated capture, and no display of unknown or restricted assets.
+- **PD-37 / ADR-017:** retain the eight existing Acquisition Channel categories; normalize canonical channel keys; preserve `confirmed`, `declared`, `estimated`, `unknown`; primary-channel claims need evidence; confidence must be distinct and justified.
+
+The implementation sequence and acceptance gates are recorded in `docs/sprints/S8.3-DISCOVER-V2.md`. The exact asset ingestion/delivery implementation must still respect the rights attached to each source; this decision does not authorize a new connector, scraping source, paid API, budget, or deployment. PD-34 remains a separate gate for Hugging Face and Enlisted.
+
+| ID | Decision | Approved direction | Main consequence | ADR |
+|---|---|---|---|---|
+| PD-36 | Product visual assets and Discover Heroes | Static authentic official Heroes, screenshots or illustrations only; rights must explicitly cover storage or remote embedding; unapproved assets stay hidden | Evidence-linked, rights-aware asset pipeline with honest fallback | ADR-016 |
+| PD-37 | Acquisition Channel taxonomy and evidence | Keep eight existing categories; canonical channel keys; evidence-based status and primary role; explainable confidence | Normalize data and filters without fabricating channel coverage | ADR-017 |
+
+---
 
 ## Pending decision register
 

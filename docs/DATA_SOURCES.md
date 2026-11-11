@@ -166,6 +166,30 @@ content and the listing metadata present; one audit row records the count).
 Verified locally on the real snapshots: 6,238 Uneed snapshots relabelled,
 2,361 Wikidata snapshots unchanged, evidence untouched, replay idempotent.
 
+### Product visuals and Acquisition Channels (S8.3, 11 November 2026)
+
+Neither is a source or a connector (ADR-016, ADR-017):
+
+- **Product visuals** are admitted one by one by the platform operator from a
+  manifest (`visual-assets-1`) naming the image, the page where it appears and
+  the documented rights (basis and https evidence) that must cover a private
+  copy; otherwise nothing is downloaded. Command (trusted machine, local stack
+  unless the product owner approves a hosted project):
+
+  ```bash
+  pnpm --filter @sor/worker assets:build
+  ```
+
+  ```bash
+  SUPABASE_URL=… SUPABASE_SECRET_KEY=… SOR_OPERATOR_ID=<operator user id> pnpm --filter @sor/worker assets admit manifest.json
+  ```
+
+  `assets revalidate` re-checks displayed visuals. No visual has been admitted
+  yet: no rights are documented.
+- **Acquisition Channels** are recorded in the operator console from a page
+  the operator cites (SOR does not fetch it). X, Reddit, LinkedIn and Product
+  Hunt appear as channel keys only; no collection from them is authorised.
+
 ### Catalog reliability (S8.2, 11 November 2026)
 
 - **Review queue.** Listings that the identity rules send to review (shared

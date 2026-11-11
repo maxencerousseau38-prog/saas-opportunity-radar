@@ -36,3 +36,4 @@ apps/web/next-env.d.ts
 dist-evals/
 dist-container/
 dist-catalog/
+dist-assets/

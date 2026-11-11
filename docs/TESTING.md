@@ -325,3 +325,10 @@ and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
   separate Playwright runs on one stack reuse the enrolled factor.
 - Catalog benchmark (S7.5c): `pnpm benchmark:catalog`, see
   `docs/S7.5C_BENCHMARK.md`.
+
+## Discover V2 completion (S8.3)
+
+- Unit: `packages/domain/src/__tests__/discover.test.ts` (registry normalization and categories, status rules, confidence `chanconf-1`, image sniffing and admission `visual-1`, rights gate), `packages/contracts/src/__tests__/discover-v2.test.ts`, `packages/data-sources/src/__tests__/visual-asset.test.ts` (robots.txt, SVG/HTML refused, size limit, redirect to a private address blocked, https required), `apps/web/test/discover-admin.test.ts`.
+- Database: pgTAP `026_discover_v2_completion.sql` (privileges, channel rules, supersede and retract, rights gate before storage, private copy, removal and revalidation, `least_analyzed`, `ai_potential` refused); `023_discover_v2.sql` fixture now states the primacy excerpt a primary channel needs.
+- Worker integration: `apps/worker/test/integration/visual-assets.int.test.ts` (no download without rights, logo and non-image refused, admission replay, revalidation hides a changed visual).
+- E2E: `apps/web/e2e/discover-v2.e2e.ts` on the demo fixtures, with automated accessibility checks (`@axe-core/playwright`, WCAG 2 A/AA, serious and critical violations fail) on Discover Feed/Grid/List, the profile and the operator console, keyboard toggling of the display modes and a 375 px no-horizontal-scroll check. Synthetic visuals and demo channels are removed or retracted at the end.

@@ -9,6 +9,9 @@ import { Row, Section, Sourced } from "@/components/profile/sourced";
 import { CompetitorTable } from "@/components/profile/competitor-table";
 import { WorkspacePanel } from "@/components/profile/workspace-panel";
 import {
+  ACQUISITION_CHANNEL,
+  ACQUISITION_CHANNEL_CATEGORY,
+  ACQUISITION_CHANNEL_STATUS,
   AVAILABILITY,
   BILLING_MODEL,
   CUSTOMER_TYPE,
@@ -16,6 +19,8 @@ import {
   PRICING_STATUS,
   RELIABILITY,
   SIGNAL_TYPE,
+  VISUAL_ASSET_TYPE,
+  confidenceLabel,
   countryName,
   formatDate,
   formatMoney,
@@ -26,6 +31,7 @@ import {
   buildGeneral,
   entryMonthlyEur,
   getCompetitors,
+  getDiscoverDetails,
   recordView,
   sourcesOf,
 } from "@/lib/services/catalog";
@@ -64,6 +70,7 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
     productTags,
     collections,
     productCollections,
+    discover,
   ] = await Promise.all([
     catalogRepo.listProvenance(client, product.id, product.company_id),
     catalogRepo.listFeatures(client, product.id),
@@ -80,6 +87,7 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
     workspaceRepo.listProductTags(client, workspaceId, product.id),
     workspaceRepo.listCollections(client, workspaceId),
     workspaceRepo.listProductCollections(client, workspaceId, product.id),
+    getDiscoverDetails(client, product.id),
   ]);
   const conflicts = await pipelineRepo.listConflicts(client, product.id);
   const defaults = await analysisDefaults(client, workspaceId);
@@ -516,6 +524,98 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
         ) : (
           <p className="text-sm">
             <Unknown label="Aucun signal de traction recensé" />
+          </p>
+        )}
+      </Section>
+
+      {discover.visual_asset ? (
+        <Section id="visual" title="Visuel du produit">
+          <figure className="space-y-2">
+            {/* eslint-disable-next-line @next/next/no-img-element -- authorized private copy served by SOR */}
+            <img
+              src={discover.visual_asset.url}
+              alt={discover.visual_asset.alt_text}
+              width={discover.visual_asset.width ?? undefined}
+              height={discover.visual_asset.height ?? undefined}
+              loading="lazy"
+              decoding="async"
+              className="h-auto max-h-96 w-full rounded-md border border-border object-contain"
+            />
+            <figcaption className="text-xs text-muted">
+              {VISUAL_ASSET_TYPE[discover.visual_asset.asset_type]} · observé le{" "}
+              {formatDate(discover.visual_asset.observed_at)} · droits :{" "}
+              {discover.visual_asset.rights_basis} ·{" "}
+              <a
+                className="text-accent underline"
+                href={discover.visual_asset.source_url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+              >
+                source du visuel
+              </a>
+            </figcaption>
+          </figure>
+        </Section>
+      ) : null}
+
+      <Section
+        id="acquisition"
+        title="Acquisition Channels"
+        note="Canaux que ce SaaS utilise pour acquérir ses clients, avec leur preuve. Distincts des sources du catalogue et des recommandations Go-to-Market. Une absence de canal n’est pas une preuve d’absence."
+      >
+        {discover.acquisition_channels.length ? (
+          <ul className="space-y-3">
+            {discover.acquisition_channels.map((ch) => (
+              <li key={`${ch.channel_key}:${ch.evidence_id}`} className="space-y-1 text-sm">
+                <p className="flex flex-wrap items-center gap-2">
+                  <span className="font-medium">
+                    {ch.role === "primary" ? "★ Canal principal : " : "Canal secondaire : "}
+                    {ACQUISITION_CHANNEL[ch.channel_key] ?? ch.channel_key}
+                  </span>
+                  <Badge>
+                    {ACQUISITION_CHANNEL_CATEGORY[ch.channel_category] ?? ch.channel_category}
+                  </Badge>
+                  <Badge
+                    tone={
+                      ch.status === "confirmed"
+                        ? "success"
+                        : ch.status === "estimated"
+                          ? "warning"
+                          : "accent"
+                    }
+                  >
+                    {ACQUISITION_CHANNEL_STATUS[ch.status] ?? ch.status}
+                  </Badge>
+                  <span className="text-xs text-muted">
+                    {confidenceLabel(ch.confidence)} · observé le {formatDate(ch.observed_at)} ·{" "}
+                    <a
+                      className="text-accent underline"
+                      href={ch.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                    >
+                      source
+                    </a>
+                  </span>
+                </p>
+                {ch.role_rationale ? (
+                  <p className="text-xs">Principal selon la source : « {ch.role_rationale} »</p>
+                ) : null}
+                {ch.inference_rationale ? (
+                  <p className="text-xs">Méthode de l’estimation : {ch.inference_rationale}</p>
+                ) : null}
+                {ch.confidence_reasons.length ? (
+                  <p className="text-xs text-muted">
+                    Confiance ({ch.confidence_method ?? "méthode inconnue"}) :{" "}
+                    {ch.confidence_reasons.join(" · ")}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm">
+            <Unknown label="Inconnus / non documentés" />
           </p>
         )}
       </Section>

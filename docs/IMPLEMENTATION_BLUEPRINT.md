@@ -5600,6 +5600,12 @@ API, token needed). S7.5b CI was green on `cb45f87` (run 77).
     a pull request (never a push to `main`), licence/attribution on product
     profiles, functional campaign in the CI real-catalog steps.
 
+-   **S8.3 Discover V2 completion (11 November 2026, PR pending):** ADR-016
+    and ADR-017 implemented (sections "Implémentation" of both ADRs; sprint
+    status in `docs/sprints/S8.3-DISCOVER-V2.md`): rights-gated private
+    visuals, operator-recorded Acquisition Channels with deterministic
+    confidence, `least_analyzed`, Discover UX and accessibility checks.
+
 -   **Current remaining work:** backup and restore drill; staging deployment;
     operational runbooks; catalog filter performance before a larger source. Security and
     RLS review is covered by S7.4. Failure-mode scenarios F1--F13 are covered

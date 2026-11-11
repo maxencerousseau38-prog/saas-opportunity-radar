@@ -259,6 +259,17 @@ async function visibleProduct(client: DbClient, idOrSlug: { id?: string; slug?: 
   return product;
 }
 
+/** Acquisition Channels and authorized visual of one product (S8.3, profile). */
+export async function getDiscoverDetails(client: DbClient, productId: string) {
+  const [row] = await catalogRepo.discoverMetadata(client, [productId]);
+  return {
+    acquisition_channels: ProductAcquisitionChannelSchema.array().parse(
+      row?.acquisition_channels ?? [],
+    ),
+    visual_asset: ProductVisualAssetSchema.nullable().parse(row?.visual_asset ?? null),
+  };
+}
+
 export async function getProductGeneral(client: DbClient, productId: string) {
   const product = await visibleProduct(client, { id: productId });
   const provenance = await catalogRepo.listProvenance(client, product.id, product.company_id);

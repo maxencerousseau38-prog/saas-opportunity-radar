@@ -29,6 +29,8 @@ export interface SafeFetchPolicy {
   resolve: (hostname: string) => Promise<ResolvedAddress[]>;
   /** Address policy. Production code never overrides it; tests may. */
   isAddressAllowed: (address: string) => boolean;
+  /** Accept header (defaults to documents; images for visual assets, S8.3). */
+  accept?: string;
 }
 
 export interface FetchedResource {
@@ -37,6 +39,8 @@ export interface FetchedResource {
   status: number;
   contentType: string;
   body: string;
+  /** Raw response bytes (binary resources such as admitted images). */
+  bytes: Uint8Array;
   redirects: number;
 }
 
@@ -77,6 +81,7 @@ interface RawResponse {
   location: string | null;
   contentType: string;
   body: string;
+  raw: Buffer;
   retryAfterMs?: number;
 }
 
@@ -101,7 +106,8 @@ function requestOnce(
     method: "GET",
     headers: {
       "user-agent": policy.userAgent,
-      accept: "text/html,application/xhtml+xml,text/plain;q=0.9,application/json;q=0.8",
+      accept:
+        policy.accept ?? "text/html,application/xhtml+xml,text/plain;q=0.9,application/json;q=0.8",
       "accept-encoding": "identity",
     },
     lookup,
@@ -120,7 +126,7 @@ function requestOnce(
         const retryAfter = Number(res.headers["retry-after"]);
         if (status >= 300 && status < 400) {
           res.resume();
-          resolve({ status, location, contentType, body: "" });
+          resolve({ status, location, contentType, body: "", raw: Buffer.alloc(0) });
           return;
         }
         const declared = Number(res.headers["content-length"]);
@@ -149,15 +155,17 @@ function requestOnce(
           }
           chunks.push(chunk);
         });
-        res.on("end", () =>
+        res.on("end", () => {
+          const raw = Buffer.concat(chunks);
           resolve({
             status,
             location,
             contentType,
-            body: Buffer.concat(chunks).toString("utf8"),
+            body: raw.toString("utf8"),
+            raw,
             ...(Number.isFinite(retryAfter) ? { retryAfterMs: retryAfter * 1000 } : {}),
-          }),
-        );
+          });
+        });
         res.on("error", reject);
       },
     );
@@ -239,6 +247,7 @@ export async function safeFetch(
         status: response.status,
         contentType: response.contentType,
         body: response.body,
+        bytes: new Uint8Array(response.raw),
         redirects: hop,
       },
     };

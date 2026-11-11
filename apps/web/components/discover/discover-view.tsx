@@ -161,7 +161,7 @@ export function DiscoverView(props: DiscoverProps) {
           {SORTS.map((s) => (
             <option key={s.value} value={s.value} disabled={Boolean(s.disabled)} title={s.disabled}>
               {s.label}
-              {s.disabled ? " — bientôt" : ""}
+              {s.disabled ? " — indisponible" : ""}
             </option>
           ))}
         </Select>
@@ -184,7 +184,10 @@ export function DiscoverView(props: DiscoverProps) {
               aria-label={label}
               title={label}
               onClick={() => changeView(mode)}
-              className={cn("p-2", view === mode ? "bg-surface-2 text-fg" : "text-muted")}
+              className={cn(
+                "p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+                view === mode ? "bg-surface-2 text-fg" : "text-muted",
+              )}
             >
               <Icon size={16} />
             </button>
@@ -264,7 +267,14 @@ export function DiscoverView(props: DiscoverProps) {
         être retiré.
       </p>
 
-      {error ? <ErrorNote>{error}</ErrorNote> : null}
+      {error ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <ErrorNote>{error}</ErrorNote>
+          <Button size="sm" onClick={() => void load(items.length ? cursor : null)}>
+            Réessayer
+          </Button>
+        </div>
+      ) : null}
 
       {!loading && !error && items.length === 0 ? (
         <EmptyState title="Aucun SaaS ne correspond">
@@ -273,6 +283,27 @@ export function DiscoverView(props: DiscoverProps) {
             ? "ajoutez un SaaS manuellement."
             : "demandez à un membre d’ajouter un SaaS."}
         </EmptyState>
+      ) : null}
+
+      {loading && items.length === 0 ? (
+        <ul
+          aria-hidden
+          data-testid="discover-skeleton"
+          className={cn(
+            "gap-3",
+            view === "grid"
+              ? "grid sm:grid-cols-2 lg:grid-cols-3"
+              : "mx-auto flex max-w-3xl flex-col",
+          )}
+        >
+          {Array.from({ length: view === "list" ? 4 : 6 }, (_, i) => (
+            <li key={i} className="animate-pulse rounded-lg border border-border bg-surface p-4">
+              <div className="mb-3 h-24 rounded-md bg-surface-2" />
+              <div className="mb-2 h-4 w-1/2 rounded bg-surface-2" />
+              <div className="h-3 w-3/4 rounded bg-surface-2" />
+            </li>
+          ))}
+        </ul>
       ) : null}
 
       {view === "list" ? (
