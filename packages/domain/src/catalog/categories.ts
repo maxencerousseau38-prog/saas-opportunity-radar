@@ -12,7 +12,7 @@ interface CategoryRule {
 }
 
 // Ordered from the most specific to the most generic. Slugs are those of the
-// taxonomy (reference data + migration 20261116090000_catalog_sources).
+// taxonomy (reference data + migration 20261116090001_catalog_sources).
 const RULES: CategoryRule[] = [
   // Sales & CRM
   { slug: "sales-crm-crm", pattern: /\b(crm|customer relationship management)\b/i },

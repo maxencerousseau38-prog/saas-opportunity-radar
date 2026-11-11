@@ -13,7 +13,10 @@ A source is usable by an engine only when its `sources` row has
 `integration_status = 'integrated'` **and** `is_enabled = true` (database
 check). Integration means: connector developed, tested, terms reviewed here,
 and approved by the product owner. **No source is enabled in production by
-Sprint 6** (product-owner instruction, 6 November 2026).
+Sprint 6** (product-owner instruction, 6 November 2026). Since 10 November
+2026, the catalog sources `wikidata` and `uneed` are integrated and enabled
+by migration (first bulk catalog collection, product-owner instruction); no
+hosted environment exists yet, so nothing runs in production.
 
 ## Summary
 
@@ -152,6 +155,17 @@ looks the company up once per product by primary key (same semantics):
 planner statistics after a bulk load (`sor_catalog_refresh_statistics`); that
 alone did not fix the timeout.
 
+Storage labels (S8.1, 11 November 2026): a catalog snapshot follows its
+source's storage policy. Wikidata (`full`, CC0) snapshots are `stored_full`;
+Uneed (`metadata_only`) snapshots are `reference_only`: the ingester keeps the
+normalized listing metadata and its licence/attribution, never page content.
+Migration `20261121090001_catalog_snapshot_storage_policy` makes the RPC
+derive the label from `sources.storage_policy` and relabels earlier Uneed
+snapshots that were wrongly marked `stored_full` (only those with no raw
+content and the listing metadata present; one audit row records the count).
+Verified locally on the real snapshots: 6,238 Uneed snapshots relabelled,
+2,361 Wikidata snapshots unchanged, evidence untouched, replay idempotent.
+
 ## `manual_entry` and `user_import` (existing)
 
 - Data supplied by the product owner. Imported products and feedback are
@@ -288,6 +302,12 @@ hello@producthunt.com (third-party summaries; official page blocked).
 (the product owner sends it). Not registered in `sources`; no connector is
 built until written permission and a product-owner approval.
 
+**Update (10 November 2026):** Product Hunt is now registered as a catalog
+source, `planned` and disabled (migration `20261116090001_catalog_sources`),
+with a prepared collector (`packages/data-sources/src/connectors/product-hunt.ts`,
+no HTTP runner wired). Enabling it still needs the product owner's token,
+non-commercial use only, and PD-29 for any other use.
+
 ## `brave_search` — deferred (no spending)
 
 From third-party pricing trackers and Brave's official help page snippet
@@ -317,10 +337,10 @@ owner on 6 November 2026; no account, no key, no call.
 |---|---|---|
 | ~~HN / Y Combinator site terms~~ | Read 10 Nov 2026 (see the catalog sources review) | Done; activation still needs a go-ahead |
 | Product Hunt terms of service (storage, attribution) | `https://www.producthunt.com/legal/terms-of-service` (HTTP 403 from the runners) | Enabling `product_hunt` |
-| Uneed terms of use | `https://www.uneed.best/terms-of-use` | Any Uneed work |
+| ~~Uneed terms of use~~ | Read 10 Nov 2026 (frozen in `docs/sources/terms/`, see the catalog sources review) | Done; Uneed enabled, metadata only |
 | Brave Search API terms and pricing | `https://brave.com/search/api/`, `https://api-dashboard.search.brave.com/documentation/resources/terms-of-service` | Nothing (deferred) |
 
-## Activation procedure (no source is enabled yet)
+## Activation procedure (for any source not yet enabled)
 
 1. Complete the open verifications above (read the official pages; no API
    call) and record the result in this document.

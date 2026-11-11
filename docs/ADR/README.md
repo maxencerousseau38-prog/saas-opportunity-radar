@@ -227,9 +227,9 @@ review: `docs/DATA_SOURCES.md`, official pages frozen in `docs/sources/terms`):
   objects.
 - **Microlaunch, BetaList, Y Combinator directory**: not retained (their
   terms prohibit copying). **SaaSHub**: later (account key, CC BY-SA).
-- **Taxonomy**: six top-level categories added (Communication &
+- **Taxonomy**: seven top-level categories added (Communication &
   Collaboration, Productivity, Design & Creative, HR & Recruiting, Education
-  & Learning, Security & IT) under PRD §4.2.E ("Pouvoir créer de nouvelles
+  & Learning, Security & IT, Industry & Vertical Software) under PRD §4.2.E ("Pouvoir créer de nouvelles
   catégories") and §24.1 (global catalog, no sectoral restriction).
 - Loading the snapshot into a **hosted** database is not done by Claude: it
   needs the product owner's go-ahead per environment and the hosted
