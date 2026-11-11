@@ -11,6 +11,10 @@ Objectif : Découverte, enrichissement, analyse et identification d’opportunit
 
 ---
 
+> **Décision produit actuelle — Ask AI :** les analyses IA sont réalisées dans la plateforme externe choisie par l'utilisateur (ChatGPT, Claude ou Perplexity), sans appels API de modèles depuis SOR. SOR prépare le prompt et un dossier de contexte sourcé (SaaS sélectionnés, concurrents, avis collectés, URLs et dates), puis copie ce contexte et ouvre la plateforme choisie. Le préremplissage automatique ne doit être utilisé que si réellement pris en charge ; le parcours fiable reste « Copier le contexte + Ouvrir l'IA ». Cette décision, détaillée dans `docs/PRODUCT_VISION.md`, prévaut sur les anciennes mentions d'AI Gateway, d'agents LLM côté serveur ou de clés API de modèles. Les connecteurs de collecte de données restent distincts des API de modèles.
+
+---
+
 # 1. VISION DU PRODUIT
 
 ## 1.1. Concept
