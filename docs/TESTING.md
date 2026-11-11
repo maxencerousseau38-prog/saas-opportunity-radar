@@ -295,11 +295,33 @@ and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
   exclusion. F12 (`e2e/workspace-isolation.e2e.ts`) sweeps the five Ask AI
   routes with a real session id. With `REAL_CATALOG=1`,
   `e2e/functional-campaign.e2e.ts` also checks the stored session and that
-  an imported answer leaves the catalog row unchanged (local runs; the CI
-  real-catalog step runs `real-catalog.e2e.ts` only).
+  an imported answer leaves the catalog row unchanged (in CI since S8.2).
 - Database: `supabase/tests/022_external_ai_research.sql` covers grants,
   workspace read isolation and the session status/answer check; it runs in
   the CI database job.
 - Not covered yet: the creator-or-owner/admin rule for import and deletion,
   the 75,000-character prompt limit, deletion.
 
+## Catalog reliability (S8.2)
+
+- Snapshot gate: `apps/worker/test/catalog-snapshots.test.ts` (in
+  `pnpm test`) validates every committed `data/catalog/<source>/listings.json`
+  against the listing contract and quality rules; the weekly collection runs
+  it before opening its pull request.
+- Review queue: pgTAP `025_catalog_review_queue.sql` (privileges, idempotent
+  recording, create / attach / reject, refusals, reopening on change, audit);
+  worker integration `catalog-ingest.int.test.ts` checks that reviews are
+  recorded once and survive a replay; contract test
+  `packages/contracts/src/__tests__/catalog-review.test.ts`.
+- CI real-catalog steps (E2E job, after `pnpm test:e2e` and the ingestion of
+  both snapshots): `e2e/real-catalog.e2e.ts` (Discover at scale, provenance,
+  licence/attribution on a Wikidata and a Uneed profile), then
+  `e2e/functional-campaign.e2e.ts` in a separate run (every workspace
+  feature on real products, the operator review queue: reject with a note and
+  attach, checked in the database and the audit log). AI steps use the fake
+  provider and are labelled simulated.
+- The operator TOTP secret used by the E2E journeys is kept in the system
+  temporary directory, keyed by the stack URL (`apps/web/e2e/helpers.ts`), so
+  separate Playwright runs on one stack reuse the enrolled factor.
+- Catalog benchmark (S7.5c): `pnpm benchmark:catalog`, see
+  `docs/S7.5C_BENCHMARK.md`.

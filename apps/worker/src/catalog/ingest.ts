@@ -27,6 +27,8 @@ export interface IngestSummary {
   counts: Record<ListingOutcome, number>;
   /** Why listings were sent to review or rejected (not imported). */
   reasons: Record<string, number>;
+  /** Listings sent to review and recorded in the operator queue (S8.2). */
+  reviews_recorded: number;
   /** Primary categories of the created products. */
   primary_categories: Record<string, number>;
   uncategorised: number;
@@ -58,6 +60,7 @@ export async function ingestListings(
       error: 0,
     },
     reasons: {},
+    reviews_recorded: 0,
     primary_categories: {},
     uncategorised: 0,
     errors: [],
@@ -86,9 +89,71 @@ export async function ingestListings(
       skip("rejected", "invalid_website_url");
       continue;
     }
+    const categories = categorizeListing({
+      name: listing.name,
+      description: listing.description,
+      sourceCategories: listing.source_categories,
+    });
+    const exclusion = classifyExclusion({
+      primaryCategorySlugs: categories.slice(0, 1),
+      name: listing.name,
+      tagline: listing.description,
+      primaryUseCase: listing.source_categories.join("; ") || null,
+      secondaryTexts: [],
+      featureTexts: [],
+    });
+    const row = {
+      source_key: listing.source_key,
+      external_id: listing.external_id,
+      source_url: listing.source_url,
+      name: listing.name,
+      description: listing.description,
+      canonical_url: url.canonicalUrl,
+      domain: url.registrableDomain ?? url.host,
+      slug_base: slugify(listing.name),
+      launch_year: listing.launch_year,
+      country_code: listing.country_code,
+      company_name: listing.company_name,
+      company_external_id: listing.company_external_id,
+      company_slug_base: listing.company_name ? slugify(listing.company_name) : null,
+      category_slugs: categories,
+      source_categories: listing.source_categories,
+      licence: listing.licence,
+      retrieved_at: listing.retrieved_at,
+      content_hash: listingHash(listing),
+    } as unknown as NonNullable<Json>;
+    const exclusionJson = {
+      status: exclusion.status,
+      rule_set_version: exclusion.ruleSetVersion,
+      matched_rules: exclusion.matchedRules,
+      incidental_mentions: exclusion.incidentalMentions,
+    } as unknown as NonNullable<Json>;
+    // A listing sent to review is kept in the operator queue (S8.2), ready to
+    // be created, attached to an existing product or rejected there.
+    const review = async (reason: string, candidates: string[]) => {
+      skip("needs_review", reason);
+      try {
+        await pipelineRepo.recordCatalogReview(db, {
+          row,
+          exclusion: exclusionJson,
+          reason,
+          candidates: [...new Set(candidates)],
+        });
+        summary.reviews_recorded++;
+      } catch (err) {
+        summary.counts.error++;
+        if (summary.errors.length < 20)
+          summary.errors.push(
+            `${listing.external_id}: review not recorded ${(err as Error).message ?? ""}`.slice(
+              0,
+              300,
+            ),
+          );
+      }
+    };
     // An app-store page, a code host or a social profile is not an official product site.
     if (isSharedHost(url.registrableDomain)) {
-      skip("needs_review", "shared_host_website");
+      await review("shared_host_website", []);
       continue;
     }
     try {
@@ -110,60 +175,26 @@ export async function ingestListings(
         lookup,
       );
       if (decision.outcome === "needs_review") {
-        skip("needs_review", decision.reason);
+        await review(decision.reason, [
+          ...(decision.possibleDuplicateOf ? [decision.possibleDuplicateOf] : []),
+          ...(decision.reason === "domain_maps_to_several_products" ? lookup.productsByDomain : []),
+        ]);
         continue;
       }
       // Same registrable domain but another canonical URL: possibly another
       // product of the same company. A human decides; evidence is never
       // attached to a product on a domain match alone.
       if (decision.outcome === "matched_existing" && decision.rule === "domain") {
-        skip("needs_review", "same_domain_other_url");
+        await review("same_domain_other_url", [decision.productId]);
         continue;
       }
-      const categories = categorizeListing({
-        name: listing.name,
-        description: listing.description,
-        sourceCategories: listing.source_categories,
-      });
-      const exclusion = classifyExclusion({
-        primaryCategorySlugs: categories.slice(0, 1),
-        name: listing.name,
-        tagline: listing.description,
-        primaryUseCase: listing.source_categories.join("; ") || null,
-        secondaryTexts: [],
-        featureTexts: [],
-      });
       const res = await pipelineRepo.ingestCatalogListing(db, {
-        row: {
-          source_key: listing.source_key,
-          external_id: listing.external_id,
-          source_url: listing.source_url,
-          name: listing.name,
-          description: listing.description,
-          canonical_url: url.canonicalUrl,
-          domain: url.registrableDomain ?? url.host,
-          slug_base: slugify(listing.name),
-          launch_year: listing.launch_year,
-          country_code: listing.country_code,
-          company_name: listing.company_name,
-          company_external_id: listing.company_external_id,
-          company_slug_base: listing.company_name ? slugify(listing.company_name) : null,
-          category_slugs: categories,
-          source_categories: listing.source_categories,
-          licence: listing.licence,
-          retrieved_at: listing.retrieved_at,
-          content_hash: listingHash(listing),
-        } as unknown as NonNullable<Json>,
+        row,
         decision:
           decision.outcome === "matched_existing"
             ? { outcome: "matched_existing", product_id: decision.productId, rule: decision.rule }
             : { outcome: "new", company_id: decision.companyId, rule: decision.rule },
-        exclusion: {
-          status: exclusion.status,
-          rule_set_version: exclusion.ruleSetVersion,
-          matched_rules: exclusion.matchedRules,
-          incidental_mentions: exclusion.incidentalMentions,
-        } as unknown as NonNullable<Json>,
+        exclusion: exclusionJson,
       });
       if (res.status === "matched_existing") {
         summary.counts.matched_existing++;

@@ -601,6 +601,11 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
                   {formatDate(s.retrieved_at) ?? "?"} · dernière vérification{" "}
                   {formatDate(s.last_retrieved_at) ?? "?"}
                 </p>
+                {s.licence ? (
+                  <p className="text-xs text-muted" data-testid="source-licence">
+                    Licence / attribution : {s.licence}
+                  </p>
+                ) : null}
                 <ul className="mt-2 space-y-1">
                   {s.evidence.map((e) => (
                     <li key={e.id} id={`evidence-${e.id}`} className="scroll-mt-24">

@@ -5584,9 +5584,24 @@ API, token needed). S7.5b CI was green on `cb45f87` (run 77).
     and with the PD-24 budgets. Host-side log alerts (Render) are to be
     configured by the product owner once staging exists.
 
--   **Current remaining work:** execute and record PostgreSQL/Supabase S7.5c
-    benchmarks and live cleanup/isolation checks on the local PostgreSQL 17
-    stack; backup and restore drill; staging deployment; operational runbooks. Security and
+-   **S7.5c executed (11 November 2026, S8.2):** real PostgreSQL 17.11 and
+    PostgREST measurements at 2K/10K/50K on a throwaway local stack, live
+    cleanup and isolation checks passed, harness defects fixed, CI step with
+    generous ceilings (`docs/S7.5C_BENCHMARK.md`). Finding: the catalog
+    filter function materialises its whole result, so its cost is linear in
+    visible products (~1.1 s at 50K for one client, ~3.1 s with 10 clients on
+    4 vCPU); an optimisation is needed before any ~260K-product source
+    (PD-34) and is not done.
+
+-   **S8.2 catalog reliability (11 November 2026):** persisted operator review
+    queue for collected listings (migration `20261122090001`, pgTAP 025,
+    operator console, audited create/attach/reject), committed snapshot gate
+    (`apps/worker/test/catalog-snapshots.test.ts`), weekly collection opening
+    a pull request (never a push to `main`), licence/attribution on product
+    profiles, functional campaign in the CI real-catalog steps.
+
+-   **Current remaining work:** backup and restore drill; staging deployment;
+    operational runbooks; catalog filter performance before a larger source. Security and
     RLS review is covered by S7.4. Failure-mode scenarios F1--F13 are covered
     by S7.5a--S7.5b; S7.5b's current-revision CI result still needs
     confirmation.

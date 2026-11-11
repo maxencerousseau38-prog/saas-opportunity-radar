@@ -104,6 +104,17 @@ export const ACQUISITION_CHANNEL_STATUS: Record<string, string> = {
   estimated: "Estimé",
   unknown: "Inconnu",
 };
+/** Why a collected catalog listing was sent to review (S8.2, ingestion rules). */
+export const CATALOG_REVIEW_REASON: Record<string, string> = {
+  shared_host_website:
+    "Site sur un hébergeur partagé (app store, hébergeur de code, réseau social) : pas un site officiel",
+  same_domain_other_url: "Même domaine qu’un produit existant, avec une autre URL",
+  similar_name: "Nom proche d’un produit existant",
+  same_name_same_company: "Même nom qu’un produit de la même entreprise",
+  domain_maps_to_several_products: "Domaine déjà partagé par plusieurs produits",
+  invalid_official_url: "URL officielle invalide",
+  missing_official_url: "URL officielle absente",
+};
 /** Confidence of a sourced fact: a percentage only when it is known. */
 export function confidenceLabel(confidence: number | null | undefined): string {
   return typeof confidence === "number" && Number.isFinite(confidence)

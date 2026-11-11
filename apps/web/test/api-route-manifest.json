@@ -1,6 +1,8 @@
 {
   "POST csp-report/route.ts": "public",
   "GET v1/me/route.ts": "authenticated",
+  "POST v1/operator/catalog-reviews/[reviewId]/resolution/route.ts": "operator",
+  "GET v1/operator/catalog-reviews/route.ts": "operator",
   "POST v1/operator/correction-reports/[reportId]/resolution/route.ts": "operator",
   "GET v1/operator/correction-reports/route.ts": "operator",
   "GET v1/operator/exclusion-reviews/route.ts": "operator",

@@ -5,6 +5,9 @@ on:
   push:
     branches: [main, "claude/**"]
   pull_request:
+  # Dispatched by the weekly catalog collection on its snapshot branch
+  # (pushes made with GITHUB_TOKEN do not trigger workflows).
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -145,6 +148,12 @@ jobs:
           { echo '## Catalog ingestion'; echo '```json'; cat "$RUNNER_TEMP/ingest.json"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Discover on the real catalog
         run: REAL_CATALOG=1 pnpm --filter @sor/web exec playwright test e2e/real-catalog.e2e.ts
+      # S8.2: the functional campaign (each workspace feature on real
+      # collected products, operator review queue included; AI steps use the
+      # fake provider and are labelled simulated). Separate run, after the
+      # Discover check: it changes workspace state (hidden, saved, statuses).
+      - name: Functional campaign on the real catalog
+        run: REAL_CATALOG=1 pnpm --filter @sor/web exec playwright test e2e/functional-campaign.e2e.ts
       # Measured on the real catalog, as the browser role (RLS applies): the
       # search and count behind Discover's first page.
       - name: Real catalog search timing (EXPLAIN ANALYZE as a viewer)
@@ -194,7 +203,7 @@ jobs:
     name: Worker integration (PGMQ, RPCs, crash recovery)
     needs: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -218,6 +227,33 @@ jobs:
             echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
           } >> "$GITHUB_ENV"
       - run: pnpm --filter @sor/worker test:integration
+      # S7.5c (validated in S8.2): synthetic, labelled catalog fixtures at 2K,
+      # 10K and 50K products on this throwaway stack (pgbench as the RLS
+      # browser role, then PostgREST), cleaned up and checked to leave every
+      # other row unchanged. Correctness always blocks; performance only on a
+      # major regression (generous ceilings). Fewer transactions than a local
+      # run to bound the job. Results are a CI artifact.
+      - name: Catalog load benchmark (synthetic 2K / 10K / 50K)
+        env:
+          SOR_S75C_TRANSACTIONS: "10"
+          SOR_S75C_DB_CONTAINER: supabase_db_saas-opportunity-radar
+        run: |
+          set -o pipefail
+          set -a; . "$RUNNER_TEMP/supabase.env"; set +a
+          SUPABASE_PUBLISHABLE_KEY="$PUBLISHABLE_KEY" SUPABASE_JWT_SECRET="$JWT_SECRET" \
+            node scripts/benchmark-catalog.mjs --check > "$RUNNER_TEMP/catalog-benchmark.json"
+          node -e '
+            const d = require(process.argv[1]);
+            const rows = d.postgresql_pgbench.map((r) => `| ${r.scale} | ${r.query} | ${r.clients} | ${r.average_latency_ms} | ${r.transactions_per_second.toFixed(1)} |`);
+            console.log(["## Catalog benchmark (synthetic fixtures)", "", "| Products | Query | Clients | Avg latency (ms) | TPS |", "|---:|---|---:|---:|---:|", ...rows].join("\n"));
+          ' "$RUNNER_TEMP/catalog-benchmark.json" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-benchmark
+          path: ${{ runner.temp }}/catalog-benchmark.json
+          if-no-files-found: ignore
+          retention-days: 30
       - if: always()
         run: supabase stop --no-backup
 

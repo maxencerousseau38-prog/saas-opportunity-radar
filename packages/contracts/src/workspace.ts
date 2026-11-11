@@ -196,6 +196,27 @@ export const OperatorReportResolutionSchema = z
   })
   .strict();
 
+/**
+ * Operator decision on a collected catalog listing sent to review (S8.2):
+ * create the product, attach the listing to an existing product, or reject it.
+ */
+export const OperatorCatalogReviewResolutionSchema = z
+  .object({
+    action: z.enum(["create", "attach", "reject"]),
+    product_id: z.uuid().optional(),
+    note: z.string().trim().max(1000).optional(),
+  })
+  .strict()
+  .superRefine((v, ctx) => {
+    if (v.action === "attach" && !v.product_id)
+      ctx.addIssue({ code: "custom", path: ["product_id"], message: "product_id required" });
+    if (v.action !== "attach" && v.product_id)
+      ctx.addIssue({ code: "custom", path: ["product_id"], message: "only for attach" });
+    if (v.action === "reject" && !v.note)
+      ctx.addIssue({ code: "custom", path: ["note"], message: "note required" });
+  });
+
+export type OperatorCatalogReviewResolution = z.infer<typeof OperatorCatalogReviewResolutionSchema>;
 export type WorkspaceRole = z.infer<typeof WorkspaceRoleSchema>;
 export type OpportunityStatus = z.infer<typeof OpportunityStatusSchema>;
 export type ResearchPreferences = z.infer<typeof ResearchPreferencesSchema>;
