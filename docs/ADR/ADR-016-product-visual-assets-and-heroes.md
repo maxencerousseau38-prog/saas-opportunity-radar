@@ -87,3 +87,52 @@ S8.3 peut commencer par une acquisition contrôlée et limitée aux actifs dont 
 - **Correctif :** le trigger `check_product_discover_evidence` de la migration `20261115090001` lisait `NEW.fact_status` sur `product_visual_assets`, qui n’a pas cette colonne : aucun visuel n’était insérable. Corrigé dans `20261123090001_discover_v2_completion.sql`.
 - **Couverture réelle :** aucun visuel réel n’a été admis par S8.3 (aucun droit documenté à ce jour). Les tests utilisent des images synthétiques étiquetées. Le repli honnête reste l’état par défaut.
 
+## Amendement PD-38 (S8.5, 12 novembre 2026) : visuels par référence
+
+Décision du product owner (PD-38) : des visuels **automatiques** pour le
+catalogue, en plus des copies privées admises une par une. Deux nouveaux
+types, **affichés par référence** depuis leur origine (aucune copie stockée :
+la base de l'offre gratuite, 500 Mo, ne peut pas contenir des milliers
+d'images, et rien n'est reproduit par SOR) :
+
+1. **`licensed_image` — image sous licence libre.** L'image Wikidata (P18)
+   d'une annonce, hébergée sur Wikimedia Commons. Seules les licences CC0,
+   domaine public, CC BY et CC BY-SA sont acceptées (NC, ND, GFDL seule,
+   usage loyal : refusés). La licence, son lien, l'auteur et la page du
+   fichier sont lus dans l'API officielle de Commons et affichés avec
+   l'image (obligation d'attribution). Formats raster seulement (SVG
+   refusé : les logos y sont presque toujours), image large (≥ 500×280,
+   ratio ≥ 1), nom de fichier qui n'évoque pas un logo ou une icône.
+2. **`publisher_share_image` — image de partage de l'éditeur.** L'image
+   `og:image` / `twitter:image` que l'éditeur déclare sur **son propre site
+   officiel** pour les aperçus de liens. **Ce n'est pas une licence** : le
+   libellé le dit (« Image de partage publiée par l'éditeur », sans licence
+   vérifiée). Page lue par le connecteur `official_website` (robots.txt,
+   fetcher SSRF-safe, redirections limitées au même site) ; image
+   téléchargée une fois par le fetcher d'images (robots.txt de l'hôte de
+   l'image, https, PNG/JPEG/WebP, 5 Mo) pour vérifier qu'elle est réelle et
+   large (≥ 600×300, ratio ≥ 1,2, pas de logo) et la hacher, puis oubliée.
+   La page doit être sur le domaine du produit ou un sous-domaine. Une URL d'image signée ou porteuse d'un jeton (S3/GCS présignée, jeton Firebase, JWT) est refusée : elle expire et contient des identifiants.
+
+Ce que l'amendement **ne change pas** : les copies privées restent soumises
+au §3 (droits documentés couvrant la copie, opérateur, preuve vérifiée) ;
+aucune capture d'écran automatique, aucune image générée, aucune page privée ;
+le retrait par l'opérateur masque immédiatement une référence. Le §3 interdisait
+le hotlink faute d'autorisation explicite : PD-38 l'autorise pour ces deux
+types uniquement, chacun avec ses règles et son libellé.
+
+**Préséance sur une carte :** copie approuvée > licence libre > image de
+partage. **Navigateur :** l'image est chargée depuis son origine sans
+référent (`referrerpolicy="no-referrer"`) ; si elle ne se charge plus, la
+carte revient au repli honnête (« Aperçu authentique non disponible »).
+
+**Implémentation :** migration `20261125090001_visual_references.sql`
+(source `wikimedia_commons`, types, statuts `licensed` /
+`publisher_published`, mode `external_reference`, colonnes licence /
+attribution, règles par type, RPC `sor_record_visual_reference`, politique de
+lecture, DTO Discover), règles `visref-1` (`@sor/domain`), collecteurs
+`@sor/data-sources` (`connectors/commons.ts`, `share-image.ts`), CLI
+`visuals.js collect|ingest` (worker), workflow *Catalog visuals* (collecte sur
+GitHub, instantanés `data/visuals/*.json` validés), cartes et profil (type,
+crédit, licence, repli). Sprint : `docs/sprints/S8.5-VISUAL-REFERENCES.md`.
+

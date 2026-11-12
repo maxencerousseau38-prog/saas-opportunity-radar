@@ -87,3 +87,53 @@ export function extractPage(html: string, baseUrl: string): ExtractedPage {
     v ? decodeEntities(v).replace(/\s+/g, " ").trim() || null : null;
   return { title: clean(title), description: clean(description), text, links: [...new Set(links)] };
 }
+
+export interface ShareImage {
+  url: string;
+  /** The meta tag that declared it. */
+  declaredBy: "og:image:secure_url" | "og:image" | "twitter:image";
+  /** Alternative text the page gives for it, if any. */
+  alt: string | null;
+}
+
+function metaContent(head: string, key: string): string | null {
+  // <meta property|name="key" content="…"> in either attribute order.
+  const k = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const a = new RegExp(
+    `<meta\\b[^>]*(?:property|name)=["']${k}["'][^>]*content=["']([^"']*)["']`,
+    "i",
+  );
+  const b = new RegExp(
+    `<meta\\b[^>]*content=["']([^"']*)["'][^>]*(?:property|name)=["']${k}["']`,
+    "i",
+  );
+  const raw = a.exec(head)?.[1] ?? b.exec(head)?.[1];
+  const value = raw ? decodeEntities(raw).trim() : "";
+  return value || null;
+}
+
+/**
+ * The link-preview image the publisher declares for a page (Open Graph, then
+ * Twitter card), as an absolute URL; https candidates first. Null when absent
+ * or templated (PD-38: the publisher's own declaration, never guessed). The
+ * collector refuses anything that is not https (fetchVisualAsset).
+ */
+export function extractShareImage(html: string, baseUrl: string): ShareImage | null {
+  const head = /<head\b[\s\S]*?<\/head>/i.exec(html)?.[0] ?? html.slice(0, 200_000);
+  const keys = ["og:image:secure_url", "og:image", "twitter:image"] as const;
+  const found: ShareImage[] = [];
+  for (const key of keys) {
+    const value = metaContent(head, key);
+    if (!value || PLACEHOLDER.test(value)) continue;
+    let url: URL;
+    try {
+      url = new URL(value, baseUrl);
+    } catch {
+      continue;
+    }
+    if (url.protocol !== "https:" && url.protocol !== "http:") continue;
+    const alt = metaContent(head, key.startsWith("twitter") ? "twitter:image:alt" : "og:image:alt");
+    found.push({ url: url.toString(), declaredBy: key, alt: alt ? alt.slice(0, 300) : null });
+  }
+  return found.find((f) => f.url.startsWith("https://")) ?? found[0] ?? null;
+}

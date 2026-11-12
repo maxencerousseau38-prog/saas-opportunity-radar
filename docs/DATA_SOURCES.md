@@ -190,6 +190,51 @@ Neither is a source or a connector (ADR-016, ADR-017):
   the operator cites (SOR does not fetch it). X, Reddit, LinkedIn and Product
   Hunt appear as channel keys only; no collection from them is authorised.
 
+### Visual references (S8.5, PD-38, 12 November 2026)
+
+Two automatic kinds of product visuals, **displayed by reference** (the
+browser loads the image from its origin; SOR stores no copy). Collected by
+the *Catalog visuals* workflow on GitHub runners from the committed catalog
+snapshots, validated (`apps/worker/test/visual-snapshots.test.ts`) and
+committed as `data/visuals/licensed.json` and `data/visuals/publisher.json`;
+loading them into a database is a separate, manual step.
+
+- **`wikimedia_commons` (new source, metadata only).** For Wikidata listings:
+  the item's image (P18) from the public query service, then the file's
+  licence, licence URL, author and SHA-1 from the official Commons API
+  (`imageinfo`, `extmetadata`), descriptive User-Agent, 1 s between batches.
+  Terms: [Reusing content outside Wikimedia](https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia)
+  — reuse under each file's licence, with attribution (and share-alike for
+  CC BY-SA). Kept: CC0, public domain, CC BY, CC BY-SA; raster, wide, not a
+  logo. The card and the profile show the author, the licence (linked) and
+  the file page.
+- **`official_website` (existing source), share image.** The page is read by
+  the existing connector (robots.txt, SSRF-safe fetcher, same-site redirects);
+  the declared `og:image` / `twitter:image` is fetched once through the
+  SSRF-safe image fetcher (robots.txt of the image host, https, raster, 5 MB)
+  to check it and hash it, then forgotten. **No licence is implied**: the
+  label says it is the publisher's share image. 12 sites in parallel, 1 s
+  between two requests to the same host.
+
+Commands (collection needs direct internet access, i.e. the workflow or a
+developer machine; loading needs the target database's secret key):
+
+```bash
+pnpm --filter @sor/worker visuals:build
+```
+
+```bash
+node apps/worker/dist-visuals/visuals.js collect licensed data/visuals/licensed.json data/catalog/wikidata/listings.json
+```
+
+```bash
+node apps/worker/dist-visuals/visuals.js collect publisher data/visuals/publisher.json data/catalog/wikidata/listings.json data/catalog/uneed/listings.json
+```
+
+```bash
+SUPABASE_URL=… SUPABASE_SECRET_KEY=… node apps/worker/dist-visuals/visuals.js ingest data/visuals/licensed.json data/visuals/publisher.json
+```
+
 ### Catalog reliability (S8.2, 11 November 2026)
 
 - **Review queue.** Listings that the identity rules send to review (shared

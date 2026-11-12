@@ -199,3 +199,22 @@ export async function productIdBySlug(service: DbClient, slug: string): Promise<
   if (error) throw mapPostgresError(error);
   return data?.id ?? null;
 }
+
+// ------------------------------------------------------------ S8.5 references
+
+/** Records one visual displayed by reference (PD-38); returns its status. */
+export async function recordVisualReference(
+  service: DbClient,
+  reference: Record<string, unknown>,
+): Promise<{ status: string; asset_id?: string; product_id?: string; primary?: boolean }> {
+  const { data, error } = await service.rpc("sor_record_visual_reference", {
+    p_ref: reference as Json,
+  });
+  if (error) throw mapPostgresError(error);
+  return data as unknown as {
+    status: string;
+    asset_id?: string;
+    product_id?: string;
+    primary?: boolean;
+  };
+}

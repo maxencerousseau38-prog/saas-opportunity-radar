@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ExternalLink, MessageSquareText } from "lucide-react";
 import { catalogRepo, pipelineRepo, workspaceRepo } from "@sor/database";
 import { Badge } from "@/components/ui/badge";
+import { VisualFigure } from "@/components/discover/visual-figure";
 import { EmptyState, Unknown } from "@/components/ui/states";
 import { ProductLogo } from "@/components/discover/product-card";
 import { Row, Section, Sourced } from "@/components/profile/sourced";
@@ -19,7 +20,6 @@ import {
   PRICING_STATUS,
   RELIABILITY,
   SIGNAL_TYPE,
-  VISUAL_ASSET_TYPE,
   confidenceLabel,
   countryName,
   formatDate,
@@ -530,31 +530,10 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
 
       {discover.visual_asset ? (
         <Section id="visual" title="Visuel du produit">
-          <figure className="space-y-2">
-            {/* eslint-disable-next-line @next/next/no-img-element -- authorized private copy served by SOR */}
-            <img
-              src={discover.visual_asset.url}
-              alt={discover.visual_asset.alt_text}
-              width={discover.visual_asset.width ?? undefined}
-              height={discover.visual_asset.height ?? undefined}
-              loading="lazy"
-              decoding="async"
-              className="h-auto max-h-96 w-full rounded-md border border-border object-contain"
-            />
-            <figcaption className="text-xs text-muted">
-              {VISUAL_ASSET_TYPE[discover.visual_asset.asset_type]} · observé le{" "}
-              {formatDate(discover.visual_asset.observed_at)} · droits :{" "}
-              {discover.visual_asset.rights_basis} ·{" "}
-              <a
-                className="text-accent underline"
-                href={discover.visual_asset.source_url}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-              >
-                source du visuel
-              </a>
-            </figcaption>
-          </figure>
+          <VisualFigure
+            asset={discover.visual_asset}
+            observedLabel={formatDate(discover.visual_asset.observed_at) ?? "date inconnue"}
+          />
         </Section>
       ) : null}
 

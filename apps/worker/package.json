@@ -16,7 +16,9 @@
     "catalog:build": "tsup --config tsup.catalog.config.ts",
     "catalog:ingest": "node dist-catalog/ingest.js",
     "assets:build": "tsup --config tsup.assets.config.ts",
-    "assets": "node dist-assets/assets.js"
+    "assets": "node dist-assets/assets.js",
+    "visuals:build": "tsup --config tsup.visuals.config.ts",
+    "visuals": "node dist-visuals/visuals.js"
   },
   "dependencies": {
     "@sor/ai-gateway": "workspace:*",

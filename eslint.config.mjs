@@ -26,6 +26,7 @@ export default defineConfig(
       "**/dist-container/**",
       "**/dist-catalog/**",
       "**/dist-assets/**",
+      "**/dist-visuals/**",
       "**/.next/**",
       "**/.turbo/**",
       "**/coverage/**",

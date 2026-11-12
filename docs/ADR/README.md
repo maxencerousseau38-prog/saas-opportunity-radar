@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-**Last updated:** 11 November 2026 (PD-36 and PD-37 approved for S8.3); 6 November 2026 (PD-28 approved); 4 November 2026 (product-owner arbitration of PD-01 to PD-23)
+**Last updated:** 12 November 2026 (PD-38 approved for S8.5); 11 November 2026 (PD-36 and PD-37 approved for S8.3); 6 November 2026 (PD-28 approved); 4 November 2026 (product-owner arbitration of PD-01 to PD-23)
 
 ## Status legend
 
@@ -37,7 +37,7 @@ separate decisions.
 | [ADR-013](ADR-013-source-acquisition-and-compliance.md) | Source acquisition and compliance | ACCEPTED (PD-14, PD-28); G2 and Product Hunt approval PENDING (PD-26, PD-29) |
 | [ADR-014](ADR-014-workspace-status-model.md) | Workspace opportunity status model | ACCEPTED (PD-04) |
 | [ADR-015](ADR-015-manual-external-ai-research-handoff.md) | Manual external AI research handoff | ACCEPTED (PD-35) |
-| [ADR-016](ADR-016-product-visual-assets-and-heroes.md) | Product visual assets and Discover Heroes | ACCEPTED (PD-36) |
+| [ADR-016](ADR-016-product-visual-assets-and-heroes.md) | Product visual assets and Discover Heroes | ACCEPTED (PD-36; amended by PD-38) |
 | [ADR-017](ADR-017-acquisition-channel-taxonomy.md) | Acquisition Channel taxonomy and evidence | ACCEPTED (PD-37) |
 
 ## Decisions approved by the product owner on 4 November 2026
@@ -251,6 +251,20 @@ The implementation sequence and acceptance gates are recorded in `docs/sprints/S
 |---|---|---|---|---|
 | PD-36 | Product visual assets and Discover Heroes | Static authentic official Heroes, screenshots or illustrations only; rights must explicitly cover storage or remote embedding; unapproved assets stay hidden | Evidence-linked, rights-aware asset pipeline with honest fallback | ADR-016 |
 | PD-37 | Acquisition Channel taxonomy and evidence | Keep eight existing categories; canonical channel keys; evidence-based status and primary role; explainable confidence | Normalize data and filters without fabricating channel coverage | ADR-017 |
+
+## S8.5 visual references (12 November 2026)
+
+The product owner asked for visuals on every SaaS card "automatically and
+without doing them one by one", and approved both options presented in the
+session (12 November 2026, "les deux, lance"):
+
+| ID | Decision | Approved direction | Main consequence | ADR |
+|---|---|---|---|---|
+| PD-38 | Automatic product visuals by reference | (1) the Wikidata image (P18) of a listing when Wikimedia Commons states a free licence (CC0, public domain, CC BY, CC BY-SA) and the required attribution; (2) the share image (og:image / twitter:image) the publisher declares on its own official site, labelled as such, with no licence implied; both displayed by reference from their origin, never copied | Amends ADR-016 §3: PD-36's rule still governs operator-approved copies; the two new kinds have their own rules, labels and precedence (approved copy > free licence > publisher share image) | ADR-016 |
+
+The product owner accepts the residual copyright risk of option (2) for a
+personal, non-commercial tool; any takedown request is honoured at once
+(operator removal). No paid service, no stored copy, no new budget.
 
 ---
 

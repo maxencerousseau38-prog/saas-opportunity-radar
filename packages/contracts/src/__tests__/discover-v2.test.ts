@@ -103,3 +103,56 @@ describe("Discover visual DTO", () => {
     ).toBe(false);
   });
 });
+
+describe("Discover visual DTO, references (PD-38)", () => {
+  const base = {
+    alt_text: "Dashboard",
+    source_url: "https://commons.wikimedia.org/wiki/File:Dashboard.png",
+    observed_at: "2026-11-12T10:00:00+00:00",
+    rights_basis: "CC-BY-SA-4.0, Jane Doe (Wikimedia Commons)",
+    confidence: null,
+    width: 1280,
+    height: 720,
+    delivery_mode: "external_reference",
+  };
+  const licensed = {
+    ...base,
+    asset_type: "licensed_image",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Dashboard.png/1280px-Dashboard.png",
+    rights_status: "licensed",
+    licence_code: "CC-BY-SA-4.0",
+    licence_url: "https://creativecommons.org/licenses/by-sa/4.0",
+    attribution: "Jane Doe",
+  };
+  it("accepts a free-licence image and a publisher share image by https reference", () => {
+    expect(ProductVisualAssetSchema.safeParse(licensed).success).toBe(true);
+    expect(
+      ProductVisualAssetSchema.safeParse({
+        ...base,
+        asset_type: "publisher_share_image",
+        url: "https://cdn.example.test/og.png",
+        rights_status: "publisher_published",
+        source_url: "https://example.test/",
+      }).success,
+    ).toBe(true);
+  });
+  it("refuses a reference that is not https, a licensed image without licence, or a mixed kind", () => {
+    expect(
+      ProductVisualAssetSchema.safeParse({ ...licensed, url: "http://upload.wikimedia.org/x.png" })
+        .success,
+    ).toBe(false);
+    expect(ProductVisualAssetSchema.safeParse({ ...licensed, licence_code: null }).success).toBe(
+      false,
+    );
+    expect(
+      ProductVisualAssetSchema.safeParse({
+        ...licensed,
+        asset_type: "official_hero",
+        rights_status: "approved",
+      }).success,
+    ).toBe(false);
+    expect(
+      ProductVisualAssetSchema.safeParse({ ...licensed, delivery_mode: "private_copy" }).success,
+    ).toBe(false);
+  });
+});

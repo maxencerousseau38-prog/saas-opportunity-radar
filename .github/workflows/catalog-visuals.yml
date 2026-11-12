@@ -1,0 +1,108 @@
+# Catalog visuals (S8.5, PD-38 — amendment of ADR-016; docs/DATA_SOURCES.md
+# "Product visuals"). Collects, for the listings of the committed catalog
+# snapshots, the visuals displayed BY REFERENCE (no image is stored):
+#   - licensed: the Wikidata image of the item when Wikimedia Commons gives a
+#     free licence (CC0, public domain, CC BY, CC BY-SA) and an author;
+#   - publisher: the share image (og:image / twitter:image) the official site
+#     declares, fetched once through the SSRF-safe fetcher (robots.txt obeyed)
+#     to check that it is a real, wide image, then forgotten.
+# The snapshots are validated (apps/worker/test/visual-snapshots.test.ts)
+# before anything is committed. No database access, no secret, no paid call;
+# loading into a hosted project is a separate, manual step.
+#
+# - Manual run from main: the snapshots go to a dated branch and a pull
+#   request (never pushed to main); CI is dispatched on that branch.
+# - Push to a claude/** branch that changes a visuals collector: the snapshots
+#   are committed back to that same branch.
+name: Catalog visuals
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["claude/**"]
+    paths:
+      - packages/data-sources/src/connectors/commons.ts
+      - packages/data-sources/src/share-image.ts
+      - packages/domain/src/discover/visual-references.ts
+      - apps/worker/src/visuals/collect.ts
+      - .github/workflows/catalog-visuals.yml
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: catalog-visuals-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: Collect visual references
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @sor/worker visuals:build
+      - name: Free-licence images (Wikidata + Wikimedia Commons)
+        run: >
+          node apps/worker/dist-visuals/visuals.js collect licensed data/visuals/licensed.json
+          data/catalog/wikidata/listings.json
+      # One page and one image per official site, 12 sites in parallel, 1 s
+      # between two requests to the same host; a failure keeps the other kind.
+      - name: Publisher share images (official sites)
+        continue-on-error: true
+        run: >
+          node apps/worker/dist-visuals/visuals.js collect publisher data/visuals/publisher.json
+          data/catalog/wikidata/listings.json data/catalog/uneed/listings.json
+      - name: Validate the snapshots
+        run: pnpm --filter @sor/worker exec vitest run test/visual-snapshots.test.ts
+      - name: Commit the snapshots to the same branch (claude/** push)
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/visuals
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -m "Catalog visuals: reference snapshots (automated)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Open a pull request with the new snapshots (manual run)
+        if: github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/visuals
+          if git diff --cached --quiet; then echo "snapshots unchanged: no pull request"; exit 0; fi
+          day="$(date -u +%Y-%m-%d)"
+          branch="catalog/visuals-${day}-${GITHUB_RUN_ID}"
+          stats="$(node -e '
+            const fs = require("node:fs");
+            for (const k of ["licensed", "publisher"]) {
+              const f = `data/visuals/${k}.json`;
+              if (!fs.existsSync(f)) continue;
+              const d = JSON.parse(fs.readFileSync(f, "utf8"));
+              console.log(`- ${k}: ${d.summary.references} references for ${d.summary.candidates} listings`);
+            }')"
+          git switch -c "${branch}"
+          git commit -m "Catalog visuals ${day}: reference snapshots (automated)"
+          git push origin "HEAD:${branch}"
+          printf '%s\n' \
+            "Automated collection of visuals displayed by reference (PD-38)." \
+            "" "${stats}" "" \
+            "The snapshots passed apps/worker/test/visual-snapshots.test.ts before this commit." \
+            "Nothing is loaded into any hosted project: loading is a separate, manual step." \
+            "" "Merge only after review by the product owner." > "${RUNNER_TEMP}/pr-body.md"
+          gh pr create --base "${BASE}" --head "${branch}" \
+            --title "Catalog visuals ${day}: reference snapshots" \
+            --body-file "${RUNNER_TEMP}/pr-body.md"
+          gh workflow run ci.yml --ref "${branch}"
