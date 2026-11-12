@@ -91,9 +91,11 @@ jobs:
           set -a; . "$RUNNER_TEMP/supabase.env"; set +a
           seed_password="e2e-$(openssl rand -hex 16)"
           author_salt="$(openssl rand -hex 32)"
+          owner_access="$(openssl rand -hex 32)"
           echo "::add-mask::$SECRET_KEY"
           echo "::add-mask::$seed_password"
           echo "::add-mask::$author_salt"
+          echo "::add-mask::$owner_access"
           {
             echo "APP_ENV=test"
             echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
@@ -103,6 +105,9 @@ jobs:
             echo "SUPABASE_URL=$API_URL"
             echo "AUTHOR_HASH_SECRET=$author_salt"
             echo "WORKER_ID=e2e-worker"
+            # PD-39: personal access link for a demo account (random per run).
+            echo "OWNER_ACCESS_TOKEN=$owner_access"
+            echo "OWNER_ACCESS_EMAIL=demo-member@demo.test"
           } >> "$GITHUB_ENV"
       - name: Seed labelled demo fixtures
         run: pnpm --filter @sor/web seed:demo

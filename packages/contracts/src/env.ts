@@ -22,12 +22,26 @@ export const WebServerEnvSchema = WebPublicEnvSchema.extend({
    * fall back to the request origin.
    */
   SITE_URL: HttpUrlSchema.optional(),
+  /**
+   * Personal owner access (PD-39): a long random secret that signs the
+   * product owner (OWNER_ACCESS_EMAIL) in without a password, through
+   * /auth/acces#<secret>. Both unset (the default) = disabled.
+   */
+  OWNER_ACCESS_TOKEN: z.string().min(32).max(256).optional(),
+  OWNER_ACCESS_EMAIL: z.string().trim().email().max(320).optional(),
 }).superRefine((env, ctx) => {
   if ((env.APP_ENV === "staging" || env.APP_ENV === "production") && !env.SITE_URL) {
     ctx.addIssue({
       code: "custom",
       path: ["SITE_URL"],
       message: "required in staging and production",
+    });
+  }
+  if (Boolean(env.OWNER_ACCESS_TOKEN) !== Boolean(env.OWNER_ACCESS_EMAIL)) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["OWNER_ACCESS_TOKEN"],
+      message: "OWNER_ACCESS_TOKEN and OWNER_ACCESS_EMAIL go together",
     });
   }
 });

@@ -24,7 +24,9 @@
         "NEXT_PUBLIC_SUPABASE_URL",
         "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
         "SUPABASE_SECRET_KEY",
-        "SEED_PASSWORD"
+        "SEED_PASSWORD",
+        "OWNER_ACCESS_TOKEN",
+        "OWNER_ACCESS_EMAIL"
       ]
     }
   }
