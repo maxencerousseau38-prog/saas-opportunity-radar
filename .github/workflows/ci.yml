@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4 # version from package.json "packageManager"
+      - uses: pnpm/action-setup@v6 # version from package.json "packageManager"
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
@@ -52,7 +52,7 @@ jobs:
           docker run --rm -u "$(id -u):$(id -g)" -v "$PWD:/repo" -w /repo \
             zricethezav/gitleaks:v8.18.4 detect --source /repo --config /repo/.gitleaks.toml \
             --redact --verbose --exit-code 1
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
@@ -74,7 +74,7 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
@@ -211,7 +211,7 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
@@ -269,7 +269,7 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
