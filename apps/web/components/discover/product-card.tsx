@@ -1,23 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ExternalLink, ImageOff } from "lucide-react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import type { ProductCard } from "@sor/contracts";
 import { Badge } from "@/components/ui/badge";
-import { Unknown } from "@/components/ui/states";
 import {
   ACQUISITION_CHANNEL,
   ACQUISITION_CHANNEL_CATEGORY,
   ACQUISITION_CHANNEL_STATUS,
-  CUSTOMER_TYPE,
   PRICING_STATUS,
   VISUAL_ASSET_TYPE,
   VISUAL_RIGHTS_NOTE,
   confidenceLabel,
-  countryName,
   isDemoUrl,
   licenceLabel,
-  teamLabel,
 } from "@/lib/labels";
 import { cn } from "@/lib/utils";
 import { ProductActions, type ActionProps } from "./product-actions";
@@ -55,6 +51,29 @@ function channelTitle(channel: Channel): string {
     .join("\n");
 }
 
+/** Deterministic hue-free shade per name: monochrome, but cards stay distinguishable. */
+function shade(name: string): number {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return h % 5;
+}
+const MONOGRAM_BG = [
+  "from-surface-3 to-surface",
+  "from-surface-2 to-bg",
+  "from-[oklch(0.32_0.005_286)] to-surface-2",
+  "from-surface to-surface-3",
+  "from-[oklch(0.26_0.004_286)] to-[oklch(0.17_0.004_286)]",
+];
+
+/** Shorter card captions; the profile keeps the full wording. */
+const CARD_VISUAL_LABEL: Record<string, string> = {
+  publisher_share_image: "Image de l’éditeur",
+};
+
+export function primaryCategory(product: Pick<ProductCard, "categories">): string | null {
+  return product.categories.find((c) => c.is_primary)?.name ?? product.categories[0]?.name ?? null;
+}
+
 export function ProductLogo({
   name,
   logoUrl,
@@ -72,7 +91,7 @@ export function ProductLogo({
         alt=""
         width={size}
         height={size}
-        className="shrink-0 rounded-md bg-surface-2 object-contain"
+        className="shrink-0 rounded-[22%] bg-surface-2 object-contain"
         referrerPolicy="no-referrer"
       />
     );
@@ -80,70 +99,27 @@ export function ProductLogo({
   return (
     <span
       aria-hidden
-      style={{ width: size, height: size }}
-      className="flex shrink-0 items-center justify-center rounded-md bg-surface-2 font-semibold text-muted"
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.42) }}
+      className={cn(
+        "flex shrink-0 items-center justify-center rounded-[22%] border border-border bg-gradient-to-br font-semibold text-fg/90",
+        MONOGRAM_BG[shade(name)],
+      )}
     >
-      {name.slice(0, 1).toUpperCase()}
+      {name.trim().slice(0, 1).toUpperCase()}
     </span>
   );
 }
 
-export function StatusBadges({ product }: { product: ProductCard }) {
-  const ws = product.workspace;
-  return (
-    <>
-      {isDemoUrl(product.website_url) ? (
-        <Badge tone="warning">Donnée de démonstration</Badge>
-      ) : null}
-      {ws.last_viewed_at === null ? <Badge tone="accent">Nouveau</Badge> : null}
-      {ws.is_favorite || ws.in_collection ? <Badge tone="success">Sauvegardé</Badge> : null}
-      {ws.is_hidden ? <Badge>Masqué</Badge> : null}
-    </>
-  );
+function domainOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
 }
 
-function Facts({ product }: { product: ProductCard }) {
-  const team = teamLabel(product.employee_min, product.employee_max);
-  return (
-    <dl className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
-      <div>
-        <dt className="sr-only">Clientèle</dt>
-        <dd>
-          {product.customer_type === "unknown" ? (
-            <Unknown label="Clientèle inconnue" />
-          ) : (
-            CUSTOMER_TYPE[product.customer_type]
-          )}
-        </dd>
-      </div>
-      <div>
-        <dt className="sr-only">Pays</dt>
-        <dd>{countryName(product.country_code) ?? <Unknown label="Pays inconnu" />}</dd>
-      </div>
-      <div>
-        <dt className="sr-only">Effectif</dt>
-        <dd>{team ?? <Unknown label="Effectif inconnu" />}</dd>
-      </div>
-      <div>
-        <dt className="sr-only">Année</dt>
-        <dd>{product.start_year ?? <Unknown label="Année inconnue" />}</dd>
-      </div>
-      <div>
-        <dt className="sr-only">Tarification</dt>
-        <dd>
-          {product.pricing_status === "unknown" ? (
-            <Unknown label="Tarification inconnue" />
-          ) : (
-            PRICING_STATUS[product.pricing_status]
-          )}
-        </dd>
-      </div>
-    </dl>
-  );
-}
-
-/** Visible, keyboard-reachable access to the official site from the preview. */
-function OfficialSiteLink({ product, className }: { product: ProductCard; className?: string }) {
+/** Visible, keyboard-reachable access to the official site from the card. */
+function OfficialSiteLink({ product }: { product: ProductCard }) {
   if (!product.website_url) return null;
   return (
     <a
@@ -151,293 +127,277 @@ function OfficialSiteLink({ product, className }: { product: ProductCard; classN
       target="_blank"
       rel="noopener noreferrer nofollow"
       aria-label={`Ouvrir le site officiel de ${product.name}`}
-      className={cn("inline-flex items-center gap-1 text-xs", className)}
+      className="relative z-10 inline-flex max-w-full items-center gap-1 truncate text-xs text-muted transition-colors hover:text-fg"
     >
-      Ouvrir le site officiel <ExternalLink size={12} aria-hidden />
+      <span className="truncate">{domainOf(product.website_url)}</span>
+      <ArrowUpRight size={13} aria-hidden className="shrink-0" />
     </a>
+  );
+}
+
+/**
+ * The card cover: an authorised, evidence-linked visual (PD-38 reference or
+ * private copy) with its type and source, or an honest typographic identity —
+ * never a fabricated screenshot.
+ */
+function ProductCover({ product, onBroken }: { product: ProductCard; onBroken: () => void }) {
+  const asset = product.visual_asset!;
+  const img = useRef<HTMLImageElement>(null);
+  const reference = asset.delivery_mode === "external_reference";
+  // The image may fail before hydration attaches onError: check once on mount.
+  useEffect(() => {
+    const el = img.current;
+    if (reference && el && el.complete && el.naturalWidth === 0) onBroken();
+  }, [reference, onBroken]);
+  return (
+    <div
+      role="group"
+      aria-label={`Aperçu authentique de ${product.name}`}
+      data-testid="product-visual-preview"
+      className="relative aspect-[1.91/1] overflow-hidden bg-surface-2"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element -- source-approved external product asset */}
+      <img
+        ref={img}
+        src={asset.url}
+        alt={asset.alt_text}
+        width={asset.width ?? undefined}
+        height={asset.height ?? undefined}
+        loading="lazy"
+        decoding="async"
+        referrerPolicy="no-referrer"
+        onError={() => {
+          // A reference (PD-38) is loaded from its origin: if it is gone, fall
+          // back to the honest identity. A private copy keeps its frame.
+          if (reference) onBroken();
+        }}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover/card:scale-[1.02]"
+      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/50 to-transparent" />
+      <a
+        href={asset.source_url}
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        aria-label={`Source du visuel (${VISUAL_ASSET_TYPE[asset.asset_type] ?? asset.asset_type})`}
+        title={VISUAL_RIGHTS_NOTE[asset.rights_status]}
+        className="absolute bottom-2 left-2 z-10 flex max-w-[calc(100%-5rem)] items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 text-[10px] text-white/90 backdrop-blur-md hover:text-white"
+      >
+        <span data-testid="visual-asset-type" className="truncate">
+          {CARD_VISUAL_LABEL[asset.asset_type] ??
+            VISUAL_ASSET_TYPE[asset.asset_type] ??
+            asset.asset_type}
+        </span>
+        {asset.asset_type === "licensed_image" ? (
+          <span data-testid="visual-asset-credit" className="truncate opacity-80">
+            {" · "}
+            {asset.attribution ? `© ${asset.attribution} · ` : ""}
+            {licenceLabel(asset.licence_code)} · Wikimedia Commons
+          </span>
+        ) : null}
+        <ExternalLink size={10} aria-hidden className="shrink-0" />
+      </a>
+      {asset.asset_type === "licensed_image" && asset.licence_url ? (
+        <a
+          href={asset.licence_url}
+          target="_blank"
+          rel="noopener noreferrer nofollow license"
+          aria-label={`Licence ${licenceLabel(asset.licence_code)}`}
+          className="absolute right-2 bottom-2 z-10 rounded-full bg-black/50 px-2 py-0.5 text-[10px] text-white/90 backdrop-blur-md hover:text-white"
+        >
+          Licence
+        </a>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Without an authorised visual the card shows its typographic identity —
+ * never a fabricated screenshot — and says so to assistive technologies.
+ */
+function IdentityMark({ product, size }: { product: ProductCard; size: number }) {
+  return (
+    <div
+      role="group"
+      aria-label={`Identité catalogue de ${product.name}`}
+      data-testid="product-visual-preview"
+      className="shrink-0"
+    >
+      <ProductLogo name={product.name} logoUrl={product.logo_url} size={size} />
+      <span className="sr-only">
+        Aperçu authentique non disponible · Capture d’interface non disponible
+      </span>
+    </div>
+  );
+}
+
+/** Documented acquisition channels only (never an "unknown" placeholder on a card). */
+function Channels({ product }: { product: ProductCard }) {
+  if (!product.acquisition_channels.length) return null;
+  return (
+    <div
+      className="relative z-10 flex flex-wrap items-center gap-1.5"
+      aria-label="Acquisition Channels documentés"
+    >
+      {product.acquisition_channels.slice(0, 2).map((channel) => (
+        <a
+          key={`${channel.channel_key}:${channel.evidence_id}`}
+          href={channel.source_url}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          title={channelTitle(channel)}
+          data-testid="acquisition-channel"
+          className="inline-flex flex-col rounded-lg border border-border px-2 py-1 text-[11px] hover:bg-surface-2"
+        >
+          <span className="flex items-center gap-1">
+            {channel.role === "primary" ? "★ " : ""}
+            {ACQUISITION_CHANNEL[channel.channel_key] ?? channel.channel_key}
+            <Badge tone={CHANNEL_STATUS_TONE[channel.status]}>
+              {ACQUISITION_CHANNEL_STATUS[channel.status]}
+            </Badge>
+          </span>
+          <span className="text-[10px] text-muted">
+            {channel.role === "primary" ? "Principal" : "Secondaire"} ·{" "}
+            {sourceHost(channel.source_url)} · {confidenceLabel(channel.confidence)}
+          </span>
+        </a>
+      ))}
+      {product.acquisition_channels.length > 2 ? (
+        <span className="text-[11px] text-muted">+{product.acquisition_channels.length - 2}</span>
+      ) : null}
+    </div>
+  );
+}
+
+function Flags({ product }: { product: ProductCard }) {
+  const ws = product.workspace;
+  const demo = isDemoUrl(product.website_url);
+  if (!demo && !ws.is_hidden && !ws.in_collection) return null;
+  return (
+    <span className="flex flex-wrap gap-1">
+      {demo ? <Badge tone="warning">Donnée de démonstration</Badge> : null}
+      {ws.in_collection ? <Badge tone="outline">En collection</Badge> : null}
+      {ws.is_hidden ? <Badge>Masqué</Badge> : null}
+    </span>
+  );
+}
+
+/** The whole card opens the profile: one stretched link, other controls sit above it. */
+function CardLink({ product, workspaceId }: { product: ProductCard; workspaceId: string }) {
+  return (
+    <Link
+      href={`/w/${workspaceId}/saas/${product.slug}`}
+      className="outline-none after:absolute after:inset-0 after:rounded-[inherit] focus-visible:after:ring-2 focus-visible:after:ring-ring"
+    >
+      {product.name}
+    </Link>
   );
 }
 
 export function ProductCardView({
   product,
-  compact,
+  variant,
   ...actions
-}: ActionProps & { product: ProductCard; compact: boolean }) {
-  const href = `/w/${actions.workspaceId}/saas/${product.slug}`;
-  // A reference (PD-38) is loaded from its origin: if it is gone, the card
-  // falls back to the honest "no authentic preview" state. A private copy is
-  // served by SOR and keeps its frame.
+}: ActionProps & { product: ProductCard; variant: "feed" | "grid" }) {
+  const feed = variant === "feed";
   const [broken, setBroken] = useState(false);
-  const asset = broken ? null : product.visual_asset;
-  const onImageError = () => {
-    if (asset?.delivery_mode === "external_reference") setBroken(true);
-  };
+  const markBroken = useCallback(() => setBroken(true), []);
+  const hasVisual = Boolean(product.visual_asset) && !broken;
+  const category = primaryCategory(product);
+  const sentence = product.tagline ?? product.short_description;
   return (
     <article
       aria-label={product.name}
-      className={cn(
-        "flex h-full flex-col gap-2 rounded-lg border border-border bg-surface",
-        compact ? "p-3" : "p-4",
-      )}
+      className="group/card relative flex animate-fade-up flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-colors hover:border-border-strong"
     >
-      <div
-        role="group"
-        aria-label={
-          asset ? `Aperçu authentique de ${product.name}` : `Identité catalogue de ${product.name}`
-        }
-        data-testid="product-visual-preview"
-        className={cn(
-          "relative overflow-hidden rounded-md border border-border bg-gradient-to-br from-surface-2 via-surface to-surface-2",
-          asset ? "aspect-[16/7]" : "flex items-center gap-3",
-          compact ? "min-h-24 p-3" : "min-h-32 p-4",
-        )}
-      >
-        {asset ? (
-          <>
-            {/* Only authorized, evidence-linked catalog assets reach this DTO. */}
-            {product.website_url ? (
-              // The preview opens the official site (PRD §24.4); the visible
-              // link below is the keyboard path, this one is pointer-only.
-              <a
-                href={product.website_url}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                tabIndex={-1}
-                aria-hidden
-                className="absolute inset-0"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element -- source-approved external product asset */}
-                <img
-                  src={asset.url}
-                  alt=""
-                  width={asset.width ?? undefined}
-                  height={asset.height ?? undefined}
-                  loading="lazy"
-                  decoding="async"
-                  referrerPolicy="no-referrer"
-                  onError={onImageError}
-                  className="h-full w-full object-cover"
-                />
-              </a>
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element -- source-approved external product asset
-              <img
-                src={asset.url}
-                alt={asset.alt_text}
-                width={asset.width ?? undefined}
-                height={asset.height ?? undefined}
-                loading="lazy"
-                decoding="async"
-                referrerPolicy="no-referrer"
-                onError={onImageError}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            )}
-            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8 text-white">
-              <span className="min-w-0 text-xs">
-                <span
-                  className="font-medium"
-                  data-testid="visual-asset-type"
-                  title={VISUAL_RIGHTS_NOTE[asset.rights_status]}
-                >
-                  {VISUAL_ASSET_TYPE[asset.asset_type]}
-                </span>
-                {asset.asset_type === "licensed_image" ? (
-                  <span className="block truncate opacity-90" data-testid="visual-asset-credit">
-                    {asset.attribution ? `© ${asset.attribution} · ` : ""}
-                    {asset.licence_url ? (
-                      <a
-                        href={asset.licence_url}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow license"
-                        className="underline"
-                      >
-                        {licenceLabel(asset.licence_code)}
-                      </a>
-                    ) : (
-                      licenceLabel(asset.licence_code)
-                    )}{" "}
-                    · Wikimedia Commons
-                  </span>
-                ) : null}
-              </span>
-              <span className="flex items-center gap-3">
-                <OfficialSiteLink product={product} className="text-white underline" />
-                <a
-                  href={asset.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  className="inline-flex items-center gap-1 text-xs underline"
-                >
-                  Source du visuel <ExternalLink size={12} />
-                </a>
-              </span>
-            </div>
-          </>
-        ) : (
-          <>
-            <ProductLogo name={product.name} logoUrl={product.logo_url} size={compact ? 48 : 60} />
-            <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-semibold tracking-[0.16em] text-muted uppercase">
-                Aperçu du catalogue
-              </p>
-              <p className="mt-1 truncate text-sm font-medium">
-                {product.categories.find((category) => category.is_primary)?.name ??
-                  "Catégorie inconnue"}
-              </p>
-              <p className="mt-1 flex items-center gap-1 text-xs text-muted">
-                <ImageOff size={12} aria-hidden /> Aperçu authentique non disponible · Capture
-                d’interface non disponible
-              </p>
-              <OfficialSiteLink product={product} className="mt-1 text-accent hover:underline" />
-            </div>
-          </>
-        )}
-      </div>
-      <div className="flex items-start gap-3">
-        <ProductLogo name={product.name} logoUrl={product.logo_url} />
-        <div className="min-w-0 flex-1">
-          <h2 className="truncate font-semibold">
-            <Link href={href} className="hover:underline">
-              {product.name}
-            </Link>
-          </h2>
-          <p className="line-clamp-2 text-sm text-muted">
-            {product.tagline ?? product.short_description ?? (
-              <Unknown label="Description non renseignée" />
-            )}
-          </p>
-        </div>
-        <ProductActions product={product} {...actions} />
-      </div>
-      <div className="flex flex-wrap gap-1">
-        {product.categories.map((c) => (
-          <Badge key={c.slug}>{c.name}</Badge>
-        ))}
-        <StatusBadges product={product} />
-      </div>
-      {product.acquisition_channels.length ? (
-        <div
-          className="flex flex-wrap items-center gap-1.5"
-          aria-label="Acquisition Channels documentés"
-        >
-          <span className="text-[11px] font-medium text-muted">Acquisition</span>
-          {product.acquisition_channels.slice(0, 3).map((channel) => (
-            <a
-              key={`${channel.channel_key}:${channel.evidence_id}`}
-              href={channel.source_url}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              title={channelTitle(channel)}
-              data-testid="acquisition-channel"
-              className="inline-flex min-w-28 flex-col items-start rounded border border-border px-1.5 py-1 text-[11px] hover:bg-surface-2"
+      {hasVisual ? <ProductCover product={product} onBroken={markBroken} /> : null}
+      <div className={cn("flex flex-col gap-2.5", feed ? "p-4" : "p-3")}>
+        <div className="flex items-start gap-3">
+          {hasVisual ? (
+            feed ? (
+              <ProductLogo name={product.name} logoUrl={product.logo_url} size={40} />
+            ) : null
+          ) : (
+            <IdentityMark product={product} size={feed ? 48 : 36} />
+          )}
+          <div className="min-w-0 flex-1 self-center">
+            <h2
+              className={cn(
+                "font-semibold tracking-tight",
+                feed ? "truncate text-[17px] leading-6" : "line-clamp-2 text-[15px] leading-5",
+              )}
             >
-              <span className="flex items-center gap-1">
-                {channel.role === "primary" ? "★ " : ""}
-                {ACQUISITION_CHANNEL[channel.channel_key] ?? channel.channel_key}
-                <Badge tone={CHANNEL_STATUS_TONE[channel.status]}>
-                  {ACQUISITION_CHANNEL_STATUS[channel.status]}
-                </Badge>
-              </span>
-              <span className="text-[10px] text-muted">
-                {channel.role === "primary" ? "Principal" : "Secondaire"} ·{" "}
-                {sourceHost(channel.source_url)} ·{" "}
-                {new Date(channel.observed_at).toLocaleDateString("fr-FR")} ·{" "}
-                {confidenceLabel(channel.confidence)}
-              </span>
-            </a>
-          ))}
-          {product.acquisition_channels.length > 3 ? (
-            <span className="text-[11px] text-muted">
-              +{product.acquisition_channels.length - 3} sur la fiche
-            </span>
-          ) : null}
+              <CardLink product={product} workspaceId={actions.workspaceId} />
+            </h2>
+            <p className="truncate text-xs text-muted">{category ?? "Non classé"}</p>
+          </div>
+          {feed ? <ProductActions product={product} {...actions} className="-mt-1 -mr-2" /> : null}
         </div>
-      ) : (
-        <p className="text-xs text-muted">Acquisition Channels : inconnus / non documentés</p>
-      )}
-      <div className="mt-auto flex items-end justify-between gap-2">
-        <Facts product={product} />
-        {product.website_url ? (
-          <a
-            href={product.website_url}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
-          >
-            Site <ExternalLink size={12} />
-          </a>
-        ) : null}
+        <p
+          className={cn(
+            "text-fg/85",
+            feed
+              ? "line-clamp-3 text-[15px] leading-[1.45]"
+              : "line-clamp-4 text-[13px] leading-snug",
+          )}
+        >
+          {sentence ?? <span className="text-muted italic">Description non renseignée</span>}
+        </p>
+        <Flags product={product} />
+        <Channels product={product} />
+        {feed ? (
+          <OfficialSiteLink product={product} />
+        ) : (
+          <div className="-mr-2 -mb-1 flex items-center justify-between gap-1">
+            <span className="min-w-0">
+              <OfficialSiteLink product={product} />
+            </span>
+            <ProductActions product={product} {...actions} />
+          </div>
+        )}
       </div>
     </article>
   );
 }
 
+/** Compact row for the List mode (dense scanning, same actions). */
 export function ProductListRow({ product, ...actions }: ActionProps & { product: ProductCard }) {
-  const team = teamLabel(product.employee_min, product.employee_max);
+  const category = primaryCategory(product);
+  const sentence = product.tagline ?? product.short_description;
   return (
-    <tr className="border-t border-border">
-      <td className="px-3 py-2">
-        <div className="flex items-center gap-2">
-          <ProductLogo name={product.name} logoUrl={product.logo_url} size={24} />
-          <Link
-            href={`/w/${actions.workspaceId}/saas/${product.slug}`}
-            className="font-medium hover:underline"
-          >
-            {product.name}
-          </Link>
-          <StatusBadges product={product} />
+    <article
+      aria-label={product.name}
+      className="relative flex items-center gap-3 border-b border-border px-1 py-3 last:border-0 sm:px-3"
+    >
+      {product.visual_asset ? (
+        <ProductLogo name={product.name} logoUrl={product.logo_url} size={44} />
+      ) : (
+        <IdentityMark product={product} size={44} />
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 items-baseline gap-2">
+          <h2 className="truncate text-[15px] font-semibold">
+            <CardLink product={product} workspaceId={actions.workspaceId} />
+          </h2>
+          {category ? (
+            <span className="hidden shrink-0 text-xs text-muted sm:inline">{category}</span>
+          ) : null}
         </div>
-      </td>
-      <td className="px-3 py-2">
-        {product.categories.find((c) => c.is_primary)?.name ?? <Unknown />}
-      </td>
-      <td className="px-3 py-2">
-        {product.customer_type === "unknown" ? <Unknown /> : CUSTOMER_TYPE[product.customer_type]}
-      </td>
-      <td className="px-3 py-2">{countryName(product.country_code) ?? <Unknown />}</td>
-      <td className="px-3 py-2">{team ?? <Unknown />}</td>
-      <td className="px-3 py-2">{product.start_year ?? <Unknown />}</td>
-      <td className="px-3 py-2">
-        {product.pricing_status === "unknown" ? (
-          <Unknown />
-        ) : (
-          PRICING_STATUS[product.pricing_status]
-        )}
-      </td>
-      <td className="min-w-52 px-3 py-2">
-        {product.acquisition_channels.length ? (
-          <ul className="space-y-1">
-            {product.acquisition_channels.map((channel) => (
-              <li key={`${channel.channel_key}:${channel.evidence_id}`}>
-                <a
-                  href={channel.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  title={channelTitle(channel)}
-                  className="inline-flex items-center gap-1 hover:underline"
-                >
-                  {channel.role === "primary" ? "★ " : ""}
-                  {ACQUISITION_CHANNEL[channel.channel_key] ?? channel.channel_key}
-                  <Badge tone={CHANNEL_STATUS_TONE[channel.status]}>
-                    {ACQUISITION_CHANNEL_STATUS[channel.status] ?? channel.status}
-                  </Badge>
-                </a>
-                <span className="block text-[10px] text-muted">
-                  {sourceHost(channel.source_url)} ·{" "}
-                  {new Date(channel.observed_at).toLocaleDateString("fr-FR")} ·{" "}
-                  {confidenceLabel(channel.confidence)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <span className="text-muted">Inconnus / non documentés</span>
-        )}
-      </td>
-      <td className="px-3 py-2">
-        <ProductActions product={product} {...actions} />
-      </td>
-    </tr>
+        <p className="truncate text-[13px] text-muted">
+          {sentence ?? <span className="italic">Description non renseignée</span>}
+        </p>
+        <div className="mt-1 flex flex-wrap items-center gap-1">
+          {category ? <span className="text-[11px] text-muted sm:hidden">{category}</span> : null}
+          {product.pricing_status !== "unknown" ? (
+            <Badge tone="outline" className="hidden sm:inline-flex">
+              {PRICING_STATUS[product.pricing_status]}
+            </Badge>
+          ) : null}
+          <Flags product={product} />
+          <Channels product={product} />
+        </div>
+      </div>
+      <ProductActions product={product} {...actions} />
+    </article>
   );
 }

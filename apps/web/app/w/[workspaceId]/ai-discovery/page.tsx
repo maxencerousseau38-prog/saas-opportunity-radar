@@ -58,7 +58,7 @@ export default async function AiDiscoveryPage(props: PageProps<"/w/[workspaceId]
   return (
     <section className="space-y-6">
       <header className="space-y-1">
-        <h1 className="text-xl font-semibold">AI Discovery</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">AI Discovery</h1>
         <p className="text-sm text-muted">
           Découvrir de vrais SaaS à partir d’une demande en langage naturel. Chaque candidat est
           vérifié sur son propre site officiel ; la correspondance aux filtres et la confiance des

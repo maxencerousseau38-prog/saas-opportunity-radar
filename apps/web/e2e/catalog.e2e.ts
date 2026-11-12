@@ -14,13 +14,16 @@ test("browse Discover: only eligible products, three display modes", async ({ pa
   await expect(
     page.getByRole("article", { name: "MetricFlow" }).getByTestId("product-visual-preview"),
   ).toContainText("Capture d’interface non disponible");
-  // The preview zone opens the official site (PRD §24.4), even without a visual.
+  // The card opens the profile (product-owner decision, 12 Nov 2026); the official
+  // site stays one visible, keyboard-reachable link away (PRD §24.4).
+  const metricflow = page.getByRole("article", { name: "MetricFlow" });
   await expect(
-    page
-      .getByRole("article", { name: "MetricFlow" })
-      .getByTestId("product-visual-preview")
-      .getByRole("link", { name: "Ouvrir le site officiel de MetricFlow" }),
+    metricflow.getByRole("link", { name: "Ouvrir le site officiel de MetricFlow" }),
   ).toHaveAttribute("href", "https://metricflow.test/");
+  await expect(metricflow.getByRole("link", { name: "MetricFlow", exact: true })).toHaveAttribute(
+    "href",
+    /\/saas\/metricflow$/,
+  );
   // Permanently excluded and under-review products never appear.
   await expect(page.getByText("AffiliTrack")).toHaveCount(0);
   await expect(page.getByText("Partnerly Hub")).toHaveCount(0);

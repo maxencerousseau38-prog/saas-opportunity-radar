@@ -73,7 +73,7 @@ export default async function DiscoveryRunPage(
         </Link>
       </nav>
       <header className="space-y-2">
-        <h1 className="text-xl font-semibold">{run.title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{run.title}</h1>
         <DiscoveryRunStatus
           workspaceId={workspaceId}
           runId={run.id}
@@ -141,36 +141,38 @@ export default async function DiscoveryRunPage(
         {report.length === 0 ? (
           <p className="text-sm text-muted">Pas encore de rapport de sources.</p>
         ) : (
-          <table className="w-full text-left text-sm">
-            <thead className="text-xs text-muted">
-              <tr>
-                <th className="py-1">Source</th>
-                <th className="py-1">Canal</th>
-                <th className="py-1">Statut</th>
-                <th className="py-1">Requêtes</th>
-                <th className="py-1">Pistes</th>
-                <th className="py-1">Limites / erreurs</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.map((r) => (
-                <tr key={`${r.source_key}-${r.channel}`} className="border-t border-border">
-                  <td className="py-1.5">{r.source_key}</td>
-                  <td className="py-1.5">{DISCOVERY_CHANNEL[r.channel] ?? r.channel}</td>
-                  <td className="py-1.5">
-                    <Badge tone={r.status === "consulted" ? "success" : "warning"}>
-                      {SOURCE_REPORT_STATUS[r.status] ?? r.status}
-                    </Badge>
-                  </td>
-                  <td className="py-1.5">{r.requests}</td>
-                  <td className="py-1.5">{r.leads}</td>
-                  <td className="py-1.5 text-muted">
-                    {[...r.limits_reached, ...r.errors].join(" ; ") || "—"}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="text-xs text-muted">
+                <tr>
+                  <th className="py-1">Source</th>
+                  <th className="py-1">Canal</th>
+                  <th className="py-1">Statut</th>
+                  <th className="py-1">Requêtes</th>
+                  <th className="py-1">Pistes</th>
+                  <th className="py-1">Limites / erreurs</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {report.map((r) => (
+                  <tr key={`${r.source_key}-${r.channel}`} className="border-t border-border">
+                    <td className="py-1.5">{r.source_key}</td>
+                    <td className="py-1.5">{DISCOVERY_CHANNEL[r.channel] ?? r.channel}</td>
+                    <td className="py-1.5">
+                      <Badge tone={r.status === "consulted" ? "success" : "warning"}>
+                        {SOURCE_REPORT_STATUS[r.status] ?? r.status}
+                      </Badge>
+                    </td>
+                    <td className="py-1.5">{r.requests}</td>
+                    <td className="py-1.5">{r.leads}</td>
+                    <td className="py-1.5 text-muted">
+                      {[...r.limits_reached, ...r.errors].join(" ; ") || "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
 

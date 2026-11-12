@@ -116,9 +116,8 @@ test("an operator documents an Acquisition Channel from a cited source, then ret
   await expect(
     page.getByRole("article", { name: "LeadNest" }).getByTestId("acquisition-channel"),
   ).toHaveCount(0);
-  await expect(page.getByRole("article", { name: "LeadNest" })).toContainText(
-    "Acquisition Channels : inconnus / non documentés",
-  );
+  // Unknown channels are not advertised on the card (the profile states them).
+  await expect(page.getByRole("article", { name: "LeadNest" })).not.toContainText("Reddit");
 });
 
 test("an authorised visual is shown with its type and source, served privately, then removed", async ({

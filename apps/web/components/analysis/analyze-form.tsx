@@ -122,11 +122,15 @@ export function AnalyzeButton({
   subject,
   defaults,
   label = "Analyze Opportunity",
+  variant = "primary",
+  className,
 }: {
   workspaceId: string;
   subject: AnalysisSubject;
   defaults: ContextDefaults;
   label?: string;
+  variant?: "primary" | "outline";
+  className?: string;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -147,7 +151,7 @@ export function AnalyzeButton({
   }
   return (
     <>
-      <Button variant="primary" size="sm" onClick={() => setOpen(true)}>
+      <Button variant={variant} size="sm" className={className} onClick={() => setOpen(true)}>
         {label}
       </Button>
       <Dialog

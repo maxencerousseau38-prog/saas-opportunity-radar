@@ -73,10 +73,12 @@ export function WorkspacePanel(props: {
   return (
     <aside
       aria-label="Mon espace de travail"
-      className="w-full space-y-3 rounded-md border border-border bg-surface-2 p-3 text-sm sm:w-72"
+      className="w-full space-y-4 rounded-2xl border border-border bg-surface p-4 text-sm"
     >
+      <h2 className="text-[15px] font-semibold tracking-tight">Mon suivi</h2>
       <div className="flex gap-2">
         <Button
+          className="flex-1"
           aria-pressed={state.is_favorite}
           disabled={disabled}
           onClick={() => void patch({ is_favorite: !state.is_favorite })}

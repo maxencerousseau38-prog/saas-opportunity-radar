@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   BarChart3,
   EyeOff,
   Eye,
+  ExternalLink,
   Flag,
   FolderPlus,
   MessageSquareText,
@@ -19,6 +20,7 @@ import { Menu, MenuItem } from "@/components/ui/menu";
 import { ErrorNote } from "@/components/ui/states";
 import { api } from "@/lib/client-api";
 import { REPORT_TYPE } from "@/lib/labels";
+import { cn } from "@/lib/utils";
 
 export interface ActionProps {
   workspaceId: string;
@@ -28,21 +30,38 @@ export interface ActionProps {
   onChange: (id: string, patch: Partial<ProductCard["workspace"]>) => void;
 }
 
-export function ProductActions({ product, ...p }: ActionProps & { product: ProductCard }) {
+export function ProductActions({
+  product,
+  className,
+  ...p
+}: ActionProps & { product: ProductCard; className?: string }) {
   const router = useRouter();
   const [reportOpen, setReportOpen] = useState(false);
   const [collectionOpen, setCollectionOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const ws = product.workspace;
 
+  useEffect(() => {
+    if (!notice) return;
+    const t = setTimeout(() => setNotice(null), 3500);
+    return () => clearTimeout(t);
+  }, [notice]);
+
   async function patchState(patch: { is_favorite?: boolean; is_hidden?: boolean }) {
+    const previous = { is_favorite: ws.is_favorite, is_hidden: ws.is_hidden };
+    // Optimistic: the star reacts at once, the server confirms or reverts.
+    if (patch.is_favorite !== undefined) p.onChange(product.id, { is_favorite: patch.is_favorite });
     try {
       await api(`/workspaces/${p.workspaceId}/products/${product.id}/state`, {
         method: "PATCH",
         body: patch,
       });
       p.onChange(product.id, patch);
+      if (patch.is_hidden !== undefined)
+        setNotice(patch.is_hidden ? "SaaS masqué." : "SaaS de nouveau visible.");
     } catch (err) {
+      if (patch.is_favorite !== undefined)
+        p.onChange(product.id, { is_favorite: previous.is_favorite });
       setNotice(err instanceof Error ? err.message : "Erreur");
     }
   }
@@ -67,10 +86,9 @@ export function ProductActions({ product, ...p }: ActionProps & { product: Produ
   }
 
   return (
-    <div className="flex items-center gap-1">
-      <Button
-        size="icon"
-        variant="ghost"
+    <div className={cn("relative z-10 flex items-center", className)}>
+      <button
+        type="button"
         aria-label={
           ws.is_favorite
             ? `Retirer ${product.name} des favoris`
@@ -79,45 +97,63 @@ export function ProductActions({ product, ...p }: ActionProps & { product: Produ
         aria-pressed={ws.is_favorite}
         disabled={!p.canEdit}
         onClick={() => void patchState({ is_favorite: !ws.is_favorite })}
+        className="grid size-9 place-items-center rounded-full text-muted transition-[color,transform] hover:bg-surface-2 hover:text-fg active:scale-90 disabled:opacity-40"
       >
-        <Star size={16} className={ws.is_favorite ? "fill-warning text-warning" : ""} />
-      </Button>
+        <Star
+          size={18}
+          className={cn(
+            "transition-transform",
+            ws.is_favorite && "scale-110 fill-warning text-warning",
+          )}
+        />
+      </button>
       <Menu
         label={`Actions pour ${product.name}`}
         trigger={
-          <Button size="icon" variant="ghost">
-            <MoreHorizontal size={16} />
-          </Button>
+          <button
+            type="button"
+            className="grid size-9 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-fg"
+          >
+            <MoreHorizontal size={18} />
+          </button>
         }
       >
         <MenuItem disabled={!p.canEdit} onSelect={() => setCollectionOpen(true)}>
-          <FolderPlus size={14} /> Ajouter à une collection…
-        </MenuItem>
-        <MenuItem
-          disabled={!p.canEdit}
-          onSelect={() => void patchState({ is_hidden: !ws.is_hidden })}
-        >
-          {ws.is_hidden ? <Eye size={14} /> : <EyeOff size={14} />}{" "}
-          {ws.is_hidden ? "Ne plus masquer" : "Masquer ce SaaS"}
-        </MenuItem>
-        <MenuItem disabled={!p.canEdit} onSelect={() => setReportOpen(true)}>
-          <Flag size={14} /> Signaler une erreur…
+          <FolderPlus size={16} /> Ajouter à une collection…
         </MenuItem>
         <MenuItem
           disabled={!p.canEdit}
           onSelect={() => router.push(`/w/${p.workspaceId}/ask-ai?products=${product.id}`)}
         >
-          <MessageSquareText size={14} /> Ask AI — dossier externe
+          <MessageSquareText size={16} /> Ask AI — dossier externe
+        </MenuItem>
+        {product.website_url ? (
+          <MenuItem onSelect={() => window.open(product.website_url!, "_blank", "noopener")}>
+            <ExternalLink size={16} /> Site officiel
+          </MenuItem>
+        ) : null}
+        <MenuItem
+          disabled={!p.canEdit}
+          onSelect={() => void patchState({ is_hidden: !ws.is_hidden })}
+        >
+          {ws.is_hidden ? <Eye size={16} /> : <EyeOff size={16} />}{" "}
+          {ws.is_hidden ? "Ne plus masquer" : "Masquer ce SaaS"}
+        </MenuItem>
+        <MenuItem disabled={!p.canEdit} onSelect={() => setReportOpen(true)}>
+          <Flag size={16} /> Signaler une erreur…
         </MenuItem>
         <MenuItem
           disabled={!p.canEdit}
           onSelect={() => router.push(`/w/${p.workspaceId}/saas/${product.slug}#internal-analysis`)}
         >
-          <BarChart3 size={14} /> Ouvrir l’analyse interne
+          <BarChart3 size={16} /> Ouvrir l’analyse interne
         </MenuItem>
       </Menu>
       {notice ? (
-        <span role="status" className="text-xs text-muted">
+        <span
+          role="status"
+          className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-1/2 z-50 -translate-x-1/2 animate-fade-up rounded-full border border-border bg-surface-2/95 px-4 py-2 text-sm whitespace-nowrap text-fg shadow-xl backdrop-blur lg:bottom-8"
+        >
           {notice}
         </span>
       ) : null}
@@ -191,7 +227,7 @@ export function CollectionDialog({
           <ul className="space-y-1">
             {collections.map((c) => (
               <li key={c.id}>
-                <Button className="w-full justify-start" onClick={() => onPick(c.id)}>
+                <Button className="h-11 w-full justify-start" onClick={() => onPick(c.id)}>
                   {c.name}
                 </Button>
               </li>

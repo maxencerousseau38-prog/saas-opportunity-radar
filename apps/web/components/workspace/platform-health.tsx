@@ -43,7 +43,7 @@ export function PlatformHealth({ health }: { health: Health }) {
   return (
     <section
       aria-label="Santé de la plateforme"
-      className="space-y-4 rounded-lg border border-border bg-surface p-4"
+      className="space-y-4 rounded-2xl border border-border bg-surface p-4"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-base font-semibold">Santé de la plateforme</h2>
@@ -92,28 +92,30 @@ export function PlatformHealth({ health }: { health: Health }) {
 
       {s.stuck.jobs.length > 0 ? (
         <Section title="Jobs bloqués">
-          <table className="w-full text-left text-sm" aria-label="Jobs bloqués">
-            <thead className="text-xs text-muted">
-              <tr>
-                <th className="py-1">Job</th>
-                <th className="py-1">Type</th>
-                <th className="py-1">Cause</th>
-                <th className="py-1">Depuis</th>
-                <th className="py-1">Tentative</th>
-              </tr>
-            </thead>
-            <tbody>
-              {s.stuck.jobs.map((j) => (
-                <tr key={j.id} className="border-t border-border">
-                  <td className="py-1.5 font-mono text-xs">{j.id.slice(0, 8)}</td>
-                  <td className="py-1.5">{j.job_kind}</td>
-                  <td className="py-1.5">{REASON[j.reason] ?? j.reason}</td>
-                  <td className="py-1.5">{formatDateTime(j.since)}</td>
-                  <td className="py-1.5">{j.attempt_count}</td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm" aria-label="Jobs bloqués">
+              <thead className="text-xs text-muted">
+                <tr>
+                  <th className="py-1">Job</th>
+                  <th className="py-1">Type</th>
+                  <th className="py-1">Cause</th>
+                  <th className="py-1">Depuis</th>
+                  <th className="py-1">Tentative</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {s.stuck.jobs.map((j) => (
+                  <tr key={j.id} className="border-t border-border">
+                    <td className="py-1.5 font-mono text-xs">{j.id.slice(0, 8)}</td>
+                    <td className="py-1.5">{j.job_kind}</td>
+                    <td className="py-1.5">{REASON[j.reason] ?? j.reason}</td>
+                    <td className="py-1.5">{formatDateTime(j.since)}</td>
+                    <td className="py-1.5">{j.attempt_count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Section>
       ) : null}
 
@@ -121,32 +123,34 @@ export function PlatformHealth({ health }: { health: Health }) {
         {s.recent_failures.length === 0 ? (
           <p className="text-sm text-muted">Aucun échec sur 24 h.</p>
         ) : (
-          <table className="w-full text-left text-sm" aria-label="Échecs récents">
-            <thead className="text-xs text-muted">
-              <tr>
-                <th className="py-1">Job</th>
-                <th className="py-1">Type</th>
-                <th className="py-1">État</th>
-                <th className="py-1">Code d’erreur</th>
-                <th className="py-1">Fin</th>
-              </tr>
-            </thead>
-            <tbody>
-              {s.recent_failures.map((f) => (
-                <tr key={f.id} className="border-t border-border">
-                  <td className="py-1.5 font-mono text-xs">{f.id.slice(0, 8)}</td>
-                  <td className="py-1.5">{f.job_kind}</td>
-                  <td className="py-1.5">
-                    {f.state === "dead_letter" ? "Échec définitif" : "Échec"}
-                  </td>
-                  <td className="py-1.5">{f.last_error_code ?? "—"}</td>
-                  <td className="py-1.5">
-                    {f.completed_at ? formatDateTime(f.completed_at) : "—"}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm" aria-label="Échecs récents">
+              <thead className="text-xs text-muted">
+                <tr>
+                  <th className="py-1">Job</th>
+                  <th className="py-1">Type</th>
+                  <th className="py-1">État</th>
+                  <th className="py-1">Code d’erreur</th>
+                  <th className="py-1">Fin</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {s.recent_failures.map((f) => (
+                  <tr key={f.id} className="border-t border-border">
+                    <td className="py-1.5 font-mono text-xs">{f.id.slice(0, 8)}</td>
+                    <td className="py-1.5">{f.job_kind}</td>
+                    <td className="py-1.5">
+                      {f.state === "dead_letter" ? "Échec définitif" : "Échec"}
+                    </td>
+                    <td className="py-1.5">{f.last_error_code ?? "—"}</td>
+                    <td className="py-1.5">
+                      {f.completed_at ? formatDateTime(f.completed_at) : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </Section>
 
@@ -155,37 +159,41 @@ export function PlatformHealth({ health }: { health: Health }) {
           {s.providers_1h.length === 0 ? (
             <p className="text-sm text-muted">Aucun appel sur la dernière heure.</p>
           ) : (
-            <table className="w-full text-left text-sm" aria-label="Fournisseurs IA">
-              <tbody>
-                {s.providers_1h.map((p) => (
-                  <tr key={p.provider} className="border-t border-border">
-                    <td className="py-1.5">{p.provider}</td>
-                    <td className="py-1.5">
-                      {p.errors} erreur(s) / {p.calls} appel(s)
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm" aria-label="Fournisseurs IA">
+                <tbody>
+                  {s.providers_1h.map((p) => (
+                    <tr key={p.provider} className="border-t border-border">
+                      <td className="py-1.5">{p.provider}</td>
+                      <td className="py-1.5">
+                        {p.errors} erreur(s) / {p.calls} appel(s)
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </Section>
         <Section title="Coût IA (7 jours, UTC)">
-          <table className="w-full text-left text-sm" aria-label="Coût IA par jour">
-            <tbody>
-              {s.cost.last_7_days.length === 0 ? (
-                <tr>
-                  <td className="py-1.5 text-muted">Aucune dépense enregistrée.</td>
-                </tr>
-              ) : (
-                s.cost.last_7_days.map((d) => (
-                  <tr key={d.day} className="border-t border-border">
-                    <td className="py-1.5">{d.day}</td>
-                    <td className="py-1.5">{usd(d.usd)}</td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm" aria-label="Coût IA par jour">
+              <tbody>
+                {s.cost.last_7_days.length === 0 ? (
+                  <tr>
+                    <td className="py-1.5 text-muted">Aucune dépense enregistrée.</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  s.cost.last_7_days.map((d) => (
+                    <tr key={d.day} className="border-t border-border">
+                      <td className="py-1.5">{d.day}</td>
+                      <td className="py-1.5">{usd(d.usd)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
           <p className="text-xs text-muted">
             Seuil d’alerte : {usd(s.thresholds.ai_cost_usd_per_day)} par jour. Fournisseur simulé
             tant que PD-24 n’est pas tranchée : coût nul.
@@ -200,32 +208,34 @@ export function PlatformHealth({ health }: { health: Health }) {
             surveillance).
           </p>
         ) : (
-          <table className="w-full text-left text-sm" aria-label="Historique des alertes">
-            <thead className="text-xs text-muted">
-              <tr>
-                <th className="py-1">Alerte</th>
-                <th className="py-1">Ouverte</th>
-                <th className="py-1">Résolue</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[...history.open, ...history.resolved].map((a) => (
-                <tr key={a.id} className="border-t border-border">
-                  <td className="py-1.5">
-                    <span className="font-mono text-xs">{a.alert_key}</span> — {a.message}
-                  </td>
-                  <td className="py-1.5">{formatDateTime(a.opened_at)}</td>
-                  <td className="py-1.5">
-                    {a.resolved_at ? (
-                      formatDateTime(a.resolved_at)
-                    ) : (
-                      <Badge tone="danger">En cours</Badge>
-                    )}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm" aria-label="Historique des alertes">
+              <thead className="text-xs text-muted">
+                <tr>
+                  <th className="py-1">Alerte</th>
+                  <th className="py-1">Ouverte</th>
+                  <th className="py-1">Résolue</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {[...history.open, ...history.resolved].map((a) => (
+                  <tr key={a.id} className="border-t border-border">
+                    <td className="py-1.5">
+                      <span className="font-mono text-xs">{a.alert_key}</span> — {a.message}
+                    </td>
+                    <td className="py-1.5">{formatDateTime(a.opened_at)}</td>
+                    <td className="py-1.5">
+                      {a.resolved_at ? (
+                        formatDateTime(a.resolved_at)
+                      ) : (
+                        <Badge tone="danger">En cours</Badge>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </Section>
     </section>

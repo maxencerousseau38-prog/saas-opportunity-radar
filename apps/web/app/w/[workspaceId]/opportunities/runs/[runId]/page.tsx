@@ -33,7 +33,7 @@ export default async function RunPage(
         </Link>
       </nav>
       <header className="space-y-2">
-        <h1 className="text-xl font-semibold">{run.title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{run.title}</h1>
         <RunStatus
           workspaceId={workspaceId}
           runId={run.id}

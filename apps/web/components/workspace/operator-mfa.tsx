@@ -37,7 +37,7 @@ export function OperatorMfa({ factorId }: { factorId: string | null }) {
 
   if (factorId) {
     return (
-      <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
+      <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
         <h2 className="text-base font-semibold">Vérification en deux étapes</h2>
         <p className="text-sm text-muted">
           La console opérateur exige un code de votre application d’authentification.
@@ -48,7 +48,7 @@ export function OperatorMfa({ factorId }: { factorId: string | null }) {
   }
 
   return (
-    <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
+    <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
       <h2 className="text-base font-semibold">Activer la vérification en deux étapes</h2>
       <p className="text-sm text-muted">
         La console opérateur exige une application d’authentification (TOTP). Elle sera demandée à

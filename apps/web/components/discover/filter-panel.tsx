@@ -47,9 +47,8 @@ function Group({
   children: ReactNode;
 }) {
   return (
-    <fieldset className="space-y-2 border-b border-border pb-4">
-      <legend className="mb-1 text-sm font-semibold">
-        <span className="mr-1 text-muted">{letter}.</span>
+    <fieldset className="space-y-2.5 border-b border-border pb-5">
+      <legend className="mb-2 text-sm font-semibold" data-letter={letter}>
         {title}
       </legend>
       {children}
@@ -69,13 +68,15 @@ function Check({
   disabled?: boolean;
 }) {
   return (
-    <label className={`flex items-center gap-2 text-sm${disabled ? " text-muted" : ""}`}>
+    <label
+      className={`flex min-h-8 items-center gap-2.5 text-[15px] sm:min-h-0 sm:text-sm${disabled ? " text-muted" : ""}`}
+    >
       <input
         type="checkbox"
         checked={checked}
         disabled={disabled}
         onChange={(e) => onChange(e.target.checked)}
-        className="accent-accent"
+        className="size-[18px] shrink-0 accent-[oklch(0.96_0_0)] sm:size-4"
       />
       {label}
     </label>
@@ -92,6 +93,9 @@ export function FilterPanel({
   categories,
   value,
   onApply,
+  onPreferences,
+  savedSearches = [],
+  onOpenSavedSearch,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -99,6 +103,10 @@ export function FilterPanel({
   categories: CategoryOption[];
   value: CatalogFilters;
   onApply: (f: CatalogFilters) => void;
+  /** Applies the workspace research preferences to the draft. */
+  onPreferences?: (draft: CatalogFilters) => CatalogFilters;
+  savedSearches?: Array<{ id: string; name: string }>;
+  onOpenSavedSearch?: (id: string) => void;
 }) {
   const [draft, setDraft] = useState<CatalogFilters>(value);
   const [count, setCount] = useState<number | null>(null);
@@ -151,19 +159,54 @@ export function FilterPanel({
   return (
     <D.Root open={open} onOpenChange={onOpenChange}>
       <D.Portal>
-        <D.Overlay className="fixed inset-0 z-40 bg-black/50" />
-        <D.Content className="fixed top-0 right-0 z-50 flex h-full w-[min(28rem,100vw)] flex-col border-l border-border bg-surface">
-          <div className="flex items-center justify-between border-b border-border p-4">
-            <D.Title className="text-lg font-semibold">Filtres</D.Title>
-            <D.Close aria-label="Fermer" className="text-muted hover:text-fg">
+        <D.Overlay className="fixed inset-0 z-50 animate-fade-in bg-black/60" />
+        <D.Content className="fixed inset-x-0 bottom-0 z-50 flex max-h-[90dvh] animate-sheet-up flex-col rounded-t-2xl border border-b-0 border-border bg-surface sm:inset-y-0 sm:right-0 sm:left-auto sm:max-h-none sm:w-[min(28rem,100vw)] sm:animate-sheet-right sm:rounded-none sm:border-y-0 sm:border-r-0">
+          <div
+            aria-hidden
+            className="mx-auto mt-2.5 h-1 w-10 shrink-0 rounded-full bg-surface-3 sm:hidden"
+          />
+          <div className="flex items-center justify-between px-5 pt-2 pb-3 sm:pt-5">
+            <D.Title className="text-lg font-semibold tracking-tight">Filtres</D.Title>
+            <D.Close
+              aria-label="Fermer"
+              className="grid size-9 place-items-center rounded-full text-muted hover:bg-surface-2 hover:text-fg"
+            >
               <X size={18} />
             </D.Close>
           </div>
-          <D.Description className="px-4 pt-3 text-xs text-muted">
+          <D.Description className="px-5 text-xs text-muted">
             ET entre les groupes, OU à l’intérieur d’un groupe. Une valeur inconnue n’est jamais
             traitée comme positive ou négative : cochez « inclure les inconnus » pour la garder.
           </D.Description>
-          <div className="flex-1 space-y-4 overflow-y-auto p-4">
+          {onPreferences || savedSearches.length ? (
+            <div className="flex flex-wrap items-center gap-2 px-5 pt-3">
+              {onPreferences ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setDraft((d) => onPreferences(d))}
+                >
+                  Mes préférences
+                </Button>
+              ) : null}
+              {savedSearches.length && onOpenSavedSearch ? (
+                <select
+                  aria-label="Recherches sauvegardées"
+                  value=""
+                  onChange={(e) => e.target.value && onOpenSavedSearch(e.target.value)}
+                  className="h-8 rounded-lg border border-border-strong bg-surface px-2 text-[13px]"
+                >
+                  <option value="">Recherches sauvegardées…</option>
+                  {savedSearches.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              ) : null}
+            </div>
+          ) : null}
+          <div className="flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-4">
             <Group letter="A" title="Type de clientèle">
               {(["b2b", "b2c", "b2b_b2c"] as const).map((v) => (
                 <Check
@@ -524,11 +567,14 @@ export function FilterPanel({
               clients arrivent en phase 2.
             </p>
           </div>
-          <div className="flex items-center gap-2 border-t border-border p-4">
-            <Button onClick={() => setDraft(CatalogFiltersSchema.parse({}))}>Réinitialiser</Button>
+          <div className="flex items-center gap-2 border-t border-border px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <Button variant="ghost" onClick={() => setDraft(CatalogFiltersSchema.parse({}))}>
+              Réinitialiser
+            </Button>
             <Button
               variant="primary"
-              className="ml-auto"
+              size="lg"
+              className="ml-auto flex-1 sm:flex-none"
               onClick={() => {
                 onApply(draft);
                 onOpenChange(false);

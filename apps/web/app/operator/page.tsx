@@ -30,7 +30,7 @@ export default async function OperatorPage() {
     const verified = factors.data?.totp[0]?.id ?? null;
     return (
       <main className="mx-auto max-w-md space-y-4 px-4 py-6">
-        <h1 className="text-xl font-semibold">Console opérateur</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Console opérateur</h1>
         <OperatorMfa factorId={verified} />
       </main>
     );
@@ -49,7 +49,7 @@ export default async function OperatorPage() {
   return (
     <main className="mx-auto max-w-5xl space-y-4 px-4 py-6">
       <div className="flex items-center gap-3">
-        <h1 className="text-xl font-semibold">Console opérateur</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Console opérateur</h1>
         {memberships[0] ? (
           <Link
             className="text-sm text-muted underline"

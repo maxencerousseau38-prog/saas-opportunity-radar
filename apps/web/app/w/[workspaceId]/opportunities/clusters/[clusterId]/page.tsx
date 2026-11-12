@@ -59,7 +59,7 @@ export default async function ClusterPage(
         </Link>
       </nav>
       <header className="space-y-2">
-        <h1 className="text-xl font-semibold">{cluster.name}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{cluster.name}</h1>
         <div className="flex flex-wrap gap-2">
           <Badge>{PROBLEM_CATEGORY[cluster.problem_category] ?? cluster.problem_category}</Badge>
           <Badge>{FREQUENCY_LABEL[cluster.frequency_label] ?? cluster.frequency_label}</Badge>
@@ -130,22 +130,24 @@ export default async function ClusterPage(
         {cluster.monthly_counts.length === 0 ? (
           <p className="text-muted">Dates de publication inconnues.</p>
         ) : (
-          <table className="text-left">
-            <thead>
-              <tr>
-                <th className="pr-6 font-medium">Mois</th>
-                <th className="font-medium">Retours</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cluster.monthly_counts.map((m) => (
-                <tr key={m.month}>
-                  <td className="pr-6">{m.month}</td>
-                  <td>{m.count}</td>
+          <div className="overflow-x-auto">
+            <table className="text-left">
+              <thead>
+                <tr>
+                  <th className="pr-6 font-medium">Mois</th>
+                  <th className="font-medium">Retours</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {cluster.monthly_counts.map((m) => (
+                  <tr key={m.month}>
+                    <td className="pr-6">{m.month}</td>
+                    <td>{m.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
         {history.length > 1 ? (
           <p className="text-xs text-muted">

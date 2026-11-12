@@ -67,7 +67,7 @@ export function SignupForm() {
         />
       </Field>
       {state?.error ? <ErrorNote>{state.error}</ErrorNote> : null}
-      <Button type="submit" variant="primary" className="w-full" disabled={pending}>
+      <Button type="submit" variant="primary" size="lg" className="w-full" disabled={pending}>
         {pending ? "Création du compte…" : "Créer mon compte"}
       </Button>
       <p className="text-center text-xs text-muted">

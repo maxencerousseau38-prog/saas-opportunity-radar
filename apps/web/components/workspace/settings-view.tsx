@@ -77,7 +77,7 @@ function UsageRow({
 
 function Block({ title, children, note }: { title: string; children: ReactNode; note?: string }) {
   return (
-    <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
+    <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
       <h2 className="text-base font-semibold">{title}</h2>
       {note ? <p className="text-xs text-muted">{note}</p> : null}
       {children}
@@ -112,7 +112,7 @@ export function SettingsView(p: Props) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Settings</h1>
+      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Settings</h1>
       {error ? <ErrorNote>{error}</ErrorNote> : null}
       {notice ? (
         <p role="status" className="text-sm text-success">
@@ -148,83 +148,85 @@ export function SettingsView(p: Props) {
         title="Membres"
         note="L’inscription publique est désactivée : un administrateur invite chaque membre par e-mail. Le rôle propriétaire ne s’attribue que par transfert."
       >
-        <table className="w-full text-left text-sm">
-          <thead className="text-xs text-muted">
-            <tr>
-              <th className="py-1">E-mail</th>
-              <th className="py-1">Rôle</th>
-              <th className="py-1">Depuis</th>
-              <th className="py-1">
-                <span className="sr-only">Actions</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {p.members.map((m) => {
-              const self = m.user_id === p.userId;
-              return (
-                <tr key={m.user_id} className="border-t border-border" data-testid="member-row">
-                  <td className="py-1.5">
-                    {m.email}
-                    {self ? " (vous)" : ""}
-                  </td>
-                  <td className="py-1.5">
-                    {p.canAdmin && !self && m.role !== "owner" ? (
-                      <Select
-                        aria-label={`Rôle de ${m.email}`}
-                        className="h-8 w-40"
-                        value={m.role}
-                        onChange={(e) =>
-                          void run(
-                            () =>
-                              api(`${base}/members/${m.user_id}`, {
-                                method: "PATCH",
-                                body: { role: e.target.value },
-                              }),
-                            "Rôle mis à jour.",
-                          )
-                        }
-                      >
-                        {["admin", "member", "viewer"].map((r) => (
-                          <option key={r} value={r}>
-                            {ROLE[r]}
-                          </option>
-                        ))}
-                      </Select>
-                    ) : (
-                      <Badge>{ROLE[m.role]}</Badge>
-                    )}
-                  </td>
-                  <td className="py-1.5">{formatDate(m.joined_at)}</td>
-                  <td className="py-1.5 text-right">
-                    {m.role !== "owner" && (self || p.canAdmin) ? (
-                      <Button
-                        size="sm"
-                        variant="danger"
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              self ? "Quitter cet espace de travail ?" : `Retirer ${m.email} ?`,
-                            )
-                          )
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="text-xs text-muted">
+              <tr>
+                <th className="py-1">E-mail</th>
+                <th className="py-1">Rôle</th>
+                <th className="py-1">Depuis</th>
+                <th className="py-1">
+                  <span className="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {p.members.map((m) => {
+                const self = m.user_id === p.userId;
+                return (
+                  <tr key={m.user_id} className="border-t border-border" data-testid="member-row">
+                    <td className="py-1.5">
+                      {m.email}
+                      {self ? " (vous)" : ""}
+                    </td>
+                    <td className="py-1.5">
+                      {p.canAdmin && !self && m.role !== "owner" ? (
+                        <Select
+                          aria-label={`Rôle de ${m.email}`}
+                          className="h-8 w-40"
+                          value={m.role}
+                          onChange={(e) =>
                             void run(
-                              async () => {
-                                await api(`${base}/members/${m.user_id}`, { method: "DELETE" });
-                                if (self) router.push("/");
-                              },
-                              self ? "Vous avez quitté l’espace." : "Membre retiré.",
-                            );
-                        }}
-                      >
-                        {self ? "Quitter" : "Retirer"}
-                      </Button>
-                    ) : null}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                              () =>
+                                api(`${base}/members/${m.user_id}`, {
+                                  method: "PATCH",
+                                  body: { role: e.target.value },
+                                }),
+                              "Rôle mis à jour.",
+                            )
+                          }
+                        >
+                          {["admin", "member", "viewer"].map((r) => (
+                            <option key={r} value={r}>
+                              {ROLE[r]}
+                            </option>
+                          ))}
+                        </Select>
+                      ) : (
+                        <Badge>{ROLE[m.role]}</Badge>
+                      )}
+                    </td>
+                    <td className="py-1.5">{formatDate(m.joined_at)}</td>
+                    <td className="py-1.5 text-right">
+                      {m.role !== "owner" && (self || p.canAdmin) ? (
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                self ? "Quitter cet espace de travail ?" : `Retirer ${m.email} ?`,
+                              )
+                            )
+                              void run(
+                                async () => {
+                                  await api(`${base}/members/${m.user_id}`, { method: "DELETE" });
+                                  if (self) router.push("/");
+                                },
+                                self ? "Vous avez quitté l’espace." : "Membre retiré.",
+                              );
+                          }}
+                        >
+                          {self ? "Quitter" : "Retirer"}
+                        </Button>
+                      ) : null}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
         {p.canAdmin ? (
           <form
             className="flex flex-wrap items-end gap-2"
@@ -386,7 +388,7 @@ export function SettingsView(p: Props) {
             <select
               id="pref-cats"
               multiple
-              className="h-32 w-full rounded-md border border-border bg-surface text-sm"
+              className="h-32 w-full rounded-2xl border border-border bg-surface text-sm"
               value={prefs.priority_category_slugs}
               onChange={(e) =>
                 setPrefs((x) => ({
@@ -448,102 +450,108 @@ export function SettingsView(p: Props) {
         title="Quotas"
         note="Limites de la plateforme appliquées à chaque demande de traitement (recherche IA, analyse, import, enrichissement, export). Une demande refusée n’est ni enregistrée ni décomptée ; renvoyer la même demande (même clé d’idempotence) ne consomme rien."
       >
-        <table className="w-full text-left text-sm" aria-label="Quotas de traitements">
-          <thead className="text-xs text-muted">
-            <tr>
-              <th className="py-1">Limite</th>
-              <th className="py-1">Utilisation</th>
-              <th className="py-1">Remise à zéro</th>
-            </tr>
-          </thead>
-          <tbody>
-            <UsageRow
-              label="Traitements en cours (workspace)"
-              used={p.usage.active_jobs}
-              limit={p.usage.max_concurrent_jobs}
-              note="À la fin d’un traitement"
-            />
-            <UsageRow
-              label="Traitements créés aujourd’hui (workspace)"
-              used={p.usage.jobs_today}
-              limit={p.usage.max_jobs_per_day}
-              note={`Le ${formatDateTime(p.usage.day_resets_at)}`}
-            />
-            <UsageRow
-              label="Mes demandes de traitement cette heure"
-              used={p.usage.my_job_requests_this_hour}
-              limit={p.usage.max_job_requests_per_hour}
-              note={`Le ${formatDateTime(p.usage.hour_resets_at)}`}
-            />
-            <tr className="border-t border-border">
-              <td className="py-1.5">Coût IA aujourd’hui (workspace)</td>
-              <td className="py-1.5">
-                <Badge tone="neutral">
-                  {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "USD" }).format(
-                    p.usage.ai_cost_usd_today,
-                  )}
-                </Badge>
-              </td>
-              <td className="py-1.5 text-xs text-muted">
-                Coût enregistré par la passerelle IA (jour UTC) ; fournisseur simulé tant que PD-24
-                n’est pas tranchée
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm" aria-label="Quotas de traitements">
+            <thead className="text-xs text-muted">
+              <tr>
+                <th className="py-1">Limite</th>
+                <th className="py-1">Utilisation</th>
+                <th className="py-1">Remise à zéro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <UsageRow
+                label="Traitements en cours (workspace)"
+                used={p.usage.active_jobs}
+                limit={p.usage.max_concurrent_jobs}
+                note="À la fin d’un traitement"
+              />
+              <UsageRow
+                label="Traitements créés aujourd’hui (workspace)"
+                used={p.usage.jobs_today}
+                limit={p.usage.max_jobs_per_day}
+                note={`Le ${formatDateTime(p.usage.day_resets_at)}`}
+              />
+              <UsageRow
+                label="Mes demandes de traitement cette heure"
+                used={p.usage.my_job_requests_this_hour}
+                limit={p.usage.max_job_requests_per_hour}
+                note={`Le ${formatDateTime(p.usage.hour_resets_at)}`}
+              />
+              <tr className="border-t border-border">
+                <td className="py-1.5">Coût IA aujourd’hui (workspace)</td>
+                <td className="py-1.5">
+                  <Badge tone="neutral">
+                    {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "USD" }).format(
+                      p.usage.ai_cost_usd_today,
+                    )}
+                  </Badge>
+                </td>
+                <td className="py-1.5 text-xs text-muted">
+                  Coût enregistré par la passerelle IA (jour UTC) ; fournisseur simulé tant que
+                  PD-24 n’est pas tranchée
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </Block>
 
       <Block
         title="Sources"
         note="Une source n’est considérée comme intégrée qu’après le développement et la validation de son connecteur et la revue écrite de ses conditions (PRD §13, docs/DATA_SOURCES.md). Intégrées : site officiel (pages publiques, robots.txt respecté), saisie manuelle et imports CSV. Hacker News (API officielle) est enregistré mais désactivé : sa revue des conditions n’est pas terminée."
       >
-        <table className="w-full text-left text-sm">
-          <thead className="text-xs text-muted">
-            <tr>
-              <th className="py-1">Source</th>
-              <th className="py-1">Statut</th>
-              <th className="py-1">Fiabilité</th>
-              <th className="py-1">Conservation</th>
-              <th className="py-1">Quota du jour</th>
-              <th className="py-1">Conditions</th>
-              <th className="py-1">Dernière synchro</th>
-              <th className="py-1">Erreur</th>
-            </tr>
-          </thead>
-          <tbody>
-            {p.sources.map((s) => (
-              <tr key={s.source_key} className="border-t border-border">
-                <td className="py-1.5">{s.name}</td>
-                <td className="py-1.5">
-                  <Badge
-                    tone={
-                      s.integration_status === "integrated" && s.is_enabled ? "success" : "neutral"
-                    }
-                  >
-                    {s.integration_status}
-                    {s.is_enabled ? "" : " · désactivée"}
-                  </Badge>
-                </td>
-                <td className="py-1.5">Niveau {s.default_reliability_level}</td>
-                <td className="py-1.5">{STORAGE_LABELS[s.storage_policy] ?? s.storage_policy}</td>
-                <td className="py-1.5">
-                  {s.quota_per_day === null
-                    ? `${s.requests_today} requête(s)`
-                    : `${s.requests_today} / ${s.quota_per_day}`}
-                </td>
-                <td className="py-1.5">
-                  {s.terms_reviewed_at
-                    ? `Revue le ${formatDate(s.terms_reviewed_at)}`
-                    : s.terms_url
-                      ? "Revue à terminer"
-                      : "—"}
-                </td>
-                <td className="py-1.5">{formatDate(s.last_sync_at) ?? "—"}</td>
-                <td className="py-1.5">{s.last_error_code ?? "—"}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="text-xs text-muted">
+              <tr>
+                <th className="py-1">Source</th>
+                <th className="py-1">Statut</th>
+                <th className="py-1">Fiabilité</th>
+                <th className="py-1">Conservation</th>
+                <th className="py-1">Quota du jour</th>
+                <th className="py-1">Conditions</th>
+                <th className="py-1">Dernière synchro</th>
+                <th className="py-1">Erreur</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {p.sources.map((s) => (
+                <tr key={s.source_key} className="border-t border-border">
+                  <td className="py-1.5">{s.name}</td>
+                  <td className="py-1.5">
+                    <Badge
+                      tone={
+                        s.integration_status === "integrated" && s.is_enabled
+                          ? "success"
+                          : "neutral"
+                      }
+                    >
+                      {s.integration_status}
+                      {s.is_enabled ? "" : " · désactivée"}
+                    </Badge>
+                  </td>
+                  <td className="py-1.5">Niveau {s.default_reliability_level}</td>
+                  <td className="py-1.5">{STORAGE_LABELS[s.storage_policy] ?? s.storage_policy}</td>
+                  <td className="py-1.5">
+                    {s.quota_per_day === null
+                      ? `${s.requests_today} requête(s)`
+                      : `${s.requests_today} / ${s.quota_per_day}`}
+                  </td>
+                  <td className="py-1.5">
+                    {s.terms_reviewed_at
+                      ? `Revue le ${formatDate(s.terms_reviewed_at)}`
+                      : s.terms_url
+                        ? "Revue à terminer"
+                        : "—"}
+                  </td>
+                  <td className="py-1.5">{formatDate(s.last_sync_at) ?? "—"}</td>
+                  <td className="py-1.5">{s.last_error_code ?? "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </Block>
     </div>
   );

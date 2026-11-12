@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Bookmark } from "lucide-react";
+import { BookmarkPlus } from "lucide-react";
 import type { CatalogFilters, CatalogSort } from "@sor/contracts";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
@@ -40,15 +40,18 @@ export function SaveSearchDialog({
   }
   return (
     <>
-      <Button
-        size="sm"
+      <button
+        type="button"
+        aria-label="Sauvegarder la recherche"
+        title="Sauvegarder la recherche"
         onClick={() => {
           setOpen(true);
           setState("idle");
         }}
+        className="grid size-8 place-items-center rounded-full border border-border text-muted transition-colors hover:bg-surface-2 hover:text-fg"
       >
-        <Bookmark size={14} /> Sauvegarder la recherche
-      </Button>
+        <BookmarkPlus size={15} aria-hidden />
+      </button>
       <Dialog
         open={open}
         onOpenChange={setOpen}

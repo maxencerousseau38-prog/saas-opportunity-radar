@@ -10,10 +10,10 @@ export function OnboardingForm() {
   return (
     <form action={action} className="space-y-4">
       <Field label="Nom de l’espace de travail" htmlFor="name">
-        <Input id="name" name="name" required maxLength={120} placeholder="Recherche SaaS" />
+        <Input id="name" name="name" required maxLength={120} placeholder="Mon radar SaaS" />
       </Field>
       {error ? <ErrorNote>{error}</ErrorNote> : null}
-      <Button type="submit" variant="primary" disabled={pending}>
+      <Button type="submit" variant="primary" size="lg" className="w-full" disabled={pending}>
         Créer l’espace de travail
       </Button>
     </form>
