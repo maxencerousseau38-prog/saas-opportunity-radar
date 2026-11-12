@@ -1373,14 +1373,14 @@ isOneToOne: true
                   ]
                 },"product_visual_assets": {
                   Row: {
-                    "admitted_by": string | null,"alt_text": string,"asset_type": string,"confidence": number | null,"content_hash": string,"created_at": string,"delivery_mode": string,"delivery_path": string | null,"evidence_id": string,"height": number | null,"id": string,"is_current": boolean,"is_primary": boolean,"last_check_status": string | null,"last_checked_at": string | null,"observed_at": string,"product_id": string,"removal_reason": string | null,"removed_at": string | null,"rights_basis": string,"rights_evidence_url": string | null,"rights_status": string,"source_url": string,"verification_status": Database["public"]['Enums']["verification_status"],"width": number | null
+                    "admitted_by": string | null,"alt_text": string,"asset_type": string,"attribution": string | null,"confidence": number | null,"content_hash": string,"created_at": string,"delivery_mode": string,"delivery_path": string | null,"evidence_id": string,"height": number | null,"id": string,"is_current": boolean,"is_primary": boolean,"last_check_status": string | null,"last_checked_at": string | null,"licence_code": string | null,"licence_url": string | null,"observed_at": string,"product_id": string,"removal_reason": string | null,"removed_at": string | null,"rights_basis": string,"rights_evidence_url": string | null,"rights_status": string,"source_url": string,"verification_status": Database["public"]['Enums']["verification_status"],"width": number | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "admitted_by"?: string | null,"alt_text": string,"asset_type": string,"confidence"?: number | null,"content_hash": string,"created_at"?: string,"delivery_mode"?: string,"delivery_path"?: string | null,"evidence_id": string,"height"?: number | null,"id"?: string,"is_current"?: boolean,"is_primary"?: boolean,"last_check_status"?: string | null,"last_checked_at"?: string | null,"observed_at"?: string,"product_id": string,"removal_reason"?: string | null,"removed_at"?: string | null,"rights_basis": string,"rights_evidence_url"?: string | null,"rights_status": string,"source_url": string,"verification_status"?: Database["public"]['Enums']["verification_status"],"width"?: number | null
+                    "admitted_by"?: string | null,"alt_text": string,"asset_type": string,"attribution"?: string | null,"confidence"?: number | null,"content_hash": string,"created_at"?: string,"delivery_mode"?: string,"delivery_path"?: string | null,"evidence_id": string,"height"?: number | null,"id"?: string,"is_current"?: boolean,"is_primary"?: boolean,"last_check_status"?: string | null,"last_checked_at"?: string | null,"licence_code"?: string | null,"licence_url"?: string | null,"observed_at"?: string,"product_id": string,"removal_reason"?: string | null,"removed_at"?: string | null,"rights_basis": string,"rights_evidence_url"?: string | null,"rights_status": string,"source_url": string,"verification_status"?: Database["public"]['Enums']["verification_status"],"width"?: number | null
                   }
                   Update: {
-                    "admitted_by"?: string | null,"alt_text"?: string,"asset_type"?: string,"confidence"?: number | null,"content_hash"?: string,"created_at"?: string,"delivery_mode"?: string,"delivery_path"?: string | null,"evidence_id"?: string,"height"?: number | null,"id"?: string,"is_current"?: boolean,"is_primary"?: boolean,"last_check_status"?: string | null,"last_checked_at"?: string | null,"observed_at"?: string,"product_id"?: string,"removal_reason"?: string | null,"removed_at"?: string | null,"rights_basis"?: string,"rights_evidence_url"?: string | null,"rights_status"?: string,"source_url"?: string,"verification_status"?: Database["public"]['Enums']["verification_status"],"width"?: number | null
+                    "admitted_by"?: string | null,"alt_text"?: string,"asset_type"?: string,"attribution"?: string | null,"confidence"?: number | null,"content_hash"?: string,"created_at"?: string,"delivery_mode"?: string,"delivery_path"?: string | null,"evidence_id"?: string,"height"?: number | null,"id"?: string,"is_current"?: boolean,"is_primary"?: boolean,"last_check_status"?: string | null,"last_checked_at"?: string | null,"licence_code"?: string | null,"licence_url"?: string | null,"observed_at"?: string,"product_id"?: string,"removal_reason"?: string | null,"removed_at"?: string | null,"rights_basis"?: string,"rights_evidence_url"?: string | null,"rights_status"?: string,"source_url"?: string,"verification_status"?: Database["public"]['Enums']["verification_status"],"width"?: number | null
                   }
                   Relationships: [
                     {
@@ -1879,6 +1879,9 @@ isOneToOne: true
                            },
 "sor_record_visual_asset_check":
 { Args: { "p_asset_id": string,"p_content_hash"?: string,"p_result": string }; Returns: string
+                           },
+"sor_record_visual_reference":
+{ Args: { "p_ref": Json }; Returns: Json
                            },
 "sor_request_analysis":
 { Args: { "p_analysis_type": Database["public"]['Enums']["analysis_type"],"p_idempotency_key": string,"p_request": Json,"p_request_hash": string,"p_requested_by": string,"p_subject": Json,"p_workspace_id": string }; Returns: {

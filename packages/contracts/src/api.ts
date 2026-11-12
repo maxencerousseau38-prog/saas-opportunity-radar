@@ -76,11 +76,23 @@ export const ProductAcquisitionChannelSchema = z
   })
   .strict();
 
+const SorAssetPath = /^\/api\/v1\/catalog\/assets\/[0-9a-f-]{36}$/;
+
 export const ProductVisualAssetSchema = z
   .object({
-    asset_type: z.enum(["official_hero", "product_screenshot", "official_illustration"]),
-    /** Authenticated SOR delivery path of the private copy, never a remote URL. */
-    url: z.string().regex(/^\/api\/v1\/catalog\/assets\/[0-9a-f-]{36}$/),
+    asset_type: z.enum([
+      "official_hero",
+      "product_screenshot",
+      "official_illustration",
+      // PD-38: displayed by reference (no copy stored by SOR).
+      "licensed_image",
+      "publisher_share_image",
+    ]),
+    /**
+     * Operator-approved private copy: the authenticated SOR delivery path,
+     * never a remote URL. Reference (PD-38): the https image URL at its origin.
+     */
+    url: z.string().min(1).max(2000),
     alt_text: z.string().min(1).max(500),
     source_url: z.string().url(),
     observed_at: ISODateTimeSchema,
@@ -88,8 +100,36 @@ export const ProductVisualAssetSchema = z
     confidence: z.number().min(0).max(100).nullable(),
     width: z.number().int().positive().nullable(),
     height: z.number().int().positive().nullable(),
+    // Defaults keep the pre-S8.5 DTO (private copies only) valid.
+    delivery_mode: z.enum(["private_copy", "external_reference"]).default("private_copy"),
+    rights_status: z.enum(["approved", "licensed", "publisher_published"]).default("approved"),
+    licence_code: z.string().nullable().default(null),
+    licence_url: z.string().url().nullable().default(null),
+    attribution: z.string().nullable().default(null),
   })
-  .strict();
+  .strict()
+  .superRefine((a, ctx) => {
+    const reference = a.delivery_mode === "external_reference";
+    if (!reference) {
+      if (!SorAssetPath.test(a.url) || a.rights_status !== "approved") {
+        ctx.addIssue({ code: "custom", message: "a private copy is served by SOR and approved" });
+      }
+      return;
+    }
+    if (!/^https:\/\/[^/]/i.test(a.url)) {
+      ctx.addIssue({ code: "custom", message: "a reference is an https image URL" });
+    }
+    if (a.asset_type === "licensed_image") {
+      if (a.rights_status !== "licensed" || !a.licence_code || !a.licence_url) {
+        ctx.addIssue({ code: "custom", message: "a free-licence image carries its licence" });
+      }
+    } else if (
+      a.asset_type !== "publisher_share_image" ||
+      a.rights_status !== "publisher_published"
+    ) {
+      ctx.addIssue({ code: "custom", message: "unknown reference kind" });
+    }
+  });
 
 export const ProductCardSchema = z
   .object({

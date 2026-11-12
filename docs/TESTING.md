@@ -348,3 +348,26 @@ and path (`http500`, `reset`, `{ slowMs }`), discovery requests.
   member, owner and creator rules for create, import and delete; deletion and
   its audit) and the cluster handoff inside `e2e/pain-points.e2e.ts` (warning
   about the simulated grouping, coverage of the cluster's problems).
+
+## Visual references (S8.5, PD-38)
+
+- Unit: `packages/domain/src/__tests__/visual-references.test.ts` (free
+  licences accepted or refused, attribution, product domain, logo-like names
+  and shapes, real format and size from the bytes);
+  `packages/data-sources/src/__tests__/visual-references.test.ts` (share image
+  declared on the official site through the loopback fixture server: kept
+  with its size and hash, refused for logos, squares, missing tag and
+  robots.txt; Commons titles, licences and batches);
+  `apps/worker/src/__tests__/visuals.test.ts` (one fetch per official site,
+  failures counted, ingestion statuses); contract tests for the reference DTO
+  and the snapshot.
+- Snapshots: `apps/worker/test/visual-snapshots.test.ts` validates any
+  committed `data/visuals/*.json` (contract, kind, one reference per listing).
+- Database: pgTAP `028_visual_references.sql` (no browser grant on the RPC,
+  per-kind rules, non-free licence and http refused, domain check, excluded
+  product, precedence approved copy > free licence > share image, replay,
+  replacement with history, audit, read side and removal).
+- E2E: `e2e/visual-references.e2e.ts` (free-licence image with its kind,
+  author, licence and file page — the Commons URL is answered by Playwright
+  routing, no network; a share image whose origin is gone falls back to the
+  honest state).

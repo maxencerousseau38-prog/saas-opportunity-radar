@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { ExternalLink, ImageOff } from "lucide-react";
 import type { ProductCard } from "@sor/contracts";
@@ -11,9 +12,11 @@ import {
   CUSTOMER_TYPE,
   PRICING_STATUS,
   VISUAL_ASSET_TYPE,
+  VISUAL_RIGHTS_NOTE,
   confidenceLabel,
   countryName,
   isDemoUrl,
+  licenceLabel,
   teamLabel,
 } from "@/lib/labels";
 import { cn } from "@/lib/utils";
@@ -161,7 +164,14 @@ export function ProductCardView({
   ...actions
 }: ActionProps & { product: ProductCard; compact: boolean }) {
   const href = `/w/${actions.workspaceId}/saas/${product.slug}`;
-  const asset = product.visual_asset;
+  // A reference (PD-38) is loaded from its origin: if it is gone, the card
+  // falls back to the honest "no authentic preview" state. A private copy is
+  // served by SOR and keeps its frame.
+  const [broken, setBroken] = useState(false);
+  const asset = broken ? null : product.visual_asset;
+  const onImageError = () => {
+    if (asset?.delivery_mode === "external_reference") setBroken(true);
+  };
   return (
     <article
       aria-label={product.name}
@@ -205,6 +215,7 @@ export function ProductCardView({
                   loading="lazy"
                   decoding="async"
                   referrerPolicy="no-referrer"
+                  onError={onImageError}
                   className="h-full w-full object-cover"
                 />
               </a>
@@ -218,12 +229,37 @@ export function ProductCardView({
                 loading="lazy"
                 decoding="async"
                 referrerPolicy="no-referrer"
+                onError={onImageError}
                 className="absolute inset-0 h-full w-full object-cover"
               />
             )}
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8 text-white">
-              <span className="text-xs font-medium" data-testid="visual-asset-type">
-                {VISUAL_ASSET_TYPE[asset.asset_type]}
+              <span className="min-w-0 text-xs">
+                <span
+                  className="font-medium"
+                  data-testid="visual-asset-type"
+                  title={VISUAL_RIGHTS_NOTE[asset.rights_status]}
+                >
+                  {VISUAL_ASSET_TYPE[asset.asset_type]}
+                </span>
+                {asset.asset_type === "licensed_image" ? (
+                  <span className="block truncate opacity-90" data-testid="visual-asset-credit">
+                    {asset.attribution ? `© ${asset.attribution} · ` : ""}
+                    {asset.licence_url ? (
+                      <a
+                        href={asset.licence_url}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow license"
+                        className="underline"
+                      >
+                        {licenceLabel(asset.licence_code)}
+                      </a>
+                    ) : (
+                      licenceLabel(asset.licence_code)
+                    )}{" "}
+                    · Wikimedia Commons
+                  </span>
+                ) : null}
               </span>
               <span className="flex items-center gap-3">
                 <OfficialSiteLink product={product} className="text-white underline" />

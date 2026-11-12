@@ -1,5 +1,6 @@
 // S8.3 Discover V2 completion contracts (ADR-016, ADR-017).
 import { z } from "zod";
+import { ISODateTimeSchema } from "./common";
 
 const HttpsUrlSchema = z
   .string()
@@ -72,3 +73,76 @@ export const VisualAssetManifestSchema = z
 export type OperatorChannelRecord = z.infer<typeof OperatorChannelRecordSchema>;
 export type VisualAssetManifestEntry = z.infer<typeof VisualAssetManifestEntrySchema>;
 export type VisualAssetManifest = z.infer<typeof VisualAssetManifestSchema>;
+
+// ------------------------------------------------------------ S8.5 visual references (PD-38)
+
+/**
+ * One visual displayed by reference (no copy stored): a free-licence image
+ * from Wikimedia Commons (`licensed`) or the share image a publisher declares
+ * on its own official site (`publisher`). Collected by the worker CLI
+ * `visuals.js collect` (Catalog visuals workflow), loaded by `visuals.js ingest`
+ * through `sor_record_visual_reference`.
+ */
+export const VisualReferenceSchema = z
+  .object({
+    kind: z.enum(["licensed", "publisher"]),
+    /** The catalog listing the visual belongs to (identity in the catalog). */
+    listing_source_key: z.string().regex(/^[a-z0-9_]{2,60}$/),
+    listing_external_id: z.string().min(1).max(200),
+    product_name: z.string().min(1).max(200),
+    image_url: HttpsUrlSchema,
+    /** Commons file page, or the official page that declares the image. */
+    page_url: HttpsUrlSchema,
+    content_hash: z.string().regex(/^[0-9a-f]{16,128}$/),
+    content_type: z.enum(["image/png", "image/jpeg", "image/webp"]),
+    width: z.number().int().min(1).max(20000),
+    height: z.number().int().min(1).max(20000),
+    alt_text: z.string().min(1).max(500),
+    observed_at: ISODateTimeSchema,
+    licence_code: z
+      .string()
+      .regex(/^(CC0-1\.0|Public-Domain|CC-BY(-SA)?-(1\.0|2\.0|2\.5|3\.0|4\.0))$/)
+      .nullable(),
+    licence_url: z.string().url().nullable(),
+    attribution: z.string().min(1).max(300).nullable(),
+  })
+  .strict()
+  .superRefine((r, ctx) => {
+    if (r.kind === "licensed") {
+      if (!r.licence_code || !r.licence_url) {
+        ctx.addIssue({ code: "custom", message: "a free-licence image needs its licence" });
+      }
+      if (r.licence_code?.startsWith("CC-BY") && !r.attribution) {
+        ctx.addIssue({ code: "custom", message: "CC BY / CC BY-SA need the attribution" });
+      }
+      if (!/^https:\/\/upload\.wikimedia\.org\//.test(r.image_url)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "a free-licence image comes from Wikimedia Commons",
+        });
+      }
+    } else if (r.licence_code || r.licence_url || r.attribution) {
+      ctx.addIssue({ code: "custom", message: "a publisher share image carries no licence" });
+    }
+  });
+
+export const VisualReferenceSnapshotSchema = z
+  .object({
+    contract_version: z.literal("visual-references-1"),
+    kind: z.enum(["licensed", "publisher"]),
+    rules_version: z.string().min(1).max(40),
+    collected_at: ISODateTimeSchema,
+    /** Listings examined, references kept, and why the others were not. */
+    summary: z
+      .object({
+        candidates: z.number().int().min(0),
+        references: z.number().int().min(0),
+        rejected: z.record(z.string(), z.number().int().min(0)),
+      })
+      .strict(),
+    references: z.array(VisualReferenceSchema),
+  })
+  .strict();
+
+export type VisualReference = z.infer<typeof VisualReferenceSchema>;
+export type VisualReferenceSnapshot = z.infer<typeof VisualReferenceSnapshotSchema>;

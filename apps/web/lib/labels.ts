@@ -99,7 +99,25 @@ export const VISUAL_ASSET_TYPE: Record<string, string> = {
   official_hero: "Visuel officiel",
   product_screenshot: "Capture authentique du produit",
   official_illustration: "Illustration officielle",
+  // PD-38: displayed by reference.
+  licensed_image: "Image sous licence libre",
+  publisher_share_image: "Image de partage publiée par l’éditeur",
 };
+/** Why a reference is shown, stated next to it (PD-38). */
+export const VISUAL_RIGHTS_NOTE: Record<string, string> = {
+  licensed:
+    "Image sous licence libre hébergée sur Wikimedia Commons, affichée depuis son origine avec son auteur et sa licence.",
+  publisher_published:
+    "Image déclarée par l’éditeur sur son site officiel pour les aperçus de liens : affichée depuis son origine, sans licence vérifiée.",
+};
+/** "CC-BY-SA-4.0" -> "CC BY-SA 4.0"; "CC0-1.0" -> "CC0"; "Public-Domain" -> "Domaine public". */
+export function licenceLabel(code: string | null): string | null {
+  if (!code) return null;
+  if (code === "Public-Domain") return "Domaine public";
+  if (code === "CC0-1.0") return "CC0";
+  const m = /^CC-BY(-SA)?-(\d\.\d)$/.exec(code);
+  return m ? `CC BY${m[1] ? "-SA" : ""} ${m[2]}` : code;
+}
 export const ACQUISITION_CHANNEL_STATUS: Record<string, string> = {
   confirmed: "Confirmé",
   declared: "Déclaré",

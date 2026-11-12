@@ -10,7 +10,7 @@ import {
   type ConnectorOutcome,
   type SourceConnector,
 } from "../connector";
-import { extractPage } from "../html";
+import { extractPage, extractShareImage } from "../html";
 import { ALLOW_ALL, DISALLOW_ALL, isAllowed, parseRobots, type RobotsRules } from "../robots";
 import { safeFetch, type SafeFetchPolicy } from "../safe-fetch";
 
@@ -125,6 +125,8 @@ export class OfficialWebsiteConnector implements SourceConnector {
       ? extractPage(res.data.body, finalUrl.toString())
       : { title: null, description: null, text: res.data.body, links: [] };
     const text = normalizeDocumentText(page.text).slice(0, MAX_TEXT);
+    // The publisher's declared link-preview image (PD-38), read, never fetched here.
+    const shareImage = isHtml ? extractShareImage(res.data.body, finalUrl.toString()) : null;
     const sameSiteLinks = page.links
       .filter((l) => {
         try {
@@ -167,6 +169,8 @@ export class OfficialWebsiteConnector implements SourceConnector {
           links: sameSiteLinks,
           external_links: externalLinks,
           redirects: res.data.redirects,
+          share_image: shareImage?.url ?? null,
+          share_image_alt: shareImage?.alt ?? null,
         },
       },
     };
