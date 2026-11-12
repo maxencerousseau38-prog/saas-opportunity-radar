@@ -15,8 +15,8 @@ test("a wrong secret is refused and leaves the visitor signed out", async ({ pag
     "Ce lien d’accès n’est pas valide.",
   );
   expect(page.url()).not.toContain("#");
-  await page.goto("/");
-  await expect(page).toHaveURL(/\/login/);
+  // No session was created: the API, called with the browser's cookies, says 401.
+  expect((await page.request.get("/api/v1/me")).status()).toBe(401);
 });
 
 test("a link without a secret says it is incomplete", async ({ page }) => {
