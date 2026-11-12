@@ -10,7 +10,10 @@ test.skip(!TOKEN, "OWNER_ACCESS_TOKEN is not set for this run");
 
 test("a wrong secret is refused and leaves the visitor signed out", async ({ page }) => {
   await page.goto(`/auth/acces#${"x".repeat(48)}`);
-  await expect(page.getByRole("alert")).toHaveText("Ce lien d’accès n’est pas valide.");
+  // Next.js renders its own empty role="alert" route announcer: filter on text.
+  await expect(page.getByRole("alert").filter({ hasText: "Ce lien" })).toHaveText(
+    "Ce lien d’accès n’est pas valide.",
+  );
   expect(page.url()).not.toContain("#");
   await page.goto("/");
   await expect(page).toHaveURL(/\/login/);
@@ -18,7 +21,9 @@ test("a wrong secret is refused and leaves the visitor signed out", async ({ pag
 
 test("a link without a secret says it is incomplete", async ({ page }) => {
   await page.goto("/auth/acces");
-  await expect(page.getByRole("alert")).toHaveText("Ce lien d’accès est incomplet.");
+  await expect(page.getByRole("alert").filter({ hasText: "Ce lien" })).toHaveText(
+    "Ce lien d’accès est incomplet.",
+  );
 });
 
 test("the right secret opens the owner's workspace without a password", async ({ page }) => {
