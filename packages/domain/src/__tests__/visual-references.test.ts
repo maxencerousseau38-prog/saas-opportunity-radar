@@ -114,6 +114,21 @@ describe("checkVisualReference", () => {
     ).toEqual(["not_https"]);
   });
 
+  it("refuses signed or token-bearing URLs (they expire and carry credentials)", () => {
+    const wide = { contentType: "image/png", width: 1200, height: 630 };
+    for (const url of [
+      "https://firebasestorage.googleapis.com/v0/b/x/o/og.png?alt=media&token=abc",
+      "https://bucket.s3.amazonaws.com/og.png?X-Amz-Credential=AKIA&X-Amz-Signature=f00",
+      "https://storage.googleapis.com/b/og.png?X-Goog-Signature=f00",
+      "https://cdn.example.com/og.png?sig=abc&se=2026-11-12",
+    ]) {
+      expect(checkVisualReference("publisher", url, wide)).toContain("signed_url");
+    }
+    expect(
+      checkVisualReference("publisher", "https://cdn.example.com/og.png?v=3&w=1200", wide),
+    ).toEqual([]);
+  });
+
   it("reads the real format and size from the bytes", () => {
     expect(
       checkVisualReferenceBytes("publisher", "https://example.com/og.png", png(1200, 630)),

@@ -112,7 +112,7 @@ d'images, et rien n'est reproduit par SOR) :
    téléchargée une fois par le fetcher d'images (robots.txt de l'hôte de
    l'image, https, PNG/JPEG/WebP, 5 Mo) pour vérifier qu'elle est réelle et
    large (≥ 600×300, ratio ≥ 1,2, pas de logo) et la hacher, puis oubliée.
-   La page doit être sur le domaine du produit ou un sous-domaine.
+   La page doit être sur le domaine du produit ou un sous-domaine. Une URL d'image signée ou porteuse d'un jeton (S3/GCS présignée, jeton Firebase, JWT) est refusée : elle expire et contient des identifiants.
 
 Ce que l'amendement **ne change pas** : les copies privées restent soumises
 au §3 (droits documentés couvrant la copie, opérateur, preuve vérifiée) ;

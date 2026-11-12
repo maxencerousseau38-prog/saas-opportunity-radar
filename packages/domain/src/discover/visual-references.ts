@@ -71,7 +71,8 @@ export type VisualReferenceRejection =
   | "unsupported_format"
   | "too_small"
   | "logo_like_shape"
-  | "logo_like_name";
+  | "logo_like_name"
+  | "signed_url";
 
 /** Minimum size and shape: a card visual is a wide image, never a logo or an icon. */
 const MIN: Record<VisualReferenceKind, { width: number; height: number; ratio: number }> = {
@@ -80,6 +81,19 @@ const MIN: Record<VisualReferenceKind, { width: number; height: number; ratio: n
 };
 const LOGO_NAME = /(^|[/_.-])(logo|logos|favicon|icon|icons|avatar|apple-touch)([/_.-]|\d|$)/i;
 const RASTER = new Set(["image/png", "image/jpeg", "image/webp"]);
+/**
+ * Query parameters of signed or token-bearing URLs (S3/GCS presigned,
+ * Firebase download tokens, JWTs, SAS): they expire and carry credentials,
+ * so they are never a stable reference and are never recorded.
+ */
+const SIGNED_PARAM =
+  /^(token|access_token|auth|authorization|key|apikey|api_key|sig|signature|credential|expires|policy|se|sp|sv|x-amz-.+|x-goog-.+)$/i;
+
+/** True when the URL carries a signature, a token or credentials in its query. */
+export function isSignedUrl(url: URL): boolean {
+  for (const name of url.searchParams.keys()) if (SIGNED_PARAM.test(name)) return true;
+  return false;
+}
 
 function safeDecode(path: string): string {
   try {
@@ -103,6 +117,7 @@ export function checkVisualReference(
     return ["not_https"];
   }
   if (url.protocol !== "https:") errors.push("not_https");
+  if (isSignedUrl(url)) errors.push("signed_url");
   const path = safeDecode(url.pathname);
   if (!RASTER.has(info.contentType.toLowerCase())) errors.push("unsupported_format");
   const min = MIN[kind];
