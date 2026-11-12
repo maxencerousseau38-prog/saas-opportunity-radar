@@ -268,6 +268,19 @@ personal, non-commercial tool; any takedown request is honoured at once
 
 ---
 
+## Personal owner access (12 November 2026)
+
+The product owner could not sign in with their password on the hosted site
+and asked to "remove the login wall" of their workspace. Removing
+authentication on a public URL would let anyone read or change the
+production data, so the safe equivalent below was implemented instead:
+
+| ID | Decision | Approved direction | Main consequence | ADR |
+|---|---|---|---|---|
+| PD-39 | Password-less personal access for the product owner | A personal secret link `/auth/acces#<secret>`: when `OWNER_ACCESS_TOKEN` (random, ≥ 32 characters) and `OWNER_ACCESS_EMAIL` are both set in the web server environment, the secret signs that one account in (server-side magic link generated with the secret key, verified at once); disabled when unset | Authentication stays in force for everyone else; RLS, roles and the operator MFA (AAL2, PD-30) are unchanged; the secret is in the URL fragment (never sent in requests or logs), compared in constant time, and each use is audit-logged (`auth.owner_access`); rotating or removing the variable revokes the link | — |
+
+---
+
 ## Pending decision register
 
 These questions were **not** settled by the 4 November arbitration. Each

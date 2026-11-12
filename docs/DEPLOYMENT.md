@@ -155,6 +155,17 @@ If the operator loses the authenticator app: in the Supabase dashboard,
 Authentication → Users → the operator → remove the TOTP factor; the next
 visit to `/operator` starts a new enrolment. Never share the enrolment key.
 
+## 7b. Personal owner access link (PD-39)
+
+1. Generate a secret on your own machine (never paste it in a chat or a commit):
+   `openssl rand -hex 32`.
+2. In Vercel > project > Settings > Environment Variables (Production), add
+   `OWNER_ACCESS_TOKEN` = that secret (type *Sensitive*) and
+   `OWNER_ACCESS_EMAIL` = the e-mail of your existing, confirmed account.
+3. Redeploy production, then open
+   `https://<production domain>/auth/acces#<secret>` and bookmark it.
+4. To revoke: change or delete `OWNER_ACCESS_TOKEN` and redeploy.
+
 ## 8. Remaining work in Sprint 7
 
 Status as of 7 November 2026, based on the repository's sprint notes:
