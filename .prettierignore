@@ -15,5 +15,8 @@ evals/enrichment/real/snapshots/
 evals/benchmark/vendor-docs/
 dist-evals/
 dist-catalog/
-# Collected catalog snapshots (machine-written)
+dist-assets/
+dist-visuals/
+# Collected catalog and visual reference snapshots (machine-written)
 data/catalog/
+data/visuals/
