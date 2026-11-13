@@ -86,7 +86,9 @@ test("viewers read runs but cannot start one; settings list the source registry 
   await page.goto(`/w/${ws}/settings`);
   const hn = page.getByRole("row", { name: /Hacker News/ });
   await expect(hn).toContainText("Métadonnées seules");
-  await expect(hn).toContainText("Revue à terminer");
+  // PD-42: terms reviewed on 10 Nov 2026; still disabled outside production.
+  await expect(hn).toContainText("Revue le 10 nov. 2026");
+  await expect(hn).toContainText("désactivée");
 
   // Job quotas (S7.2): the viewer sees the workspace usage and their own budget.
   const quotas = page.getByRole("table", { name: "Quotas de traitements" });
