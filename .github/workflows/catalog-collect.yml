@@ -2,7 +2,8 @@
 # docs/DATA_SOURCES.md). Runs the catalog collectors on GitHub runners and
 # validates the normalized snapshots (apps/worker/test/catalog-snapshots.test.ts)
 # before anything is written. Sources: Wikidata (CC0, public query service,
-# no key) and Uneed (official read-only API, no key). No database access, no
+# no key), Uneed (official read-only API, no key) and Hacker News (official
+# API, latest Show HN launches, metadata only; PD-42). No database access, no
 # secret, no paid call; nothing is loaded into any hosted project.
 #
 # - Weekly schedule, or a manual run from main: the snapshots go to a dated
@@ -24,6 +25,7 @@ on:
     paths:
       - packages/data-sources/src/connectors/wikidata.ts
       - packages/data-sources/src/connectors/uneed.ts
+      - packages/data-sources/src/connectors/hacker-news-catalog.ts
       - packages/contracts/src/listings.ts
       - apps/worker/src/catalog/collect.ts
       - .github/workflows/catalog-collect.yml
@@ -58,6 +60,11 @@ jobs:
       - name: Collect Uneed listings (official read API)
         continue-on-error: true
         run: node apps/worker/dist-catalog/collect.js uneed data/catalog/uneed/listings.json
+      # Hacker News official API (PD-42): latest Show HN launches, metadata
+      # only, 60 requests a minute. Same rule: a failure keeps the others.
+      - name: Collect Hacker News Show HN launches (official API)
+        continue-on-error: true
+        run: node apps/worker/dist-catalog/collect.js hacker_news data/catalog/hacker_news/listings.json
       # A snapshot that fails the contract and quality checks is never
       # committed (no PR, no push): the run fails and says why.
       - name: Validate the snapshots
@@ -86,7 +93,7 @@ jobs:
           branch="catalog/snapshots-${day}-${GITHUB_RUN_ID}"
           stats="$(node -e '
             const fs = require("node:fs");
-            for (const s of ["wikidata", "uneed"]) {
+            for (const s of ["wikidata", "uneed", "hacker_news"]) {
               const f = `data/catalog/${s}/listings.json`;
               if (!fs.existsSync(f)) continue;
               const d = JSON.parse(fs.readFileSync(f, "utf8"));
@@ -97,7 +104,7 @@ jobs:
           git commit -m "Catalog collection ${day}: listings snapshots (automated)"
           git push origin "HEAD:${branch}"
           printf '%s\n' \
-            "Automated weekly catalog collection (Wikidata CC0, Uneed official read API)." \
+            "Automated weekly catalog collection (Wikidata CC0, Uneed official read API, Hacker News official API)." \
             "" "${stats}" "" \
             "The snapshots passed apps/worker/test/catalog-snapshots.test.ts before this commit." \
             "CI is dispatched on this branch. Nothing is loaded into any hosted project:" \

@@ -6,6 +6,7 @@ export * from "./robots";
 export * from "./html";
 export * from "./connectors/official-website";
 export * from "./connectors/hacker-news";
+export * from "./connectors/hacker-news-catalog";
 export * from "./connectors/simulated-search";
 export * from "./connectors/wikidata";
 export * from "./connectors/product-hunt";

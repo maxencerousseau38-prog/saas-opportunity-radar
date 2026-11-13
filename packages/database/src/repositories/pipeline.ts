@@ -90,6 +90,22 @@ export async function sourceIdByKey(service: DbClient, sourceKey: string): Promi
 }
 
 /**
+ * Whether a source may be loaded now: integrated and enabled in this
+ * environment (a source is enabled per environment on the product owner's
+ * go-ahead, docs/DATA_SOURCES.md). The ingestion RPC refuses the others.
+ */
+export async function sourceIsEnabled(service: DbClient, sourceKey: string): Promise<boolean> {
+  const row = check(
+    await service
+      .from("sources")
+      .select("integration_status, is_enabled")
+      .eq("source_key", sourceKey)
+      .maybeSingle(),
+  );
+  return row?.integration_status === "integrated" && row.is_enabled === true;
+}
+
+/**
  * Writes one collected catalog listing through the provenance pipeline
  * (first bulk collection, migration 20261116090001_catalog_sources).
  */

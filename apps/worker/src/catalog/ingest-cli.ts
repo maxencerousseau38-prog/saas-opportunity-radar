@@ -28,6 +28,14 @@ for (const file of files) {
     listings?: unknown;
   };
   const listings = Array.isArray(envelope.listings) ? envelope.listings : [];
+  // A source not enabled in this environment is never loaded (PD-42: Hacker
+  // News is enabled in production only; CI and local stacks keep it off).
+  if (!(await pipelineRepo.sourceIsEnabled(db, envelope.source_key))) {
+    process.stdout.write(
+      `${JSON.stringify({ file, source_key: envelope.source_key, total: listings.length, skipped: "source_not_enabled" }, null, 2)}\n`,
+    );
+    continue;
+  }
   const started = Date.now();
   const summary = await ingestListings(db, listings, {
     sourceKey: envelope.source_key,
