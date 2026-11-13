@@ -125,6 +125,9 @@ describe("collectOfficialVisuals", () => {
         '<div class="hero"><img src="/hero-flat.png"></div><img src="/screenshot-app.png" alt="App screenshot">',
       ),
       "/none": page("<main><p>No visual</p></main>"),
+      "/decor": page(
+        '<section class="hero"><img src="/hero-offsite.jpg" alt="Our offsite in the mountains"></section>',
+      ),
       "/og.png": image(png(1200, 630)),
       "/hero.png": image(png(1600, 900)),
       "/hero-flat.png": image(png(1600, 900, 0.005)),
@@ -162,6 +165,7 @@ describe("collectOfficialVisuals", () => {
 
   it("states why there is no site image", async () => {
     expect((await run("/none")).site).toEqual({ rejection: "no_site_image" });
+    expect((await run("/decor")).site).toEqual({ rejection: "hero_not_product" });
     expect(await run("/private")).toEqual({
       share: { rejection: "page_robots_disallow" },
       site: { rejection: "page_robots_disallow" },

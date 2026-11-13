@@ -9,6 +9,7 @@ import { createHash } from "node:crypto";
 import type { VisualReference } from "@sor/contracts";
 import {
   checkVisualReferenceBytes,
+  heroShowsProduct,
   isOnProductDomain,
   normalizeUrl,
   type VisualReferenceKind,
@@ -133,7 +134,18 @@ export async function collectOfficialVisuals(args: {
     ? (meta.site_images as SiteImageCandidate[])
     : [];
   let site: ShareImageDecision = { rejection: "no_site_image" };
-  for (const candidate of candidates.slice(0, MAX_SITE_IMAGE_DOWNLOADS)) {
+  let downloads = 0;
+  for (const candidate of candidates) {
+    if (downloads >= MAX_SITE_IMAGE_DOWNLOADS) break;
+    // A hero must visibly concern the product, not decorate the page (visref-2).
+    if (
+      candidate.kind === "site_hero" &&
+      !heroShowsProduct({ imageUrl: candidate.url, alt: candidate.alt, productName: listing.name })
+    ) {
+      site = { rejection: "hero_not_product" };
+      continue;
+    }
+    downloads++;
     const label =
       candidate.kind === "site_screenshot"
         ? `Capture de l’interface de ${listing.name} sur son site officiel`
