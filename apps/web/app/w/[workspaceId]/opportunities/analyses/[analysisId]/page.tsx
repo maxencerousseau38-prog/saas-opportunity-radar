@@ -138,7 +138,7 @@ export default async function AnalysisPage(
           Analyse d’opportunité · {ANALYSIS_SUBJECT[a.subject_type] ?? a.subject_type} · marché{" "}
           {a.target_market} · créée le {formatDate(a.created_at)}
         </p>
-        <h1 className="text-xl font-semibold">{a.subject_label}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{a.subject_label}</h1>
         <AnalysisStatus
           workspaceId={workspaceId}
           analysisId={a.id}

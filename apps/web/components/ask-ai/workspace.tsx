@@ -270,7 +270,7 @@ export function AskAiWorkspace({
     <section className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold">Ask AI</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Ask AI</h1>
           <p className="max-w-3xl text-sm text-muted">
             Préparez un dossier d’analyse à partir du catalogue, copiez le prompt vers un assistant
             externe, puis importez sa réponse. Aucun modèle n’est exécuté dans l’application.
@@ -282,7 +282,7 @@ export function AskAiWorkspace({
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_21rem]">
         <div className="space-y-5">
           {!currentContext || editingSelection ? (
-            <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
+            <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
               <h2 className="font-semibold">Choisir les SaaS à étudier</h2>
               <p className="text-sm text-muted">
                 Sélectionnez jusqu’à cinq produits. Le contexte disponible sera chargé depuis le
@@ -403,7 +403,7 @@ export function AskAiWorkspace({
             </section>
           ) : currentContext ? (
             <>
-              <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
+              <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <h2 className="font-semibold">Sujet et contexte</h2>
@@ -551,7 +551,7 @@ export function AskAiWorkspace({
                 ) : null}
               </section>
 
-              <section className="space-y-4 rounded-lg border border-border bg-surface p-4">
+              <section className="space-y-4 rounded-2xl border border-border bg-surface p-4">
                 <h2 className="font-semibold">Construire le prompt</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Field
@@ -639,7 +639,7 @@ export function AskAiWorkspace({
               </section>
 
               {session ? (
-                <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
+                <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
                   <div>
                     <h2 className="font-semibold">Importer la réponse externe</h2>
                     <p className="text-sm text-muted">
@@ -700,7 +700,7 @@ export function AskAiWorkspace({
           ) : null}
         </div>
 
-        <aside className="h-fit space-y-3 rounded-lg border border-border bg-surface p-4">
+        <aside className="h-fit space-y-3 rounded-2xl border border-border bg-surface p-4">
           <h2 className="font-semibold">Historique de recherche</h2>
           {sessions.length ? (
             <ul className="space-y-2">

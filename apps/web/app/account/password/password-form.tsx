@@ -34,7 +34,7 @@ export function PasswordForm() {
         />
       </Field>
       {error ? <ErrorNote>{error}</ErrorNote> : null}
-      <Button type="submit" variant="primary" disabled={pending}>
+      <Button type="submit" variant="primary" size="lg" className="w-full" disabled={pending}>
         Enregistrer
       </Button>
     </form>

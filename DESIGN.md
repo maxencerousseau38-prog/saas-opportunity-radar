@@ -18,26 +18,43 @@ This file is the visual source of truth for UI work. It describes the direction 
 
 The application exposes these Tailwind v4 tokens through apps/web/app/globals.css:
 
-| Token                                   | Purpose                                       |
-| --------------------------------------- | --------------------------------------------- |
-| bg-bg                                   | Main page background                          |
-| bg-surface                              | Sidebar, cards and raised surfaces            |
-| bg-surface-2                            | Inputs, selected items and secondary surfaces |
-| border-border                           | Subtle neutral separators                     |
-| text-fg                                 | Main text                                     |
-| text-muted                              | Secondary text                                |
-| bg-accent text-accent-fg                | High-contrast primary action / brand mark     |
-| text-success, text-warning, text-danger | Semantic status only                          |
+| Token                                   | Purpose                                                          |
+| --------------------------------------- | ---------------------------------------------------------------- |
+| bg-bg                                   | Main page background                                             |
+| bg-surface                              | Sidebar, cards and raised surfaces                               |
+| bg-surface-2                            | Inputs, selected items and secondary surfaces                    |
+| border-border                           | Subtle neutral separators                                        |
+| text-fg                                 | Main text                                                        |
+| text-muted                              | Secondary text                                                   |
+| bg-accent text-accent-fg                | High-contrast primary action / brand mark                        |
+| text-success, text-warning, text-danger | Semantic status only                                             |
+| shadcn aliases                          | `background`, `card`, `primary`, `ring`… map to the tokens above |
 
 The palette follows the neutral dark scale used by the reference template: near-black canvas, charcoal surfaces, soft-white foreground and low-contrast borders. Do not add a blue, purple or gradient brand accent.
 
-## Application shell
+## Application shell (mobile-first since 12 Nov 2026)
 
-- Desktop: fixed left sidebar (16rem), compact top bar, wide content canvas.
-- Mobile: compact top bar, horizontal scrollable primary navigation, full-width content.
-- Sidebar: product identity, workspace switcher, primary research navigation and signed-in identity.
-- Active navigation: neutral raised surface, border and clear text/icon contrast.
-- Content: use a consistent max-width, responsive page padding and vertical rhythm.
+- Phone first: SOR is opened daily from an iPhone. Design at 375–430 px, then widen.
+- Phone: a small top bar that scrolls away, a fixed bottom tab bar (Discover, Saved, Ask AI,
+  Opportunities, Plus) above the home indicator (`env(safe-area-inset-bottom)`); secondary
+  destinations, workspace switcher and sign-out live in the "Plus" bottom sheet.
+- Desktop (`lg`): fixed left sidebar (15rem) with identity, workspace switcher, navigation and
+  account; no top bar.
+- Pages keep their own sticky tools (Discover search, profile section nav).
+- Dialogs are bottom sheets on phones and centred cards from `sm`; the Discover filters are a
+  bottom sheet on phones and a right-hand sheet from `sm`.
+- Inputs use 16 px text on phones (iOS zooms into smaller fields); touch targets ≥ 36 px.
+- Installable web app: `app/manifest.ts`, `app/icon.svg`, `app/apple-icon.tsx`.
+
+## Discover cards
+
+- A card says three things: name, one sentence (tagline or short description) and category.
+  The whole card opens the profile (one stretched link); favourite and the "…" menu sit above it.
+- An authentic, evidence-linked visual (PD-38) is the cover when one exists, with its kind and
+  source; otherwise the card is compact with a monogram — never a fabricated screenshot.
+- Feed: one column (max-w-xl). Grid: prefix-stable masonry (`components/discover/masonry.ts`).
+  List: dense rows. Infinite scroll prefetches ~1,200 px ahead.
+- Unknown facts are not advertised on cards; the profile groups them on one "Inconnu" line.
 
 ## Blocks and Claude workflow
 
@@ -53,8 +70,8 @@ When using shadcnstore blocks:
 
 ## Component conventions
 
-- Buttons: compact, medium weight, neutral primary/secondary/outline/ghost hierarchy.
-- Cards: subtle surface, 1px border, restrained radius; avoid decorative gradients.
+- Buttons: medium weight, neutral primary/secondary/outline/ghost hierarchy, `active:scale` feedback.
+- Cards: subtle surface, 1px border, `rounded-2xl`; avoid decorative gradients.
 - Inputs: neutral raised background, visible border and obvious focus ring.
 - Tables: clear column hierarchy, compact rows, muted metadata and low-contrast dividers.
 - Badges: neutral by default; semantic colors only for meaningful states.

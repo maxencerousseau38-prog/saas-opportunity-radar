@@ -143,7 +143,7 @@ export function LoginForm() {
           />
         </Field>
         {error ? <ErrorNote>{error}</ErrorNote> : null}
-        <Button type="submit" variant="primary" className="w-full" disabled={pending}>
+        <Button type="submit" variant="primary" size="lg" className="w-full" disabled={pending}>
           {pending ? "Connexion…" : "Se connecter"}
         </Button>
       </form>

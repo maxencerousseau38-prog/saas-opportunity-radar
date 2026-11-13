@@ -145,7 +145,9 @@ test("free-licence and publisher references: kind, credit, licence and fallback"
     "https://commons.wikimedia.org/wiki/File:E2E_dashboard.png",
   );
 
-  // The share image cannot load: the card says so instead of showing a hole.
+  // The share image cannot load: once the card is on screen (images load
+  // lazily), it says so instead of showing a hole.
+  await page.getByRole("article", { name: "MetricFlow" }).scrollIntoViewIfNeeded();
   await expect(
     page.getByRole("article", { name: "MetricFlow" }).getByTestId("product-visual-preview"),
   ).toContainText("Aperçu authentique non disponible");

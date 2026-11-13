@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState, ErrorNote } from "@/components/ui/states";
 import { api } from "@/lib/client-api";
 import { REPORT_TYPE, formatDate } from "@/lib/labels";
+import { ProductLogo } from "@/components/discover/product-card";
 
 interface ProductRef {
   id: string;
@@ -51,8 +52,8 @@ interface Props {
 
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
-      <h2 className="text-base font-semibold">{title}</h2>
+    <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
+      <h2 className="text-[17px] font-semibold tracking-tight">{title}</h2>
       {children}
     </section>
   );
@@ -95,11 +96,11 @@ export function SavedView(p: Props) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-xl font-semibold">Saved</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Saved</h1>
         <Link
           href={`/w/${p.workspaceId}/compare?ids=${compare.join(",")}`}
           aria-disabled={compare.length < 2}
-          className={`rounded-md border border-border px-3 py-1.5 text-sm ${compare.length < 2 ? "pointer-events-none opacity-50" : ""}`}
+          className={`ml-auto rounded-full border border-border px-3.5 py-1.5 text-sm transition-colors hover:bg-surface-2 ${compare.length < 2 ? "pointer-events-none opacity-50" : ""}`}
         >
           Comparer la sélection ({compare.length})
         </Link>
@@ -108,12 +109,17 @@ export function SavedView(p: Props) {
 
       <Block title="Favoris">
         {p.favorites.length ? (
-          <ul className="space-y-1">
+          <ul className="-mx-1 divide-y divide-border">
             {p.favorites.map((f) => (
-              <li key={f.id} className="flex items-center gap-2">
+              <li key={f.id} className="flex items-center gap-3 px-1 py-2.5">
                 {compareBox(f)}
-                {link(f)}
-                <span className="text-sm text-muted">{f.tagline}</span>
+                <ProductLogo name={f.name} logoUrl={null} size={40} />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px]">{link(f)}</span>
+                  {f.tagline ? (
+                    <span className="block truncate text-[13px] text-muted">{f.tagline}</span>
+                  ) : null}
+                </span>
               </li>
             ))}
           </ul>
@@ -149,7 +155,7 @@ export function SavedView(p: Props) {
         ) : null}
         {p.collections.length === 0 ? <EmptyState title="Aucune collection" /> : null}
         {p.collections.map((c) => (
-          <div key={c.id} className="rounded border border-border p-3" data-testid="collection">
+          <div key={c.id} className="rounded-xl border border-border p-3" data-testid="collection">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="font-medium">{c.name}</h3>
               <Badge>{c.items.length} SaaS</Badge>

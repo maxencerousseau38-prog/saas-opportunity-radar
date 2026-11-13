@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getMemberships, getSession } from "@/lib/auth";
+import { buttonVariants } from "@/components/ui/button";
+import { BrandMark } from "@/components/workspace/brand";
 
 export const metadata = {
   title: "SaaS Opportunity Radar — Démonstration",
@@ -47,112 +49,107 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-bg">
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5">
-          <Link href="/" className="font-semibold tracking-tight">
-            SaaS Opportunity Radar
+    <main className="min-h-dvh bg-bg">
+      <header className="pt-safe sticky top-0 z-30 border-b border-border bg-bg/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-5">
+          <Link href="/" className="flex items-center gap-2">
+            <BrandMark size="sm" />
+            <span className="text-[15px] font-semibold tracking-tight">SOR</span>
           </Link>
-          <span className="rounded-full border border-border px-3 py-1 text-xs text-muted">
-            Démonstration publique · sans compte
-          </span>
+          <Link href="/login" className={buttonVariants({ variant: "primary", size: "sm" })}>
+            Se connecter
+          </Link>
         </div>
       </header>
 
-      <section className="mx-auto max-w-6xl px-5 pb-12 pt-16 sm:pb-16 sm:pt-24">
-        <p className="mb-4 text-sm font-medium text-accent">
-          Recherche SaaS fondée sur les preuves
-        </p>
-        <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
-          Repère les SaaS qui méritent vraiment ton attention.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-muted">
-          Parcours cette démonstration sans créer de compte. Découvre comment les logiciels, leurs
-          positionnements et leurs signaux commerciaux peuvent être présentés.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            href="#catalogue"
-            className="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-fg hover:opacity-90"
-          >
-            Explorer la démonstration
-          </a>
-          <a
-            href="#fonctionnalites"
-            className="rounded-lg border border-border px-5 py-3 text-sm font-semibold hover:bg-surface"
-          >
-            Voir les fonctionnalités
-          </a>
-        </div>
-      </section>
-
-      <section id="catalogue" className="border-y border-border bg-surface/60">
-        <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-medium text-accent">Aperçu du produit</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Discover</h2>
-              <p className="mt-2 max-w-xl text-sm text-muted">
-                Un exemple de la manière dont les logiciels peuvent être présentés et comparés.
-              </p>
-            </div>
-            <span className="rounded-full border border-warning/40 bg-warning/10 px-3 py-1 text-xs text-warning">
-              Données fictives de démonstration
-            </span>
-          </div>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            {EXAMPLES.map((item) => (
-              <article key={item.name} className="rounded-xl border border-border bg-surface p-5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <span className="rounded-full bg-surface-2 px-2.5 py-1 text-xs text-muted">
-                    {item.category}
-                  </span>
-                </div>
-                <p className="mt-3 min-h-12 text-sm leading-6 text-muted">{item.description}</p>
-                <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-                  <span className="text-sm font-medium">{item.pricing}</span>
-                  <span className="text-xs text-muted">{item.signal}</span>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <p className="mt-5 text-xs leading-5 text-muted">
-            Ces noms, descriptions et informations sont des exemples fictifs. Cette démonstration
-            est en lecture seule : aucune recherche, sauvegarde ou donnée de compte n’est modifiée.
+      <section className="relative overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(55%_100%_at_50%_0%,oklch(1_0_0/8%),transparent)]"
+        />
+        <div className="relative mx-auto max-w-5xl px-5 pt-14 pb-12 text-center sm:pt-24 sm:pb-16">
+          <span className="inline-flex rounded-full border border-border px-3 py-1 text-xs text-muted">
+            Démonstration publique · sans compte
+          </span>
+          <h1 className="mx-auto mt-6 max-w-3xl text-[40px] leading-[1.05] font-semibold tracking-tight sm:text-6xl">
+            Découvre chaque jour de vrais SaaS.
+          </h1>
+          <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-muted">
+            Un feed de logiciels existants, leurs clients et leurs failles — pour repérer
+            l’opportunité qui mérite d’être construite.
           </p>
+          <div className="mx-auto mt-8 flex max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
+            <Link href="/login" className={buttonVariants({ variant: "primary", size: "lg" })}>
+              Ouvrir mon radar
+            </Link>
+            <a href="#catalogue" className={buttonVariants({ variant: "outline", size: "lg" })}>
+              Voir un aperçu
+            </a>
+          </div>
         </div>
       </section>
 
-      <section id="fonctionnalites" className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-        <div className="grid gap-6 sm:grid-cols-3">
-          <div>
-            <h3 className="font-semibold">Découvrir</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
-              Parcourir un catalogue et filtrer les logiciels selon leur marché et leur modèle.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold">Évaluer</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
-              Examiner les informations disponibles, les prix et les signaux commerciaux.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold">Organiser</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">
-              Retrouver ses recherches et suivre ses pistes dans un espace de travail personnel.
-            </p>
-          </div>
+      <section id="catalogue" className="mx-auto max-w-5xl scroll-mt-16 px-5 pb-14">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-lg font-semibold tracking-tight">Aperçu du feed</h2>
+          <span className="rounded-full bg-warning/15 px-2.5 py-0.5 text-xs text-warning">
+            Données fictives de démonstration
+          </span>
+        </div>
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {EXAMPLES.map((item) => (
+            <li key={item.name}>
+              <article className="h-full rounded-2xl border border-border bg-surface p-4">
+                <div className="flex items-center gap-3">
+                  <span
+                    aria-hidden
+                    className="grid size-11 shrink-0 place-items-center rounded-[22%] border border-border bg-gradient-to-br from-surface-3 to-surface text-lg font-semibold"
+                  >
+                    {item.name.slice(0, 1)}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="truncate text-[16px] font-semibold tracking-tight">
+                      {item.name}
+                    </h3>
+                    <p className="truncate text-xs text-muted">{item.category}</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-[15px] leading-snug text-fg/85">{item.description}</p>
+                <p className="mt-3 text-xs text-muted">
+                  {item.pricing} · {item.signal}
+                </p>
+              </article>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-xs leading-5 text-muted">
+          Ces noms, descriptions et informations sont des exemples fictifs. Cette démonstration est
+          en lecture seule : aucune recherche, sauvegarde ou donnée de compte n’est modifiée.
+        </p>
+      </section>
+
+      <section id="fonctionnalites" className="border-t border-border">
+        <div className="mx-auto grid max-w-5xl gap-8 px-5 py-14 sm:grid-cols-3">
+          {[
+            [
+              "Découvrir",
+              "Scroller un feed de SaaS réels, multi-catégories, avec leurs sources et dates.",
+            ],
+            ["Comprendre", "Ouvrir une fiche, ses concurrents, ses avis clients et ses preuves."],
+            ["Décider", "Sauvegarder, comparer et préparer une analyse avec l’IA de ton choix."],
+          ].map(([title, text]) => (
+            <div key={title}>
+              <h3 className="font-semibold">{title}</h3>
+              <p className="mt-1.5 text-sm leading-6 text-muted">{text}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-xs text-muted">
+        <div className="pb-safe mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-xs text-muted">
           <span>SaaS Opportunity Radar</span>
-          <span>Démo publique sans compte · Espaces privés et actions d’écriture protégés</span>
+          <span>Démo publique · espaces privés et actions d’écriture protégés</span>
         </div>
       </footer>
     </main>

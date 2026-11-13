@@ -43,7 +43,7 @@ export default async function GeneratedOpportunityPage(
         </Link>
       </nav>
       <header className="space-y-2">
-        <h1 className="text-xl font-semibold">{o.name}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{o.name}</h1>
         <div className="flex flex-wrap gap-2">
           <Badge>Hypothèse non notée</Badge>
           {o.exclusion_status !== "eligible" ? (

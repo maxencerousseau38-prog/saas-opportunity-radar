@@ -19,8 +19,9 @@ export function Menu({
       <M.Portal>
         <M.Content
           align="end"
-          sideOffset={4}
-          className="z-50 min-w-48 rounded-md border border-border bg-surface p-1 text-sm shadow-lg"
+          sideOffset={6}
+          collisionPadding={12}
+          className="z-50 min-w-56 animate-pop rounded-xl border border-border bg-surface/95 p-1.5 text-sm shadow-2xl shadow-black/40 backdrop-blur-xl"
         >
           {children}
         </M.Content>
@@ -42,7 +43,7 @@ export function MenuItem({
     <M.Item
       disabled={disabled}
       onSelect={onSelect}
-      className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 outline-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[highlighted]:bg-surface-2"
+      className="flex min-h-10 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 outline-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-45 data-[highlighted]:bg-surface-2 sm:min-h-9"
     >
       {children}
     </M.Item>

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getMemberships, requireUser } from "@/lib/auth";
+import { AuthShell } from "@/components/auth-shell";
 import { OnboardingForm } from "./onboarding-form";
 
 export default async function OnboardingPage(props: PageProps<"/onboarding">) {
@@ -9,13 +10,11 @@ export default async function OnboardingPage(props: PageProps<"/onboarding">) {
   if (memberships.length > 0 && wantsNew !== "1")
     redirect(`/w/${memberships[0]?.workspaceId}/discover`);
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
-      <h1 className="text-xl font-semibold">Créer un espace de travail</h1>
-      <p className="mt-1 mb-6 text-sm text-muted">
-        Vous en serez le propriétaire. Les collections, recherches sauvegardées et statuts sont
-        propres à chaque espace.
-      </p>
+    <AuthShell
+      title="Créer ton espace"
+      description="Tu en seras le propriétaire. Favoris, collections, recherches et statuts sont propres à chaque espace."
+    >
       <OnboardingForm />
-    </main>
+    </AuthShell>
   );
 }

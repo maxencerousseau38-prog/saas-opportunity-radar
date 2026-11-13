@@ -40,7 +40,7 @@ export default async function OpportunitiesPage(
   return (
     <div className="space-y-8">
       <section className="space-y-3" aria-labelledby="pain-title">
-        <h1 id="pain-title" className="text-xl font-semibold">
+        <h1 id="pain-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
           Problèmes clients récurrents
         </h1>
         <p className="text-sm text-muted">

@@ -77,7 +77,7 @@ export default async function ComparePage(props: PageProps<"/w/[workspaceId]/com
   ];
   return (
     <section className="space-y-3">
-      <h1 className="text-xl font-semibold">Comparaison</h1>
+      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Comparaison</h1>
       <p className="text-sm text-muted">
         Tableau déterministe des données du catalogue. « Aucune recensée » ne prouve pas l’absence.
       </p>

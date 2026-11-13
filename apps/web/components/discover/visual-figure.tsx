@@ -14,9 +14,9 @@ export function VisualFigure({ asset, observedLabel }: { asset: Asset; observedL
   const [broken, setBroken] = useState(false);
   const reference = asset.delivery_mode === "external_reference";
   return (
-    <figure className="space-y-2" data-testid="profile-visual">
+    <figure data-testid="profile-visual">
       {broken ? (
-        <p className="flex items-center gap-2 text-sm text-muted">
+        <p className="flex items-center gap-2 px-4 pt-4 text-sm text-muted">
           <ImageOff size={14} aria-hidden /> Le visuel n’est plus disponible à son origine.
         </p>
       ) : (
@@ -30,42 +30,50 @@ export function VisualFigure({ asset, observedLabel }: { asset: Asset; observedL
           decoding="async"
           referrerPolicy="no-referrer"
           onError={() => setBroken(reference)}
-          className="h-auto max-h-96 w-full rounded-md border border-border object-contain"
+          className="aspect-[1.91/1] h-auto w-full bg-surface-2 object-cover"
         />
       )}
-      <figcaption className="text-xs text-muted">
-        {VISUAL_ASSET_TYPE[asset.asset_type]} · observé le {observedLabel} ·{" "}
-        {asset.asset_type === "licensed_image" ? (
-          <>
-            {asset.attribution ? `© ${asset.attribution} · ` : ""}
-            licence{" "}
-            {asset.licence_url ? (
-              <a
-                className="text-accent underline"
-                href={asset.licence_url}
-                target="_blank"
-                rel="noopener noreferrer nofollow license"
-              >
-                {licenceLabel(asset.licence_code)}
-              </a>
-            ) : (
-              licenceLabel(asset.licence_code)
-            )}{" "}
-            ·{" "}
-          </>
-        ) : (
-          <>droits : {asset.rights_basis} · </>
-        )}
-        <a
-          className="text-accent underline"
-          href={asset.source_url}
-          target="_blank"
-          rel="noopener noreferrer nofollow"
-        >
-          source du visuel
-        </a>
-        {reference ? (
-          <span className="block">{VISUAL_RIGHTS_NOTE[asset.rights_status]}</span>
+      <figcaption className="px-4 py-2.5 text-[11px] leading-relaxed text-muted">
+        <span>
+          {VISUAL_ASSET_TYPE[asset.asset_type]} · observé le {observedLabel} ·{" "}
+          {asset.asset_type === "licensed_image" ? (
+            <>
+              {asset.attribution ? `© ${asset.attribution} · ` : ""}
+              licence{" "}
+              {asset.licence_url ? (
+                <a
+                  className="underline underline-offset-2 hover:text-fg"
+                  href={asset.licence_url}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow license"
+                >
+                  {licenceLabel(asset.licence_code)}
+                </a>
+              ) : (
+                licenceLabel(asset.licence_code)
+              )}{" "}
+              ·{" "}
+            </>
+          ) : null}
+          <a
+            className="underline underline-offset-2 hover:text-fg"
+            href={asset.source_url}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+          >
+            source du visuel
+          </a>
+        </span>
+        {asset.asset_type !== "licensed_image" || reference ? (
+          <details className="mt-1">
+            <summary className="cursor-pointer select-none hover:text-fg">Droits d’usage</summary>
+            {asset.asset_type !== "licensed_image" ? (
+              <span className="block">droits : {asset.rights_basis}</span>
+            ) : null}
+            {reference ? (
+              <span className="block">{VISUAL_RIGHTS_NOTE[asset.rights_status]}</span>
+            ) : null}
+          </details>
         ) : null}
       </figcaption>
     </figure>

@@ -5,7 +5,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { CSP_HEADER, buildCsp, newNonce } from "@/lib/security-headers";
 
-const PUBLIC_PATHS = ["/login", "/signup", "/auth/"];
+// Install metadata is fetched without credentials: it must stay public.
+const PUBLIC_PATHS = ["/login", "/signup", "/auth/", "/manifest.webmanifest", "/apple-icon"];
 
 export async function proxy(request: NextRequest) {
   const nonce = newNonce();

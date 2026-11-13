@@ -116,7 +116,7 @@ export function AcquisitionChannelsAdmin({ channels }: { channels: ChannelAdminR
 
   return (
     <section
-      className="space-y-3 rounded-lg border border-border bg-surface p-4"
+      className="space-y-3 rounded-2xl border border-border bg-surface p-4"
       aria-labelledby="channels-admin-title"
     >
       <h2 id="channels-admin-title" className="font-semibold">
@@ -305,7 +305,7 @@ export function VisualAssetsAdmin({ assets }: { assets: VisualAssetAdminRow[] })
   }
   return (
     <section
-      className="space-y-3 rounded-lg border border-border bg-surface p-4"
+      className="space-y-3 rounded-2xl border border-border bg-surface p-4"
       aria-labelledby="visuals-admin-title"
     >
       <h2 id="visuals-admin-title" className="font-semibold">

@@ -41,7 +41,7 @@ export function CatalogReviews({ total, reviews }: { total: number; reviews: Cat
   const noteOf = (id: string) => notes[id]?.trim() || undefined;
   return (
     <section
-      className="space-y-2 rounded-lg border border-border bg-surface p-4"
+      className="space-y-2 rounded-2xl border border-border bg-surface p-4"
       aria-labelledby="catalog-reviews-title"
     >
       <h2 id="catalog-reviews-title" className="font-semibold">

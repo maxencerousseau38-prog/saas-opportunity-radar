@@ -1,25 +1,101 @@
 @import "tailwindcss";
 
 /*
- * SaaS Opportunity Radar — monochrome shadcn-inspired system.
- * Keep existing semantic token names so product components stay compatible.
+ * SaaS Opportunity Radar — monochrome shadcn-based system (DESIGN.md).
+ * Product components use the short semantic names (bg, surface, fg, muted…);
+ * the shadcn names (background, card, primary…) alias them so blocks adapted
+ * from shadcn/ui keep working without new colours.
  */
 @theme {
-  --color-bg: oklch(0.145 0 0);
-  --color-surface: oklch(0.205 0 0);
-  --color-surface-2: oklch(0.269 0 0);
-  --color-border: oklch(1 0 0 / 10%);
-  --color-fg: oklch(0.985 0 0);
-  --color-muted: oklch(0.708 0 0);
-  --color-accent: oklch(0.922 0 0);
-  --color-accent-fg: oklch(0.205 0 0);
+  --color-bg: oklch(0.141 0.004 286);
+  --color-surface: oklch(0.183 0.004 286);
+  --color-surface-2: oklch(0.235 0.005 286);
+  --color-surface-3: oklch(0.29 0.006 286);
+  --color-border: oklch(1 0 0 / 9%);
+  --color-border-strong: oklch(1 0 0 / 16%);
+  --color-fg: oklch(0.975 0 0);
+  --color-muted: oklch(0.68 0.008 286);
+  --color-accent: oklch(0.96 0 0);
+  --color-accent-fg: oklch(0.18 0.004 286);
+
+  /* shadcn/ui aliases. */
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-fg);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-fg);
+  --color-popover: var(--color-surface);
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-accent-fg);
+  --color-secondary: var(--color-surface-2);
+  --color-muted-foreground: var(--color-muted);
+  --color-input: var(--color-border-strong);
+  --color-ring: oklch(0.8 0 0);
 
   /* Semantic colors are reserved for statuses and destructive actions. */
-  --color-success: oklch(0.792 0.209 151.711);
-  --color-warning: oklch(0.75 0.183 55.934);
-  --color-danger: oklch(0.704 0.191 22.216);
+  --color-success: oklch(0.79 0.17 152);
+  --color-warning: oklch(0.8 0.15 75);
+  --color-danger: oklch(0.7 0.19 22);
 
-  --font-sans: Inter, Geist, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans:
+    var(--font-geist), ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+    "Segoe UI", Roboto, sans-serif;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  --animate-fade-up: fade-up 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-fade-in: fade-in 0.2s ease-out both;
+  --animate-sheet-up: sheet-up 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-sheet-right: sheet-right 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-pop: pop 0.18s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes sheet-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
 :root {
@@ -31,21 +107,62 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
   body {
     @apply bg-bg text-fg;
     font-family: var(--font-sans);
     line-height: 1.5;
+    font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
   }
 
   ::selection {
-    color: oklch(0.145 0 0);
-    background: oklch(0.985 0 0);
+    color: var(--color-accent-fg);
+    background: var(--color-accent);
   }
 
   :focus-visible {
-    outline: 2px solid oklch(0.922 0 0);
+    outline: 2px solid var(--color-ring);
     outline-offset: 2px;
+  }
+
+  button,
+  [role="button"],
+  a {
+    touch-action: manipulation;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

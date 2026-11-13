@@ -42,7 +42,7 @@ export function OperatorView({
   return (
     <div className="space-y-4">
       {error ? <ErrorNote>{error}</ErrorNote> : null}
-      <section className="space-y-2 rounded-lg border border-border bg-surface p-4">
+      <section className="space-y-2 rounded-2xl border border-border bg-surface p-4">
         <h2 className="font-semibold">Revues d’exclusion ({reviews.length})</h2>
         {reviews.length === 0 ? <EmptyState title="Aucun SaaS en attente de revue" /> : null}
         {reviews.map((r) => (
@@ -100,7 +100,7 @@ export function OperatorView({
           </div>
         ))}
       </section>
-      <section className="space-y-2 rounded-lg border border-border bg-surface p-4">
+      <section className="space-y-2 rounded-2xl border border-border bg-surface p-4">
         <h2 className="font-semibold">Signalements ouverts ({reports.length})</h2>
         {reports.length === 0 ? <EmptyState title="Aucun signalement ouvert" /> : null}
         {reports.map((r) => (

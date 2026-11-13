@@ -66,16 +66,18 @@ export function ManualAddDialog({
 
   return (
     <>
-      <Button
-        size="sm"
-        variant="primary"
+      <button
+        type="button"
+        aria-label="Ajouter un SaaS"
+        title="Ajouter un SaaS"
         onClick={() => {
           setOpen(true);
           setResult(null);
         }}
+        className="grid size-8 place-items-center rounded-full bg-accent text-accent-fg transition-opacity hover:opacity-90"
       >
-        <Plus size={14} /> Ajouter un SaaS
-      </Button>
+        <Plus size={16} aria-hidden />
+      </button>
       <Dialog
         open={open}
         onOpenChange={setOpen}
