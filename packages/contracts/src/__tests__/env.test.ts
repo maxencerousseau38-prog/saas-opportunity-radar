@@ -65,6 +65,31 @@ describe("environment parsing", () => {
     expect(parseWebServerEnv({ ...base, APP_ENV: "test" }).SITE_URL).toBeUndefined();
   });
 
+  it("takes the owner access secret and e-mail together, long enough, or neither (PD-39)", () => {
+    const base = {
+      NEXT_PUBLIC_SUPABASE_URL: "https://x.supabase.co",
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: KEY,
+      SUPABASE_SECRET_KEY: SECRET,
+    };
+    expect(parseWebServerEnv(base).OWNER_ACCESS_TOKEN).toBeUndefined();
+    const token = "t".repeat(40);
+    expect(
+      parseWebServerEnv({
+        ...base,
+        OWNER_ACCESS_TOKEN: token,
+        OWNER_ACCESS_EMAIL: "owner@example.com",
+      }).OWNER_ACCESS_EMAIL,
+    ).toBe("owner@example.com");
+    expect(() => parseWebServerEnv({ ...base, OWNER_ACCESS_TOKEN: token })).toThrow(/OWNER_ACCESS/);
+    expect(() =>
+      parseWebServerEnv({
+        ...base,
+        OWNER_ACCESS_TOKEN: "short",
+        OWNER_ACCESS_EMAIL: "owner@example.com",
+      }),
+    ).toThrow(/OWNER_ACCESS_TOKEN/);
+  });
+
   it("refuses to start when a secret is exposed to the browser", () => {
     expect(() =>
       parseWebPublicEnv({

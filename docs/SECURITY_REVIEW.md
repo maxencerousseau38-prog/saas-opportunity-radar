@@ -135,6 +135,24 @@ No critical or high finding.
 - A new workspace route is swept automatically once it is in the manifest
   (which `apps/web/test/api-routes.test.ts` already requires).
 
+## 4e. Personal owner access (PD-39)
+
+`/auth/acces#<secret>` signs the product owner in without a password. It is
+off unless `OWNER_ACCESS_TOKEN` and `OWNER_ACCESS_EMAIL` are both set (the
+environment schema refuses one without the other and a secret shorter than
+32 characters). The secret travels in the URL fragment, so it never reaches
+the server in a request line, a referrer or a log; the page removes it from
+the address bar before calling the server action, which compares SHA-256
+digests in constant time and waits 500 ms on refusal. On success the server
+generates a magic link for that one e-mail with the secret key and verifies
+it immediately, giving an ordinary AAL1 session: workspace RLS applies and
+the operator console still requires MFA (PD-30). Each use writes
+`auth.owner_access` to `audit_logs`. Treat the link like a password: anyone
+holding it is signed in as the owner. Revoke it by changing or removing
+`OWNER_ACCESS_TOKEN` in the hosting environment and redeploying. Tests:
+`apps/web/test/owner-access.test.ts`, `packages/contracts` env tests and
+`apps/web/e2e/owner-access.e2e.ts` (random secret per CI run).
+
 ## 5. Hosted configuration checklist (product owner, when the Frankfurt projects are created)
 
 Not applied: no hosted project exists yet.
