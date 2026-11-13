@@ -2,17 +2,17 @@
  "contract_version": "catalog-listing-1",
  "source_key": "hacker_news",
  "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
- "retrieved_at": "2026-11-13T21:06:04.010Z",
+ "retrieved_at": "2026-11-13T21:20:41.946Z",
  "queries": [
   {
    "key": "show_stories",
    "status": "ok",
-   "rows": 185
+   "rows": 184
   },
   {
    "key": "items",
    "status": "ok",
-   "rows": 185
+   "rows": 184
   },
   {
    "key": "skipped_not_a_story",
@@ -27,7 +27,7 @@
   {
    "key": "skipped_article_link",
    "status": "ok",
-   "rows": 8
+   "rows": 7
   },
   {
    "key": "skipped_name_not_stated",
@@ -52,7 +52,7 @@
   {
    "key": "requests",
    "status": "ok",
-   "rows": 186
+   "rows": 185
   }
  ],
  "listings": [
@@ -69,7 +69,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -84,7 +84,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -99,7 +99,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -114,7 +114,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -129,7 +129,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -144,7 +144,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -159,7 +159,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -174,7 +174,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -189,7 +189,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -204,7 +204,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -219,7 +219,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -234,7 +234,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -249,7 +249,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -264,7 +264,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -279,7 +279,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -294,7 +294,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -309,7 +309,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -324,7 +324,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -339,7 +339,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -354,7 +354,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -369,7 +369,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -384,7 +384,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -399,7 +399,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -414,7 +414,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -429,7 +429,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -444,7 +444,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -459,7 +459,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -474,7 +474,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -489,7 +489,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -504,7 +504,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -519,7 +519,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -534,7 +534,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -549,7 +549,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -564,7 +564,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   },
   {
    "source_key": "hacker_news",
@@ -579,7 +579,7 @@
    "company_external_id": null,
    "source_categories": [],
    "licence": "HN official API, metadata only (YC Terms of Use: personal use)",
-   "retrieved_at": "2026-11-13T21:06:04.010Z"
+   "retrieved_at": "2026-11-13T21:20:41.946Z"
   }
  ]
 }
