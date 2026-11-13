@@ -427,9 +427,9 @@ export function DiscoverView(props: DiscoverProps) {
           <div className="flex items-start gap-3">
             {columns.map((column, i) => (
               <ul key={i} className="flex min-w-0 flex-1 flex-col gap-3">
-                {column.map((p) => (
+                {column.map((p, j) => (
                   <li key={p.id}>
-                    <ProductCardView product={p} variant="grid" {...cardProps} />
+                    <ProductCardView product={p} variant="grid" priority={j < 1} {...cardProps} />
                   </li>
                 ))}
               </ul>
@@ -437,9 +437,9 @@ export function DiscoverView(props: DiscoverProps) {
           </div>
         ) : (
           <ul className="mx-auto flex max-w-xl flex-col gap-4">
-            {items.map((p) => (
+            {items.map((p, i) => (
               <li key={p.id}>
-                <ProductCardView product={p} variant="feed" {...cardProps} />
+                <ProductCardView product={p} variant="feed" priority={i < 2} {...cardProps} />
               </li>
             ))}
           </ul>

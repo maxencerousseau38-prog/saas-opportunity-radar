@@ -218,3 +218,12 @@ export async function recordVisualReference(
     primary?: boolean;
   };
 }
+
+/** visref-2: retires current references that do not show a product (service role). */
+export async function retireGenericVisualReferences(
+  service: DbClient,
+): Promise<{ retired: number; shared: number; platform_default_or_stock: number }> {
+  const { data, error } = await service.rpc("sor_retire_generic_visual_references");
+  if (error) throw mapPostgresError(error);
+  return data as unknown as { retired: number; shared: number; platform_default_or_stock: number };
+}

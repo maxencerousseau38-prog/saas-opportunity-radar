@@ -1,6 +1,7 @@
 // Official-website connector (ADR-013; Implementation Blueprint §5.1): public
 // pages of a product's own site, through the safe fetcher, obeying robots.txt
 // and a per-host rate limit. Returns normalized SourceDocuments; never writes.
+import { extractSiteImages } from "../site-images";
 import { createHash } from "node:crypto";
 import type { SourceDocument } from "@sor/contracts/evidence";
 import { normalizeUrl } from "@sor/domain";
@@ -127,6 +128,8 @@ export class OfficialWebsiteConnector implements SourceConnector {
     const text = normalizeDocumentText(page.text).slice(0, MAX_TEXT);
     // The publisher's declared link-preview image (PD-38), read, never fetched here.
     const shareImage = isHtml ? extractShareImage(res.data.body, finalUrl.toString()) : null;
+    // Hero and screenshot candidates the page itself shows (PD-40), read, never fetched here.
+    const siteImages = isHtml ? extractSiteImages(res.data.body, finalUrl.toString()) : [];
     const sameSiteLinks = page.links
       .filter((l) => {
         try {
@@ -171,6 +174,7 @@ export class OfficialWebsiteConnector implements SourceConnector {
           redirects: res.data.redirects,
           share_image: shareImage?.url ?? null,
           share_image_alt: shareImage?.alt ?? null,
+          site_images: siteImages,
         },
       },
     };

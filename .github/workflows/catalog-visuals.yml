@@ -5,7 +5,9 @@
 #     free licence (CC0, public domain, CC BY, CC BY-SA) and an author;
 #   - publisher: the share image (og:image / twitter:image) the official site
 #     declares, fetched once through the SSRF-safe fetcher (robots.txt obeyed)
-#     to check that it is a real, wide image, then forgotten.
+#     to check that it is a real, wide image, then forgotten;
+#   - site (PD-40): the hero or interface screenshot the official home page
+#     shows, read in the same visit and checked the same way (visref-2).
 # The snapshots are validated (apps/worker/test/visual-snapshots.test.ts)
 # before anything is committed. No database access, no secret, no paid call;
 # loading into a hosted project is a separate, manual step.
@@ -23,6 +25,7 @@ on:
     paths:
       - packages/data-sources/src/connectors/commons.ts
       - packages/data-sources/src/share-image.ts
+      - packages/data-sources/src/site-images.ts
       - packages/domain/src/discover/visual-references.ts
       - apps/worker/src/visuals/collect.ts
       - .github/workflows/catalog-visuals.yml
@@ -54,12 +57,14 @@ jobs:
         run: >
           node apps/worker/dist-visuals/visuals.js collect licensed data/visuals/licensed.json
           data/catalog/wikidata/listings.json
-      # One page and one image per official site, 12 sites in parallel, 1 s
+      # One page and at most four images per official site (the share image,
+      # up to three hero/screenshot candidates), 12 sites in parallel, 1 s
       # between two requests to the same host; a failure keeps the other kind.
-      - name: Publisher share images (official sites)
+      - name: Official site visuals (share images, heroes and screenshots)
         continue-on-error: true
         run: >
-          node apps/worker/dist-visuals/visuals.js collect publisher data/visuals/publisher.json
+          node apps/worker/dist-visuals/visuals.js collect official
+          data/visuals/publisher.json data/visuals/site.json
           data/catalog/wikidata/listings.json data/catalog/uneed/listings.json
       - name: Validate the snapshots
         run: pnpm --filter @sor/worker exec vitest run test/visual-snapshots.test.ts
@@ -87,7 +92,7 @@ jobs:
           branch="catalog/visuals-${day}-${GITHUB_RUN_ID}"
           stats="$(node -e '
             const fs = require("node:fs");
-            for (const k of ["licensed", "publisher"]) {
+            for (const k of ["licensed", "publisher", "site"]) {
               const f = `data/visuals/${k}.json`;
               if (!fs.existsSync(f)) continue;
               const d = JSON.parse(fs.readFileSync(f, "utf8"));

@@ -1,6 +1,6 @@
 # ADR-016 — Visuels produits et Heroes de Discover
 
-- **Statut :** ACCEPTED (PD-36, orientation approuvée au lancement de S8.3 le 11 novembre 2026)
+- **Statut :** ACCEPTED (PD-36, orientation approuvée au lancement de S8.3 le 11 novembre 2026 ; amendée par PD-38 et PD-40)
 - **Date :** 11 novembre 2026
 - **Décision produit :** les cartes Discover peuvent présenter de vrais visuels produits uniquement lorsque leur provenance et les droits correspondant au mode d'utilisation sont établis.
 - **Références :** PRD §§24.2, 24.4 et 24.5 ; migration `20261115090001_discover_v2_assets_and_acquisition_channels.sql` ; table `product_visual_assets`.
@@ -136,3 +136,55 @@ lecture, DTO Discover), règles `visref-1` (`@sor/domain`), collecteurs
 GitHub, instantanés `data/visuals/*.json` validés), cartes et profil (type,
 crédit, licence, repli). Sprint : `docs/sprints/S8.5-VISUAL-REFERENCES.md`.
 
+
+## Amendement PD-40 (13 novembre 2026) : visuels du site officiel, règles `visref-2`
+
+Demande du product owner : que chaque SaaS soit représenté par son véritable
+univers visuel, dans cet ordre : (1) le visuel principal (hero) de son site
+officiel, (2) une capture authentique de son interface, (3) l'image Open Graph
+en solution secondaire ; jamais d'image aléatoire, générique ou sans rapport.
+
+**Deux nouveaux types de référence**, collectés dans la **même visite** de la
+page d'accueil officielle que l'image de partage (robots.txt, fetcher
+SSRF-safe, redirections limitées au même site) :
+
+- `official_hero` (référence) : le visuel principal que la page montre ;
+- `product_screenshot` (référence) : une capture de l'interface que la page montre.
+
+**Sélection déterministe** (`@sor/data-sources/site-images.ts`) : une image
+n'est candidate qu'avec un **signal explicite** — nom de fichier, texte
+alternatif ou identifiant qui dit « hero / bannière / visuel principal » ou
+« capture / dashboard / interface / aperçu / démo », ou une section dont la
+classe est `hero` ou `banner`. Sont exclus d'office : logos, icônes, avatars,
+portraits, équipes, témoignages, badges et récompenses, boutons de stores,
+décorations (motifs, dégradés, fonds), illustrations, images de blog, cartes,
+images « stock », SVG/GIF, images de widgets tiers (Product Hunt, G2,
+Trustpilot, avatars Google/GitHub/Twitter…) et images déclarées petites. Au
+plus trois candidats par page sont téléchargés, une fois, pour vérification.
+
+**Règles de qualité `visref-2`** (`@sor/domain`), pour tous les types :
+dimensions minimales (hero ≥ 1000×420, capture ≥ 800×400), forme (ni carrée
+ni bandeau extrême), **détail** (une image presque vide — couleur unie, petit
+logo sur fond uni — est refusée d'après son poids par pixel), **aperçus par
+défaut des plateformes** refusés (Lovable, Softr, Chrome Web Store, cartes
+d'icône de l'App Store), **banques d'images** refusées (Unsplash, Pexels,
+Shutterstock…), et **image partagée** : une image trouvée sur les sites de deux
+produits différents est un modèle, retirée pour les deux.
+
+**Préséance unique** (`private.visual_rank`) : copie approuvée > hero du site >
+capture du site > image sous licence libre > image de partage. Le visuel
+principal est toujours le meilleur visuel courant
+(`private.refresh_primary_visual`), y compris après un retrait : le suivant
+prend le relais immédiatement.
+
+**Retrait des images génériques déjà chargées** :
+`sor_retire_generic_visual_references()` (service, audité, rejouable) — même
+image sur plusieurs produits, aperçus par défaut, banques d'images. Les
+références retirées restent dans l'historique avec leur motif.
+
+**Ce que l'amendement ne change pas** : aucune copie stockée, aucune capture
+automatique (pas de navigateur), aucune image générée, aucune page privée ;
+libellé honnête (« Visuel officiel », « Capture du produit »), source et note
+de droits visibles ; retrait opérateur immédiat. Migration
+`20261126090001_site_visual_references.sql`, pgTAP 029. Sprint :
+`docs/sprints/S8.6-SITE-VISUALS.md`.

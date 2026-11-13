@@ -13,6 +13,7 @@ export * from "./connectors/uneed";
 export * from "./rebound";
 export * from "./visual-asset";
 export * from "./share-image";
+export * from "./site-images";
 export * from "./connectors/commons";
 export * from "./registry";
 export * from "./import/csv";

@@ -136,6 +136,28 @@ describe("Discover visual DTO, references (PD-38)", () => {
       }).success,
     ).toBe(true);
   });
+  it("accepts the official hero and screenshot shown on the product's site (PD-40)", () => {
+    for (const asset_type of ["official_hero", "product_screenshot"]) {
+      expect(
+        ProductVisualAssetSchema.safeParse({
+          ...base,
+          asset_type,
+          url: "https://cdn.example.test/hero.webp",
+          rights_status: "publisher_published",
+          source_url: "https://example.test/",
+        }).success,
+      ).toBe(true);
+    }
+    expect(
+      ProductVisualAssetSchema.safeParse({
+        ...base,
+        asset_type: "official_illustration",
+        url: "https://cdn.example.test/hero.webp",
+        rights_status: "publisher_published",
+        source_url: "https://example.test/",
+      }).success,
+    ).toBe(false);
+  });
   it("refuses a reference that is not https, a licensed image without licence, or a mixed kind", () => {
     expect(
       ProductVisualAssetSchema.safeParse({ ...licensed, url: "http://upload.wikimedia.org/x.png" })

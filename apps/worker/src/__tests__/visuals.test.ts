@@ -3,7 +3,13 @@
 import { describe, expect, it } from "vitest";
 import type { CatalogListing, VisualReference } from "@sor/contracts";
 import type { DbClient } from "@sor/database";
-import { collectLicensed, collectPublisher, type ShareImageCollector } from "../visuals/collect";
+import {
+  collectLicensed,
+  collectOfficial,
+  collectPublisher,
+  type OfficialVisualsCollector,
+  type ShareImageCollector,
+} from "../visuals/collect";
 import { ingestVisualReferences } from "../visuals/ingest";
 
 function listing(source: "wikidata" | "uneed", id: string, website: string | null): CatalogListing {
@@ -44,6 +50,65 @@ const shareImage = (overrides: Partial<VisualReference> = {}): VisualReference =
   licence_url: null,
   attribution: null,
   ...overrides,
+});
+
+describe("collectOfficial (PD-40, visref-2)", () => {
+  it("builds both snapshots from one visit and drops images shared by two products", async () => {
+    const calls: string[] = [];
+    const collect: OfficialVisualsCollector = async (l) => {
+      calls.push(l.website_url ?? "");
+      const host = new URL(l.website_url!).hostname.replace(/^www\./, "");
+      return {
+        share: {
+          // alpha and beta both declare the same builder template.
+          reference: shareImage({
+            page_url: `https://${host}/`,
+            image_url:
+              host === "gamma.test" ? "https://gamma.test/og.png" : "https://builder.test/og.png",
+            content_hash: (host === "gamma.test" ? "a" : "b").repeat(64),
+          }),
+        },
+        site:
+          host === "alpha.test"
+            ? {
+                reference: shareImage({
+                  kind: "site_hero",
+                  page_url: "https://alpha.test/",
+                  image_url: "https://alpha.test/hero.png",
+                  content_hash: "c".repeat(64),
+                  width: 1600,
+                  height: 900,
+                }),
+              }
+            : { rejection: "no_site_image" },
+      };
+    };
+    const { publisher, site } = await collectOfficial({
+      listings: [
+        listing("uneed", "alpha", "https://alpha.test/"),
+        listing("wikidata", "Q9", "https://www.alpha.test"),
+        listing("uneed", "beta", "https://beta.test/"),
+        listing("uneed", "gamma", "https://gamma.test/"),
+      ],
+      collect,
+      concurrency: 2,
+      now: () => new Date("2026-11-13T10:00:00Z"),
+    });
+    expect(calls).toHaveLength(3);
+    expect(publisher.summary).toEqual({
+      candidates: 4,
+      references: 1,
+      rejected: { shared_across_products: 3 },
+    });
+    expect(publisher.references[0]).toMatchObject({ listing_external_id: "gamma" });
+    expect(site.kind).toBe("site");
+    expect(site.rules_version).toBe("visref-2");
+    expect(site.references.map((r) => [r.listing_external_id, r.kind])).toEqual([
+      ["alpha", "site_hero"],
+      ["Q9", "site_hero"],
+    ]);
+    expect(site.summary.rejected).toEqual({ no_site_image: 2 });
+  });
 });
 
 describe("collectPublisher", () => {

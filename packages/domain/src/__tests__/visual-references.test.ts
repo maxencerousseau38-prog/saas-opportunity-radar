@@ -3,14 +3,18 @@ import {
   attributionRequired,
   checkVisualReference,
   checkVisualReferenceBytes,
+  dropSharedImages,
   isOnProductDomain,
+  isPlatformDefaultImage,
+  isStockImage,
+  VISUAL_REFERENCE_RANK,
   normalizeFreeLicence,
   plainAttribution,
 } from "../discover/visual-references";
 
 /** Synthetic PNG header with the given dimensions (test fixture, not an image of a product). */
-function png(width: number, height: number): Uint8Array {
-  const b = new Uint8Array(33);
+function png(width: number, height: number, bytesPerPixel = 0.05): Uint8Array {
+  const b = new Uint8Array(Math.max(33, Math.ceil(width * height * bytesPerPixel)));
   b.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13, 0x49, 0x48, 0x44, 0x52]);
   new DataView(b.buffer).setUint32(16, width);
   new DataView(b.buffer).setUint32(20, height);
@@ -149,5 +153,93 @@ describe("checkVisualReference", () => {
         new TextEncoder().encode("<html>"),
       ),
     ).toEqual({ ok: false, errors: ["not_an_image"] });
+  });
+});
+
+describe("visref-2: site images, generic and low-detail images", () => {
+  const wide = { contentType: "image/png", width: 1600, height: 900 };
+
+  it("ranks the product's own hero, then its screenshot, above share images", () => {
+    expect(VISUAL_REFERENCE_RANK.site_hero).toBeGreaterThan(VISUAL_REFERENCE_RANK.site_screenshot);
+    expect(VISUAL_REFERENCE_RANK.site_screenshot).toBeGreaterThan(VISUAL_REFERENCE_RANK.licensed);
+    expect(VISUAL_REFERENCE_RANK.licensed).toBeGreaterThan(VISUAL_REFERENCE_RANK.publisher);
+  });
+
+  it("asks more of site images: size and shape", () => {
+    expect(checkVisualReference("site_hero", "https://example.com/hero.png", wide)).toEqual([]);
+    expect(
+      checkVisualReference("site_hero", "https://example.com/hero.png", {
+        ...wide,
+        width: 900,
+        height: 500,
+      }),
+    ).toEqual(["too_small"]);
+    expect(
+      checkVisualReference("site_screenshot", "https://example.com/app.png", {
+        ...wide,
+        width: 3000,
+        height: 600,
+      }),
+    ).toEqual(["too_tall"]);
+    expect(
+      checkVisualReference("site_screenshot", "https://example.com/app.png", {
+        ...wide,
+        width: 1000,
+        height: 1000,
+      }),
+    ).toEqual(["logo_like_shape"]);
+  });
+
+  it("refuses platform defaults, app-store icon cards and stock photos", () => {
+    for (const url of [
+      "https://lovable.dev/opengraph-image-p98pqg.png",
+      "https://assets.softr-files.com/assets/images/random/og_default_image.png",
+      "https://ssl.gstatic.com/chrome/webstore/images/chrome_web_store_v2_1200x630.png",
+      "https://is1-ssl.mzstatic.com/image/thumb/Purple/v4/placeholder.mill/1200x630wa.jpg",
+    ]) {
+      expect(isPlatformDefaultImage(url)).toBe(true);
+      expect(checkVisualReference("publisher", url, wide)).toContain("platform_default");
+    }
+    // A site's own branded default stays acceptable.
+    expect(isPlatformDefaultImage("https://acme.io/og-default.png")).toBe(false);
+    expect(isStockImage("https://images.unsplash.com/photo-123?w=1600")).toBe(true);
+    expect(isStockImage("https://acme.io/hero.jpg")).toBe(false);
+    expect(
+      checkVisualReference("site_hero", "https://images.pexels.com/photos/1/a.jpeg", wide),
+    ).toEqual(["stock_image"]);
+  });
+
+  it("refuses near-blank images (too few bytes for their size)", () => {
+    expect(
+      checkVisualReferenceBytes("site_screenshot", "https://acme.io/app.png", png(1600, 900, 0.01)),
+    ).toEqual({ ok: false, errors: ["low_detail"] });
+    expect(
+      checkVisualReferenceBytes("site_screenshot", "https://acme.io/app.png", png(1600, 900, 0.2)),
+    ).toMatchObject({ ok: true });
+    expect(
+      checkVisualReferenceBytes("publisher", "https://acme.io/og.png", png(1200, 630, 0.005)),
+    ).toEqual({ ok: false, errors: ["low_detail"] });
+  });
+
+  it("drops an image shown by two different products, keeps one product's listings", () => {
+    const ref = (hash: string, page: string, url = `https://cdn.test/${hash}.png`) => ({
+      content_hash: hash,
+      image_url: url,
+      page_url: page,
+    });
+    const domain = (u: string) => new URL(u).hostname.replace(/^www\./, "");
+    const { kept, dropped } = dropSharedImages(
+      [
+        ref("aaaa", "https://alpha.io/"),
+        ref("aaaa", "https://beta.io/"), // template shared by two products
+        ref("bbbb", "https://gamma.io/"),
+        ref("bbbb", "https://www.gamma.io/"), // same product from two sources
+        ref("cccc", "https://delta.io/", "https://cdn.test/same.png"),
+        ref("dddd", "https://epsilon.io/", "https://cdn.test/same.png"),
+      ],
+      domain,
+    );
+    expect(kept.map((r) => r.page_url)).toEqual(["https://gamma.io/", "https://www.gamma.io/"]);
+    expect(dropped).toBe(4);
   });
 });

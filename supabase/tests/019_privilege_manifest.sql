@@ -144,6 +144,7 @@ select is((select string_agg(n.nspname || '.' || p.proname || '(' || pg_get_func
     || 'private.trg_feedback_evidence_consistency() | '
     || 'private.trg_provenance_scope() | '
     || 'private.valid_country_codes(p text[]) | '
+    || 'private.visual_rank(p_rights_status text, p_asset_type text) | '
     || 'public.catalog_count(p_workspace_id uuid, p_plan jsonb) | '
     || 'public.catalog_count_v2(p_workspace_id uuid, p_plan jsonb) | '
     || 'public.catalog_discover_metadata(p_product_ids uuid[]) | '
