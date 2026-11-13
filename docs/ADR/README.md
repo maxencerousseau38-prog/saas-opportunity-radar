@@ -300,6 +300,16 @@ order at every opening (all 8,540 production SaaS arrived on the same day).
 |---|---|---|---|---|
 | PD-41 | Discover feed renewed at each opening | Default sort "Pour vous" (`discovery`, rule `feed-1` in `@sor/domain`, mirrored by `private.feed_score`): a seeded draw per session, a bonus for SaaS the workspace has never been shown (more for catalogue additions of the last 14 days), a fading penalty for cards shown in an earlier session (7 days) and a larger one for profiles opened (30 days, with a floor); a text search keeps relevance first. One feed session per opening (new tab or app launch, or 30 minutes of inactivity); within a session the order is frozen (signals recorded during the session only count from the next one) | New workspace table `workspace_feed_signals` (cards at least 60 % on screen, profiles opened from the feed), read by members, written only by the server RPC `sor_record_feed_signals` behind `POST W/feed/signals` (member and above); favourites, hidden products and statuses untouched; no AI, no tracking outside the workspace | — |
 
+## Hacker News as a catalog source (13 November 2026)
+
+The product owner asked to "activate Hacker News" and chose, between a
+Discovery-only activation (invisible while no worker runs in production)
+and a catalog collection, the catalog collection.
+
+| ID | Decision | Approved direction | Main consequence | ADR |
+|---|---|---|---|---|
+| PD-42 | Hacker News Show HN launches in the catalog | Official API only, terms read on 10 Nov 2026 (personal, non-commercial use, metadata only); the latest Show HN stories become catalog listings only when the title states a product name that matches the story's own website, never for code hosts, stores, articles or games; weekly with Wikidata and Uneed; enabled in production only | Extends PD-28 (Discovery leads) to the catalog; source `integrated`, disabled by migration in every environment, enabled per environment; usernames, user text and comments never kept; listings go through identity resolution, the exclusion classifier and the review queue like the other sources | ADR-013 |
+
 ## Personal owner access (12 November 2026)
 
 The product owner could not sign in with their password on the hosted site

@@ -35,18 +35,19 @@ select is(
   0, 'discovery RPCs are service-role only');
 
 -- ------------------------------------------------------------ source registry
+-- PD-42: integrated with its terms review, still disabled until a per-environment go-ahead.
 select is((select integration_status::text || '/' || is_enabled || '/' || storage_policy::text
              || '/' || access_method::text || '/' || default_reliability_level
              from public.sources where source_key = 'hacker_news'),
-  'planned/false/metadata_only/official_api/3', 'Hacker News is registered planned, disabled, metadata only');
-select ok((select terms_reviewed_at is null from public.sources where source_key = 'hacker_news'),
-  'the Hacker News terms review is not complete');
+  'integrated/false/metadata_only/official_api/3', 'Hacker News is integrated, disabled, metadata only');
+select ok((select terms_reviewed_at is not null from public.sources where source_key = 'hacker_news'),
+  'the Hacker News terms review is recorded');
 select is((select storage_policy::text from public.sources where source_key = 'official_website'), 'full',
   'the official website keeps full public pages');
 select tests.as_owner_role();
-select throws_ok($$update public.sources set is_enabled = true where source_key = 'hacker_news'$$,
+select throws_ok($$update public.sources set is_enabled = true where source_key = 'product_hunt'$$,
   '23514', null, 'a planned source cannot be enabled');
-select throws_ok($$update public.sources set integration_status = 'integrated', is_enabled = true
+select throws_ok($$update public.sources set terms_reviewed_at = null, is_enabled = true
                     where source_key = 'hacker_news'$$,
   '23514', null, 'a source without a written terms review cannot be enabled');
 select tests.as_service_role();

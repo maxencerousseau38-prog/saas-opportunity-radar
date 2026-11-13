@@ -13,7 +13,7 @@ const CATALOG_DIR = resolve(__dirname, "../../../data/catalog");
  * (docs/DATA_SOURCES.md). A snapshot of any other source fails here: a new
  * source needs its terms review and an approved migration first.
  */
-const APPROVED_CATALOG_SOURCES = ["uneed", "wikidata"];
+const APPROVED_CATALOG_SOURCES = ["hacker_news", "uneed", "wikidata"];
 
 const sources = readdirSync(CATALOG_DIR).filter((d) =>
   statSync(join(CATALOG_DIR, d)).isDirectory(),

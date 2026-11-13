@@ -71,7 +71,7 @@ blocks them): `docs/sources/terms/` (`index.json` lists URL, date, status).
 |---|---|---|---|
 | **Wikidata** | Public SPARQL service, no key | "All structured data (i.e. the main, Property, Lexeme, and EntitySchema namespaces) is released into the public domain under Creative Commons Zero" (Wikidata:Licensing). WDQS manual: "a hard query deadline configured which is set to 60 seconds"; "One client (user agent + IP) is allowed 60 seconds of processing time each 60 seconds"; "access to the service is limited to 5 parallel queries per IP"; "Clients who don't comply with the User-Agent policy may be blocked completely". | **Retained — first connector, integrated and enabled.** Volume: several thousand software products with an official website, all categories; quality: curated identities (official site, inception, country, developer); freshness: weaker for recent launches. |
 | **Product Hunt** | API v2 (GraphQL), OAuth token | "The Product Hunt API must not be used for commercial purposes. If you would like to use it for your business, please contact us at hello@producthunt.com." "Currently the API is only accessible with a provided access_token." Terms of service page: HTTP 403 (not readable from the runners). | **Retained — second connector, not enabled.** Best freshness (daily launches). Allowed for SOR's personal, non-commercial use with a token the product owner creates in the API dashboard (never pasted in chat: a repository secret). Commercial use needs Product Hunt's permission (PD-29 draft). |
-| **Hacker News** (official API) | Firebase API, no key | Y Combinator Terms of Use: "you agree not to modify, copy, frame, scrape … the Site or the Site Content … In connection with your use of the Site you will not engage in or use any data mining, robots, scraping or similar data gathering or extraction methods", except "as expressly authorized"; no commercial use. The official API is the means Hacker News makes available. | **Kept as approved (PD-28)**, metadata only, personal non-commercial use; a Show HN item is a lead that needs its official site (Discovery), not a ready catalog record. Open verification of 6 Nov 2026 now done. |
+| **Hacker News** (official API) | Firebase API, no key | Y Combinator Terms of Use: "you agree not to modify, copy, frame, scrape … the Site or the Site Content … In connection with your use of the Site you will not engage in or use any data mining, robots, scraping or similar data gathering or extraction methods", except "as expressly authorized"; no commercial use. The official API is the means Hacker News makes available. | **Kept as approved (PD-28)**, metadata only, personal non-commercial use; a Show HN item is a lead that needs its official site (Discovery), not a ready catalog record. Open verification of 6 Nov 2026 now done. **13 Nov 2026 (PD-42): also a catalog source**, Show HN launches whose stated name matches their own website (see the `hacker_news` section). |
 | **SaaSHub** | Beta JSON API, personal `api_key` | "To make requests and access the API you need an API key"; "If you are using the API, you have to disclose somewhere on your website that you are using SaaSHub' API." Lists of alternatives are "licensed under Creative Commons: Attribution-ShareAlike 4.0". | **Candidate for later** (alternatives graph); needs an account key and attribution/ShareAlike handling. |
 | **Microlaunch** | No API or feed found | "Permission is granted to temporarily download one copy of the materials on our Website for personal, non-commercial transitory viewing only … you may not: modify or copy the materials". | **Not retained** (copying prohibited; scraping would be unauthorized). |
 | **BetaList** | No API or feed found | Same licence wording: "personal, non-commercial transitory viewing only … you may not: modify or copy the materials". | **Not retained.** |
@@ -392,6 +392,39 @@ development with synthetic fixtures).
   never evidence of demand, paying customers or willingness to pay
   (PRD §13.2: community sources are not monetisation evidence).
 - Attribution: the source reference links back to the HN item.
+
+### Catalog collection (PD-42, 13 November 2026)
+
+Instruction of the product owner: "Active Hacker News", with the catalog
+collection chosen (a Discovery-only activation would show nothing while no
+worker runs in production). Same official API, same terms as above.
+
+- **What is read:** `/v0/showstories.json` (at most 200 latest Show HN
+  stories, roughly one week) and each story item, one request a second
+  (60 a minute, within the self-imposed limit), at most 260 requests per
+  collection; a 429 stops the collection, never a retry loop.
+- **What is kept** (`connectors/hacker-news-catalog.ts`): story id, the
+  product name and tagline from the title, the product's own site (home
+  page, no query string), the year, the HN item page as source. **Never
+  kept:** `by`, `text`, comments, scores of users.
+- **A story becomes a listing only when** the title states a name
+  ("Show HN: Name – tagline", or a dash, colon, bar, or a comma before
+  "a/an/the"), the name is short and not a sentence, the link is a website
+  of its own (no code host, store, video, social network, newsletter; at
+  most one path segment, not a blog path), the name matches the website's
+  domain, and it is not a game or a puzzle. Every other story is counted
+  under its reason in the snapshot (`skipped_*` entries): nothing is hidden.
+- First live run (13 Nov 2026, from this session through the proxy): 185
+  Show HN stories read, **35 listings** kept; skipped: no own website 56,
+  name not stated 71, game 7, article link 8, name/domain mismatch 5,
+  sentence instead of a name 3.
+- **Environments:** the migration `20261201090001_hacker_news_catalog.sql`
+  records the source as `integrated` with its terms review, **disabled**
+  everywhere; it is enabled in production only (product-owner go-ahead).
+  The ingester skips a source that is not enabled (`source_not_enabled`),
+  so CI and local stacks never load it and the CI worker never calls the
+  real API. Weekly collection: *Catalog collection* workflow, with Wikidata
+  and Uneed.
 
 ## `product_hunt` — not approved (permission requested)
 
