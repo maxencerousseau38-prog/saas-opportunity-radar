@@ -66,6 +66,7 @@ jobs:
           node apps/worker/dist-visuals/visuals.js collect official
           data/visuals/publisher.json data/visuals/site.json
           data/catalog/wikidata/listings.json data/catalog/uneed/listings.json
+          data/catalog/hacker_news/listings.json
       - name: Validate the snapshots
         run: pnpm --filter @sor/worker exec vitest run test/visual-snapshots.test.ts
       - name: Commit the snapshots to the same branch (claude/** push)
