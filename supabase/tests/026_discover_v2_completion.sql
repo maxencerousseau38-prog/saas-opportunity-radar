@@ -205,11 +205,11 @@ insert into public.analysis_subject_products (analysis_id, product_id, role)
   values (tests.id('9a1'), tests.id('d1'), 'subject');
 select tests.authenticate_as(tests.id('a4'));
 select is((select array_agg(name order by ord) from (
-             select name, row_number() over () as ord from public.catalog_search_v2(
-               tests.id('b1'), '{"include_hidden":false,"configurable_exclusions":[]}', 'least_analyzed', 0, null, null, 10)) x),
+             select name, row_number() over () as ord from public.catalog_search_v3(
+               tests.id('b1'), '{"include_hidden":false,"configurable_exclusions":[]}', 'least_analyzed', 0, now(), null, null, 10)) x),
   array['Product Nine', 'Product One'],
   'least_analyzed puts never-analysed products before analysed ones');
-select throws_ok($$select * from public.catalog_search_v2(tests.id('b1'), '{}', 'ai_potential', 0, null, null, 10)$$,
+select throws_ok($$select * from public.catalog_search_v3(tests.id('b1'), '{}', 'ai_potential', 0, now(), null, null, 10)$$,
   '22023', null, 'ai_potential stays unavailable (no real scores to sort by)');
 
 select * from finish();

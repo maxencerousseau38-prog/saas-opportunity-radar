@@ -151,7 +151,6 @@ select is((select string_agg(n.nspname || '.' || p.proname || '(' || pg_get_func
     || 'public.catalog_count_v2(p_workspace_id uuid, p_plan jsonb) | '
     || 'public.catalog_discover_metadata(p_product_ids uuid[]) | '
     || 'public.catalog_search(p_workspace_id uuid, p_plan jsonb, p_sort text, p_seed integer, p_after_value numeric, p_after_id uuid, p_limit integer) | '
-    || 'public.catalog_search_v2(p_workspace_id uuid, p_plan jsonb, p_sort text, p_seed integer, p_after_value numeric, p_after_id uuid, p_limit integer) | '
     || 'public.catalog_search_v3(p_workspace_id uuid, p_plan jsonb, p_sort text, p_seed integer, p_as_of timestamp with time zone, p_after_value numeric, p_after_id uuid, p_limit integer) | '
     || 'public.create_workspace(p_name text) | '
     || 'public.workspace_member_directory(p_workspace_id uuid)',

@@ -175,7 +175,7 @@ jobs:
           begin;
           select set_config('request.jwt.claims', json_build_object('sub', :'uid', 'role', 'authenticated')::text, true);
           set local role authenticated;
-          explain (analyze, summary on) select count(*) from public.catalog_search_v2(:'ws', '{"configurable_exclusions":[],"include_hidden":false,"current_year":2026}', 'relevance', 0, null, null, 30);
+          explain (analyze, summary on) select count(*) from public.catalog_search_v3(:'ws', '{"configurable_exclusions":[],"include_hidden":false,"current_year":2026}', 'discovery', 0, now(), null, null, 30);
           explain (analyze, summary on) select public.catalog_count_v2(:'ws', '{"configurable_exclusions":[],"include_hidden":false,"current_year":2026}');
           rollback;
           SQL
