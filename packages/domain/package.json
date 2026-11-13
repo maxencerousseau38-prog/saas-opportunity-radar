@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./channels": "./src/discover/channels.ts"
+    "./channels": "./src/discover/channels.ts",
+    "./feed": "./src/discover/feed-ranking.ts"
   },
   "scripts": {
     "lint": "eslint .",

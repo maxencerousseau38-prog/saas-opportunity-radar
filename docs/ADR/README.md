@@ -287,6 +287,19 @@ takes over). No paid service, no stored copy, no new budget.
 
 ---
 
+## Discover feed renewal (13 November 2026)
+
+The product owner asked that "à chaque ouverture de la plateforme, la
+découverte soit renouvelée intelligemment : nouveaux SaaS en priorité, SaaS
+déjà consultés moins souvent, sans répétitions inutiles", without breaking
+the pagination or the favourites (instruction of 13 November 2026). Before
+it, the default Discover order was the catalogue arrival date: the same
+order at every opening (all 8,540 production SaaS arrived on the same day).
+
+| ID | Decision | Approved direction | Main consequence | ADR |
+|---|---|---|---|---|
+| PD-41 | Discover feed renewed at each opening | Default sort "Pour vous" (`discovery`, rule `feed-1` in `@sor/domain`, mirrored by `private.feed_score`): a seeded draw per session, a bonus for SaaS the workspace has never been shown (more for catalogue additions of the last 14 days), a fading penalty for cards shown in an earlier session (7 days) and a larger one for profiles opened (30 days, with a floor); a text search keeps relevance first. One feed session per opening (new tab or app launch, or 30 minutes of inactivity); within a session the order is frozen (signals recorded during the session only count from the next one) | New workspace table `workspace_feed_signals` (cards at least 60 % on screen, profiles opened from the feed), read by members, written only by the server RPC `sor_record_feed_signals` behind `POST W/feed/signals` (member and above); favourites, hidden products and statuses untouched; no AI, no tracking outside the workspace | — |
+
 ## Personal owner access (12 November 2026)
 
 The product owner could not sign in with their password on the hosted site

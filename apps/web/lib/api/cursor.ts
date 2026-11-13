@@ -12,6 +12,7 @@ export interface CursorPayload {
   sort: string;
   seed: number;
   q: string; // query hash
+  at?: string; // feed session start (PD-41): the session's ranking is frozen at it
 }
 
 function key(): Buffer {
@@ -42,7 +43,8 @@ export function decodeCursor(cursor: string): CursorPayload | null {
       typeof p.id !== "string" ||
       typeof p.sort !== "string" ||
       typeof p.seed !== "number" ||
-      typeof p.q !== "string"
+      typeof p.q !== "string" ||
+      (p.at !== undefined && typeof p.at !== "string")
     ) {
       return null;
     }

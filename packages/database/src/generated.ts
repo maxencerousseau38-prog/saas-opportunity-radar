@@ -1653,6 +1653,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"workspace_feed_signals": {
+                  Row: {
+                    "last_opened_at": string | null,"last_shown_at": string | null,"opened_count": number,"prev_opened_at": string | null,"prev_shown_at": string | null,"product_id": string,"shown_count": number,"updated_at": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "last_opened_at"?: string | null,"last_shown_at"?: string | null,"opened_count"?: number,"prev_opened_at"?: string | null,"prev_shown_at"?: string | null,"product_id": string,"shown_count"?: number,"updated_at"?: string,"workspace_id": string
+                  }
+                  Update: {
+                    "last_opened_at"?: string | null,"last_shown_at"?: string | null,"opened_count"?: number,"prev_opened_at"?: string | null,"prev_shown_at"?: string | null,"product_id"?: string,"shown_count"?: number,"updated_at"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "workspace_feed_signals_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "saas_products"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "workspace_feed_signals_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"workspace_members": {
                   Row: {
                     "invited_by": string | null,"joined_at": string,"role": Database["public"]['Enums']["workspace_role"],"user_id": string,"workspace_id": string
@@ -1757,6 +1783,11 @@ isOneToOne: true
                            },
 "catalog_search_v2":
 { Args: { "p_after_id"?: string,"p_after_value"?: number,"p_limit"?: number,"p_plan": Json,"p_seed"?: number,"p_sort"?: string,"p_workspace_id": string }; Returns: {
+              "billing_models": (Database["public"]['Enums']["billing_model"])[],"categories": Json,"country_code": string,"customer_type": Database["public"]['Enums']["customer_type"],"employee_max": number,"employee_min": number,"id": string,"in_collection": boolean,"is_favorite": boolean,"is_hidden": boolean,"last_viewed_at": string,"logo_url": string,"name": string,"pricing_status": Database["public"]['Enums']["pricing_status"],"short_description": string,"slug": string,"sort_value": string,"start_year": number,"tagline": string,"website_url": string,"workspace_status": Database["public"]['Enums']["opportunity_status"]
+            }[]
+                           },
+"catalog_search_v3":
+{ Args: { "p_after_id"?: string,"p_after_value"?: number,"p_as_of"?: string,"p_limit"?: number,"p_plan": Json,"p_seed"?: number,"p_sort"?: string,"p_workspace_id": string }; Returns: {
               "billing_models": (Database["public"]['Enums']["billing_model"])[],"categories": Json,"country_code": string,"customer_type": Database["public"]['Enums']["customer_type"],"employee_max": number,"employee_min": number,"id": string,"in_collection": boolean,"is_favorite": boolean,"is_hidden": boolean,"last_viewed_at": string,"logo_url": string,"name": string,"pricing_status": Database["public"]['Enums']["pricing_status"],"short_description": string,"slug": string,"sort_value": string,"start_year": number,"tagline": string,"website_url": string,"workspace_status": Database["public"]['Enums']["opportunity_status"]
             }[]
                            },
@@ -1873,6 +1904,9 @@ isOneToOne: true
                            },
 "sor_pain_save_problems":
 { Args: { "p_contract_version": string,"p_feedback_id": string,"p_problems": Json,"p_prompt_version": string,"p_step_id": string }; Returns: string[]
+                           },
+"sor_record_feed_signals":
+{ Args: { "p_actor_id": string,"p_opened": (string)[],"p_shown": (string)[],"p_started_at": string,"p_workspace_id": string }; Returns: number
                            },
 "sor_record_snapshot":
 { Args: { "p_canonical_url": string,"p_content_hash": string,"p_external_id": string,"p_fetch_status": Database["public"]['Enums']["fetch_status"],"p_http_status": number,"p_metadata": Json,"p_published_at": string,"p_retrieved_at": string,"p_source_key": string,"p_storage_status": Database["public"]['Enums']["content_storage_status"],"p_title": string }; Returns: string

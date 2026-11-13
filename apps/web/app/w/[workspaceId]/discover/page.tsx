@@ -33,7 +33,8 @@ export default async function DiscoverPage(props: PageProps<"/w/[workspaceId]/di
       collections={collections.map((c) => ({ id: c.id, name: c.name }))}
       preferences={settings.research_preferences}
       initialFilters={initial ? initial.filters : CatalogFiltersSchema.parse({})}
-      initialSort={initial ? CatalogSortSchema.parse(initial.sort_key) : "relevance"}
+      // "Pour vous" by default: renewed at each opening (PD-41).
+      initialSort={initial ? CatalogSortSchema.parse(initial.sort_key) : "discovery"}
       initialSearchName={initial?.name ?? null}
     />
   );

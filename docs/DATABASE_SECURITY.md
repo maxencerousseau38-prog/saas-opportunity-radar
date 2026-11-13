@@ -100,6 +100,7 @@ S = select, I = insert, U = update, D = delete. A dash means denied.
 | `tag_assignments` | S | S, I, D | S, I, D | S, I, D | — |
 | `saved_searches` | S | S, I, U(own), D(own) | S, I, U, D | S, I, U, D | — |
 | `workspace_product_states` | S | S, I, U | S, I, U, D | S, I, U, D | — |
+| `workspace_feed_signals` (PD-41) | S | S | S | S | written only by `sor_record_feed_signals` (service role, behind `POST W/feed/signals`, member and above) |
 | `catalog_correction_reports` | S | S, I | S, I | S, I | — |
 
 Additional rules:

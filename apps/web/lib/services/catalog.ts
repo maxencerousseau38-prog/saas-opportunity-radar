@@ -11,6 +11,7 @@ import {
   type CatalogPage,
   type CatalogQuery,
   type CategoryRef,
+  type FeedSignalsRequest,
   type ManualAddResult,
   type ManualProductEntry,
   type ProductCard,
@@ -29,6 +30,7 @@ import {
   assertSupportedQuery,
   buildCatalogPlan,
   classifyExclusion,
+  feedSessionStart,
   normalizeUrl,
   slugify,
 } from "@sor/domain";
@@ -92,6 +94,9 @@ export async function searchProducts(
 
   let after: { value: string; id: string } | null = null;
   let seed = query.random_seed ?? randomInt(0, 2_147_483_647);
+  // Feed session (PD-41): one start per opening, returned to the client and
+  // carried by the cursor, so the session's order never moves under it.
+  let feedStartedAt = feedSessionStart(query.feed_started_at, new Date());
   if (query.cursor) {
     const c = decodeCursor(query.cursor);
     if (!c || c.q !== q || c.sort !== query.sort) {
@@ -99,6 +104,7 @@ export async function searchProducts(
     }
     after = { value: c.v, id: c.id };
     seed = c.seed;
+    if (c.at) feedStartedAt = c.at;
   }
 
   const rows = await catalogRepo.searchCatalog(client, {
@@ -106,6 +112,7 @@ export async function searchProducts(
     plan: plan as unknown as Json,
     sort: query.sort,
     seed,
+    asOf: feedStartedAt,
     after,
     limit: query.limit + 1,
   });
@@ -113,7 +120,14 @@ export async function searchProducts(
   const last = page.at(-1);
   const next_cursor =
     rows.length > query.limit && last
-      ? encodeCursor({ v: String(last.sort_value), id: last.id, sort: query.sort, seed, q })
+      ? encodeCursor({
+          v: String(last.sort_value),
+          id: last.id,
+          sort: query.sort,
+          seed,
+          q,
+          at: feedStartedAt,
+        })
       : null;
   const metadata = await catalogRepo.discoverMetadata(
     client,
@@ -123,7 +137,26 @@ export async function searchProducts(
   return {
     data: page.map((row) => toCard(row, metadataByProduct.get(row.id))),
     next_cursor,
+    feed_started_at: feedStartedAt,
   };
+}
+
+/**
+ * Cards shown and profiles opened in one feed session (PD-41). Members and
+ * above only (viewers do not write workspace state, as for profile views).
+ */
+export async function recordFeedSignals(
+  workspaceId: string,
+  actorId: string,
+  request: FeedSignalsRequest,
+): Promise<void> {
+  await catalogRepo.recordFeedSignals(getServiceClient(), {
+    workspaceId,
+    actorId,
+    startedAt: request.feed_started_at,
+    shown: request.shown,
+    opened: request.opened,
+  });
 }
 
 export async function countProducts(

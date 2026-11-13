@@ -28,6 +28,7 @@ export const BILLING_MODEL: Record<string, string> = {
 };
 
 export const SORTS: Array<{ value: string; label: string; disabled?: string }> = [
+  { value: "discovery", label: "Pour vous" },
   { value: "relevance", label: "Plus pertinents" },
   { value: "newest", label: "Plus récents" },
   { value: "recently_added", label: "Récemment ajoutés" },
