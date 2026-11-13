@@ -186,5 +186,5 @@ références retirées restent dans l'historique avec leur motif.
 automatique (pas de navigateur), aucune image générée, aucune page privée ;
 libellé honnête (« Visuel officiel », « Capture du produit »), source et note
 de droits visibles ; retrait opérateur immédiat. Migration
-`20261126090001_site_visual_references.sql`, pgTAP 029. Sprint :
+`20261126090001_site_visual_references.sql` et `20261127090001_site_visual_references_same_image.sql` (même image sous deux types, verrou par produit), pgTAP 029. Sprint :
 `docs/sprints/S8.6-SITE-VISUALS.md`.

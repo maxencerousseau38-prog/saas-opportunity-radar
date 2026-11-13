@@ -114,8 +114,6 @@ declare
   v_asset_type text;
   v_status text;
   v_primary boolean;
-  v_same uuid;
-  v_same_rank integer;
 begin
   begin
     v_width := (p_ref ->> 'width')::integer;
@@ -163,9 +161,6 @@ begin
   if not private.is_visible_product(v_product) then
     return jsonb_build_object('status', 'not_visible', 'product_id', v_product);
   end if;
-  -- One writer per product at a time: two listings of the same product
-  -- (Wikidata and Uneed) may be loaded concurrently.
-  perform pg_advisory_xact_lock(hashtextextended('visual:' || v_product::text, 0));
   if v_kind <> 'licensed' then
     -- Only from the product's own site (or a subdomain of it).
     select lower(p.primary_domain) into v_domain from public.saas_products p where p.id = v_product;
@@ -190,24 +185,6 @@ begin
     update public.product_visual_assets set last_checked_at = now(), last_check_status = 'unchanged'
      where id = v_existing;
     return jsonb_build_object('status', 'existing', 'asset_id', v_existing, 'product_id', v_product);
-  end if;
-
-  -- The same image already shown under another kind (a share image that is
-  -- also the site's hero, a free-licence copy…): one row per image, with the
-  -- better-ranked kind; a lower-ranked kind never relabels it.
-  select a.id, private.visual_rank(a.rights_status, a.asset_type) into v_same, v_same_rank
-    from public.product_visual_assets a
-   where a.product_id = v_product and a.is_current and a.content_hash = v_hash
-   limit 1;
-  if v_same is not null then
-    if v_same_rank >= private.visual_rank(v_status, v_asset_type) then
-      update public.product_visual_assets set last_checked_at = now(), last_check_status = 'unchanged'
-       where id = v_same;
-      return jsonb_build_object('status', 'existing', 'asset_id', v_same, 'product_id', v_product);
-    end if;
-    update public.product_visual_assets
-       set is_current = false, is_primary = false, last_checked_at = now(), last_check_status = 'changed'
-     where id = v_same;
   end if;
 
   select * into v_source from public.sources s
