@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "SaaS Opportunity Radar",
   description: "Découvre chaque jour de vrais SaaS et les opportunités qu’ils révèlent.",
   applicationName: "SOR",
-  appleWebApp: { capable: true, title: "SOR", statusBarStyle: "black-translucent" },
+  appleWebApp: { capable: true, title: "SOR", statusBarStyle: "black" },
   formatDetection: { telephone: false },
 };
 

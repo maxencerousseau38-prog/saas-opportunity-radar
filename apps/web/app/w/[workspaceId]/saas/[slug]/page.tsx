@@ -11,6 +11,7 @@ import { ProductLogo } from "@/components/discover/product-card";
 import { DetailList, Row, Section, Sourced } from "@/components/profile/sourced";
 import { CompetitorTable } from "@/components/profile/competitor-table";
 import { WorkspacePanel } from "@/components/profile/workspace-panel";
+import { FavoriteButton } from "@/components/profile/favorite-button";
 import {
   ACQUISITION_CHANNEL,
   ACQUISITION_CHANNEL_CATEGORY,
@@ -194,6 +195,13 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
           </div>
 
           <div className="flex flex-wrap gap-2">
+            <FavoriteButton
+              workspaceId={workspaceId}
+              productId={product.id}
+              productName={product.name}
+              initial={state?.is_favorite ?? false}
+              canEdit={editable}
+            />
             {product.website_url ? (
               <a
                 href={product.website_url}
@@ -227,7 +235,7 @@ export default async function ProfilePage(props: PageProps<"/w/[workspaceId]/saa
           </dl>
         </header>
 
-        <div className="lg:sticky lg:top-8 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
+        <div className="order-last lg:sticky lg:top-8 lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
           <WorkspacePanel
             workspaceId={workspaceId}
             productId={product.id}
