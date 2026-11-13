@@ -106,6 +106,20 @@ select lives_ok($$select public.sor_operator_remove_visual_asset(tests.id('a1'),
 select is(tests.primary_type(tests.id('d1')), 'licensed_image',
   'the next best current visual takes over at once');
 
+-- ------------------------------------------------------------ same image, two kinds
+select tests.as_service_role();
+select is(public.sor_record_visual_reference(tests.ref('site_screenshot', jsonb_build_object(
+    'image_url', 'https://cdn.product-one.test/publisher.png', 'content_hash', md5('publisher') || md5('publisher')))) ->> 'status',
+  'created', 'a site screenshot that is the very image of the share image is recorded');
+select is((select count(*)::integer from public.product_visual_assets
+            where product_id = tests.id('d1') and is_current and content_hash = md5('publisher') || md5('publisher')), 1,
+  'one current row per image: the better-ranked kind relabels it');
+select is((select asset_type from public.product_visual_assets
+            where product_id = tests.id('d1') and is_current and content_hash = md5('publisher') || md5('publisher')),
+  'product_screenshot', 'the share image is now shown as the product screenshot');
+select is(public.sor_record_visual_reference(tests.ref('publisher')) ->> 'status', 'existing',
+  'replaying the share image never downgrades it');
+
 -- ------------------------------------------------------------ generic images
 -- Product Two shows the very same image as Product One's share image: a template.
 select is(public.sor_record_visual_reference(tests.ref('publisher', jsonb_build_object(
