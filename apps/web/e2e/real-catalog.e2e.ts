@@ -5,7 +5,7 @@
 // demo products and must run before.
 import { createClient } from "@supabase/supabase-js";
 import { expect, test } from "./fixtures";
-import { VIEWER, signIn, waitForResults } from "./helpers";
+import { MEMBER, VIEWER, signIn, waitForResults } from "./helpers";
 
 test.skip(process.env.REAL_CATALOG !== "1", "real catalog step only (REAL_CATALOG=1)");
 
@@ -111,4 +111,99 @@ test("Discover scrolls through real SaaS collected from Wikidata, with their sou
       .filter({ hasText: "Source: Uneed, uneed.best" })
       .first(),
   ).toBeVisible();
+});
+
+// PD-41: the "Pour vous" feed is renewed at each opening (never-seen SaaS
+// first, cards already shown later), stays the same within one session
+// (reload, pagination) and leaves favourites alone.
+test("Discover renews the feed at each opening without breaking pagination or favourites", async ({
+  page,
+  browser,
+}) => {
+  test.setTimeout(150_000);
+  const firstNames = async (n: number) =>
+    (
+      await page
+        .getByRole("article")
+        .evaluateAll((els) => els.map((e) => e.getAttribute("aria-label") ?? ""))
+    ).slice(0, n);
+
+  const workspaceId = await signIn(page, MEMBER);
+  await waitForResults(page);
+  await expect(page.getByLabel("Trier")).toHaveValue("discovery");
+  const top = await firstNames(8);
+  expect(top).toHaveLength(8);
+
+  // Same session: a reload keeps the order.
+  await page.reload();
+  await waitForResults(page);
+  expect(await firstNames(8)).toEqual(top);
+
+  // Pagination: further pages load, no card twice.
+  const cards = page.getByRole("article");
+  const firstPage = await cards.count();
+  await page.mouse.wheel(0, 20_000);
+  await expect.poll(async () => cards.count(), { timeout: 30_000 }).toBeGreaterThan(firstPage);
+  const all = await cards.evaluateAll((els) => els.map((e) => e.getAttribute("data-product-id")));
+  expect(new Set(all).size).toBe(all.length);
+
+  // Favourites: unchanged by the feed; reverted at the end.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  const first = cards.first();
+  const name = (await first.getAttribute("aria-label")) ?? "";
+  await first.getByRole("button", { name: `Ajouter ${name} aux favoris` }).click();
+  await expect(first.getByRole("button", { name: `Retirer ${name} des favoris` })).toBeVisible();
+
+  // The cards seen on screen are recorded for the workspace (batches every few seconds).
+  await expect
+    .poll(
+      async () => {
+        const { count } = await admin
+          .from("workspace_feed_signals")
+          .select("product_id", { count: "exact", head: true })
+          .eq("workspace_id", workspaceId)
+          .gt("shown_count", 0);
+        return count ?? 0;
+      },
+      { timeout: 20_000 },
+    )
+    .toBeGreaterThanOrEqual(2);
+  const { data: seen } = await admin
+    .from("workspace_feed_signals")
+    .select("product_id")
+    .eq("workspace_id", workspaceId)
+    .gt("shown_count", 0);
+  const seenIds = new Set((seen ?? []).map((r) => r.product_id));
+
+  // A new opening (new tab session): another selection, none of the cards already seen.
+  const context = await browser.newContext();
+  const next = await context.newPage();
+  await signIn(next, MEMBER);
+  await waitForResults(next);
+  const nextIds = await next
+    .getByRole("article")
+    .evaluateAll((els) => els.slice(0, 12).map((e) => e.getAttribute("data-product-id") ?? ""));
+  expect(nextIds).toHaveLength(12);
+  expect(nextIds.filter((id) => seenIds.has(id))).toEqual([]);
+  // The favourite is still there in the new session.
+  await next.getByLabel("Rechercher un SaaS").fill(name);
+  await waitForResults(next);
+  await expect(
+    next
+      .getByRole("article", { name })
+      .first()
+      .getByRole("button", { name: `Retirer ${name} des favoris` }),
+  ).toBeVisible({ timeout: 15_000 });
+  await next
+    .getByRole("article", { name })
+    .first()
+    .getByRole("button", { name: `Retirer ${name} des favoris` })
+    .click();
+  await expect(
+    next
+      .getByRole("article", { name })
+      .first()
+      .getByRole("button", { name: `Ajouter ${name} aux favoris` }),
+  ).toBeVisible();
+  await context.close();
 });

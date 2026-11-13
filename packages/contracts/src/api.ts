@@ -167,6 +167,8 @@ export const CatalogPageSchema = z
   .object({
     data: z.array(ProductCardSchema),
     next_cursor: z.string().nullable(),
+    /** Start of the feed session this page belongs to (PD-41). */
+    feed_started_at: ISODateTimeSchema,
   })
   .strict();
 

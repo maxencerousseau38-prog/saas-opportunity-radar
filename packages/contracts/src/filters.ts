@@ -2,7 +2,7 @@
 // AND between groups, OR inside a group, unknown handling chosen per group.
 // Permanent exclusions are not representable here (server-side constant).
 import { z } from "zod";
-import { CountryCodeSchema, SlugSchema } from "./common";
+import { CountryCodeSchema, ISODateTimeSchema, SlugSchema, UUIDSchema } from "./common";
 import {
   BillingModelSchema,
   CustomerTypeSchema,
@@ -193,6 +193,8 @@ export const CatalogFiltersSchema = z
   .strict();
 
 export const CatalogSortSchema = z.enum([
+  /** "Pour vous": renewed at each opening (rule feed-1, PD-41). */
+  "discovery",
   "newest",
   "recently_added",
   "relevance",
@@ -210,10 +212,28 @@ export const CatalogQuerySchema = z
     filters: CatalogFiltersSchema.default(() => CatalogFiltersSchema.parse({})),
     sort: CatalogSortSchema.default("relevance"),
     random_seed: z.number().int().min(0).max(2_147_483_647).optional(),
+    /**
+     * Start of the feed session, as returned by the server on the session's
+     * first page (PD-41). Absent: the server starts a new session now.
+     */
+    feed_started_at: ISODateTimeSchema.optional(),
     limit: z.number().int().min(1).max(100).default(30),
     cursor: z.string().max(1000).optional(),
   })
   .strict();
+
+/**
+ * Feed signals of one session (PD-41): cards actually shown on screen and
+ * profiles opened from the feed. Only the workspace's own ranking uses them.
+ */
+export const FeedSignalsRequestSchema = z
+  .object({
+    feed_started_at: ISODateTimeSchema,
+    shown: z.array(UUIDSchema).max(100).default([]),
+    opened: z.array(UUIDSchema).max(20).default([]),
+  })
+  .strict()
+  .refine((r) => r.shown.length + r.opened.length > 0, { message: "empty" });
 
 /**
  * Filter groups shipped in the MVP (PD-16 A + J): A, B, C, D, E, F, G, I, J, O.
@@ -244,4 +264,5 @@ export type CatalogFiltersInput = z.input<typeof CatalogFiltersSchema>;
 export type CatalogSort = z.infer<typeof CatalogSortSchema>;
 export type CatalogQuery = z.infer<typeof CatalogQuerySchema>;
 export type CatalogQueryInput = z.input<typeof CatalogQuerySchema>;
+export type FeedSignalsRequest = z.infer<typeof FeedSignalsRequestSchema>;
 export type ConfigurableExclusion = z.infer<typeof ConfigurableExclusionSchema>;

@@ -19,6 +19,22 @@ describe("pagination cursor", () => {
     expect(decodeCursor(encodeCursor(payload))).toEqual(payload);
   });
 
+  it("carries the feed session start (PD-41) and still reads older cursors", async () => {
+    const { decodeCursor, encodeCursor } = await import("@/lib/api/cursor");
+    const payload = {
+      v: "1.234567890123",
+      id: "00000000-0000-4000-8000-000000000002",
+      sort: "discovery",
+      seed: 9,
+      q: "abc",
+      at: "2026-11-13T12:00:00.000Z",
+    };
+    expect(decodeCursor(encodeCursor(payload))?.at).toBe(payload.at);
+    const older = { ...payload } as Partial<typeof payload>;
+    delete older.at;
+    expect(decodeCursor(encodeCursor(older as Parameters<typeof encodeCursor>[0]))).toEqual(older);
+  });
+
   it("rejects a tampered cursor", async () => {
     const { decodeCursor, encodeCursor } = await import("@/lib/api/cursor");
     const cursor = encodeCursor({ v: "-Infinity", id: "x", sort: "newest", seed: 0, q: "q" });

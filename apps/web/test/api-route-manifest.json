@@ -55,6 +55,7 @@
   "POST v1/workspaces/[workspaceId]/discovery-runs/[runId]/save/route.ts": "member",
   "GET v1/workspaces/[workspaceId]/discovery-runs/route.ts": "viewer",
   "POST v1/workspaces/[workspaceId]/discovery-runs/route.ts": "member",
+  "POST v1/workspaces/[workspaceId]/feed/signals/route.ts": "member",
   "GET v1/workspaces/[workspaceId]/generated-opportunities/[opportunityId]/route.ts": "viewer",
   "PATCH v1/workspaces/[workspaceId]/generated-opportunities/[opportunityId]/route.ts": "member",
   "GET v1/workspaces/[workspaceId]/generated-opportunities/route.ts": "viewer",

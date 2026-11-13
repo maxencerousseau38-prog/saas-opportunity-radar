@@ -323,6 +323,7 @@ export function ProductCardView({
   return (
     <article
       aria-label={product.name}
+      data-product-id={product.id}
       className="group/card relative flex animate-fade-up flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-colors hover:border-border-strong"
     >
       {hasVisual ? (
@@ -384,6 +385,7 @@ export function ProductListRow({ product, ...actions }: ActionProps & { product:
   return (
     <article
       aria-label={product.name}
+      data-product-id={product.id}
       className="relative flex items-center gap-3 border-b border-border px-1 py-3 last:border-0 sm:px-3"
     >
       {product.visual_asset ? (

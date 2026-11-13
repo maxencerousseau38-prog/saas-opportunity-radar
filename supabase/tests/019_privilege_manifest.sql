@@ -91,6 +91,7 @@ select is((select string_agg(t || ':' || p, ' ' order by t) from (
     || 'sources:SELECT '
     || 'tag_assignments:DELETE,INSERT,SELECT '
     || 'tags:DELETE,INSERT,SELECT '
+    || 'workspace_feed_signals:SELECT '
     || 'workspace_members:DELETE,INSERT,SELECT '
     || 'workspace_product_states:DELETE,INSERT,SELECT '
     || 'workspace_settings:SELECT '
@@ -129,6 +130,7 @@ select is((select string_agg(n.nspname || '.' || p.proname || '(' || pg_get_func
     || 'private.catalog_channel_matches(p_product_id uuid, p_filter jsonb) | '
     || 'private.catalog_filtered(p_workspace_id uuid, p_plan jsonb) | '
     || 'private.catalog_sort_value(p_sort text, p_seed integer, p_id uuid, p_first_discovered_at timestamp with time zone, p_start_year integer, p_team_size integer, p_monetization_score integer, p_last_activity_at timestamp with time zone, p_text_rank real) | '
+    || 'private.feed_score(p_draw numeric, p_age_days numeric, p_shown_count integer, p_days_since_shown numeric, p_days_since_opened numeric) | '
     || 'private.has_workspace_role(p_workspace_id uuid, p_roles workspace_role[]) | '
     || 'private.is_visible_company(p_company_id uuid) | '
     || 'private.is_visible_evidence(p_evidence_id uuid) | '
@@ -150,6 +152,7 @@ select is((select string_agg(n.nspname || '.' || p.proname || '(' || pg_get_func
     || 'public.catalog_discover_metadata(p_product_ids uuid[]) | '
     || 'public.catalog_search(p_workspace_id uuid, p_plan jsonb, p_sort text, p_seed integer, p_after_value numeric, p_after_id uuid, p_limit integer) | '
     || 'public.catalog_search_v2(p_workspace_id uuid, p_plan jsonb, p_sort text, p_seed integer, p_after_value numeric, p_after_id uuid, p_limit integer) | '
+    || 'public.catalog_search_v3(p_workspace_id uuid, p_plan jsonb, p_sort text, p_seed integer, p_as_of timestamp with time zone, p_after_value numeric, p_after_id uuid, p_limit integer) | '
     || 'public.create_workspace(p_name text) | '
     || 'public.workspace_member_directory(p_workspace_id uuid)',
   'functions executable by authenticated match the reviewed manifest');

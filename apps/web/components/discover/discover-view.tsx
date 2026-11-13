@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import type { CatalogFilters, CatalogPage, CatalogSort, ProductCard } from "@sor/contracts";
+import type { FeedSession } from "@sor/domain/feed";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/field";
 import { EmptyState, ErrorNote, Skeleton } from "@/components/ui/states";
@@ -22,12 +23,14 @@ import { api } from "@/lib/client-api";
 import { SORTS } from "@/lib/labels";
 import { cn } from "@/lib/utils";
 import { activeChips, filtersFromPreferences } from "./filter-model";
+import { openFeedSession, saveFeedSession, touchFeedSession } from "./feed-session";
 import { FilterPanel } from "./filter-panel";
 import { masonry } from "./masonry";
 import { ManualAddDialog } from "./manual-add-dialog";
 import { ProductCardView, ProductListRow } from "./product-card";
 import { SaveSearchDialog } from "./save-search-dialog";
 import type { DiscoverProps, ViewMode } from "./types";
+import { useFeedSignals } from "./use-feed-signals";
 
 const PAGE_SIZE = 24;
 const EMPTY_FILTERS: CatalogFilters = { configurable_exclusions: [], include_hidden: false };
@@ -66,7 +69,9 @@ export function DiscoverView(props: DiscoverProps) {
   const [collections, setCollections] = useState(props.collections);
   const [showTop, setShowTop] = useState(false);
   const requestSeq = useRef(0);
-  const seed = useRef<number>(Math.floor(Math.random() * 2_000_000_000));
+  // One feed session per opening (PD-41): same seed and start while it lasts.
+  const session = useRef<FeedSession | null>(null);
+  const feedRoot = useRef<HTMLDivElement>(null);
   const cols = useColumns();
 
   useEffect(() => {
@@ -102,26 +107,26 @@ export function DiscoverView(props: DiscoverProps) {
     return () => clearTimeout(t);
   }, [text]);
 
-  const body = useMemo(
-    () => ({
-      filters,
-      sort,
-      limit: PAGE_SIZE,
-      random_seed: sort === "random" ? seed.current : undefined,
-    }),
-    [filters, sort],
-  );
+  const body = useMemo(() => ({ filters, sort, limit: PAGE_SIZE }), [filters, sort]);
 
   const load = useCallback(
     async (after: string | null) => {
       const seq = ++requestSeq.current;
       setLoading(true);
       setError(null);
+      session.current ??= openFeedSession();
+      const feed = session.current;
+      touchFeedSession(feed);
       try {
         const [page, total] = await Promise.all([
           api<CatalogPage>(`/workspaces/${workspaceId}/products/search`, {
             method: "POST",
-            body: { ...body, ...(after ? { cursor: after } : {}) },
+            body: {
+              ...body,
+              random_seed: feed.seed,
+              ...(feed.startedAt ? { feed_started_at: feed.startedAt } : {}),
+              ...(after ? { cursor: after } : {}),
+            },
           }),
           after
             ? Promise.resolve(null)
@@ -130,6 +135,10 @@ export function DiscoverView(props: DiscoverProps) {
                 body: { filters },
               }),
         ]);
+        if (feed.startedAt !== page.feed_started_at) {
+          feed.startedAt = page.feed_started_at;
+          saveFeedSession(feed);
+        }
         if (seq !== requestSeq.current) return;
         setItems((prev) => {
           if (!after) return page.data;
@@ -209,6 +218,18 @@ export function DiscoverView(props: DiscoverProps) {
   };
 
   const columns = useMemo(() => masonry(items, cols), [items, cols]);
+  const feedStartedAt = useCallback(() => session.current?.startedAt ?? null, []);
+  const touch = useCallback(() => {
+    if (session.current) touchFeedSession(session.current);
+  }, []);
+  const signals = useFeedSignals({
+    workspaceId,
+    enabled: props.canEdit,
+    container: feedRoot,
+    startedAt: feedStartedAt,
+    revision: `${items.length}:${view}:${cols}`,
+    onActivity: touch,
+  });
   const initialLoading = loading && items.length === 0;
 
   return (
@@ -395,7 +416,7 @@ export function DiscoverView(props: DiscoverProps) {
         </div>
       ) : null}
 
-      <div className="mt-4">
+      <div className="mt-4" ref={feedRoot} onClickCapture={signals.onClickCapture}>
         {error ? (
           <div className="mx-auto mb-4 flex max-w-3xl flex-wrap items-center gap-2">
             <ErrorNote>{error}</ErrorNote>

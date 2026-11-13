@@ -13,6 +13,8 @@ export interface CatalogSearchParams {
   plan: Json;
   sort: string;
   seed: number;
+  /** Start of the feed session (PD-41): the 'discovery' ranking is frozen at it. */
+  asOf: string;
   after: { value: string; id: string } | null;
   limit: number;
 }
@@ -21,11 +23,12 @@ export async function searchCatalog(
   client: DbClient,
   p: CatalogSearchParams,
 ): Promise<CatalogSearchRow[]> {
-  const { data, error } = await client.rpc("catalog_search_v2", {
+  const { data, error } = await client.rpc("catalog_search_v3", {
     p_workspace_id: p.workspaceId,
     p_plan: p.plan,
     p_sort: p.sort,
     p_seed: p.seed,
+    p_as_of: p.asOf,
     p_limit: p.limit,
     ...(p.after
       ? { p_after_value: p.after.value as unknown as number, p_after_id: p.after.id }
@@ -33,6 +36,26 @@ export async function searchCatalog(
   });
   if (error) throw mapPostgresError(error);
   return data ?? [];
+}
+
+/**
+ * Feed signals of one session (PD-41). Service client only: the caller has
+ * authenticated the user and checked an editing role; the RPC checks the role
+ * again and records each card once per session.
+ */
+export async function recordFeedSignals(
+  service: DbClient,
+  p: { workspaceId: string; actorId: string; startedAt: string; shown: string[]; opened: string[] },
+): Promise<number> {
+  const { data, error } = await service.rpc("sor_record_feed_signals", {
+    p_workspace_id: p.workspaceId,
+    p_actor_id: p.actorId,
+    p_started_at: p.startedAt,
+    p_shown: p.shown,
+    p_opened: p.opened,
+  });
+  if (error) throw mapPostgresError(error);
+  return Number(data ?? 0);
 }
 
 export async function countCatalog(
