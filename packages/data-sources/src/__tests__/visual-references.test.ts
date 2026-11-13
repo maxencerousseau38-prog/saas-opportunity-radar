@@ -15,8 +15,9 @@ import {
 } from "../index";
 import { startServer, testPolicy } from "./fixture-server";
 
+/** Synthetic PNG header padded to a realistic size (visref-2 rejects near-blank images). */
 function png(width: number, height: number): Buffer {
-  const b = Buffer.alloc(64, 1);
+  const b = Buffer.alloc(Math.max(64, Math.ceil(width * height * 0.05)), 1);
   Buffer.from("89504e470d0a1a0a0000000d49484452", "hex").copy(b, 0);
   b.writeUInt32BE(width, 16);
   b.writeUInt32BE(height, 20);

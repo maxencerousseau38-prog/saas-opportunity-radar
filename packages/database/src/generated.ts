@@ -1903,6 +1903,9 @@ isOneToOne: true
               "created": boolean,"job_id": string,"run_id": string
             }[]
                            },
+"sor_retire_generic_visual_references":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
 "sor_retry_analysis":
 { Args: { "p_actor": string,"p_analysis_id": string,"p_idempotency_key": string,"p_request_hash": string,"p_workspace_id": string }; Returns: {
               "created": boolean,"job_id": string

@@ -1,0 +1,374 @@
+-- Site visuals by reference and visual quality (PD-40, amendment of ADR-016;
+-- rules visref-2). The product owner asked (13 November 2026) that each SaaS
+-- be shown by its own visual universe, in this order: the official hero image
+-- of its site, an authentic screenshot of its interface, then the share image.
+--
+-- 1. Two more reference kinds, recorded like the share image (PD-38): the
+--    hero (official_hero) and the interface screenshot (product_screenshot)
+--    the publisher shows on the home page of its own official site; displayed
+--    by reference, never copied, no licence implied, labelled as such.
+-- 2. One precedence everywhere (private.visual_rank): approved private copy >
+--    site hero > site screenshot > free-licence image > share image.
+-- 3. The primary visual is always the best current one
+--    (private.refresh_primary_visual), also after a removal.
+-- 4. sor_retire_generic_visual_references: retires the references that do not
+--    show a product (the same image on several products' sites, a site
+--    builder's or app store's default preview, a stock photo). Audited.
+--
+-- No new table, no browser grant; the read policy and the Discover DTO keep
+-- their shape (statuses already readable: licensed, publisher_published).
+
+-- ------------------------------------------------------------ kinds
+alter table public.product_visual_assets drop constraint product_visual_asset_kind_rules;
+alter table public.product_visual_assets
+  add constraint product_visual_asset_kind_rules check (
+    (delivery_mode = 'private_copy'
+       and asset_type in ('official_hero','product_screenshot','official_illustration')
+       and rights_status not in ('licensed','publisher_published'))
+    or (delivery_mode = 'external_reference' and delivery_path is null and (
+         (asset_type = 'licensed_image' and rights_status in ('licensed','removed')
+            and licence_code is not null and licence_url is not null)
+      or (asset_type in ('publisher_share_image','official_hero','product_screenshot')
+            and rights_status in ('publisher_published','removed')
+            and licence_code is null and licence_url is null and attribution is null))));
+
+-- ------------------------------------------------------------ precedence
+create or replace function private.visual_rank(p_rights_status text, p_asset_type text)
+returns integer language sql immutable set search_path = '' as $$
+  select case
+    when p_rights_status = 'approved' then 10
+    when p_rights_status = 'publisher_published' and p_asset_type = 'official_hero' then 5
+    when p_rights_status = 'publisher_published' and p_asset_type = 'product_screenshot' then 4
+    when p_rights_status = 'licensed' then 3
+    when p_rights_status = 'publisher_published' then 2
+    else 0 end
+$$;
+revoke all on function private.visual_rank(text, text) from public, anon;
+grant execute on function private.visual_rank(text, text) to authenticated, service_role;
+
+-- The best displayable current visual becomes the product's primary one.
+create or replace function private.refresh_primary_visual(p_product uuid)
+returns void language plpgsql security definer set search_path = '' as $$
+declare
+  v_best uuid;
+begin
+  select a.id into v_best from public.product_visual_assets a
+   where a.product_id = p_product and a.is_current
+     and ((a.rights_status = 'approved' and a.verification_status = 'verified'
+           and a.delivery_mode = 'private_copy')
+          or (a.rights_status in ('licensed', 'publisher_published')
+              and a.delivery_mode = 'external_reference'))
+   order by private.visual_rank(a.rights_status, a.asset_type) desc, a.observed_at desc, a.id
+   limit 1;
+  -- Two statements: the one-primary index is checked row by row.
+  update public.product_visual_assets set is_primary = false
+   where product_id = p_product and is_primary and id is distinct from v_best;
+  if v_best is not null then
+    update public.product_visual_assets set is_primary = true where id = v_best and not is_primary;
+  end if;
+end;
+$$;
+revoke all on function private.refresh_primary_visual(uuid) from public, anon, authenticated;
+
+-- A removed or replaced primary visual hands over to the next best one.
+create or replace function private.promote_next_visual()
+returns trigger language plpgsql security definer set search_path = '' as $$
+begin
+  perform private.refresh_primary_visual(new.product_id);
+  return null;
+end;
+$$;
+revoke all on function private.promote_next_visual() from public, anon, authenticated;
+create trigger product_visual_assets_promote_next
+  after update of is_current on public.product_visual_assets
+  for each row when (old.is_primary and old.is_current and not new.is_current)
+  execute function private.promote_next_visual();
+
+-- ------------------------------------------------------------ record a reference
+-- p_ref keys as in 20261125090001, with two more kinds: site_hero and
+-- site_screenshot (the page must be on the product's own domain; the image
+-- may be served by the CDN the page uses). Optional rules_version.
+create or replace function public.sor_record_visual_reference(p_ref jsonb)
+returns jsonb language plpgsql security definer set search_path = '' as $$
+declare
+  v_kind text := p_ref ->> 'kind';
+  v_image text := btrim(coalesce(p_ref ->> 'image_url', ''));
+  v_page text := btrim(coalesce(p_ref ->> 'page_url', ''));
+  v_hash text := lower(btrim(coalesce(p_ref ->> 'content_hash', '')));
+  v_alt text := btrim(coalesce(p_ref ->> 'alt_text', ''));
+  v_width integer;
+  v_height integer;
+  v_observed timestamptz;
+  v_licence text := nullif(btrim(coalesce(p_ref ->> 'licence_code', '')), '');
+  v_licence_url text := nullif(btrim(coalesce(p_ref ->> 'licence_url', '')), '');
+  v_attribution text := nullif(btrim(coalesce(p_ref ->> 'attribution', '')), '');
+  v_product uuid;
+  v_domain text;
+  v_host text;
+  v_source public.sources;
+  v_existing uuid;
+  v_record uuid;
+  v_snapshot uuid;
+  v_evidence uuid;
+  v_id uuid := gen_random_uuid();
+  v_asset_type text;
+  v_status text;
+  v_primary boolean;
+begin
+  begin
+    v_width := (p_ref ->> 'width')::integer;
+    v_height := (p_ref ->> 'height')::integer;
+    v_observed := coalesce((p_ref ->> 'observed_at')::timestamptz, now());
+  exception when others then
+    raise exception 'VALIDATION_ERROR: visual reference' using errcode = '22023';
+  end;
+  if not coalesce(v_kind in ('site_hero', 'site_screenshot', 'licensed', 'publisher')
+     and v_image ~* '^https://[a-z0-9.-]+(:[0-9]+)?/\S+$' and length(v_image) <= 2000
+     and v_page ~* '^https://[a-z0-9.-]+(:[0-9]+)?(/\S*)?$' and length(v_page) <= 2000
+     and v_hash ~ '^[0-9a-f]{16,128}$'
+     and length(v_alt) between 1 and 500
+     and v_width between 1 and 20000 and v_height between 1 and 20000
+     and v_observed <= now() + interval '1 minute', false) then
+    raise exception 'VALIDATION_ERROR: visual reference' using errcode = '22023';
+  end if;
+  if v_kind = 'licensed' then
+    if not coalesce(v_image ~* '^https://upload\.wikimedia\.org/'
+       and v_page ~* '^https://commons\.wikimedia\.org/'
+       and v_licence ~ '^(CC0-1\.0|Public-Domain|CC-BY(-SA)?-(1\.0|2\.0|2\.5|3\.0|4\.0))$'
+       and v_licence_url ~* '^https?://'
+       and (v_attribution is not null or v_licence in ('CC0-1.0', 'Public-Domain')), false) then
+      raise exception 'VALIDATION_ERROR: free licence required' using errcode = '22023';
+    end if;
+  else
+    -- A share image, a hero or a screenshot shown by the publisher on its own
+    -- site: the publisher's declaration, no licence is implied.
+    v_licence := null;
+    v_licence_url := null;
+    v_attribution := null;
+  end if;
+
+  select i.product_id into v_product
+    from public.entity_identifiers i
+    join public.sources s on s.id = i.source_id
+   where s.source_key = p_ref ->> 'listing_source_key'
+     and i.identifier_type = 'external_id'
+     and i.value_normalized = p_ref ->> 'listing_external_id'
+     and i.product_id is not null and i.valid_to is null
+   limit 1;
+  if v_product is null then
+    return jsonb_build_object('status', 'no_product');
+  end if;
+  if not private.is_visible_product(v_product) then
+    return jsonb_build_object('status', 'not_visible', 'product_id', v_product);
+  end if;
+  if v_kind <> 'licensed' then
+    -- Only from the product's own site (or a subdomain of it).
+    select lower(p.primary_domain) into v_domain from public.saas_products p where p.id = v_product;
+    v_host := lower(substring(v_page from '^https://([^/:?#]+)'));
+    if v_domain is null or v_domain = '' or not (v_host = v_domain or v_host like '%.' || v_domain) then
+      return jsonb_build_object('status', 'domain_mismatch', 'product_id', v_product);
+    end if;
+  end if;
+
+  v_asset_type := case v_kind when 'licensed' then 'licensed_image'
+                               when 'site_hero' then 'official_hero'
+                               when 'site_screenshot' then 'product_screenshot'
+                               else 'publisher_share_image' end;
+  v_status := case v_kind when 'licensed' then 'licensed' else 'publisher_published' end;
+
+  -- Replay: same image, same bytes.
+  select a.id into v_existing from public.product_visual_assets a
+   where a.product_id = v_product and a.is_current and a.asset_type = v_asset_type
+     and a.delivery_mode = 'external_reference'
+     and a.source_url = v_image and a.content_hash = v_hash;
+  if v_existing is not null then
+    update public.product_visual_assets set last_checked_at = now(), last_check_status = 'unchanged'
+     where id = v_existing;
+    return jsonb_build_object('status', 'existing', 'asset_id', v_existing, 'product_id', v_product);
+  end if;
+
+  select * into v_source from public.sources s
+   where s.source_key = case v_kind when 'licensed' then 'wikimedia_commons' else 'official_website' end;
+  if v_source.id is null or not v_source.is_enabled or v_source.integration_status <> 'integrated' then
+    raise exception 'INVALID_STATE: source not enabled' using errcode = '55000';
+  end if;
+
+  -- A newer reference of the same kind replaces the previous one (history
+  -- kept). The site keeps one image per product, hero or screenshot. An
+  -- operator-approved private copy is never replaced by a reference.
+  update public.product_visual_assets
+     set is_current = false, is_primary = false, last_checked_at = now(), last_check_status = 'changed'
+   where product_id = v_product and is_current and delivery_mode = 'external_reference'
+     and (asset_type = v_asset_type
+          or (v_kind in ('site_hero', 'site_screenshot')
+              and asset_type in ('official_hero', 'product_screenshot')));
+
+  insert into public.source_records (source_id, canonical_url, title)
+    values (v_source.id, v_page, left('Visual: ' || v_alt, 500))
+    on conflict (source_id, canonical_url) do update set title = coalesce(public.source_records.title, excluded.title)
+    returning id into v_record;
+  insert into public.source_snapshots (source_record_id, content_hash, fetch_status, retrieved_at,
+                                       last_retrieved_at, storage_status, extracted_metadata, extraction_status)
+    values (v_record, v_hash, 'ok', v_observed, v_observed, 'reference_only',
+            jsonb_build_object('purpose', 'visual_reference', 'kind', v_kind, 'image_url', v_image,
+                               'rules_version', p_ref ->> 'rules_version',
+                               'content_type', p_ref ->> 'content_type', 'width', v_width, 'height', v_height,
+                               'licence_code', v_licence, 'licence_url', v_licence_url,
+                               'attribution', v_attribution),
+            'completed')
+    on conflict (source_record_id, content_hash)
+      do update set last_retrieved_at = greatest(public.source_snapshots.last_retrieved_at, excluded.last_retrieved_at)
+    returning id into v_snapshot;
+  insert into public.evidence_items (product_id, source_snapshot_id, claim_type, claim_text, claim_value,
+                                     evidence_type, fact_status, reliability_level, verification_status,
+                                     observed_at, extraction_method)
+    values (v_product, v_snapshot, 'visual_asset', left(v_alt, 1000),
+            jsonb_build_object('kind', v_kind, 'image_url', v_image, 'content_hash', v_hash,
+                               'licence_code', v_licence, 'attribution', v_attribution),
+            case v_kind when 'licensed' then 'third_party_report' else 'official_statement' end::public.evidence_type,
+            'declared', case v_kind when 'licensed' then 3 else 2 end, 'unverified', v_observed,
+            'structured_parse')
+    returning id into v_evidence;
+
+
+  insert into public.product_visual_assets (id, product_id, asset_type, source_url, delivery_path, content_hash,
+                                            alt_text, rights_basis, rights_status, verification_status,
+                                            evidence_id, observed_at, is_primary, is_current, rights_evidence_url,
+                                            width, height, last_checked_at, last_check_status, delivery_mode,
+                                            licence_code, licence_url, attribution)
+    values (v_id, v_product, v_asset_type, v_image, null, v_hash, v_alt,
+            case v_kind
+              when 'licensed' then left(format('%s, %s (Wikimedia Commons)', v_licence,
+                                               coalesce(v_attribution, 'sans attribution requise')), 1000)
+              when 'site_hero' then 'Visuel principal montré par l''éditeur sur la page d''accueil de son site officiel (PD-40) : pas de licence vérifiée'
+              when 'site_screenshot' then 'Capture de l''interface montrée par l''éditeur sur son site officiel (PD-40) : pas de licence vérifiée'
+              else 'Image de partage publiée par l''éditeur sur son site officiel (aperçu de lien, PD-38) : pas de licence vérifiée'
+            end,
+            v_status, 'unverified', v_evidence, v_observed, false, true, v_page,
+            v_width, v_height, now(), 'unchanged', 'external_reference',
+            v_licence, v_licence_url, v_attribution);
+  -- The best current visual of the product becomes (or stays) its primary one.
+  perform private.refresh_primary_visual(v_product);
+  select a.is_primary into v_primary from public.product_visual_assets a where a.id = v_id;
+  insert into public.audit_logs (actor_kind, action, resource_type, resource_id, metadata)
+    values ('worker', 'catalog.visual_reference_recorded', 'product_visual_asset', v_id,
+            jsonb_build_object('product_id', v_product, 'kind', v_kind, 'image_url', v_image,
+                               'page_url', v_page, 'licence_code', v_licence, 'primary', v_primary));
+  return jsonb_build_object('status', 'created', 'asset_id', v_id, 'product_id', v_product, 'primary', v_primary);
+end;
+$$;
+revoke all on function public.sor_record_visual_reference(jsonb) from public, anon, authenticated;
+grant execute on function public.sor_record_visual_reference(jsonb) to service_role;
+
+-- ------------------------------------------------------------ generic images
+-- Retires the current references that do not show the product (visref-2):
+-- an image on two or more products, a builder's or store's default preview, a
+-- stock photo. Run after loading a snapshot; replays retire nothing new.
+create or replace function public.sor_retire_generic_visual_references()
+returns jsonb language plpgsql security definer set search_path = '' as $$
+declare
+  v_ids uuid[];
+  v_products uuid[];
+  v_shared integer;
+  v_default integer;
+begin
+  with refs as (
+    select a.id, a.product_id, a.content_hash, a.source_url
+      from public.product_visual_assets a
+     where a.is_current and a.delivery_mode = 'external_reference'
+       and a.rights_status in ('licensed', 'publisher_published')
+  ), shared as (
+    select r.id from refs r
+     where r.content_hash in (select content_hash from refs group by content_hash
+                               having count(distinct product_id) > 1)
+        or r.source_url in (select source_url from refs group by source_url
+                             having count(distinct product_id) > 1)
+  ), defaults as (
+    select r.id from refs r
+     where r.source_url ~* '^https://lovable\.dev/opengraph-image'
+        or r.source_url ~* '^https://[^/]*softr-files\.com/.*default'
+        or r.source_url ~* '^https://[^/]*gstatic\.com/chrome/webstore/'
+        or r.source_url ~* '^https://is[0-9]+-ssl\.mzstatic\.com/'
+        or r.source_url ~* '/(og[_-]?)?(default|placeholder)[_-]?(og|share|social)?[_-]?image\.(png|jpe?g|webp)$'
+        or substring(r.source_url from '^https://([^/:?#]+)') ~*
+           '(^|\.)(unsplash\.com|pexels\.com|pixabay\.com|shutterstock\.com|istockphoto\.com|freepik\.com|stock\.adobe\.com|depositphotos\.com|dreamstime\.com|123rf\.com|stocksy\.com)$'
+        or substring(r.source_url from '^https://([^/:?#]+)') ~* '(^|\.)gettyimages\.[a-z.]+$'
+  )
+  select array_agg(distinct x.id), (select count(*) from shared), (select count(*) from defaults)
+    into v_ids, v_shared, v_default
+    from (select id from shared union select id from defaults) x;
+  if v_ids is null then
+    return jsonb_build_object('retired', 0, 'shared', 0, 'platform_default_or_stock', 0);
+  end if;
+  select array_agg(distinct product_id) into v_products
+    from public.product_visual_assets where id = any(v_ids);
+  update public.product_visual_assets
+     set rights_status = 'removed', is_current = false, is_primary = false, removed_at = now(),
+         removal_reason = 'Image générique : ne montre pas le produit (visref-2)',
+         last_checked_at = now(), last_check_status = 'refused'
+   where id = any(v_ids);
+  perform private.refresh_primary_visual(p) from unnest(v_products) p;
+  insert into public.audit_logs (actor_kind, action, resource_type, resource_id, metadata)
+    values ('worker', 'catalog.generic_visual_references_retired', 'product_visual_asset', null,
+            jsonb_build_object('retired', cardinality(v_ids), 'shared', v_shared,
+                               'platform_default_or_stock', v_default, 'rules_version', 'visref-2'));
+  return jsonb_build_object('retired', cardinality(v_ids), 'shared', v_shared,
+                            'platform_default_or_stock', v_default);
+end;
+$$;
+revoke all on function public.sor_retire_generic_visual_references() from public, anon, authenticated;
+grant execute on function public.sor_retire_generic_visual_references() to service_role;
+
+-- ------------------------------------------------------------ Discover DTO
+-- Same signature and shape; the best current primary visual by the single
+-- precedence above.
+create or replace function public.catalog_discover_metadata(p_product_ids uuid[])
+returns table(product_id uuid,acquisition_channels jsonb,visual_asset jsonb)
+language plpgsql stable set search_path = '' as $$
+begin
+  if cardinality(p_product_ids)>100 then
+    raise exception 'VALIDATION_ERROR: too many products' using errcode = '22023';
+  end if;
+  return query
+  select p.id,
+    coalesce((select jsonb_agg(jsonb_build_object(
+      'channel_key',c.channel_key,'channel_category',c.channel_category,
+      'role',c.role,'status',c.fact_status,'confidence',c.confidence,
+      'observed_at',c.observed_at,'source_url',sr.canonical_url,
+      'source_name',s.name,'evidence_id',e.id,
+      'role_rationale',c.role_rationale,'inference_rationale',c.inference_rationale,
+      'confidence_method',c.confidence_method,'confidence_reasons',c.confidence_reasons
+    ) order by (c.role='primary') desc,c.channel_key)
+      from public.product_acquisition_channels c
+      join public.evidence_items e on e.id=c.evidence_id
+      join public.source_snapshots ss on ss.id=e.source_snapshot_id
+      join public.source_records sr on sr.id=ss.source_record_id
+      join public.sources s on s.id=sr.source_id
+      where c.product_id=p.id and c.is_current and c.fact_status<>'unknown'
+        and private.is_visible_evidence(e.id)),'[]'::jsonb),
+    (select jsonb_build_object(
+      'asset_type',a.asset_type,
+      'url',case a.delivery_mode when 'private_copy' then a.delivery_path else a.source_url end,
+      'alt_text',a.alt_text,
+      'source_url',sr.canonical_url,'observed_at',a.observed_at,
+      'rights_basis',a.rights_basis,'confidence',a.confidence,
+      'width',a.width,'height',a.height,
+      'delivery_mode',a.delivery_mode,'rights_status',a.rights_status,
+      'licence_code',a.licence_code,'licence_url',a.licence_url,'attribution',a.attribution
+    ) from public.product_visual_assets a
+      join public.evidence_items e on e.id=a.evidence_id
+      join public.source_snapshots ss on ss.id=e.source_snapshot_id
+      join public.source_records sr on sr.id=ss.source_record_id
+      where a.product_id=p.id and a.is_current and a.is_primary
+        and ((a.rights_status='approved' and a.verification_status='verified'
+              and a.delivery_mode='private_copy' and a.delivery_path is not null)
+             or (a.rights_status in ('licensed','publisher_published')
+                 and a.delivery_mode='external_reference'))
+        and private.is_visible_evidence(e.id)
+      order by private.visual_rank(a.rights_status, a.asset_type) desc,
+               a.observed_at desc
+      limit 1)
+  from public.saas_products p where p.id=any(p_product_ids)
+    and private.is_visible_product(p.id);
+end;
+$$;

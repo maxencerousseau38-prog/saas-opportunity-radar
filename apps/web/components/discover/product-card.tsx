@@ -9,13 +9,12 @@ import {
   ACQUISITION_CHANNEL_CATEGORY,
   ACQUISITION_CHANNEL_STATUS,
   PRICING_STATUS,
-  VISUAL_ASSET_TYPE,
-  VISUAL_RIGHTS_NOTE,
   confidenceLabel,
   isDemoUrl,
   licenceLabel,
 } from "@/lib/labels";
 import { cn } from "@/lib/utils";
+import { visualPresentation } from "@/lib/visuals";
 import { ProductActions, type ActionProps } from "./product-actions";
 
 type Channel = ProductCard["acquisition_channels"][number];
@@ -64,11 +63,6 @@ const MONOGRAM_BG = [
   "from-surface to-surface-3",
   "from-[oklch(0.26_0.004_286)] to-[oklch(0.17_0.004_286)]",
 ];
-
-/** Shorter card captions; the profile keeps the full wording. */
-const CARD_VISUAL_LABEL: Record<string, string> = {
-  publisher_share_image: "Image de l’éditeur",
-};
 
 export function primaryCategory(product: Pick<ProductCard, "categories">): string | null {
   return product.categories.find((c) => c.is_primary)?.name ?? product.categories[0]?.name ?? null;
@@ -140,21 +134,36 @@ function OfficialSiteLink({ product }: { product: ProductCard }) {
  * private copy) with its type and source, or an honest typographic identity —
  * never a fabricated screenshot.
  */
-function ProductCover({ product, onBroken }: { product: ProductCard; onBroken: () => void }) {
+function ProductCover({
+  product,
+  onBroken,
+  priority,
+}: {
+  product: ProductCard;
+  onBroken: () => void;
+  priority: boolean;
+}) {
   const asset = product.visual_asset!;
   const img = useRef<HTMLImageElement>(null);
+  const [loaded, setLoaded] = useState(false);
   const reference = asset.delivery_mode === "external_reference";
-  // The image may fail before hydration attaches onError: check once on mount.
+  const view = visualPresentation(asset);
+  // The image may load or fail before hydration attaches its handlers.
   useEffect(() => {
     const el = img.current;
-    if (reference && el && el.complete && el.naturalWidth === 0) onBroken();
+    if (!el?.complete) return;
+    if (el.naturalWidth > 0) setLoaded(true);
+    else if (reference) onBroken();
   }, [reference, onBroken]);
   return (
     <div
       role="group"
       aria-label={`Aperçu authentique de ${product.name}`}
       data-testid="product-visual-preview"
-      className="relative aspect-[1.91/1] overflow-hidden bg-surface-2"
+      className={cn(
+        "relative aspect-[1.91/1] overflow-hidden bg-surface-2",
+        !loaded && "animate-pulse",
+      )}
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- source-approved external product asset */}
       <img
@@ -163,29 +172,34 @@ function ProductCover({ product, onBroken }: { product: ProductCard; onBroken: (
         alt={asset.alt_text}
         width={asset.width ?? undefined}
         height={asset.height ?? undefined}
-        loading="lazy"
+        // The first cards of the feed are the page's largest paint.
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
         decoding="async"
         referrerPolicy="no-referrer"
+        onLoad={() => setLoaded(true)}
         onError={() => {
           // A reference (PD-38) is loaded from its origin: if it is gone, fall
           // back to the honest identity. A private copy keeps its frame.
           if (reference) onBroken();
         }}
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover/card:scale-[1.02]"
+        style={{ objectPosition: view.objectPosition }}
+        className={cn(
+          "absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-500 group-hover/card:scale-[1.02]",
+          loaded ? "opacity-100" : "opacity-0",
+        )}
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/50 to-transparent" />
       <a
         href={asset.source_url}
         target="_blank"
         rel="noopener noreferrer nofollow"
-        aria-label={`Source du visuel (${VISUAL_ASSET_TYPE[asset.asset_type] ?? asset.asset_type})`}
-        title={VISUAL_RIGHTS_NOTE[asset.rights_status]}
+        aria-label={`Source du visuel (${view.label})`}
+        title={view.rightsNote}
         className="absolute bottom-2 left-2 z-10 flex max-w-[calc(100%-5rem)] items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 text-[10px] text-white/90 backdrop-blur-md hover:text-white"
       >
         <span data-testid="visual-asset-type" className="truncate">
-          {CARD_VISUAL_LABEL[asset.asset_type] ??
-            VISUAL_ASSET_TYPE[asset.asset_type] ??
-            asset.asset_type}
+          {view.cardLabel}
         </span>
         {asset.asset_type === "licensed_image" ? (
           <span data-testid="visual-asset-credit" className="truncate opacity-80">
@@ -297,8 +311,9 @@ function CardLink({ product, workspaceId }: { product: ProductCard; workspaceId:
 export function ProductCardView({
   product,
   variant,
+  priority = false,
   ...actions
-}: ActionProps & { product: ProductCard; variant: "feed" | "grid" }) {
+}: ActionProps & { product: ProductCard; variant: "feed" | "grid"; priority?: boolean }) {
   const feed = variant === "feed";
   const [broken, setBroken] = useState(false);
   const markBroken = useCallback(() => setBroken(true), []);
@@ -310,7 +325,9 @@ export function ProductCardView({
       aria-label={product.name}
       className="group/card relative flex animate-fade-up flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-colors hover:border-border-strong"
     >
-      {hasVisual ? <ProductCover product={product} onBroken={markBroken} /> : null}
+      {hasVisual ? (
+        <ProductCover product={product} onBroken={markBroken} priority={priority} />
+      ) : null}
       <div className={cn("flex flex-col gap-2.5", feed ? "p-4" : "p-3")}>
         <div className="flex items-start gap-3">
           {hasVisual ? (

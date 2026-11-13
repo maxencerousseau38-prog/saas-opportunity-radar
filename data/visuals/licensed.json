@@ -1,8 +1,8 @@
 {
  "contract_version": "visual-references-1",
  "kind": "licensed",
- "rules_version": "visref-1",
- "collected_at": "2026-11-12T18:23:54.843Z",
+ "rules_version": "visref-2",
+ "collected_at": "2026-11-13T08:10:25.741Z",
  "summary": {
   "candidates": 2584,
   "references": 27,
@@ -29,7 +29,7 @@
    "width": 1280,
    "height": 603,
    "alt_text": "Image de Google Docs (Sample of collaborative editing using google doc.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC-BY-SA-3.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
    "attribution": "Subhashish Panigrahi"
@@ -46,7 +46,7 @@
    "width": 1280,
    "height": 835,
    "alt_text": "Image de Google Earth (NASA World Wind - Google Earth bar.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "Public-Domain",
    "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
    "attribution": "EEIM"
@@ -63,7 +63,7 @@
    "width": 1280,
    "height": 548,
    "alt_text": "Image de PhpPgAdmin (Phppgadmin.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "Public-Domain",
    "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
    "attribution": "Alex J. Ivasyuv"
@@ -80,7 +80,7 @@
    "width": 1280,
    "height": 653,
    "alt_text": "Image de MediaGoblin (MediaGoblin homepage screenshot.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC0-1.0",
    "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
    "attribution": "MediaGoblin team"
@@ -97,7 +97,7 @@
    "width": 1280,
    "height": 756,
    "alt_text": "Image de OpenLayers (Screenshot OpenLayers 6.9.0.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC-BY-SA-4.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
    "attribution": "The RedBurn"
@@ -114,7 +114,7 @@
    "width": 1280,
    "height": 1280,
    "alt_text": "Image de CKAN (Lohj.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "Public-Domain",
    "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
    "attribution": "A A UCL - IMB"
@@ -131,7 +131,7 @@
    "width": 1280,
    "height": 715,
    "alt_text": "Image de Roundcube (Roundcube 1.6.0 screenshot.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC-BY-SA-3.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
    "attribution": "Software: The Roundcube Dev Team Screenshot: VulcanSphere"
@@ -148,7 +148,7 @@
    "width": 1280,
    "height": 960,
    "alt_text": "Image de Web NDL Authorities (Web NDL Authorities 2012.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "Public-Domain",
    "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
    "attribution": "NDL/Kolja21"
@@ -165,7 +165,7 @@
    "width": 1280,
    "height": 832,
    "alt_text": "Image de Dedoose (DedooseQualitativeExcerpting.jpg)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC-BY-SA-3.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
    "attribution": "Jtthegeek"
@@ -182,7 +182,7 @@
    "width": 1280,
    "height": 799,
    "alt_text": "Image de Loomio (Loomio.jpg)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC-BY-3.0",
    "licence_url": "https://creativecommons.org/licenses/by/3.0",
    "attribution": "Loomio"
@@ -199,7 +199,7 @@
    "width": 1280,
    "height": 1252,
    "alt_text": "Image de BibBase (BibBase screenshot.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC0-1.0",
    "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
    "attribution": "Christian.fritz"
@@ -216,7 +216,7 @@
    "width": 1280,
    "height": 934,
    "alt_text": "Image de Hyperbase (Hyperbas1.jpg)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC-BY-SA-4.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
    "attribution": "Hyperbase"
@@ -233,7 +233,7 @@
    "width": 1280,
    "height": 870,
    "alt_text": "Image de GNU social (GNU social web frontend with Swedish localization.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC0-1.0",
    "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
    "attribution": "Free Software Foundation"
@@ -250,7 +250,7 @@
    "width": 1280,
    "height": 585,
    "alt_text": "Image de GNU remotecontrol (GNU remotecontrol - Home (2 of 3).png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC-BY-SA-3.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
    "attribution": "Shdawson"
@@ -267,7 +267,7 @@
    "width": 1280,
    "height": 1254,
    "alt_text": "Image de Noosfero (Noosfero Control Panel.png)",
-   "observed_at": "2026-11-12T18:23:51.280Z",
+   "observed_at": "2026-11-13T08:10:21.590Z",
    "licence_code": "CC-BY-SA-4.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
    "attribution": "Aurium"
@@ -284,7 +284,7 @@
    "width": 1280,
    "height": 735,
    "alt_text": "Image de CropTool (Croptool-01.png)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "CC-BY-3.0",
    "licence_url": "https://creativecommons.org/licenses/by/3.0",
    "attribution": "Danmichaelo"
@@ -301,7 +301,7 @@
    "width": 1280,
    "height": 855,
    "alt_text": "Image de Ruffle (Ruffle.rs demo (1).png)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "Public-Domain",
    "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
    "attribution": "P0008874"
@@ -318,7 +318,7 @@
    "width": 1280,
    "height": 934,
    "alt_text": "Image de HOT Tasking Manager (Tasking Manager.png)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "CC-BY-SA-4.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
    "attribution": "Kateregga1"
@@ -335,7 +335,7 @@
    "width": 1280,
    "height": 908,
    "alt_text": "Image de Wikimedia Enterprise (Wikimedia Enterprise homepage screenshot 2026.png)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "CC-BY-SA-3.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
    "attribution": "Wikimedia Foundation"
@@ -352,7 +352,7 @@
    "width": 1280,
    "height": 964,
    "alt_text": "Image de Projector (Projector page for Corfu, screenshot.png)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "CC-BY-SA-4.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
    "attribution": "Magnus Manske"
@@ -369,7 +369,7 @@
    "width": 1280,
    "height": 1015,
    "alt_text": "Image de Grok (Grok chatbot example screenshot.webp)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "Public-Domain",
    "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
    "attribution": "Software: xAI Screenshot: VulcanSphere"
@@ -386,7 +386,7 @@
    "width": 1280,
    "height": 1151,
    "alt_text": "Image de OSM Apps Catalog (Screenshot of startpage from OSM Apps Catalog.png)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "CC-BY-SA-4.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
    "attribution": "PizzaToast"
@@ -403,7 +403,7 @@
    "width": 1280,
    "height": 760,
    "alt_text": "Image de ComfyUI (Generic SDXL ComfyUI Nodes (2024) (cropped).png)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "CC0-1.0",
    "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
    "attribution": "MrAlanKoh , cropped by VulcanSphere"
@@ -420,7 +420,7 @@
    "width": 1280,
    "height": 882,
    "alt_text": "Image de Kimi (Kimi K2 chatbot example screenshot.webp)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "Public-Domain",
    "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
    "attribution": "Software: Moonshot AI Screenshot: VulcanSphere"
@@ -437,7 +437,7 @@
    "width": 1280,
    "height": 897,
    "alt_text": "Image de Mistral Vibe (Le Chat chatbot example screenshot.webp)",
-   "observed_at": "2026-11-12T18:23:52.631Z",
+   "observed_at": "2026-11-13T08:10:23.425Z",
    "licence_code": "Public-Domain",
    "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
    "attribution": "Software: Mistral AI Screenshot: VulcanSphere"
@@ -454,7 +454,7 @@
    "width": 1280,
    "height": 802,
    "alt_text": "Image de ClayArena (ClayArena platform homepage screenshot 2026.jpg)",
-   "observed_at": "2026-11-12T18:23:53.841Z",
+   "observed_at": "2026-11-13T08:10:24.740Z",
    "licence_code": "CC-BY-SA-4.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
    "attribution": "23IVAN"
@@ -471,7 +471,7 @@
    "width": 1280,
    "height": 1280,
    "alt_text": "Image de Thunaivi (Thunaivi Omnichannel AI Shared Inbox Dashboard.png)",
-   "observed_at": "2026-11-12T18:23:53.841Z",
+   "observed_at": "2026-11-13T08:10:24.740Z",
    "licence_code": "CC-BY-SA-4.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
    "attribution": "Parthasarathi Kannan ( Talkure / Thunaivi )"

@@ -1,4 +1,4 @@
-// S8.5 (PD-38): visuals displayed by reference on the labelled demo fixtures.
+// S8.5 (PD-38) and S8.6 (PD-40): visuals displayed by reference on the labelled demo fixtures.
 // A free-licence image (Wikimedia Commons URL answered by a synthetic image
 // through Playwright routing: no network) shows its kind, author and licence;
 // a publisher share image whose origin is gone falls back to the honest
@@ -73,11 +73,11 @@ test.afterAll(async () => {
     .from("product_visual_assets")
     .delete()
     .in("product_id", productIds)
-    .in("asset_type", ["licensed_image", "publisher_share_image"]);
+    .eq("delivery_mode", "external_reference");
   await admin
     .from("entity_identifiers")
     .delete()
-    .in("value_normalized", ["Q990000001", "Q990000002"]);
+    .in("value_normalized", ["Q990000001", "Q990000002", "Q990000003"]);
 });
 
 test("free-licence and publisher references: kind, credit, licence and fallback", async ({
@@ -151,4 +151,63 @@ test("free-licence and publisher references: kind, credit, licence and fallback"
   await expect(
     page.getByRole("article", { name: "MetricFlow" }).getByTestId("product-visual-preview"),
   ).toContainText("Aperçu authentique non disponible");
+});
+
+test("the official site's interface screenshot outranks its share image (PD-40)", async ({
+  page,
+}) => {
+  const leadnest = await identify("leadnest", "Q990000003");
+  productIds = [...productIds, leadnest];
+  const reference = (kind: string, image: string, hash: string) =>
+    admin.rpc("sor_record_visual_reference", {
+      p_ref: {
+        kind,
+        listing_source_key: "wikidata",
+        listing_external_id: "Q990000003",
+        image_url: image,
+        page_url: "https://leadnest.test/",
+        content_hash: hash.repeat(64),
+        content_type: "image/png",
+        width: 1600,
+        height: 1000,
+        alt_text: `LeadNest ${kind} (fixture de test synthétique)`,
+        observed_at: "2026-11-12T10:00:00Z",
+      },
+    });
+  expect((await reference("publisher", "https://cdn.leadnest.test/og.png", "e")).error).toBeNull();
+  const shot = await reference(
+    "site_screenshot",
+    "https://cdn.leadnest.test/app/dashboard.png",
+    "f",
+  );
+  expect(shot.error).toBeNull();
+  expect((shot.data as { primary: boolean }).primary).toBe(true);
+
+  // Both origins are answered locally (no network in the test).
+  await page.route("https://cdn.leadnest.test/**", (route) =>
+    route.fulfill({ status: 200, contentType: "image/png", body: syntheticPng() }),
+  );
+  await signIn(page, MEMBER);
+  await waitForResults(page);
+  const card = page.getByRole("article", { name: "LeadNest" });
+  await card.scrollIntoViewIfNeeded();
+  const preview = card.getByTestId("product-visual-preview");
+  await expect(preview.getByTestId("visual-asset-type")).toHaveText("Capture du produit");
+  const img = preview.locator("img");
+  await expect(img).toHaveAttribute("src", "https://cdn.leadnest.test/app/dashboard.png");
+  // An interface is framed from its top; the image fades in once loaded.
+  await expect(img).toHaveCSS("object-position", "50% 0%");
+  await expect(img).toHaveCSS("opacity", "1");
+  await expect(preview.getByRole("link", { name: /Source du visuel/ })).toHaveAttribute(
+    "href",
+    "https://leadnest.test/",
+  );
+
+  await card.getByRole("link", { name: "LeadNest", exact: true }).click();
+  const figure = page.getByTestId("profile-visual");
+  await expect(figure.getByTestId("profile-visual-type")).toHaveText(
+    "Capture authentique du produit",
+  );
+  await figure.getByText("Droits d’usage").click();
+  await expect(figure).toContainText("sans licence vérifiée");
 });

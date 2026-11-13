@@ -124,9 +124,10 @@ export const ProductVisualAssetSchema = z
         ctx.addIssue({ code: "custom", message: "a free-licence image carries its licence" });
       }
     } else if (
-      a.asset_type !== "publisher_share_image" ||
+      !["publisher_share_image", "official_hero", "product_screenshot"].includes(a.asset_type) ||
       a.rights_status !== "publisher_published"
     ) {
+      // PD-38 share image, or PD-40 hero / screenshot shown on the official site.
       ctx.addIssue({ code: "custom", message: "unknown reference kind" });
     }
   });

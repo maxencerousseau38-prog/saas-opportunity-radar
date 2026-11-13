@@ -13,7 +13,7 @@ const files = existsSync(VISUALS_DIR)
 
 describe("committed visual reference snapshots", () => {
   it("are named after their kind", () => {
-    for (const f of files) expect(["licensed.json", "publisher.json"]).toContain(f);
+    for (const f of files) expect(["licensed.json", "publisher.json", "site.json"]).toContain(f);
   });
 
   describe.each(files.length ? files : ["(none yet)"])("%s", (file) => {
@@ -23,7 +23,19 @@ describe("committed visual reference snapshots", () => {
       );
       expect(`${snapshot.kind}.json`).toBe(file);
       expect(snapshot.summary.references).toBe(snapshot.references.length);
-      for (const r of snapshot.references) expect(r.kind).toBe(snapshot.kind);
+      for (const r of snapshot.references) {
+        if (snapshot.kind === "site") expect(["site_hero", "site_screenshot"]).toContain(r.kind);
+        else expect(r.kind).toBe(snapshot.kind);
+      }
+      // visref-2: an image shown by two different products is a template.
+      if (snapshot.rules_version !== "visref-1") {
+        const owners = new Map<string, Set<string>>();
+        for (const r of snapshot.references) {
+          const host = new URL(r.page_url).hostname.replace(/^www\./, "");
+          owners.set(r.content_hash, (owners.get(r.content_hash) ?? new Set()).add(host));
+        }
+        for (const [, hosts] of owners) expect(hosts.size).toBeLessThanOrEqual(2);
+      }
       const keys = snapshot.references.map(
         (r) => `${r.listing_source_key}:${r.listing_external_id}`,
       );

@@ -85,13 +85,17 @@ export type VisualAssetManifest = z.infer<typeof VisualAssetManifestSchema>;
  */
 export const VisualReferenceSchema = z
   .object({
-    kind: z.enum(["licensed", "publisher"]),
+    /**
+     * site_hero / site_screenshot (PD-40): an image the official home page
+     * shows; licensed: Wikimedia Commons; publisher: the declared share image.
+     */
+    kind: z.enum(["site_hero", "site_screenshot", "licensed", "publisher"]),
     /** The catalog listing the visual belongs to (identity in the catalog). */
     listing_source_key: z.string().regex(/^[a-z0-9_]{2,60}$/),
     listing_external_id: z.string().min(1).max(200),
     product_name: z.string().min(1).max(200),
     image_url: HttpsUrlSchema,
-    /** Commons file page, or the official page that declares the image. */
+    /** Commons file page, or the official page that shows or declares the image. */
     page_url: HttpsUrlSchema,
     content_hash: z.string().regex(/^[0-9a-f]{16,128}$/),
     content_type: z.enum(["image/png", "image/jpeg", "image/webp"]),
@@ -129,7 +133,8 @@ export const VisualReferenceSchema = z
 export const VisualReferenceSnapshotSchema = z
   .object({
     contract_version: z.literal("visual-references-1"),
-    kind: z.enum(["licensed", "publisher"]),
+    /** "site" snapshots hold site_hero and site_screenshot references. */
+    kind: z.enum(["licensed", "publisher", "site"]),
     rules_version: z.string().min(1).max(40),
     collected_at: ISODateTimeSchema,
     /** Listings examined, references kept, and why the others were not. */

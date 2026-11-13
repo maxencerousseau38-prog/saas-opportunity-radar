@@ -37,7 +37,7 @@ separate decisions.
 | [ADR-013](ADR-013-source-acquisition-and-compliance.md) | Source acquisition and compliance | ACCEPTED (PD-14, PD-28); G2 and Product Hunt approval PENDING (PD-26, PD-29) |
 | [ADR-014](ADR-014-workspace-status-model.md) | Workspace opportunity status model | ACCEPTED (PD-04) |
 | [ADR-015](ADR-015-manual-external-ai-research-handoff.md) | Manual external AI research handoff | ACCEPTED (PD-35) |
-| [ADR-016](ADR-016-product-visual-assets-and-heroes.md) | Product visual assets and Discover Heroes | ACCEPTED (PD-36; amended by PD-38) |
+| [ADR-016](ADR-016-product-visual-assets-and-heroes.md) | Product visual assets and Discover Heroes | ACCEPTED (PD-36; amended by PD-38 and PD-40) |
 | [ADR-017](ADR-017-acquisition-channel-taxonomy.md) | Acquisition Channel taxonomy and evidence | ACCEPTED (PD-37) |
 
 ## Decisions approved by the product owner on 4 November 2026
@@ -265,6 +265,25 @@ session (12 November 2026, "les deux, lance"):
 The product owner accepts the residual copyright risk of option (2) for a
 personal, non-commercial tool; any takedown request is honoured at once
 (operator removal). No paid service, no stored copy, no new budget.
+
+## Site visuals (13 November 2026)
+
+The product owner asked that every SaaS be shown by "its true visual
+universe", in this order: (1) official hero images from the SaaS's site,
+(2) authentic screenshots of its interface, (3) official Open Graph images as
+a fallback; never random, generic or unrelated images; provenance,
+relevance and quality checked for each image; verified visuals preserved;
+an elegant fallback when no reliable visual exists (instruction of
+13 November 2026, "Améliore le système d'images de SOR").
+
+| ID | Decision | Approved direction | Main consequence | ADR |
+|---|---|---|---|---|
+| PD-40 | Official site visuals by reference | The hero image and the interface screenshot the publisher shows on the home page of its own official site, read in the same visit as the share image (robots.txt, SSRF-safe fetcher), kept only with an explicit hero or screenshot signal and after the quality rules `visref-2`; displayed by reference, never copied, labelled as such, no licence implied | Amends ADR-016 again: precedence approved copy > site hero > site screenshot > free licence > share image; images shown by several products, builder defaults, app-store icon cards and stock photos are refused or retired | ADR-016 |
+
+As for PD-38 option (2), the residual copyright risk of displaying the
+publisher's own images by reference is accepted for this personal tool; any
+takedown request is honoured at once (operator removal, the next best visual
+takes over). No paid service, no stored copy, no new budget.
 
 ---
 
