@@ -425,6 +425,9 @@ worker runs in production). Same official API, same terms as above.
   so CI and local stacks never load it and the CI worker never calls the
   real API. Weekly collection: *Catalog collection* workflow, with Wikidata
   and Uneed.
+- **Visuals:** the *Catalog visuals* workflow also visits the official
+  sites of Hacker News listings (share image, hero, interface screenshot;
+  same rules `visref-2`, PD-40). No image is taken from Hacker News itself.
 
 ## `product_hunt` — not approved (permission requested)
 
